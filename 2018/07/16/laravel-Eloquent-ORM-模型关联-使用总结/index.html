@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="在lavaral中可以直接使用DB查询构建器写sql关联语句，其实挺方便，程序执行效率也会更高。ORM主要应该使用于关联查询比较多的情景。">
+<meta name="description" content="在lavaral中可以直接使用DB查询构建器写sql关联语句，其实挺方便，程序执行效率也会更高。ORM主要应该使用于关联查询比较多的情景。 简介laravel当中主要有以下几种关联关系：  一对一 一对多 多对多 远程一对多 多态关联 多对多的多态关联">
 <meta name="keywords" content="laravel,orm,关联模型">
 <meta property="og:type" content="article">
 <meta property="og:title" content="laravel Eloquent ORM 模型关联 使用总结">
 <meta property="og:url" content="http://yangcp.me/2018/07/16/laravel-Eloquent-ORM-模型关联-使用总结/index.html">
 <meta property="og:site_name" content="YCP个人博客">
-<meta property="og:description" content="在lavaral中可以直接使用DB查询构建器写sql关联语句，其实挺方便，程序执行效率也会更高。ORM主要应该使用于关联查询比较多的情景。">
+<meta property="og:description" content="在lavaral中可以直接使用DB查询构建器写sql关联语句，其实挺方便，程序执行效率也会更高。ORM主要应该使用于关联查询比较多的情景。 简介laravel当中主要有以下几种关联关系：  一对一 一对多 多对多 远程一对多 多态关联 多对多的多态关联">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-16T13:50:32.675Z">
+<meta property="og:updated_time" content="2018-07-16T14:31:28.454Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="laravel Eloquent ORM 模型关联 使用总结">
-<meta name="twitter:description" content="在lavaral中可以直接使用DB查询构建器写sql关联语句，其实挺方便，程序执行效率也会更高。ORM主要应该使用于关联查询比较多的情景。">
+<meta name="twitter:description" content="在lavaral中可以直接使用DB查询构建器写sql关联语句，其实挺方便，程序执行效率也会更高。ORM主要应该使用于关联查询比较多的情景。 简介laravel当中主要有以下几种关联关系：  一对一 一对多 多对多 远程一对多 多态关联 多对多的多态关联">
 
 
 
@@ -422,7 +422,7 @@
       
 
       
-        <p>在lavaral中可以直接使用DB查询构建器写sql关联语句，其实挺方便，程序执行效率也会更高。ORM主要应该使用于关联查询比较多的情景。<br><a id="more"></a></p>
+        <p>在lavaral中可以直接使用DB查询构建器写sql关联语句，其实挺方便，程序执行效率也会更高。ORM主要应该使用于关联查询比较多的情景。</p>
 <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>laravel当中主要有以下几种关联关系：</p>
 <ul>
 <li>一对一</li>
@@ -430,10 +430,10 @@
 <li>多对多</li>
 <li>远程一对多</li>
 <li>多态关联</li>
-<li>多对多的多态关联</li>
+<li>多对多的多态关联<a id="more"></a>
+主要是前3种关联用的多。返回的数据是集合类型。<h2 id="定义关联关系"><a href="#定义关联关系" class="headerlink" title="定义关联关系"></a>定义关联关系</h2><h3 id="简单定义使用"><a href="#简单定义使用" class="headerlink" title="简单定义使用"></a>简单定义使用</h3></li>
 </ul>
-<p>主要是前3种关联用的多。返回的数据是集合类型。</p>
-<h2 id="定义关联关系"><a href="#定义关联关系" class="headerlink" title="定义关联关系"></a>定义关联关系</h2><h3 id="简单定义使用"><a href="#简单定义使用" class="headerlink" title="简单定义使用"></a>简单定义使用</h3><p>在模型中定义一个函数，比如：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Users</span> <span class="keyword">extends</span> <span class="title">Base</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $table = <span class="string">'blog_admin'</span>;</span><br><span class="line">    <span class="keyword">protected</span> $dateFormat = <span class="string">'U'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 关联模型</span></span><br><span class="line"><span class="comment">     * 属于该用户的身份。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">roles</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;belongsToMany(<span class="string">'App\Models\Admin\Role'</span>,<span class="string">'blog_admin_role'</span>,<span class="string">'admin_id'</span>,<span class="string">'role_id'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在模型中定义一个函数，比如：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Users</span> <span class="keyword">extends</span> <span class="title">Base</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $table = <span class="string">'blog_admin'</span>;</span><br><span class="line">    <span class="keyword">protected</span> $dateFormat = <span class="string">'U'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 关联模型</span></span><br><span class="line"><span class="comment">     * 属于该用户的身份。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">roles</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;belongsToMany(<span class="string">'App\Models\Admin\Role'</span>,<span class="string">'blog_admin_role'</span>,<span class="string">'admin_id'</span>,<span class="string">'role_id'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <blockquote>
 <p>使用:按正常查询数据，然后在后面跟上roles属性就行了。需要注意的是，必须是单条记录才能直接使用roles属性。</p>
 </blockquote>

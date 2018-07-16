@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="控制反转（IoC）和依赖注入（DI）">
+<meta name="description" content="控制反转（IoC）和依赖注入（DI） IoC 容器 —— Laravel 的核心laravel 的请求生命周期几乎所有php框架，或者对php程序来说，都是单一入口，都是以index.php开始的。那么laravel的 入口文件都干了些什么事呢？">
 <meta name="keywords" content="IOC,依赖注入,控制反转">
 <meta property="og:type" content="article">
 <meta property="og:title" content="laravel中的服务容器">
 <meta property="og:url" content="http://yangcp.me/2018/07/16/laravel中的服务容器/index.html">
 <meta property="og:site_name" content="YCP个人博客">
-<meta property="og:description" content="控制反转（IoC）和依赖注入（DI）">
+<meta property="og:description" content="控制反转（IoC）和依赖注入（DI） IoC 容器 —— Laravel 的核心laravel 的请求生命周期几乎所有php框架，或者对php程序来说，都是单一入口，都是以index.php开始的。那么laravel的 入口文件都干了些什么事呢？">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-16T14:28:03.264Z">
+<meta property="og:updated_time" content="2018-07-16T14:31:42.869Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="laravel中的服务容器">
-<meta name="twitter:description" content="控制反转（IoC）和依赖注入（DI）">
+<meta name="twitter:description" content="控制反转（IoC）和依赖注入（DI） IoC 容器 —— Laravel 的核心laravel 的请求生命周期几乎所有php框架，或者对php程序来说，都是单一入口，都是以index.php开始的。那么laravel的 入口文件都干了些什么事呢？">
 
 
 
@@ -401,10 +401,8 @@
 
       
         <p>控制反转（IoC）和依赖注入（DI）</p>
-<a id="more"></a>
 <h2 id="IoC-容器-——-Laravel-的核心"><a href="#IoC-容器-——-Laravel-的核心" class="headerlink" title="IoC 容器 —— Laravel 的核心"></a>IoC 容器 —— Laravel 的核心</h2><h3 id="laravel-的请求生命周期"><a href="#laravel-的请求生命周期" class="headerlink" title="laravel 的请求生命周期"></a>laravel 的请求生命周期</h3><p>几乎所有php框架，或者对php程序来说，都是单一入口，都是以index.php开始的。那么laravel的</p>
-<p>入口文件都干了些什么事呢？</p>
-<p>所有请求通过web服务器（apapache/nignx）引导至 public/index.php。</p>
+<p>入口文件都干了些什么事呢？<br><a id="more"></a><br>所有请求通过web服务器（apapache/nignx）引导至 public/index.php。</p>
 <p>第一件事就是从bootstrap/app.php脚本中检索laravel应用程序的实例。</p>
 <h4 id="引入app-php（创建一个新的应用）"><a href="#引入app-php（创建一个新的应用）" class="headerlink" title="引入app.php（创建一个新的应用）"></a>引入app.php（创建一个新的应用）</h4><p><code>$app = require_once __DIR__.&#39;/../bootstrap/app.php&#39;;</code></p>
 <p>app.php文件当中，第一件事就是创建一个新的实例;</p>

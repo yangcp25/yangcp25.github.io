@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="一些使用laravel时用到的一些小技巧">
+<meta name="description" content="一些使用laravel时用到的一些小技巧 添加自定义函数建立文件夹，放在app目录下，比如：      然后再 conposer.json文件中的自动加载项加入你添加的自定义文件：">
 <meta name="keywords" content="技巧总结">
 <meta property="og:type" content="article">
 <meta property="og:title" content="laravel 技巧总结">
 <meta property="og:url" content="http://yangcp.me/2018/07/16/laravel-技巧总结/index.html">
 <meta property="og:site_name" content="YCP个人博客">
-<meta property="og:description" content="一些使用laravel时用到的一些小技巧">
+<meta property="og:description" content="一些使用laravel时用到的一些小技巧 添加自定义函数建立文件夹，放在app目录下，比如：      然后再 conposer.json文件中的自动加载项加入你添加的自定义文件：">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yangcp.me/uploads/53811c8df312660ada9423ec853ae1c5.png">
-<meta property="og:updated_time" content="2018-07-16T14:28:35.143Z">
+<meta property="og:updated_time" content="2018-07-16T14:31:36.378Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="laravel 技巧总结">
-<meta name="twitter:description" content="一些使用laravel时用到的一些小技巧">
+<meta name="twitter:description" content="一些使用laravel时用到的一些小技巧 添加自定义函数建立文件夹，放在app目录下，比如：      然后再 conposer.json文件中的自动加载项加入你添加的自定义文件：">
 <meta name="twitter:image" content="http://yangcp.me/uploads/53811c8df312660ada9423ec853ae1c5.png">
 
 
@@ -403,10 +403,10 @@
 
       
         <p>一些使用laravel时用到的一些小技巧</p>
-<a id="more"></a>
 <h2 id="添加自定义函数"><a href="#添加自定义函数" class="headerlink" title="添加自定义函数"></a>添加自定义函数</h2><p>建立文件夹，放在app目录下，比如：  </p>
 <p><img src="http://yangcp.me/uploads/53811c8df312660ada9423ec853ae1c5.png" alt="\QQ截图20171116183742.png">  </p>
 <p>然后再 conposer.json文件中的自动加载项加入你添加的自定义文件：</p>
+<a id="more"></a>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="string">"autoload"</span>: &#123;</span><br><span class="line">        <span class="string">"classmap"</span>: [</span><br><span class="line">            <span class="string">"database"</span></span><br><span class="line">        ],</span><br><span class="line">        <span class="string">"files"</span>:[</span><br><span class="line">            <span class="string">"app/Helpers/Helpers.php"</span></span><br><span class="line">        ],</span><br><span class="line">        <span class="string">"psr-4"</span>: &#123;</span><br><span class="line">            <span class="string">"App\\"</span>: <span class="string">"app/"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure>
 <p>  然后运行：</p>
 <p>  <code>composer dump-autoload</code></p>

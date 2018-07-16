@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="php基础,php," />
+  <meta name="keywords" content="php,php基础," />
 
 
 
@@ -79,20 +79,20 @@
 
 
 
-<meta name="description" content="PHP赋值语句的引用传递与按值传递">
-<meta name="keywords" content="php基础,php">
+<meta name="description" content="PHP赋值语句的引用传递与按值传递 赋值语句的引用传递与按值传递　　之前对于php当中的引用传递与按值传递，并没有深入了解。   　php中对变量赋值有2种方式：  按值传递 引用传递">
+<meta name="keywords" content="php,php基础">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PHP基础整理（一）">
 <meta property="og:url" content="http://yangcp.me/2018/07/16/PHP基础整理（一）/index.html">
 <meta property="og:site_name" content="YCP个人博客">
-<meta property="og:description" content="PHP赋值语句的引用传递与按值传递">
+<meta property="og:description" content="PHP赋值语句的引用传递与按值传递 赋值语句的引用传递与按值传递　　之前对于php当中的引用传递与按值传递，并没有深入了解。   　php中对变量赋值有2种方式：  按值传递 引用传递">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yangcp.me/uploads/3bff61b1afa432471b03b8f6a8746949.png">
 <meta property="og:image" content="http://yangcp.me/uploads/d1bb327088bfcced0b76ffe4663a9561.png">
-<meta property="og:updated_time" content="2018-07-16T14:27:12.072Z">
+<meta property="og:updated_time" content="2018-07-16T14:31:47.650Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PHP基础整理（一）">
-<meta name="twitter:description" content="PHP赋值语句的引用传递与按值传递">
+<meta name="twitter:description" content="PHP赋值语句的引用传递与按值传递 赋值语句的引用传递与按值传递　　之前对于php当中的引用传递与按值传递，并没有深入了解。   　php中对变量赋值有2种方式：  按值传递 引用传递">
 <meta name="twitter:image" content="http://yangcp.me/uploads/3bff61b1afa432471b03b8f6a8746949.png">
 
 
@@ -403,22 +403,24 @@
       
 
       
-        <p>PHP赋值语句的引用传递与按值传递<br><a id="more"></a></p>
+        <p>PHP赋值语句的引用传递与按值传递</p>
 <h2 id="赋值语句的引用传递与按值传递"><a href="#赋值语句的引用传递与按值传递" class="headerlink" title="赋值语句的引用传递与按值传递"></a>赋值语句的引用传递与按值传递</h2><p>　　之前对于php当中的引用传递与按值传递，并没有深入了解。</p>
 <p>  　php中对变量赋值有2种方式：</p>
 <ol>
 <li>按值传递</li>
-<li>引用传递</li>
-</ol>
+<li><p>引用传递</p>
+<a id="more"></a>
 <p>　　这2个主要应用于变量或者函数赋值，计数赋值用于对象赋值。</p>
-<p>  ###按值传递<br>  简单来说就是将变量进行复制，然后开辟一块新的内存空间存储。比如：</p>
-  <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$b = <span class="number">1</span>;</span><br><span class="line">$a = $b;</span><br><span class="line">$a = <span class="number">2</span>;</span><br><span class="line">dd($a,$b);</span><br></pre></td></tr></table></figure>
+<p>###按值传递<br>简单来说就是将变量进行复制，然后开辟一块新的内存空间存储。比如：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$b = <span class="number">1</span>;</span><br><span class="line">$a = $b;</span><br><span class="line">$a = <span class="number">2</span>;</span><br><span class="line">dd($a,$b);</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>结果为 <code>2 1</code></p>
 </blockquote>
-<p>  <code>$a</code>的改变并不会影响<code>$b</code>的数值。变量相当于一个内存中的地址别名，当<code>$a = $b</code>，就开辟一个新的内存空间，将$a地址内存的数据取出来放在$b所指向的地址中。因为是不同的地址内存中，所以互相不会影响。按值赋值php7之前有个copy on write(写时复制)机制，貌似到php7废除了（以待以后考证）。</p>
-<p>  ###引用传递<br>  引用传递则是拷贝一份变量的引用。关于变量的引用，有一篇解释的非常好的文章<a href="http://www.cnblogs.com/mushan/p/4330386.html" target="_blank" rel="noopener">http://www.cnblogs.com/mushan/p/4330386.html</a>。简单来说，php中的变量与值是2个不同的概念，变量存于一个符号表中，并有作用域，而值则在php内部（zend引擎中），存于一个zval结构体当中。</p>
-<p>  <img src="http://yangcp.me/uploads/3bff61b1afa432471b03b8f6a8746949.png" alt="\QQ截图20170815171917.png"></p>
+<p><code>$a</code>的改变并不会影响<code>$b</code>的数值。变量相当于一个内存中的地址别名，当<code>$a = $b</code>，就开辟一个新的内存空间，将$a地址内存的数据取出来放在$b所指向的地址中。因为是不同的地址内存中，所以互相不会影响。按值赋值php7之前有个copy on write(写时复制)机制，貌似到php7废除了（以待以后考证）。</p>
+<p>###引用传递<br>引用传递则是拷贝一份变量的引用。关于变量的引用，有一篇解释的非常好的文章<a href="http://www.cnblogs.com/mushan/p/4330386.html" target="_blank" rel="noopener">http://www.cnblogs.com/mushan/p/4330386.html</a>。简单来说，php中的变量与值是2个不同的概念，变量存于一个符号表中，并有作用域，而值则在php内部（zend引擎中），存于一个zval结构体当中。</p>
+<p><img src="http://yangcp.me/uploads/3bff61b1afa432471b03b8f6a8746949.png" alt="\QQ截图20170815171917.png"></p>
+</li>
+</ol>
 <blockquote>
 <p>is_ref 代表他是否为引用，是一个bool值，用来标识这个值是否是一个<code>引用</code>。第二个额外字节是<code>refcount</code>，用来表示指向这个值的变量（也称符号即symbol）的个数。如果refcount为0，那么这个值就可以被回收了。</p>
 </blockquote>
@@ -476,9 +478,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/php基础/" rel="tag"># php基础</a>
-          
             <a href="/tags/php/" rel="tag"># php</a>
+          
+            <a href="/tags/php基础/" rel="tag"># php基础</a>
           
         </div>
       
