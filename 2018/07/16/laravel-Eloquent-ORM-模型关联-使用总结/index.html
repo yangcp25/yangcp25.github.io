@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="laravel orm 关联模型," />
 
 
 
@@ -79,17 +79,18 @@
 
 
 
-<meta name="description" content="YCP个人博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="标签">
-<meta property="og:url" content="http://yangcp.me/tags/index.html">
+<meta name="description" content="在lavaral中可以直接使用DB查询构建器写sql关联语句，其实挺方便，程序执行效率也会更高。ORM主要应该使用于关联查询比较多的情景。 ##一、简介laravel当中主要有以下几种关联关系：  一对一 一对多 多对多 远程一对多 多态关联 多对多的多态关联  主要是前3种关联用的多。返回的数据是集合类型。 ##二、定义关联关系 ###简单定义使用 在模型中定义一个函数，比如：123456789">
+<meta name="keywords" content="laravel orm 关联模型">
+<meta property="og:type" content="article">
+<meta property="og:title" content="laravel Eloquent ORM 模型关联 使用总结">
+<meta property="og:url" content="http://yangcp.me/2018/07/16/laravel-Eloquent-ORM-模型关联-使用总结/index.html">
 <meta property="og:site_name" content="YCP个人博客">
-<meta property="og:description" content="YCP个人博客">
+<meta property="og:description" content="在lavaral中可以直接使用DB查询构建器写sql关联语句，其实挺方便，程序执行效率也会更高。ORM主要应该使用于关联查询比较多的情景。 ##一、简介laravel当中主要有以下几种关联关系：  一对一 一对多 多对多 远程一对多 多态关联 多对多的多态关联  主要是前3种关联用的多。返回的数据是集合类型。 ##二、定义关联关系 ###简单定义使用 在模型中定义一个函数，比如：123456789">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-15T09:47:33.662Z">
+<meta property="og:updated_time" content="2018-07-16T13:12:14.871Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="标签">
-<meta name="twitter:description" content="YCP个人博客">
+<meta name="twitter:title" content="laravel Eloquent ORM 模型关联 使用总结">
+<meta name="twitter:description" content="在lavaral中可以直接使用DB查询构建器写sql关联语句，其实挺方便，程序执行效率也会更高。ORM主要应该使用于关联查询比较多的情景。 ##一、简介laravel当中主要有以下几种关联关系：  一对一 一对多 多对多 远程一对多 多态关联 多对多的多态关联  主要是前3种关联用的多。返回的数据是集合类型。 ##二、定义关联关系 ###简单定义使用 在模型中定义一个函数，比如：123456789">
 
 
 
@@ -119,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yangcp.me/tags/"/>
+  <link rel="canonical" href="http://yangcp.me/2018/07/16/laravel-Eloquent-ORM-模型关联-使用总结/"/>
 
 
 
 
 
-  <title>标签 | YCP个人博客</title>
+  <title>laravel Eloquent ORM 模型关联 使用总结 | YCP个人博客</title>
   
 
 
@@ -284,40 +285,277 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yangcp.me/2018/07/16/laravel-Eloquent-ORM-模型关联-使用总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="YCP">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YCP个人博客">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline">标签</h1>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <div class="tag-cloud">
-            <div class="tag-cloud-title">
-                目前共计 1 个标签
+          <h1 class="post-title" itemprop="name headline">laravel Eloquent ORM 模型关联 使用总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-16T21:05:02+08:00">
+                2018-07-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  791 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  3 分钟
+                </span>
+              
             </div>
-            <div class="tag-cloud-tags">
-              <a href="/tags/laravel-orm-关联模型/" style="font-size: 12px; color: #ccc">laravel orm 关联模型</a>
-            </div>
-          </div>
-        
-      </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <p>在lavaral中可以直接使用DB查询构建器写sql关联语句，其实挺方便，程序执行效率也会更高。ORM主要应该使用于关联查询比较多的情景。</p>
+<p>##一、简介<br>laravel当中主要有以下几种关联关系：</p>
+<ul>
+<li>一对一</li>
+<li>一对多</li>
+<li>多对多</li>
+<li>远程一对多</li>
+<li>多态关联</li>
+<li>多对多的多态关联</li>
+</ul>
+<p>主要是前3种关联用的多。返回的数据是集合类型。</p>
+<p>##二、定义关联关系</p>
+<p>###简单定义使用</p>
+<p>在模型中定义一个函数，比如：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Users</span> <span class="keyword">extends</span> <span class="title">Base</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $table = <span class="string">'blog_admin'</span>;</span><br><span class="line">    <span class="keyword">protected</span> $dateFormat = <span class="string">'U'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 关联模型</span></span><br><span class="line"><span class="comment">     * 属于该用户的身份。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">roles</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;belongsToMany(<span class="string">'App\Models\Admin\Role'</span>,<span class="string">'blog_admin_role'</span>,<span class="string">'admin_id'</span>,<span class="string">'role_id'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>使用:按正常查询数据，然后在后面跟上roles属性就行了。需要注意的是，必须是单条记录才能直接使用roles属性。</p>
+</blockquote>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$data-&gt;roles;</span><br></pre></td></tr></table></figure>
+<p> 多条记录需要遍历：<br> <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">foreach</span>($data <span class="keyword">as</span> $v)&#123;</span><br><span class="line">   $v-&gt;roles;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>###关联关系</p>
+<blockquote>
+<p>每种关联关系都有正向关联和反向关联</p>
+</blockquote>
+<p>####1. 一对一  </p>
+<p>正向：</p>
+<p><code>$this-&gt;hasOne(&#39;要关联的模型名&#39;,&#39;foreign_key&#39;,&#39;local_key&#39;);</code> </p>
+<p>反向：</p>
+<p><code>$this-&gt;belongsTo(&#39;要关联的模型名&#39;,&#39;local_key&#39;,&#39;foreign_key&#39;);</code></p>
+<blockquote>
+<p>foreign_key:关联模型名对应的外键</p>
+</blockquote>
+<blockquote>
+<p>local_key:本模型被关联的ID</p>
+</blockquote>
+<h4 id="2-一对多"><a href="#2-一对多" class="headerlink" title="2.一对多"></a>2.一对多</h4><p>正向：</p>
+<p><code>$this-&gt;hasMany(&#39;要关联的模型名&#39;,&#39;foreign_key&#39;,&#39;local_key&#39;);</code> </p>
+<p>反向：</p>
+<p><code>$this-&gt;belongsTo(&#39;要关联的模型名&#39;,&#39;local_key&#39;,&#39;foreign_key&#39;);</code></p>
+<blockquote>
+<p>foreign_key:关联模型名对应的外键</p>
+</blockquote>
+<blockquote>
+<p>local_key:本模型被关联的ID</p>
+</blockquote>
+<p>比如：一个分类对应多篇文章，一个文章只属于一个分类，我在文章模型中定义</p>
+<p>正向关联：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 关联模型</span></span><br><span class="line"><span class="comment"> * 属于该文章的分类。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">cat</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;hasMany(<span class="string">'App\Models\Admin\Cat'</span>,<span class="string">'id'</span>,<span class="string">'cat_id'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>反向关联：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 关联模型</span></span><br><span class="line"><span class="comment"> * 属于该文章的分类。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">cat</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;belongsTo(<span class="string">'App\Models\Admin\Cat'</span>,<span class="string">'cat_id'</span>,<span class="string">'id'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>总结来说,第一个参数就是外键，无论正向反向关联，这里填写数据表中的外键即可</p>
+</blockquote>
+<p>####3. 多对多</p>
+<p>比如一个管理员和角色多对多，中间表明为blog_admin_role,可以这样定义：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 关联模型</span></span><br><span class="line"><span class="comment">     * 属于该用户的身份。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">roles</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;belongsToMany(<span class="string">'App\Models\Admin\Role'</span>,<span class="string">'blog_admin_role'</span>,<span class="string">'admin_id'</span>,<span class="string">'role_id'</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>##三、插入 &amp; 更新关联模型</p>
+<p>###插入关联模型<br>首先需要获取到模型，比如，添加一片文章，然后添加标签</p>
+<p>添加文章</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$this_article = <span class="keyword">$this</span>-&gt;create($data);</span><br></pre></td></tr></table></figure>
+<p>添加标签</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$this_article-&gt;tag()-&gt;attach($tags_id);</span><br></pre></td></tr></table></figure>
+<p>###移除关联模型</p>
+<p>获取文章</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$this_article = <span class="keyword">$this</span>-&gt;find($id);</span><br></pre></td></tr></table></figure>
+<p>移除标签</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$this_article-&gt;tag()-&gt;detach($tags_id);</span><br></pre></td></tr></table></figure>
+<p>###更新关联模型</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$this_article-&gt;tag()-&gt;sync($tags_id);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>sync方法会接受一组数据，他会保存新添加的数据，移除删除掉的数据。</p>
+</blockquote>
+<p>以上便是简单使用orm后，自己的一些理解。</p>
+<p>—-更新（2017/12/24）</p>
+<p>###多对多添加更新中间表</p>
+<p>当多对多中间表需要添加额外字段，可以这样做</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$this_article-&gt;tag()-&gt;attach($tags_id,[<span class="string">'key'</span>=&gt;$value]);</span><br></pre></td></tr></table></figure>
+<p>或者将$tags_id改造成以下格式（假如额外字段位tag_val）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[ &apos;1&apos;=&gt;[&apos;tag_val&apos;=&gt;&apos;tag_1&apos;],</span><br><span class="line">  &apos;2&apos;=&gt;[&apos;tag_val&apos;=&gt;&apos;tag_2&apos;]</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>  参考：</p>
+<p>  <a href="http://laravelacademy.org/post/6996.html" target="_blank" rel="noopener">http://laravelacademy.org/post/6996.html</a></p>
+<p>  – END</p>
+
       
     </div>
     
     
     
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    YCP
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yangcp.me/2018/07/16/laravel-Eloquent-ORM-模型关联-使用总结/" title="laravel Eloquent ORM 模型关联 使用总结">http://yangcp.me/2018/07/16/laravel-Eloquent-ORM-模型关联-使用总结/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://ycp19940225.github.io/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/laravel-orm-关联模型/" rel="tag"># laravel orm 关联模型</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/16/hello-world/" rel="prev" title="laravel Eloquent ORM 模型关联 使用总结">
+                laravel Eloquent ORM 模型关联 使用总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -355,8 +593,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -421,6 +668,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-一对多"><span class="nav-number">1.</span> <span class="nav-text">2.一对多</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
