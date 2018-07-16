@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="类与对象（1） PHP中的类与对象简介 PHP 5完全重写了对象模型以得到更佳性能和更多特性,具有完整的对象模型。  PHP 对待对象的方式与引用和句柄相同，即每个变量都持有对象的引用，而不是整个对象的拷贝。">
+<meta name="description" content="类与对象（1） PHP 5完全重写了对象模型以得到更佳性能和更多特性,具有完整的对象模型。 PHP 对待对象的方式与引用和句柄相同，即每个变量都持有对象的引用，而不是整个对象的拷贝。 我们都知道PHP对象赋值默认情况下是通过引用传递的，但这并不完全正确。">
 <meta name="keywords" content="php基础,类与对象">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PHP基础整理（三）">
 <meta property="og:url" content="http://yangcp.me/2018/07/16/PHP基础整理（三）/index.html">
 <meta property="og:site_name" content="YCP个人博客">
-<meta property="og:description" content="类与对象（1） PHP中的类与对象简介 PHP 5完全重写了对象模型以得到更佳性能和更多特性,具有完整的对象模型。  PHP 对待对象的方式与引用和句柄相同，即每个变量都持有对象的引用，而不是整个对象的拷贝。">
+<meta property="og:description" content="类与对象（1） PHP 5完全重写了对象模型以得到更佳性能和更多特性,具有完整的对象模型。 PHP 对待对象的方式与引用和句柄相同，即每个变量都持有对象的引用，而不是整个对象的拷贝。 我们都知道PHP对象赋值默认情况下是通过引用传递的，但这并不完全正确。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-16T14:31:53.631Z">
+<meta property="og:updated_time" content="2018-07-16T14:36:24.944Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PHP基础整理（三）">
-<meta name="twitter:description" content="类与对象（1） PHP中的类与对象简介 PHP 5完全重写了对象模型以得到更佳性能和更多特性,具有完整的对象模型。  PHP 对待对象的方式与引用和句柄相同，即每个变量都持有对象的引用，而不是整个对象的拷贝。">
+<meta name="twitter:description" content="类与对象（1） PHP 5完全重写了对象模型以得到更佳性能和更多特性,具有完整的对象模型。 PHP 对待对象的方式与引用和句柄相同，即每个变量都持有对象的引用，而不是整个对象的拷贝。 我们都知道PHP对象赋值默认情况下是通过引用传递的，但这并不完全正确。">
 
 
 
@@ -363,7 +363,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,299 字
+                  1,401 字
                 </span>
               
 
@@ -400,9 +400,9 @@
       
 
       
-        <p>类与对象（1）</p>
+        <p>类与对象（1）<br> PHP 5完全重写了对象模型以得到更佳性能和更多特性,具有完整的对象模型。<br> PHP 对待对象的方式与引用和句柄相同，即每个变量都持有对象的引用，而不是整个对象的拷贝。<br> 我们都知道PHP对象赋值默认情况下是通过引用传递的，但这并不完全正确。<br> <a id="more"></a></p>
 <h2 id="PHP中的类与对象"><a href="#PHP中的类与对象" class="headerlink" title="PHP中的类与对象"></a>PHP中的类与对象</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p> PHP 5完全重写了对象模型以得到更佳性能和更多特性,具有完整的对象模型。</p>
-<p> PHP 对待对象的方式与引用和句柄相同，即每个变量都持有对象的引用，而不是整个对象的拷贝。<br> <a id="more"></a><br> 我们都知道PHP对象赋值默认情况下是通过引用传递的，但这并不完全正确。</p>
+<p> PHP 对待对象的方式与引用和句柄相同，即每个变量都持有对象的引用，而不是整个对象的拷贝。<br> 我们都知道PHP对象赋值默认情况下是通过引用传递的，但这并不完全正确。</p>
 <p> 比如：</p>
  <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $i = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$a = <span class="keyword">new</span> A();</span><br><span class="line"></span><br><span class="line">$b = $a ;  <span class="comment">//此时，$a,$b是同一个标识符的拷贝，即 ($a) = ($b) = &lt;id&gt;</span></span><br><span class="line"></span><br><span class="line">$c = &amp;$a; <span class="comment">//此时，$a,$b是引用 即 ($c,$d) = &lt;id&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">($obj)</span></span>&#123;</span><br><span class="line">    $obj-&gt;i = <span class="number">2</span> ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo($a);  <span class="comment">//此时传递$a 对象，是标识符拷贝 ，即  // ($obj) = ($e) = &lt;id&gt;</span></span><br></pre></td></tr></table></figure>
 <p> ###类型提示</p>
@@ -675,7 +675,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">7.7k</span>
+    <span title="Site words total count">8.0k</span>
   
 </div>
 
