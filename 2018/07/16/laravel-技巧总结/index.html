@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="laravel,orm,关联模型," />
+  <meta name="keywords" content="技巧总结," />
 
 
 
@@ -79,18 +79,20 @@
 
 
 
-<meta name="description" content="在lavaral中可以直接使用DB查询构建器写sql关联语句，其实挺方便，程序执行效率也会更高。ORM主要应该使用于关联查询比较多的情景。">
-<meta name="keywords" content="laravel,orm,关联模型">
+<meta name="description" content="一些使用laravel时用到的一些小技巧">
+<meta name="keywords" content="技巧总结">
 <meta property="og:type" content="article">
-<meta property="og:title" content="laravel Eloquent ORM 模型关联 使用总结">
-<meta property="og:url" content="http://yangcp.me/2018/07/16/laravel-Eloquent-ORM-模型关联-使用总结/index.html">
+<meta property="og:title" content="laravel 技巧总结">
+<meta property="og:url" content="http://yangcp.me/2018/07/16/laravel-技巧总结/index.html">
 <meta property="og:site_name" content="YCP个人博客">
-<meta property="og:description" content="在lavaral中可以直接使用DB查询构建器写sql关联语句，其实挺方便，程序执行效率也会更高。ORM主要应该使用于关联查询比较多的情景。">
+<meta property="og:description" content="一些使用laravel时用到的一些小技巧">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-16T13:50:32.675Z">
+<meta property="og:image" content="http://yangcp.me/uploads/53811c8df312660ada9423ec853ae1c5.png">
+<meta property="og:updated_time" content="2018-07-16T14:28:35.143Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="laravel Eloquent ORM 模型关联 使用总结">
-<meta name="twitter:description" content="在lavaral中可以直接使用DB查询构建器写sql关联语句，其实挺方便，程序执行效率也会更高。ORM主要应该使用于关联查询比较多的情景。">
+<meta name="twitter:title" content="laravel 技巧总结">
+<meta name="twitter:description" content="一些使用laravel时用到的一些小技巧">
+<meta name="twitter:image" content="http://yangcp.me/uploads/53811c8df312660ada9423ec853ae1c5.png">
 
 
 
@@ -120,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yangcp.me/2018/07/16/laravel-Eloquent-ORM-模型关联-使用总结/"/>
+  <link rel="canonical" href="http://yangcp.me/2018/07/16/laravel-技巧总结/"/>
 
 
 
 
 
-  <title>laravel Eloquent ORM 模型关联 使用总结 | YCP个人博客</title>
+  <title>laravel 技巧总结 | YCP个人博客</title>
   
 
 
@@ -297,7 +299,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yangcp.me/2018/07/16/laravel-Eloquent-ORM-模型关联-使用总结/">
+    <link itemprop="mainEntityOfPage" href="http://yangcp.me/2018/07/16/laravel-技巧总结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="YCP">
@@ -314,7 +316,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">laravel Eloquent ORM 模型关联 使用总结</h1>
+          <h1 class="post-title" itemprop="name headline">laravel 技巧总结</h1>
         
 
         <div class="post-meta">
@@ -326,7 +328,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-16T21:05:02+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-16T22:22:49+08:00">
                 2018-07-16
               </time>
             
@@ -336,28 +338,6 @@
             
           </span>
 
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/laravel/" itemprop="url" rel="index">
-                    <span itemprop="name">laravel</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -385,7 +365,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  785 字
+                  995 字
                 </span>
               
 
@@ -401,7 +381,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  3 分钟
+                  4 分钟
                 </span>
               
             </div>
@@ -422,77 +402,54 @@
       
 
       
-        <p>在lavaral中可以直接使用DB查询构建器写sql关联语句，其实挺方便，程序执行效率也会更高。ORM主要应该使用于关联查询比较多的情景。<br><a id="more"></a></p>
-<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>laravel当中主要有以下几种关联关系：</p>
-<ul>
-<li>一对一</li>
-<li>一对多</li>
-<li>多对多</li>
-<li>远程一对多</li>
-<li>多态关联</li>
-<li>多对多的多态关联</li>
-</ul>
-<p>主要是前3种关联用的多。返回的数据是集合类型。</p>
-<h2 id="定义关联关系"><a href="#定义关联关系" class="headerlink" title="定义关联关系"></a>定义关联关系</h2><h3 id="简单定义使用"><a href="#简单定义使用" class="headerlink" title="简单定义使用"></a>简单定义使用</h3><p>在模型中定义一个函数，比如：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Users</span> <span class="keyword">extends</span> <span class="title">Base</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $table = <span class="string">'blog_admin'</span>;</span><br><span class="line">    <span class="keyword">protected</span> $dateFormat = <span class="string">'U'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 关联模型</span></span><br><span class="line"><span class="comment">     * 属于该用户的身份。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">roles</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;belongsToMany(<span class="string">'App\Models\Admin\Role'</span>,<span class="string">'blog_admin_role'</span>,<span class="string">'admin_id'</span>,<span class="string">'role_id'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+        <p>一些使用laravel时用到的一些小技巧</p>
+<a id="more"></a>
+<h2 id="添加自定义函数"><a href="#添加自定义函数" class="headerlink" title="添加自定义函数"></a>添加自定义函数</h2><p>建立文件夹，放在app目录下，比如：  </p>
+<p><img src="http://yangcp.me/uploads/53811c8df312660ada9423ec853ae1c5.png" alt="\QQ截图20171116183742.png">  </p>
+<p>然后再 conposer.json文件中的自动加载项加入你添加的自定义文件：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="string">"autoload"</span>: &#123;</span><br><span class="line">        <span class="string">"classmap"</span>: [</span><br><span class="line">            <span class="string">"database"</span></span><br><span class="line">        ],</span><br><span class="line">        <span class="string">"files"</span>:[</span><br><span class="line">            <span class="string">"app/Helpers/Helpers.php"</span></span><br><span class="line">        ],</span><br><span class="line">        <span class="string">"psr-4"</span>: &#123;</span><br><span class="line">            <span class="string">"App\\"</span>: <span class="string">"app/"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure>
+<p>  然后运行：</p>
+<p>  <code>composer dump-autoload</code></p>
+<h2 id="开发项目必备"><a href="#开发项目必备" class="headerlink" title="开发项目必备"></a>开发项目必备</h2><p>  1.ide-hlper</p>
+<p>  <code>composer require --dev barryvdh/laravel-ide-helper</code></p>
+<p>  然后在</p>
+<p>  app/Providers/AppServiceProvider.php file, 添加</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">register</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;app-&gt;environment() !== <span class="string">'production'</span>) &#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;app-&gt;register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2.laravel-debugbar</p>
+<p>1). 使用 Composer 安装该扩展包：</p>
+<p><code>composer require barryvdh/laravel-debugbar</code></p>
+<p>2). 安装完成后，修改 config/app.php 在 providers 数组内追加 Debugbar 的 Provider</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="string">'providers'</span> =&gt; [</span><br><span class="line">    ...</span><br><span class="line">    Barryvdh\Debugbar\ServiceProvider::class,</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
+<p>同时在 aliases 数组内追加如下内容</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="string">'aliases'</span> =&gt; [</span><br><span class="line">    ...</span><br><span class="line">    <span class="string">'Debugbar'</span> =&gt; Barryvdh\Debugbar\Facade::class,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>3). 接下来运行以下命令生成此扩展包的配置文件 config/debugbar.php：</p>
+<p>  <code>php artisan vendor:publish --provider=&quot;Barryvdh\Debugbar\ServiceProvider&quot;</code>  </p>
+<p>  打开 <code>config/debugbar.php</code>，将 enabled 的值设置为：</p>
+<p>   <code>&#39;enabled&#39; =&gt; env(&#39;APP_DEBUG&#39;, false),</code><br>   修改完以后, Debugbar 分析器的启动状态将由 .env文件中 APP_DEBUG 值决定。</p>
+<h2 id="加密解密函数"><a href="#加密解密函数" class="headerlink" title="加密解密函数"></a>加密解密函数</h2><p> laravel 当中提供了两种加密解密方式</p>
+<p> ###encrypt和decrypt</p>
+<p> 你可以使用辅助函数 encrypt 来加密一个值。所有加密值都使用 OpenSSL 与 AES-256-CBC 来进行加密。此外，所有加密过的值都会使用消息认证码（MAC）进行签名，以检测加密字符串是否被篡改过：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Http</span>\<span class="title">Controllers</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">User</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Http</span>\<span class="title">Request</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Http</span>\<span class="title">Controllers</span>\<span class="title">Controller</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserController</span> <span class="keyword">extends</span> <span class="title">Controller</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 存储用户保密信息</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span>  Request  $request</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span>  int  $id</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> Response</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">storeSecret</span><span class="params">(Request $request, $id)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $user = User::findOrFail($id);</span><br><span class="line"></span><br><span class="line">        $user-&gt;fill([</span><br><span class="line">            <span class="string">'secret'</span> =&gt; encrypt($request-&gt;secret)</span><br><span class="line">        ])-&gt;save();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="无序列化加密"><a href="#无序列化加密" class="headerlink" title="无序列化加密"></a>无序列化加密</h4><p>加密值在加密期间通过 serialize 传递，这允许对象和数组的加密。因此，接收加密值的非PHP客户端将需要 unserialize 数据。如果想在不序列化的情况下加密和解密值，可以使用 Crypt Facade 的 encryptString 和 decryptString 方法：</p>
+<p><code>use Illuminate\Support\Facades\Crypt;</code></p>
+<p><code>$encrypted = Crypt::encryptString(&#39;Hello world.&#39;);</code></p>
+<p><code>$decrypted = Crypt::decryptString($encrypted);</code></p>
+<h4 id="解密一个值"><a href="#解密一个值" class="headerlink" title="解密一个值"></a>解密一个值</h4><p>你可以使用辅助函数 decrypt 来解密一个值。如果该值不能被正确解密，例如当 MAC 无效时，会抛出异常 Illuminate\Contracts\Encryption\DecryptException：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Contracts</span>\<span class="title">Encryption</span>\<span class="title">DecryptException</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    $decrypted = decrypt($encryptedValue);</span><br><span class="line">&#125; <span class="keyword">catch</span> (DecryptException $e) &#123;</span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="哈希"><a href="#哈希" class="headerlink" title="哈希"></a>哈希</h3><p>Laravel Hash Facade 提供安全的 Bcrypt 哈希保存用户密码。 如果应用程序中使用了 Laravel 内置的 <code>LoginController</code> 和 <code>RegisterController</code> 类，它们将自动使用 Bcrypt 进行注册和身份验证</p>
 <blockquote>
-<p>使用:按正常查询数据，然后在后面跟上roles属性就行了。需要注意的是，必须是单条记录才能直接使用roles属性。</p>
+<p>如果用到了laravel auth认证模块，默认是采用这种加密方式</p>
 </blockquote>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$data-&gt;roles;</span><br></pre></td></tr></table></figure>
-<p> 多条记录需要遍历：<br> <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">foreach</span>($data <span class="keyword">as</span> $v)&#123;</span><br><span class="line">   $v-&gt;roles;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="关联关系"><a href="#关联关系" class="headerlink" title="关联关系"></a>关联关系</h3><blockquote>
-<p>每种关联关系都有正向关联和反向关联</p>
-</blockquote>
-<h4 id="一对一"><a href="#一对一" class="headerlink" title="一对一"></a>一对一</h4><p>正向：</p>
-<p><code>$this-&gt;hasOne(&#39;要关联的模型名&#39;,&#39;foreign_key&#39;,&#39;local_key&#39;);</code> </p>
-<p>反向：</p>
-<p><code>$this-&gt;belongsTo(&#39;要关联的模型名&#39;,&#39;local_key&#39;,&#39;foreign_key&#39;);</code></p>
-<blockquote>
-<p>foreign_key:关联模型名对应的外键</p>
-</blockquote>
-<blockquote>
-<p>local_key:本模型被关联的ID</p>
-</blockquote>
-<h4 id="一对多"><a href="#一对多" class="headerlink" title="一对多"></a>一对多</h4><p>正向：</p>
-<p><code>$this-&gt;hasMany(&#39;要关联的模型名&#39;,&#39;foreign_key&#39;,&#39;local_key&#39;);</code> </p>
-<p>反向：</p>
-<p><code>$this-&gt;belongsTo(&#39;要关联的模型名&#39;,&#39;local_key&#39;,&#39;foreign_key&#39;);</code></p>
-<blockquote>
-<p>foreign_key:关联模型名对应的外键</p>
-</blockquote>
-<blockquote>
-<p>local_key:本模型被关联的ID</p>
-</blockquote>
-<p>比如：一个分类对应多篇文章，一个文章只属于一个分类，我在文章模型中定义</p>
-<p>正向关联：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 关联模型</span></span><br><span class="line"><span class="comment"> * 属于该文章的分类。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">cat</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;hasMany(<span class="string">'App\Models\Admin\Cat'</span>,<span class="string">'id'</span>,<span class="string">'cat_id'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>反向关联：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 关联模型</span></span><br><span class="line"><span class="comment"> * 属于该文章的分类。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">cat</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;belongsTo(<span class="string">'App\Models\Admin\Cat'</span>,<span class="string">'cat_id'</span>,<span class="string">'id'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>总结来说,第一个参数就是外键，无论正向反向关联，这里填写数据表中的外键即可</p>
-</blockquote>
-<h4 id="多对多"><a href="#多对多" class="headerlink" title="多对多"></a>多对多</h4><p>比如一个管理员和角色多对多，中间表明为blog_admin_role,可以这样定义：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 关联模型</span></span><br><span class="line"><span class="comment">     * 属于该用户的身份。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">roles</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;belongsToMany(<span class="string">'App\Models\Admin\Role'</span>,<span class="string">'blog_admin_role'</span>,<span class="string">'admin_id'</span>,<span class="string">'role_id'</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="插入-amp-更新关联模型"><a href="#插入-amp-更新关联模型" class="headerlink" title="插入 &amp; 更新关联模型"></a>插入 &amp; 更新关联模型</h2><h3 id="插入关联模型"><a href="#插入关联模型" class="headerlink" title="插入关联模型"></a>插入关联模型</h3><p>首先需要获取到模型，比如，添加一片文章，然后添加标签</p>
-<p>添加文章</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$this_article = <span class="keyword">$this</span>-&gt;create($data);</span><br></pre></td></tr></table></figure>
-<p>添加标签</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$this_article-&gt;tag()-&gt;attach($tags_id);</span><br></pre></td></tr></table></figure>
-<h3 id="移除关联模型"><a href="#移除关联模型" class="headerlink" title="移除关联模型"></a>移除关联模型</h3><p>获取文章</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$this_article = <span class="keyword">$this</span>-&gt;find($id);</span><br></pre></td></tr></table></figure>
-<p>移除标签</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$this_article-&gt;tag()-&gt;detach($tags_id);</span><br></pre></td></tr></table></figure>
-<h3 id="更新关联模型"><a href="#更新关联模型" class="headerlink" title="更新关联模型"></a>更新关联模型</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$this_article-&gt;tag()-&gt;sync($tags_id);</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>sync方法会接受一组数据，他会保存新添加的数据，移除删除掉的数据。</p>
-</blockquote>
-<p>以上便是简单使用orm后，自己的一些理解。</p>
-<p>—-更新（2017/12/24）</p>
-<h3 id="多对多添加更新中间表"><a href="#多对多添加更新中间表" class="headerlink" title="多对多添加更新中间表"></a>多对多添加更新中间表</h3><p>当多对多中间表需要添加额外字段，可以这样做</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$this_article-&gt;tag()-&gt;attach($tags_id,[<span class="string">'key'</span>=&gt;$value]);</span><br></pre></td></tr></table></figure>
-<p>或者将$tags_id改造成以下格式（假如额外字段位tag_val）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[ &apos;1&apos;=&gt;[&apos;tag_val&apos;=&gt;&apos;tag_1&apos;],</span><br><span class="line">  &apos;2&apos;=&gt;[&apos;tag_val&apos;=&gt;&apos;tag_2&apos;]</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-<p>  参考：</p>
-<p>  <a href="http://laravelacademy.org/post/6996.html" target="_blank" rel="noopener">http://laravelacademy.org/post/6996.html</a></p>
-<p>  – END</p>
+<h4 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h4><p>你可以通过调用 Hash Facade 的 make 方法来填写密码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Http</span>\<span class="title">Controllers</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Http</span>\<span class="title">Request</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Support</span>\<span class="title">Facades</span>\<span class="title">Hash</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Http</span>\<span class="title">Controllers</span>\<span class="title">Controller</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UpdatePasswordController</span> <span class="keyword">extends</span> <span class="title">Controller</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *  更新用户密码</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span>  Request  $request</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> Response</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">update</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// Validate the new password length...</span></span><br><span class="line"></span><br><span class="line">        $request-&gt;user()-&gt;fill([</span><br><span class="line">            <span class="string">'password'</span> =&gt; Hash::make($request-&gt;newPassword)</span><br><span class="line">        ])-&gt;save();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>make 方法还能使用 rounds 选项来管理 bcrypt 哈希算法的加密系数。然而，大多数应用程序还是能接受默认值的：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$hashed = Hash::make(<span class="string">'password'</span>, [</span><br><span class="line">    <span class="string">'rounds'</span> =&gt; <span class="number">12</span></span><br><span class="line">]);</span><br></pre></td></tr></table></figure>
+<h4 id="根据哈希值验证密码"><a href="#根据哈希值验证密码" class="headerlink" title="根据哈希值验证密码"></a>根据哈希值验证密码</h4><p>check 方法可以验证给定的纯文本字符串对应于给定的散列。 如果使用 Laravel 内置的 LoginController，则不需要直接使用该方法，因为该控制器会自动调用此方法：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> (Hash::check(<span class="string">'plain-text'</span>, $hashedPassword)) &#123;</span><br><span class="line">    <span class="comment">// 密码对比...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="检查密码是否需要重新加密"><a href="#检查密码是否需要重新加密" class="headerlink" title="检查密码是否需要重新加密"></a>检查密码是否需要重新加密</h4><p><code>needsRehash</code> 函数允许你检查已加密的密码所使用的加密系数是否被修改：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> (Hash::needsRehash($hashed)) &#123;</span><br><span class="line">    $hashed = Hash::make(<span class="string">'plain-text'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>###PHPSTORM最新注册码</p>
+<p><a href="http://www.0-php.com:1017" target="_blank" rel="noopener">http://www.0-php.com:1017</a>  –2018/3/12（可用）</p>
 
       
     </div>
@@ -513,7 +470,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yangcp.me/2018/07/16/laravel-Eloquent-ORM-模型关联-使用总结/" title="laravel Eloquent ORM 模型关联 使用总结">http://yangcp.me/2018/07/16/laravel-Eloquent-ORM-模型关联-使用总结/</a>
+    <a href="http://yangcp.me/2018/07/16/laravel-技巧总结/" title="laravel 技巧总结">http://yangcp.me/2018/07/16/laravel-技巧总结/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -528,11 +485,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/laravel/" rel="tag"># laravel</a>
-          
-            <a href="/tags/orm/" rel="tag"># orm</a>
-          
-            <a href="/tags/关联模型/" rel="tag"># 关联模型</a>
+            <a href="/tags/技巧总结/" rel="tag"># 技巧总结</a>
           
         </div>
       
@@ -545,14 +498,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2018/07/16/GIT常用命令/" rel="next" title="GIT常用命令">
+                <i class="fa fa-chevron-left"></i> GIT常用命令
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/07/16/利用php反射机制-获取权限/" rel="prev" title="利用php反射机制  获取权限">
-                利用php反射机制  获取权限 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/07/16/laravel中的服务容器/" rel="prev" title="laravel中的服务容器">
+                laravel中的服务容器 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -704,7 +661,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义关联关系"><span class="nav-number">2.</span> <span class="nav-text">定义关联关系</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简单定义使用"><span class="nav-number">2.1.</span> <span class="nav-text">简单定义使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关联关系"><span class="nav-number">2.2.</span> <span class="nav-text">关联关系</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一对一"><span class="nav-number">2.2.1.</span> <span class="nav-text">一对一</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一对多"><span class="nav-number">2.2.2.</span> <span class="nav-text">一对多</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多对多"><span class="nav-number">2.2.3.</span> <span class="nav-text">多对多</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#插入-amp-更新关联模型"><span class="nav-number">3.</span> <span class="nav-text">插入 &amp; 更新关联模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#插入关联模型"><span class="nav-number">3.1.</span> <span class="nav-text">插入关联模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#移除关联模型"><span class="nav-number">3.2.</span> <span class="nav-text">移除关联模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更新关联模型"><span class="nav-number">3.3.</span> <span class="nav-text">更新关联模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多对多添加更新中间表"><span class="nav-number">3.4.</span> <span class="nav-text">多对多添加更新中间表</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#添加自定义函数"><span class="nav-number">1.</span> <span class="nav-text">添加自定义函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开发项目必备"><span class="nav-number">2.</span> <span class="nav-text">开发项目必备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加密解密函数"><span class="nav-number">3.</span> <span class="nav-text">加密解密函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#无序列化加密"><span class="nav-number">3.0.1.</span> <span class="nav-text">无序列化加密</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解密一个值"><span class="nav-number">3.0.2.</span> <span class="nav-text">解密一个值</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哈希"><span class="nav-number">3.1.</span> <span class="nav-text">哈希</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基本用法"><span class="nav-number">3.1.1.</span> <span class="nav-text">基本用法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#根据哈希值验证密码"><span class="nav-number">3.1.2.</span> <span class="nav-text">根据哈希值验证密码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#检查密码是否需要重新加密"><span class="nav-number">3.1.3.</span> <span class="nav-text">检查密码是否需要重新加密</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>

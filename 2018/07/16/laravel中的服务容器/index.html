@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="IOC,依赖注入,控制反转," />
 
 
 
@@ -79,16 +79,18 @@
 
 
 
-<meta name="description" content="YCP个人博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="YCP个人博客">
-<meta property="og:url" content="http://yangcp.me/tags/关联模型/index.html">
+<meta name="description" content="控制反转（IoC）和依赖注入（DI）">
+<meta name="keywords" content="IOC,依赖注入,控制反转">
+<meta property="og:type" content="article">
+<meta property="og:title" content="laravel中的服务容器">
+<meta property="og:url" content="http://yangcp.me/2018/07/16/laravel中的服务容器/index.html">
 <meta property="og:site_name" content="YCP个人博客">
-<meta property="og:description" content="YCP个人博客">
+<meta property="og:description" content="控制反转（IoC）和依赖注入（DI）">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-16T14:28:03.264Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="YCP个人博客">
-<meta name="twitter:description" content="YCP个人博客">
+<meta name="twitter:title" content="laravel中的服务容器">
+<meta name="twitter:description" content="控制反转（IoC）和依赖注入（DI）">
 
 
 
@@ -118,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yangcp.me/tags/关联模型/"/>
+  <link rel="canonical" href="http://yangcp.me/2018/07/16/laravel中的服务容器/"/>
 
 
 
 
 
-  <title>标签: 关联模型 | YCP个人博客</title>
+  <title>laravel中的服务容器 | YCP个人博客</title>
   
 
 
@@ -143,7 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -281,54 +283,267 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>关联模型<small>标签</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yangcp.me/2018/07/16/laravel中的服务容器/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="YCP">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YCP个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/07/16/laravel-Eloquent-ORM-模型关联-使用总结/" itemprop="url">
-              
-                <span itemprop="name">laravel Eloquent ORM 模型关联 使用总结</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">laravel中的服务容器</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-07-16T21:05:02+08:00"
-              content="2018-07-16" >
-          07-16
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-16T22:24:35+08:00">
+                2018-07-16
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,306 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  5 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>控制反转（IoC）和依赖注入（DI）</p>
+<a id="more"></a>
+<h2 id="IoC-容器-——-Laravel-的核心"><a href="#IoC-容器-——-Laravel-的核心" class="headerlink" title="IoC 容器 —— Laravel 的核心"></a>IoC 容器 —— Laravel 的核心</h2><h3 id="laravel-的请求生命周期"><a href="#laravel-的请求生命周期" class="headerlink" title="laravel 的请求生命周期"></a>laravel 的请求生命周期</h3><p>几乎所有php框架，或者对php程序来说，都是单一入口，都是以index.php开始的。那么laravel的</p>
+<p>入口文件都干了些什么事呢？</p>
+<p>所有请求通过web服务器（apapache/nignx）引导至 public/index.php。</p>
+<p>第一件事就是从bootstrap/app.php脚本中检索laravel应用程序的实例。</p>
+<h4 id="引入app-php（创建一个新的应用）"><a href="#引入app-php（创建一个新的应用）" class="headerlink" title="引入app.php（创建一个新的应用）"></a>引入app.php（创建一个新的应用）</h4><p><code>$app = require_once __DIR__.&#39;/../bootstrap/app.php&#39;;</code></p>
+<p>app.php文件当中，第一件事就是创建一个新的实例;</p>
+<p><code>$app = new Illuminate\Foundation\Application(
+    realpath(__DIR__.&#39;/../&#39;)
+);</code></p>
+<h5 id="实例化Application"><a href="#实例化Application" class="headerlink" title="实例化Application"></a>实例化Application</h5>  <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">Application</span> <span class="keyword">extends</span> <span class="title">Container</span> <span class="keyword">implements</span> <span class="title">ApplicationContract</span>, <span class="title">HttpKernelInterface</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">   <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($basePath = null)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> ($basePath) &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;setBasePath($basePath);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;registerBaseBindings();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;registerBaseServiceProviders();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;registerCoreContainerAliases();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  实例化的时候干了4件事</p>
+<ul>
+<li>绑定当前实例路径  </li>
+<li>注册基本绑定  </li>
+<li>注册所有基本服务提供者  </li>
+<li>注册所有核心依赖到容器中  </li>
+</ul>
+<p>#####(2)将重要的接口绑定到容器</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$app-&gt;singleton(</span><br><span class="line">    Illuminate\Contracts\Http\Kernel::class,    App\Http\Kernel::class</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">$app-&gt;singleton(</span><br><span class="line">    Illuminate\Contracts\Console\Kernel::class,</span><br><span class="line">    App\Console\Kernel::class</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">$app-&gt;singleton(</span><br><span class="line">    Illuminate\Contracts\Debug\ExceptionHandler::class,</span><br><span class="line">    App\Exceptions\Handler::class</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>绑定单例到容器（http,kernel,debug）</p>
+</blockquote>
+<p>#####(3)返回应用程序(当前实例)</p>
+<h4 id="启动应用程序"><a href="#启动应用程序" class="headerlink" title="启动应用程序"></a>启动应用程序</h4><p><code>$kernel = $app-&gt;make(Illuminate\Contracts\Http\Kernel::class);</code></p>
+<p>这里 <code>Illuminate\Contracts\Http\Kernel::class</code>只是一个接口，这里的$app-&gt;make()</p>
+<p>这里有深入研究  <a href="https://laravel-china.org/topics/1372/understanding-of-laravel-implementation-process-five-make" target="_blank" rel="noopener">Laravel 执行流程（五）之 认识 Make</a></p>
+<p>简单来说就是从容器中解析给定的类型。那么这行代码可以理解为实例化位于app/Http/Kernel.php这个类。</p>
+<h5 id="HTTP／控制器内核"><a href="#HTTP／控制器内核" class="headerlink" title="HTTP／控制器内核"></a>HTTP／控制器内核</h5><p>所有请求都会Http的核心类（kernel）中的handle方法处理</p>
+<p>这个handle方法长这个样子</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">handle</span><span class="params">($request)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            $request-&gt;enableHttpMethodParameterOverride();</span><br><span class="line"></span><br><span class="line">            $response = <span class="keyword">$this</span>-&gt;sendRequestThroughRouter($request);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (<span class="keyword">Exception</span> $e) &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;reportException($e);</span><br><span class="line"></span><br><span class="line">            $response = <span class="keyword">$this</span>-&gt;renderException($request, $e);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable $e) &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;reportException($e = <span class="keyword">new</span> FatalThrowableError($e));</span><br><span class="line"></span><br><span class="line">            $response = <span class="keyword">$this</span>-&gt;renderException($request, $e);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;app[<span class="string">'events'</span>]-&gt;dispatch(</span><br><span class="line">            <span class="keyword">new</span> Events\RequestHandled($request, $response)</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> $response;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>简单来说就是创建了一个新的HTTP内核实例，并且实例化了一些重要的组件</p>
+</blockquote>
+<p>应用程序的请求类型将传入的请求发送到 HTTP 内核或控制台内核。而这两个内核是用来作为所</p>
+<p>有请求都要通过的中心位置。一个处理http请求，一个处理控制台请求。我们一般用到的是HTTP</p>
+<p>内核。</p>
+<p><code>$response = $kernel-&gt;handle(
+    $request = Illuminate\Http\Request::capture()
+);</code><br>实例化了kernel传入了请求类</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Request</span> <span class="keyword">extends</span> <span class="title">SymfonyRequest</span> <span class="keyword">implements</span> <span class="title">Arrayable</span>, <span class="title">ArrayAccess</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>继承了symfony的Request然后实现了一些接口。</p>
+<blockquote>
+<p>从请求入口后面就可以开始处理自己业务逻辑了</p>
+</blockquote>
+<h4 id="返回"><a href="#返回" class="headerlink" title="返回"></a>返回</h4><p><code>$response-&gt;send();</code></p>
+<h3 id="服务容器与服务提供器"><a href="#服务容器与服务提供器" class="headerlink" title="服务容器与服务提供器"></a>服务容器与服务提供器</h3><h4 id="服务提供器"><a href="#服务提供器" class="headerlink" title="服务提供器"></a>服务提供器</h4><p>  最重要的内核引导操作之一是加载应用程序的 服务提供器。应用程序的所有服务提供器都在 config/app.php 配置文件的 providers 数组中配置。首先，所有提供器都会调用 register 方法，接着，由 boot 方法负责调用所有被注册提供器。</p>
+<p>服务提供器负责引导所有框架的各种组件，如数据库、队列、验证和路由组件。也就是说，框架提供的每个功能都它们来引导并配置。因此也可以说，服务提供器是整个 Laravel 引导过程中最重要的方面。</p>
+<blockquote>
+<p>简单来说就是在容器中注册需要的类</p>
+</blockquote>
+<h4 id="服务容器"><a href="#服务容器" class="headerlink" title="服务容器"></a>服务容器</h4><p>服务容器通过构造函数或者某些情况下通过 set 方法将类依赖注入到类中。说得专业点就是用于管理类依赖和执行依赖注入的强大工具</p>
+<h5 id="依赖注入与控制反转"><a href="#依赖注入与控制反转" class="headerlink" title="依赖注入与控制反转"></a>依赖注入与控制反转</h5><blockquote>
+<p>我的理解：当一个类A需要实例化另一个类B，我们不在类A里面实例化，让其他类(专门的)来实例化,这个就叫控制反转。那怎么把实例化的类B放到类A,可以通过构造函数,或者set方法注入，这个就叫依赖注入。</p>
+</blockquote>
+<p>在php当中一般使用类型提示注入依赖，比如管理员控制器需要注入，角色和权限</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AdminController</span> <span class="keyword">extends</span> <span class="title">controller</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $user;</span><br><span class="line">    <span class="keyword">protected</span> $role;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(UserServices $userServices,RoleServices $roleServices)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;user=$userServices;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;role=$roleServices;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这里的<code>UserService</code>,<code>RoleServices</code>为接口</p>
+</blockquote>
+<p>在laravel中服务容器有一个强大的功能，就是将接口绑定到给定实现。如果需要用到服务容器，一般是注入接口，如果不是就接口，也就没有必要使用了。直接注入就行了，可以使用Repository模式，事实证明，服务容器很麻烦，如果不是超大型项目，根本没有必要使用。</p>
+<p>Laravel 的核心就是一个 IoC 容器，高级的IOC容器，他会根据类的依赖需求，自动在注册、绑定的一堆实例中搜寻符合的依赖需求，并自动注入到构造函数参数中去。这种自动搜寻依赖需求的功能，是通过反射（Reflection）实现的。</p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    YCP
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yangcp.me/2018/07/16/laravel中的服务容器/" title="laravel中的服务容器">http://yangcp.me/2018/07/16/laravel中的服务容器/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://ycp19940225.github.io/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/IOC/" rel="tag"># IOC</a>
+          
+            <a href="/tags/依赖注入/" rel="tag"># 依赖注入</a>
+          
+            <a href="/tags/控制反转/" rel="tag"># 控制反转</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/16/laravel-技巧总结/" rel="next" title="laravel 技巧总结">
+                <i class="fa fa-chevron-left"></i> laravel 技巧总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -336,6 +551,15 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zODA3NC8xNDYwNA=="></div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -356,8 +580,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -431,6 +664,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#IoC-容器-——-Laravel-的核心"><span class="nav-number">1.</span> <span class="nav-text">IoC 容器 —— Laravel 的核心</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#laravel-的请求生命周期"><span class="nav-number">1.1.</span> <span class="nav-text">laravel 的请求生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#引入app-php（创建一个新的应用）"><span class="nav-number">1.1.1.</span> <span class="nav-text">引入app.php（创建一个新的应用）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#实例化Application"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">实例化Application</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动应用程序"><span class="nav-number">1.1.2.</span> <span class="nav-text">启动应用程序</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#HTTP／控制器内核"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">HTTP／控制器内核</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#返回"><span class="nav-number">1.1.3.</span> <span class="nav-text">返回</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务容器与服务提供器"><span class="nav-number">1.2.</span> <span class="nav-text">服务容器与服务提供器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#服务提供器"><span class="nav-number">1.2.1.</span> <span class="nav-text">服务提供器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#服务容器"><span class="nav-number">1.2.2.</span> <span class="nav-text">服务容器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#依赖注入与控制反转"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">依赖注入与控制反转</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -600,6 +849,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -628,6 +881,17 @@
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 

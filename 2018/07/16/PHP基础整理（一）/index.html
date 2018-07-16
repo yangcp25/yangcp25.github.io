@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="php基础,php," />
 
 
 
@@ -79,16 +79,21 @@
 
 
 
-<meta name="description" content="YCP个人博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="YCP个人博客">
-<meta property="og:url" content="http://yangcp.me/tags/关联模型/index.html">
+<meta name="description" content="PHP赋值语句的引用传递与按值传递">
+<meta name="keywords" content="php基础,php">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP基础整理（一）">
+<meta property="og:url" content="http://yangcp.me/2018/07/16/PHP基础整理（一）/index.html">
 <meta property="og:site_name" content="YCP个人博客">
-<meta property="og:description" content="YCP个人博客">
+<meta property="og:description" content="PHP赋值语句的引用传递与按值传递">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yangcp.me/uploads/3bff61b1afa432471b03b8f6a8746949.png">
+<meta property="og:image" content="http://yangcp.me/uploads/d1bb327088bfcced0b76ffe4663a9561.png">
+<meta property="og:updated_time" content="2018-07-16T14:27:12.072Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="YCP个人博客">
-<meta name="twitter:description" content="YCP个人博客">
+<meta name="twitter:title" content="PHP基础整理（一）">
+<meta name="twitter:description" content="PHP赋值语句的引用传递与按值传递">
+<meta name="twitter:image" content="http://yangcp.me/uploads/3bff61b1afa432471b03b8f6a8746949.png">
 
 
 
@@ -118,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="http://yangcp.me/tags/关联模型/"/>
+  <link rel="canonical" href="http://yangcp.me/2018/07/16/PHP基础整理（一）/"/>
 
 
 
 
 
-  <title>标签: 关联模型 | YCP个人博客</title>
+  <title>PHP基础整理（一） | YCP个人博客</title>
   
 
 
@@ -143,7 +148,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -281,54 +286,244 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>关联模型<small>标签</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yangcp.me/2018/07/16/PHP基础整理（一）/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="YCP">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YCP个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/07/16/laravel-Eloquent-ORM-模型关联-使用总结/" itemprop="url">
-              
-                <span itemprop="name">laravel Eloquent ORM 模型关联 使用总结</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">PHP基础整理（一）</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-07-16T21:05:02+08:00"
-              content="2018-07-16" >
-          07-16
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-16T22:14:28+08:00">
+                2018-07-16
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  977 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  4 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>PHP赋值语句的引用传递与按值传递<br><a id="more"></a></p>
+<h2 id="赋值语句的引用传递与按值传递"><a href="#赋值语句的引用传递与按值传递" class="headerlink" title="赋值语句的引用传递与按值传递"></a>赋值语句的引用传递与按值传递</h2><p>　　之前对于php当中的引用传递与按值传递，并没有深入了解。</p>
+<p>  　php中对变量赋值有2种方式：</p>
+<ol>
+<li>按值传递</li>
+<li>引用传递</li>
+</ol>
+<p>　　这2个主要应用于变量或者函数赋值，计数赋值用于对象赋值。</p>
+<p>  ###按值传递<br>  简单来说就是将变量进行复制，然后开辟一块新的内存空间存储。比如：</p>
+  <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$b = <span class="number">1</span>;</span><br><span class="line">$a = $b;</span><br><span class="line">$a = <span class="number">2</span>;</span><br><span class="line">dd($a,$b);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>结果为 <code>2 1</code></p>
+</blockquote>
+<p>  <code>$a</code>的改变并不会影响<code>$b</code>的数值。变量相当于一个内存中的地址别名，当<code>$a = $b</code>，就开辟一个新的内存空间，将$a地址内存的数据取出来放在$b所指向的地址中。因为是不同的地址内存中，所以互相不会影响。按值赋值php7之前有个copy on write(写时复制)机制，貌似到php7废除了（以待以后考证）。</p>
+<p>  ###引用传递<br>  引用传递则是拷贝一份变量的引用。关于变量的引用，有一篇解释的非常好的文章<a href="http://www.cnblogs.com/mushan/p/4330386.html" target="_blank" rel="noopener">http://www.cnblogs.com/mushan/p/4330386.html</a>。简单来说，php中的变量与值是2个不同的概念，变量存于一个符号表中，并有作用域，而值则在php内部（zend引擎中），存于一个zval结构体当中。</p>
+<p>  <img src="http://yangcp.me/uploads/3bff61b1afa432471b03b8f6a8746949.png" alt="\QQ截图20170815171917.png"></p>
+<blockquote>
+<p>is_ref 代表他是否为引用，是一个bool值，用来标识这个值是否是一个<code>引用</code>。第二个额外字节是<code>refcount</code>，用来表示指向这个值的变量（也称符号即symbol）的个数。如果refcount为0，那么这个值就可以被回收了。</p>
+</blockquote>
+<p>   测试代码如下：<br>  <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$b = <span class="number">1</span>;</span><br><span class="line">$a = $b;</span><br><span class="line">$a = <span class="number">2</span>;</span><br><span class="line">xdebug_debug_zval(<span class="string">'a'</span>);</span><br><span class="line">xdebug_debug_zval(<span class="string">'b'</span>);</span><br><span class="line"></span><br><span class="line">$c = <span class="number">1</span>;</span><br><span class="line">$d = &amp;$c;</span><br><span class="line">$d = <span class="number">2</span>;</span><br><span class="line">xdebug_debug_zval(<span class="string">'c'</span>);</span><br><span class="line">xdebug_debug_zval(<span class="string">'d'</span>);</span><br><span class="line">dd($a,$b);</span><br></pre></td></tr></table></figure></p>
+<p>  测试结果：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">a:</span><br><span class="line">  (refcount=0, is_ref=0)int 2</span><br><span class="line">b:</span><br><span class="line">  (refcount=0, is_ref=0)int 1</span><br><span class="line">c:</span><br><span class="line">  (refcount=2, is_ref=1)int 2</span><br><span class="line">d:</span><br><span class="line">  (refcount=2, is_ref=1)int 2</span><br><span class="line"> 2</span><br><span class="line"> 1</span><br><span class="line"> 2</span><br><span class="line"> 2</span><br></pre></td></tr></table></figure>
+<p>  这里我的php版本为7.0.12，<code>a</code> <code>b</code> 变量的refcount都为0了，这是在php7当中对于在zval的value字段中能保存下的值，不在进行引用计数的原因。这里暂时不深入研究，不然又跑远了。<br>  看一下<code>c</code> <code>d</code> 变量使用应用传递的时候，refcount数量都为2，有2个变量指向它，is_ref为1，这就说明<code>c`</code>d<code>都指向了同一个变量，且变量被标记为引用值。当改变了</code>d<code>的的值，</code>c`也会随之改变，因为2者指向同一个zval容器。</p>
+<h3 id="默认传值方式"><a href="#默认传值方式" class="headerlink" title="默认传值方式"></a>默认传值方式</h3><p>  <img src="http://yangcp.me/uploads/d1bb327088bfcced0b76ffe4663a9561.png" alt="\QQ截图20170816163130.png"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>  搞清楚PHP引用赋值与按值赋值的过程当中，查了很多资料，也让自己由以前对2者模糊的印象，变得清晰。值得注意的是由于PHP版本不同，让自己测试当中遇到一些困难。PHP7数据结构发生了变化，性能也得到了提升。鸟哥的博客当中对这一块也有过解释，但是我自己的环境运行代码，与他得到的结果也不一样，和php手册上的也不一样。</p>
+<p>  总的来说，变量与数组一般都是按值赋值，对象默认是引用传递。当需要修改一个内存存储大量数据的变量，或者需要在函数内部修改变量，并返回修改的变量，使用引用传递（&amp;）。</p>
+<p>  参考资料：</p>
+<ul>
+<li><p>php手册：引用的解释 <a href="http://php.net/manual/zh/language.references.php" target="_blank" rel="noopener">http://php.net/manual/zh/language.references.php</a></p>
+</li>
+<li><p>php手册：引用计数基本知识 <a href="http://php.net/manual/zh/features.gc.refcounting-basics.php" target="_blank" rel="noopener">http://php.net/manual/zh/features.gc.refcounting-basics.php</a></p>
+</li>
+<li><p>鸟哥博客：深入理解PHP原理之变量分离/引用(Variables Separation) <a href="http://www.laruence.com/2008/09/19/520.html" target="_blank" rel="noopener">http://www.laruence.com/2008/09/19/520.html</a></p>
+</li>
+<li><p>php的三种变量赋值方式 <a href="http://blog.csdn.net/sanwenyublog/article/details/13021975" target="_blank" rel="noopener">http://blog.csdn.net/sanwenyublog/article/details/13021975</a></p>
+</li>
+</ul>
+<p>  –END</p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    YCP
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yangcp.me/2018/07/16/PHP基础整理（一）/" title="PHP基础整理（一）">http://yangcp.me/2018/07/16/PHP基础整理（一）/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://ycp19940225.github.io/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/php基础/" rel="tag"># php基础</a>
+          
+            <a href="/tags/php/" rel="tag"># php</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/16/利用php反射机制-获取权限/" rel="next" title="利用php反射机制  获取权限">
+                <i class="fa fa-chevron-left"></i> 利用php反射机制  获取权限
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/16/PHP基础整理（二）/" rel="prev" title="PHP基础整理（二）">
+                PHP基础整理（二） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -336,6 +531,15 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zODA3NC8xNDYwNA=="></div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -356,8 +560,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -431,6 +644,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#赋值语句的引用传递与按值传递"><span class="nav-number">1.</span> <span class="nav-text">赋值语句的引用传递与按值传递</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#默认传值方式"><span class="nav-number">1.1.</span> <span class="nav-text">默认传值方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">1.2.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -600,6 +829,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -628,6 +861,17 @@
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 
