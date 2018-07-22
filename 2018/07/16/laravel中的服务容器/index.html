@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="YCP个人博客">
 <meta property="og:description" content="控制反转（IoC）和依赖注入（DI）几乎所有php框架，或者对php程序来说，都是单一入口，都是以index.php开始的。那么laravel的入口文件都干了些什么事呢？">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-22T11:27:03.801Z">
+<meta property="og:updated_time" content="2018-07-22T11:29:53.479Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="laravel中的服务容器">
 <meta name="twitter:description" content="控制反转（IoC）和依赖注入（DI）几乎所有php框架，或者对php程序来说，都是单一入口，都是以index.php开始的。那么laravel的入口文件都干了些什么事呢？">
@@ -337,6 +337,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -418,13 +440,11 @@
 <li>注册所有基本服务提供者  </li>
 <li>注册所有核心依赖到容器中  </li>
 </ul>
-<p>#####(2)将重要的接口绑定到容器</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$app-&gt;singleton(</span><br><span class="line">    Illuminate\Contracts\Http\Kernel::class,    App\Http\Kernel::class</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">$app-&gt;singleton(</span><br><span class="line">    Illuminate\Contracts\Console\Kernel::class,</span><br><span class="line">    App\Console\Kernel::class</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">$app-&gt;singleton(</span><br><span class="line">    Illuminate\Contracts\Debug\ExceptionHandler::class,</span><br><span class="line">    App\Exceptions\Handler::class</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<h5 id="2-将重要的接口绑定到容器"><a href="#2-将重要的接口绑定到容器" class="headerlink" title="(2)将重要的接口绑定到容器"></a>(2)将重要的接口绑定到容器</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$app-&gt;singleton(</span><br><span class="line">    Illuminate\Contracts\Http\Kernel::class,    App\Http\Kernel::class</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">$app-&gt;singleton(</span><br><span class="line">    Illuminate\Contracts\Console\Kernel::class,</span><br><span class="line">    App\Console\Kernel::class</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">$app-&gt;singleton(</span><br><span class="line">    Illuminate\Contracts\Debug\ExceptionHandler::class,</span><br><span class="line">    App\Exceptions\Handler::class</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>绑定单例到容器（http,kernel,debug）</p>
 </blockquote>
-<p>#####(3)返回应用程序(当前实例)</p>
-<h4 id="启动应用程序"><a href="#启动应用程序" class="headerlink" title="启动应用程序"></a>启动应用程序</h4><p><code>$kernel = $app-&gt;make(Illuminate\Contracts\Http\Kernel::class);</code></p>
+<h5 id="3-返回应用程序-当前实例"><a href="#3-返回应用程序-当前实例" class="headerlink" title="(3)返回应用程序(当前实例)"></a>(3)返回应用程序(当前实例)</h5><h4 id="启动应用程序"><a href="#启动应用程序" class="headerlink" title="启动应用程序"></a>启动应用程序</h4><p><code>$kernel = $app-&gt;make(Illuminate\Contracts\Http\Kernel::class);</code></p>
 <p>这里 <code>Illuminate\Contracts\Http\Kernel::class</code>只是一个接口，这里的$app-&gt;make()</p>
 <p>这里有深入研究  <a href="https://laravel-china.org/topics/1372/understanding-of-laravel-implementation-process-five-make" target="_blank" rel="noopener">Laravel 执行流程（五）之 认识 Make</a></p>
 <p>简单来说就是从容器中解析给定的类型。那么这行代码可以理解为实例化位于app/Http/Kernel.php这个类。</p>
@@ -615,7 +635,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -673,7 +693,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#IoC-容器-——-Laravel-的核心"><span class="nav-number">1.</span> <span class="nav-text">IoC 容器 —— Laravel 的核心</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#laravel-的请求生命周期"><span class="nav-number">1.1.</span> <span class="nav-text">laravel 的请求生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#引入app-php（创建一个新的应用）"><span class="nav-number">1.1.1.</span> <span class="nav-text">引入app.php（创建一个新的应用）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#实例化Application"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">实例化Application</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动应用程序"><span class="nav-number">1.1.2.</span> <span class="nav-text">启动应用程序</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#HTTP／控制器内核"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">HTTP／控制器内核</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#返回"><span class="nav-number">1.1.3.</span> <span class="nav-text">返回</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务容器与服务提供器"><span class="nav-number">1.2.</span> <span class="nav-text">服务容器与服务提供器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#服务提供器"><span class="nav-number">1.2.1.</span> <span class="nav-text">服务提供器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#服务容器"><span class="nav-number">1.2.2.</span> <span class="nav-text">服务容器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#依赖注入与控制反转"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">依赖注入与控制反转</span></a></li></ol></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#IoC-容器-——-Laravel-的核心"><span class="nav-number">1.</span> <span class="nav-text">IoC 容器 —— Laravel 的核心</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#laravel-的请求生命周期"><span class="nav-number">1.1.</span> <span class="nav-text">laravel 的请求生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#引入app-php（创建一个新的应用）"><span class="nav-number">1.1.1.</span> <span class="nav-text">引入app.php（创建一个新的应用）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#实例化Application"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">实例化Application</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-将重要的接口绑定到容器"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">(2)将重要的接口绑定到容器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-返回应用程序-当前实例"><span class="nav-number">1.1.1.3.</span> <span class="nav-text">(3)返回应用程序(当前实例)</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动应用程序"><span class="nav-number">1.1.2.</span> <span class="nav-text">启动应用程序</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#HTTP／控制器内核"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">HTTP／控制器内核</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#返回"><span class="nav-number">1.1.3.</span> <span class="nav-text">返回</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务容器与服务提供器"><span class="nav-number">1.2.</span> <span class="nav-text">服务容器与服务提供器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#服务提供器"><span class="nav-number">1.2.1.</span> <span class="nav-text">服务提供器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#服务容器"><span class="nav-number">1.2.2.</span> <span class="nav-text">服务容器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#依赖注入与控制反转"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">依赖注入与控制反转</span></a></li></ol></li></ol></li></ol></li></ol></div>
             
 
           </div>
