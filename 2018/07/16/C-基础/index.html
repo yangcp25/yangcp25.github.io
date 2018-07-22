@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="laravel,orm,关联模型," />
 
 
 
@@ -79,16 +79,25 @@
 
 
 
-<meta name="description" content="YCP个人博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="YCP个人博客">
-<meta property="og:url" content="http://yangcp.me/page/2/index.html">
+<meta name="description" content="基础特性C++ 完全支持面向对象的程序设计，包括面向对象开发的四大特性：  封装 抽象 继承 多态  标准库标准的 C++ 由三个重要部分组成：  核心语言，提供了所有构件块，包括变量、数据类型和常量，等等。 C++ 标准库，提供了大量的函数，用于操作文件、字符串等。 标准模板库（STL），提供了大量的方法，用于操作数据结构等。  语法C++ 基本语法 对象  类  方法  即时变量  三字符组三">
+<meta name="keywords" content="laravel,orm,关联模型">
+<meta property="og:type" content="article">
+<meta property="og:title" content="laravel Eloquent ORM 模型关联 使用总结">
+<meta property="og:url" content="http://yangcp.me/2018/07/16/C-基础/index.html">
 <meta property="og:site_name" content="YCP个人博客">
-<meta property="og:description" content="YCP个人博客">
+<meta property="og:description" content="基础特性C++ 完全支持面向对象的程序设计，包括面向对象开发的四大特性：  封装 抽象 继承 多态  标准库标准的 C++ 由三个重要部分组成：  核心语言，提供了所有构件块，包括变量、数据类型和常量，等等。 C++ 标准库，提供了大量的函数，用于操作文件、字符串等。 标准模板库（STL），提供了大量的方法，用于操作数据结构等。  语法C++ 基本语法 对象  类  方法  即时变量  三字符组三">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yangcp.me/uploads/92d510123c8d584df544243f704d5785.png">
+<meta property="og:image" content="http://yangcp.me/uploads/ed141babe5da33b551fe92af5e1bacde.png">
+<meta property="og:image" content="http://yangcp.me/uploads/3fcc5ddb84ec3cdc949fec18c5dc9bc0.png">
+<meta property="og:image" content="http://yangcp.me/uploads/92d510123c8d584df544243f704d5785.png">
+<meta property="og:image" content="http://yangcp.me/uploads/ed141babe5da33b551fe92af5e1bacde.png">
+<meta property="og:image" content="http://yangcp.me/uploads/3fcc5ddb84ec3cdc949fec18c5dc9bc0.png">
+<meta property="og:updated_time" content="2018-07-22T11:39:52.057Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="YCP个人博客">
-<meta name="twitter:description" content="YCP个人博客">
+<meta name="twitter:title" content="laravel Eloquent ORM 模型关联 使用总结">
+<meta name="twitter:description" content="基础特性C++ 完全支持面向对象的程序设计，包括面向对象开发的四大特性：  封装 抽象 继承 多态  标准库标准的 C++ 由三个重要部分组成：  核心语言，提供了所有构件块，包括变量、数据类型和常量，等等。 C++ 标准库，提供了大量的函数，用于操作文件、字符串等。 标准模板库（STL），提供了大量的方法，用于操作数据结构等。  语法C++ 基本语法 对象  类  方法  即时变量  三字符组三">
+<meta name="twitter:image" content="http://yangcp.me/uploads/92d510123c8d584df544243f704d5785.png">
 
 
 
@@ -118,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://yangcp.me/page/2/"/>
+  <link rel="canonical" href="http://yangcp.me/2018/07/16/C-基础/"/>
 
 
 
 
 
-  <title>YCP个人博客</title>
+  <title>laravel Eloquent ORM 模型关联 使用总结 | YCP个人博客</title>
   
 
 
@@ -143,8 +152,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -281,540 +289,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yangcp.me/2018/07/16/PHP基础整理（二）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="YCP">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="YCP个人博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/16/PHP基础整理（二）/" itemprop="url">PHP基础整理（二）</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-16T22:16:02+08:00">
-                2018-07-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/PHP基础/" itemprop="url" rel="index">
-                    <span itemprop="name">PHP基础</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  393 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  2 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>这里记录一些PHP常见的，自己以前理解不到位的一些小问题。时不时会更新<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/07/16/PHP基础整理（二）/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yangcp.me/2018/07/16/PHP基础整理（一）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="YCP">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="YCP个人博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/16/PHP基础整理（一）/" itemprop="url">PHP基础整理（一）</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-16T22:14:28+08:00">
-                2018-07-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/PHP基础/" itemprop="url" rel="index">
-                    <span itemprop="name">PHP基础</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1,038 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  4 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>PHP赋值语句的引用传递与按值传递<br>之前对于php当中的引用传递与按值传递，并没有深入了解<br> php中对变量赋值有2种方式：<br>这2个主要应用于变量或者函数赋值，计数赋值用于对象赋值。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/07/16/PHP基础整理（一）/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yangcp.me/2018/07/16/利用php反射机制-获取权限/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="YCP">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="YCP个人博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/16/利用php反射机制-获取权限/" itemprop="url">利用php反射机制  获取权限</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-16T21:59:07+08:00">
-                2018-07-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/PHP/" itemprop="url" rel="index">
-                    <span itemprop="name">PHP</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1,194 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  6 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><em>之前实现了一个基于角色的权限控制，需要后台手动添加权限，当系统庞大的时候，一条条的加无疑是一场灾难…后来看到公司的权限系统利用php反射机制获取权限，感觉很不错，自己查了下php的反射机制，应用在了自己博客中。</em></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/07/16/利用php反射机制-获取权限/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
 
   
 
@@ -844,9 +321,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/16/C-基础/" itemprop="url">laravel Eloquent ORM 模型关联 使用总结</a></h1>
+          <h1 class="post-title" itemprop="name headline">laravel Eloquent ORM 模型关联 使用总结</h1>
         
 
         <div class="post-meta">
@@ -900,6 +375,11 @@
           
 
           
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
 
           
             <div class="post-wordcount">
@@ -949,9 +429,7 @@
       
 
       
-        
-          
-            <h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><h4 id="特性"><a href="#特性" class="headerlink" title="特性"></a><strong>特性</strong></h4><p>C++ 完全支持面向对象的程序设计，包括面向对象开发的四大特性：</p>
+        <h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><h4 id="特性"><a href="#特性" class="headerlink" title="特性"></a><strong>特性</strong></h4><p>C++ 完全支持面向对象的程序设计，包括面向对象开发的四大特性：</p>
 <ul>
 <li>封装</li>
 <li>抽象</li>
@@ -1883,8 +1361,6 @@
 <p>x, y 和 z 都是指向长整型 long int 的指针。</p>
 </blockquote>
 
-          
-        
       
     </div>
     
@@ -1896,194 +1372,65 @@
     
 
     
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    YCP
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yangcp.me/2018/07/16/C-基础/" title="laravel Eloquent ORM 模型关联 使用总结">http://yangcp.me/2018/07/16/C-基础/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://ycp19940225.github.io/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yangcp.me/2018/07/16/laravel-Eloquent-ORM-模型关联-使用总结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="YCP">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="YCP个人博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/16/laravel-Eloquent-ORM-模型关联-使用总结/" itemprop="url">laravel Eloquent ORM 模型关联 使用总结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-16T21:05:02+08:00">
-                2018-07-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/laravel/" itemprop="url" rel="index">
-                    <span itemprop="name">laravel</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
+            <a href="/tags/laravel/" rel="tag"># laravel</a>
           
-
+            <a href="/tags/orm/" rel="tag"># orm</a>
           
-            
+            <a href="/tags/关联模型/" rel="tag"># 关联模型</a>
           
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  806 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  3 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
         </div>
-      </header>
-    
+      
 
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+      
       
       
 
       
-        
-          <p>在lavaral中可以直接使用DB查询构建器写sql关联语句，其实挺方便，程序执行效率也会更高。ORM主要应该使用于关联查询比较多的情景。<br>主要是前3种关联用的多。返回的数据是集合类型。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/07/16/laravel-Eloquent-ORM-模型关联-使用总结/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/16/laravel-Eloquent-ORM-模型关联-使用总结/" rel="next" title="laravel Eloquent ORM 模型关联 使用总结">
+                <i class="fa fa-chevron-left"></i> laravel Eloquent ORM 模型关联 使用总结
+              </a>
+            
           </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
 
-    
+          <span class="post-nav-divider"></span>
 
-    
-
-    
-
-    <footer class="post-footer">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/16/利用php反射机制-获取权限/" rel="prev" title="利用php反射机制  获取权限">
+                利用php反射机制  获取权限 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
       
 
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -2093,14 +1440,11 @@
   </article>
 
 
-    
-  </section>
 
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
-  </nav>
-
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -2108,6 +1452,15 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zODA3NC8xNDYwNA=="></div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -2128,8 +1481,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -2203,6 +1565,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础"><span class="nav-number">1.</span> <span class="nav-text">基础</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#特性"><span class="nav-number">1.0.1.</span> <span class="nav-text">特性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#标准库"><span class="nav-number">1.0.2.</span> <span class="nav-text">标准库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#语法"><span class="nav-number">1.0.3.</span> <span class="nav-text">语法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#C-基本语法"><span class="nav-number">1.0.3.1.</span> <span class="nav-text">C++ 基本语法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#三字符组"><span class="nav-number">1.0.3.2.</span> <span class="nav-text">三字符组</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-数据类型"><span class="nav-number">1.0.4.</span> <span class="nav-text">C++ 数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#基本的内置类型"><span class="nav-number">1.0.4.1.</span> <span class="nav-text">基本的内置类型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#typedef-声明"><span class="nav-number">1.0.4.2.</span> <span class="nav-text">typedef 声明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#枚举类型"><span class="nav-number">1.0.4.3.</span> <span class="nav-text">枚举类型</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-变量类型"><span class="nav-number">1.0.5.</span> <span class="nav-text">C++ 变量类型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#C-中的变量定义"><span class="nav-number">1.0.5.1.</span> <span class="nav-text">C++ 中的变量定义</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#C-中的变量声明"><span class="nav-number">1.0.5.2.</span> <span class="nav-text">C++ 中的变量声明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#C-修饰符类型"><span class="nav-number">1.0.5.3.</span> <span class="nav-text">C++ 修饰符类型</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-存储类"><span class="nav-number">1.0.6.</span> <span class="nav-text">C++ 存储类</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#extern-存储类"><span class="nav-number">1.0.6.1.</span> <span class="nav-text">extern 存储类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#thread-local-存储类"><span class="nav-number">1.0.6.2.</span> <span class="nav-text">thread_local 存储类</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-循环"><span class="nav-number">1.0.7.</span> <span class="nav-text">C++ 循环</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#循环类型"><span class="nav-number">1.0.7.1.</span> <span class="nav-text">循环类型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#循环控制语句"><span class="nav-number">1.0.7.2.</span> <span class="nav-text">循环控制语句</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-函数"><span class="nav-number">1.0.8.</span> <span class="nav-text">C++ 函数</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#函数参数"><span class="nav-number">1.0.8.1.</span> <span class="nav-text">函数参数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Lambda-函数与表达式"><span class="nav-number">1.0.8.2.</span> <span class="nav-text">Lambda 函数与表达式</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-数组"><span class="nav-number">1.0.9.</span> <span class="nav-text">C++ 数组</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#C-数组-1"><span class="nav-number">1.0.9.1.</span> <span class="nav-text">C++ 数组</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#声明数组"><span class="nav-number">1.0.9.2.</span> <span class="nav-text">声明数组</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#初始化数组"><span class="nav-number">1.0.9.3.</span> <span class="nav-text">初始化数组</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#访问数组元素"><span class="nav-number">1.0.9.4.</span> <span class="nav-text">访问数组元素</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#C-中数组详解"><span class="nav-number">1.0.9.5.</span> <span class="nav-text">C++ 中数组详解</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-字符串"><span class="nav-number">1.0.10.</span> <span class="nav-text">C++ 字符串</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#C-风格字符串"><span class="nav-number">1.0.10.1.</span> <span class="nav-text">C 风格字符串</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#C-中的-String-类"><span class="nav-number">1.0.10.2.</span> <span class="nav-text">C++ 中的 String 类</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#十C-指针"><span class="nav-number">1.0.11.</span> <span class="nav-text">十C++ 指针</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#什么是指针？"><span class="nav-number">1.0.11.1.</span> <span class="nav-text">什么是指针？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#C-中使用指针"><span class="nav-number">1.0.11.2.</span> <span class="nav-text">C++ 中使用指针</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#C-指针详解"><span class="nav-number">1.0.11.3.</span> <span class="nav-text">C++ 指针详解</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#十C-引用"><span class="nav-number">1.0.12.</span> <span class="nav-text">十C++ 引用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#C-引用-vs-指针"><span class="nav-number">1.0.12.1.</span> <span class="nav-text">C++ 引用 vs 指针</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#C-中创建引用"><span class="nav-number">1.0.12.2.</span> <span class="nav-text">C++ 中创建引用</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#十-C-日期-amp-时间"><span class="nav-number">1.0.13.</span> <span class="nav-text">十 C++ 日期 &amp; 时间</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#当前日期和时间"><span class="nav-number">1.0.13.1.</span> <span class="nav-text">当前日期和时间</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#使用结构-tm-格式化时间"><span class="nav-number">1.0.13.2.</span> <span class="nav-text">使用结构 tm 格式化时间</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#十-C-基本的输入输出"><span class="nav-number">1.0.14.</span> <span class="nav-text">十  C++ 基本的输入输出</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#I-O-库头文件"><span class="nav-number">1.0.14.1.</span> <span class="nav-text">I/O 库头文件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#标准输出流（cout）"><span class="nav-number">1.0.14.2.</span> <span class="nav-text">标准输出流（cout）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#标准输入流（cin）"><span class="nav-number">1.0.14.3.</span> <span class="nav-text">标准输入流（cin）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#标准错误流（cerr）"><span class="nav-number">1.0.14.4.</span> <span class="nav-text">标准错误流（cerr）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#标准日志流（clog）"><span class="nav-number">1.0.14.5.</span> <span class="nav-text">标准日志流（clog）</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#十-C-数据结构"><span class="nav-number">1.0.15.</span> <span class="nav-text">十   C++ 数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#定义结构"><span class="nav-number">1.0.15.1.</span> <span class="nav-text">定义结构</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#访问结构成员"><span class="nav-number">1.0.15.2.</span> <span class="nav-text">访问结构成员</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#结构作为函数参数"><span class="nav-number">1.0.15.3.</span> <span class="nav-text">结构作为函数参数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#结构作为函数参数-1"><span class="nav-number">1.0.15.4.</span> <span class="nav-text">结构作为函数参数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#指向结构的指针"><span class="nav-number">1.0.15.5.</span> <span class="nav-text">指向结构的指针</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#typedef-关键字"><span class="nav-number">1.0.15.6.</span> <span class="nav-text">typedef 关键字</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基础-1"><span class="nav-number">2.</span> <span class="nav-text">基础</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#特性-1"><span class="nav-number">2.0.1.</span> <span class="nav-text">特性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#标准库-1"><span class="nav-number">2.0.2.</span> <span class="nav-text">标准库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#语法-1"><span class="nav-number">2.0.3.</span> <span class="nav-text">语法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#C-基本语法-1"><span class="nav-number">2.0.3.1.</span> <span class="nav-text">C++ 基本语法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#三字符组-1"><span class="nav-number">2.0.3.2.</span> <span class="nav-text">三字符组</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-数据类型-1"><span class="nav-number">2.0.4.</span> <span class="nav-text">C++ 数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#基本的内置类型-1"><span class="nav-number">2.0.4.1.</span> <span class="nav-text">基本的内置类型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#typedef-声明-1"><span class="nav-number">2.0.4.2.</span> <span class="nav-text">typedef 声明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#枚举类型-1"><span class="nav-number">2.0.4.3.</span> <span class="nav-text">枚举类型</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-变量类型-1"><span class="nav-number">2.0.5.</span> <span class="nav-text">C++ 变量类型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#C-中的变量定义-1"><span class="nav-number">2.0.5.1.</span> <span class="nav-text">C++ 中的变量定义</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#C-中的变量声明-1"><span class="nav-number">2.0.5.2.</span> <span class="nav-text">C++ 中的变量声明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#C-修饰符类型-1"><span class="nav-number">2.0.5.3.</span> <span class="nav-text">C++ 修饰符类型</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-存储类-1"><span class="nav-number">2.0.6.</span> <span class="nav-text">C++ 存储类</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#extern-存储类-1"><span class="nav-number">2.0.6.1.</span> <span class="nav-text">extern 存储类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#thread-local-存储类-1"><span class="nav-number">2.0.6.2.</span> <span class="nav-text">thread_local 存储类</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-循环-1"><span class="nav-number">2.0.7.</span> <span class="nav-text">C++ 循环</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#循环控制语句-1"><span class="nav-number">2.0.7.1.</span> <span class="nav-text">循环控制语句</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-函数-1"><span class="nav-number">2.0.8.</span> <span class="nav-text">C++ 函数</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#函数参数-1"><span class="nav-number">2.0.8.1.</span> <span class="nav-text">函数参数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Lambda-函数与表达式-1"><span class="nav-number">2.0.8.2.</span> <span class="nav-text">Lambda 函数与表达式</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-数组-2"><span class="nav-number">2.0.9.</span> <span class="nav-text">C++ 数组</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#声明数组-1"><span class="nav-number">2.0.9.1.</span> <span class="nav-text">声明数组</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#初始化数组-1"><span class="nav-number">2.0.9.2.</span> <span class="nav-text">初始化数组</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#访问数组元素-1"><span class="nav-number">2.0.9.3.</span> <span class="nav-text">访问数组元素</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#C-中数组详解-1"><span class="nav-number">2.0.9.4.</span> <span class="nav-text">C++ 中数组详解</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-字符串-1"><span class="nav-number">2.0.10.</span> <span class="nav-text">C++ 字符串</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#C-风格字符串-1"><span class="nav-number">2.0.10.1.</span> <span class="nav-text">C 风格字符串</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#C-中的-String-类-1"><span class="nav-number">2.0.10.2.</span> <span class="nav-text">C++ 中的 String 类</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-指针"><span class="nav-number">2.0.11.</span> <span class="nav-text">C++ 指针</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#什么是指针？-1"><span class="nav-number">2.0.11.1.</span> <span class="nav-text">什么是指针？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#C-中使用指针-1"><span class="nav-number">2.0.11.2.</span> <span class="nav-text">C++ 中使用指针</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#C-指针详解-1"><span class="nav-number">2.0.11.3.</span> <span class="nav-text">C++ 指针详解</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-引用"><span class="nav-number">2.0.12.</span> <span class="nav-text">C++ 引用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#C-引用-vs-指针-1"><span class="nav-number">2.0.12.1.</span> <span class="nav-text">C++ 引用 vs 指针</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#C-中创建引用-1"><span class="nav-number">2.0.12.2.</span> <span class="nav-text">C++ 中创建引用</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-日期-amp-时间"><span class="nav-number">2.0.13.</span> <span class="nav-text">C++ 日期 &amp; 时间</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#当前日期和时间-1"><span class="nav-number">2.0.13.1.</span> <span class="nav-text">当前日期和时间</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#使用结构-tm-格式化时间-1"><span class="nav-number">2.0.13.2.</span> <span class="nav-text">使用结构 tm 格式化时间</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-基本的输入输出"><span class="nav-number">2.0.14.</span> <span class="nav-text">C++ 基本的输入输出</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#I-O-库头文件-1"><span class="nav-number">2.0.14.1.</span> <span class="nav-text">I/O 库头文件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#标准输出流（cout）-1"><span class="nav-number">2.0.14.2.</span> <span class="nav-text">标准输出流（cout）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#标准输入流（cin）-1"><span class="nav-number">2.0.14.3.</span> <span class="nav-text">标准输入流（cin）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#标准错误流（cerr）-1"><span class="nav-number">2.0.14.4.</span> <span class="nav-text">标准错误流（cerr）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#标准日志流（clog）-1"><span class="nav-number">2.0.14.5.</span> <span class="nav-text">标准日志流（clog）</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-数据结构"><span class="nav-number">2.0.15.</span> <span class="nav-text">C++ 数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#定义结构-1"><span class="nav-number">2.0.15.1.</span> <span class="nav-text">定义结构</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#访问结构成员-1"><span class="nav-number">2.0.15.2.</span> <span class="nav-text">访问结构成员</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#结构作为函数参数-2"><span class="nav-number">2.0.15.3.</span> <span class="nav-text">结构作为函数参数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#结构作为函数参数-3"><span class="nav-number">2.0.15.4.</span> <span class="nav-text">结构作为函数参数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#指向结构的指针-1"><span class="nav-number">2.0.15.5.</span> <span class="nav-text">指向结构的指针</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#typedef-关键字-1"><span class="nav-number">2.0.15.6.</span> <span class="nav-text">typedef 关键字</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -2372,6 +1750,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -2400,6 +1782,17 @@
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 
