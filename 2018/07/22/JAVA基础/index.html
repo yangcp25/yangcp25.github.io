@@ -1,0 +1,1991 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="基础,JAVA," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一个Java程序可以认为是一系列对象的集合，而这些对象通过调用彼此的方法来协同工作。">
+<meta name="keywords" content="基础,JAVA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JAVA基础">
+<meta property="og:url" content="http://yangcp.me/2018/07/22/JAVA基础/index.html">
+<meta property="og:site_name" content="YCP个人博客">
+<meta property="og:description" content="一个Java程序可以认为是一系列对象的集合，而这些对象通过调用彼此的方法来协同工作。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yangcp.me/uploads/b8a14ffa0ce8a8b1a8c3903b705a1935.png">
+<meta property="og:image" content="http://yangcp.me/uploads/95e6293fd7d5f9a373ea8ffa5bfca541.png">
+<meta property="og:image" content="http://yangcp.me/uploads/5d6217409e4d6e086bc9df355fdb69d0.png">
+<meta property="og:image" content="http://yangcp.me/uploads/b522774604cffa8373158b5171c3f104.png">
+<meta property="og:image" content="http://yangcp.me/uploads/1446963809d32a555f69a1ee3c5de735.png">
+<meta property="og:image" content="http://yangcp.me/uploads/3034ce582191f8de7343e2705425f342.png">
+<meta property="og:image" content="http://yangcp.me/uploads/4be981d223cfc4171f98cf74fe591943.png">
+<meta property="og:updated_time" content="2018-07-22T13:24:27.066Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JAVA基础">
+<meta name="twitter:description" content="一个Java程序可以认为是一系列对象的集合，而这些对象通过调用彼此的方法来协同工作。">
+<meta name="twitter:image" content="http://yangcp.me/uploads/b8a14ffa0ce8a8b1a8c3903b705a1935.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yangcp.me/2018/07/22/JAVA基础/"/>
+
+
+
+
+
+  <title>JAVA基础 | YCP个人博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">YCP个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">个人博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yangcp.me/2018/07/22/JAVA基础/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="YCP">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YCP个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">JAVA基础</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-22T21:22:25+08:00">
+                2018-07-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  11,832 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  44 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>一个Java程序可以认为是一系列对象的集合，而这些对象通过调用彼此的方法来协同工作。<br><a id="more"></a></p>
+<h2 id="JAVA基础"><a href="#JAVA基础" class="headerlink" title="JAVA基础"></a>JAVA基础</h2><h4 id="一、JAVA基础"><a href="#一、JAVA基础" class="headerlink" title="一、JAVA基础"></a><strong>一、JAVA基础</strong></h4><p>一个Java程序可以认为是一系列对象的集合，而这些对象通过调用彼此的方法来协同工作。</p>
+<ul>
+<li>对象：对象是类的一个实例，有状态和行为</li>
+<li>类：类是一个模板，它描述一类对象的行为和状态。</li>
+<li>方法：方法就是行为，一个类可以有很多方法。逻辑运算、数据修改以及所有动作都是在方法中完成的。</li>
+<li>实例变量：每个对象都有独特的实例变量，对象的状态由这些实例变量的值决定。</li>
+</ul>
+<h5 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a><strong>基本语法</strong></h5><p>编写Java程序时，应注意以下几点：</p>
+<ul>
+<li><p>大小写敏感：Java是大小写敏感的，这就意味着标识符Hello与hello是不同的。</p>
+</li>
+<li><p>类名：对于所有的类来说，类名的首字母应该大写。如果类名由若干单词组成，那么每个单词的首字母应该大写，例如 MyFirstJavaClass 。</p>
+</li>
+<li><p>方法名：所有的方法名都应该以小写字母开头。如果方法名含有若干单词，则后面的每个单词首字母大写。</p>
+</li>
+<li><p>源文件名：源文件名必须和类名相同。当保存文件的时候，应该使用类名作为文件名保存（切记Java是大小写敏感的），文件名的后缀为.java。（如果文件名和类名不相同则会导致编译错误）。</p>
+</li>
+<li><p>主方法入口：所有的Java 程序由public static void main(String []args)方法开始执行。</p>
+</li>
+</ul>
+<h5 id="Java标识符"><a href="#Java标识符" class="headerlink" title="Java标识符"></a><strong>Java标识符</strong></h5><p>Java所有的组成部分都需要名字。类名、变量名以及方法名都被称为标识符。<br>关于Java标识符，有以下几点需要注意：</p>
+<ul>
+<li><p>所有的标识符都应该以字母（A-Z或者a-z）,美元符（$）、或者下划线（_）开始</p>
+</li>
+<li><p>首字符之后可以是字母（A-Z或者a-z）,美元符（$）、下划线（_）或数字的任何字符组合</p>
+</li>
+<li><p>关键字不能用作标识符</p>
+</li>
+<li><p>标识符是大小写敏感的</p>
+</li>
+<li><p>合法标识符举例：age、$salary、_value、__1_value</p>
+</li>
+<li><p>非法标识符举例：123abc、-salary</p>
+</li>
+</ul>
+<h5 id="Java修饰符"><a href="#Java修饰符" class="headerlink" title="Java修饰符"></a><strong>Java修饰符</strong></h5><p>像其他语言一样，Java可以使用修饰符来修饰类中方法和属性。主要有两类修饰符：</p>
+<ul>
+<li>访问控制修饰符 : default, public , protected, private</li>
+<li>非访问控制修饰符 : final, abstract, strictfp</li>
+</ul>
+<h5 id="Java变量"><a href="#Java变量" class="headerlink" title="Java变量"></a><strong>Java变量</strong></h5><p>Java中主要有如下几种类型的变量</p>
+<ul>
+<li><p>局部变量</p>
+</li>
+<li><p>类变量（静态变量）</p>
+</li>
+<li><p>成员变量（非静态变量）</p>
+</li>
+</ul>
+<h5 id="Java数组"><a href="#Java数组" class="headerlink" title="Java数组"></a><strong>Java数组</strong></h5><p>数组是储存在堆上的对象，可以保存多个同类型变量。</p>
+<h5 id="Java枚举"><a href="#Java枚举" class="headerlink" title="Java枚举"></a><strong>Java枚举</strong></h5><p>ava 5.0引入了枚举，枚举限制变量只能是预先设定好的值。使用枚举可以减少代码中的bug。</p>
+<blockquote>
+<p>枚举可以单独声明或者声明在类里面。方法、变量、构造函数也可以在枚举中定义</p>
+</blockquote>
+<h5 id="Java关键字"><a href="#Java关键字" class="headerlink" title="Java关键字"></a><strong>Java关键字</strong></h5><p>下面列出了Java保留字。这些保留字不能用于常量、变量、和任何标识符的名称。</p>
+<p><img src="http://yangcp.me/uploads/b8a14ffa0ce8a8b1a8c3903b705a1935.png" alt="\QQ截图20180408065842.png"></p>
+<p>  <img src="http://yangcp.me/uploads/95e6293fd7d5f9a373ea8ffa5bfca541.png" alt="\QQ截图20180408065914.png"></p>
+<h5 id="继承"><a href="#继承" class="headerlink" title="继承"></a><strong>继承</strong></h5><p>在Java中，一个类可以由其他类派生。如果要创建一个类，而且已经存在一个类具有所需要的属性或方法，那么可以将新创建的类继承该类。<br>利用继承的方法，可以重用已存在类的方法和属性，而不用重写这些代码。被继承的类称为超类（super class），派生类称为子类（subclass）。</p>
+<h5 id="接口"><a href="#接口" class="headerlink" title="接口"></a><strong>接口</strong></h5><p>在Java中，接口可理解为对象间相互通信的协议。接口在继承中扮演着很重要的角色。<br>接口只定义派生要用到的方法，但是方法的具体实现完全取决于派生类。</p>
+<h5 id="Java-源程序与编译型运行区别"><a href="#Java-源程序与编译型运行区别" class="headerlink" title="Java 源程序与编译型运行区别"></a><strong>Java 源程序与编译型运行区别</strong></h5><p><img src="http://yangcp.me/uploads/5d6217409e4d6e086bc9df355fdb69d0.png" alt="\QQ截图20180408070147.png"></p>
+<h4 id="二、Java-对象和类"><a href="#二、Java-对象和类" class="headerlink" title="二、Java 对象和类"></a><strong>二、Java 对象和类</strong></h4><p>Java作为一种面向对象语言。支持以下基本概念：</p>
+<ul>
+<li>多态</li>
+<li>继承</li>
+<li>封装</li>
+<li>抽象</li>
+<li>类</li>
+<li>对象</li>
+<li>实例</li>
+<li>方法</li>
+<li>重载</li>
+</ul>
+<p>对象：对象是类的一个实例（对象不是找个女朋友），有状态和行为。例如，一条狗是一个对象，它的状态有：颜色、名字、品种；行为有：摇尾巴、叫、吃等。</p>
+<p>类：类是一个模板，它描述一类对象的行为和状态。</p>
+<h5 id="Java中的对象"><a href="#Java中的对象" class="headerlink" title="Java中的对象"></a><strong>Java中的对象</strong></h5><p>软件对象有状态和行为。软件对象的状态就是属性，行为通过方法体现。<br>在软件开发中，方法操作对象内部状态的改变，对象的相互调用也是通过方法来完成。</p>
+<h5 id="Java中的类"><a href="#Java中的类" class="headerlink" title="Java中的类"></a><strong>Java中的类</strong></h5><p>实例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Dog</span></span>&#123;</span><br><span class="line">  String breed;</span><br><span class="line">  <span class="keyword">int</span> age;</span><br><span class="line">  String color;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">barking</span><span class="params">()</span></span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">hungry</span><span class="params">()</span></span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">sleeping</span><span class="params">()</span></span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一个类可以包含以下类型变量：</p>
+<ul>
+<li><p>局部变量：在方法、构造方法或者语句块中定义的变量被称为局部变量。变量声明和初始化都是在方法中，方法结束后，变量就会自动销毁。</p>
+</li>
+<li><p>成员变量：成员变量是定义在类中，方法体之外的变量。这种变量在创建对象的时候实例化。成员变量可以被类中方法、构造方法和特定类的语句块访问。</p>
+</li>
+<li><p>类变量：类变量也声明在类中，方法体之外，但必须声明为static类型。</p>
+</li>
+</ul>
+<p>一个类可以拥有多个方法，在上面的例子中：barking()、hungry()和sleeping()都是Dog类的方法</p>
+<h5 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a><strong>构造方法</strong></h5><p>每个类都有构造方法。如果没有显式地为类定义构造方法，Java编译器将会为该类提供一个默认构造方法。<br>在创建一个对象的时候，至少要调用一个构造方法。构造方法的名称必须与类同名，一个类可以有多个构造方法。</p>
+<h5 id="创建对象"><a href="#创建对象" class="headerlink" title="创建对象"></a><strong>创建对象</strong></h5><p>对象是根据类创建的。在Java中，使用关键字new来创建一个新的对象。创建对象需要以下三步：</p>
+<ul>
+<li>声明：声明一个对象，包括对象名称和对象类型。</li>
+<li>实例化：使用关键字new来创建一个对象。</li>
+<li>初始化：使用new创建对象时，会调用构造方法初始化对象。</li>
+</ul>
+<p>实例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Puppy</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Puppy</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"名字是"</span>+name);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String []args)</span> </span>&#123;</span><br><span class="line">		Puppy myPuppy = <span class="keyword">new</span> Puppy(<span class="string">"pipigo"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="访问实例变量和方法"><a href="#访问实例变量和方法" class="headerlink" title="访问实例变量和方法"></a><strong>访问实例变量和方法</strong></h5><p>通过已创建的对象来访问成员变量和成员方法，如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/* 实例化对象 */</span></span><br><span class="line">ObjectReference = <span class="keyword">new</span> Constructor();</span><br><span class="line"><span class="comment">/* 访问类中的变量 */</span></span><br><span class="line">ObjectReference.variableName;</span><br><span class="line"><span class="comment">/* 访问类中的方法 */</span></span><br><span class="line">ObjectReference.MethodName();</span><br></pre></td></tr></table></figure>
+<p>实例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Puppy</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> puppyAge;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Puppy</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"名字是"</span>+name);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">    	puppyAge = age;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"皮皮虾的年纪为"</span>+puppyAge);</span><br><span class="line">		<span class="keyword">return</span> puppyAge;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String []args)</span> </span>&#123;</span><br><span class="line">        Puppy myPuppy = <span class="keyword">new</span> Puppy(<span class="string">"pipigo"</span>);</span><br><span class="line">        myPuppy.setAge(<span class="number">12</span>);</span><br><span class="line">        myPuppy.getAge();</span><br><span class="line">        </span><br><span class="line">        System.out.println(<span class="string">"年纪"</span>+myPuppy.puppyAge);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果:</p>
+<p><code>名字是pipigo
+皮皮虾的年纪为12
+年纪12</code></p>
+<h5 id="源文件声明规则"><a href="#源文件声明规则" class="headerlink" title="源文件声明规则"></a><strong>源文件声明规则</strong></h5><p>当在一个源文件中定义多个类，并且还有import语句和package语句时，要特别注意这些规则。</p>
+<ul>
+<li><p>一个源文件中只能有一个public类</p>
+</li>
+<li><p>一个源文件可以有多个非public类</p>
+</li>
+<li><p>源文件的名称应该和public类的类名保持一致。例如：源文件中public类的类名是Employee，那么源文件应该命名为Employee.java。</p>
+</li>
+<li><p>如果一个类定义在某个包中，那么package语句应该在源文件的首行。</p>
+</li>
+<li><p>如果源文件包含import语句，那么应该放在package语句和类定义之间。如果没有package语句，那么import语句应该在源文件中最前面。</p>
+</li>
+<li><p>import语句和package语句对源文件中定义的所有类都有效。在同一源文件中，不能给不同的类不同的包声明。</p>
+</li>
+<li><p>类有若干种访问级别，并且类也分不同的类型：抽象类和final类等。</p>
+</li>
+</ul>
+<p>除了上面提到的几种类型，Java还有一些特殊的类，如：内部类、匿名类。</p>
+<h5 id="Java包"><a href="#Java包" class="headerlink" title="Java包"></a><strong>Java包</strong></h5><p>包主要用来对类和接口进行分类。当开发Java程序时，可能编写成百上千的类，因此很有必要对类和接口进行分类。</p>
+<h5 id="Import语句"><a href="#Import语句" class="headerlink" title="Import语句"></a><strong>Import语句</strong></h5><p>在Java中，如果给出一个完整的限定名，包括包名、类名，那么Java编译器就可以很容易地定位到源代码或者类。Import语句就是用来提供一个合理的路径，使得编译器可以找到某个类。<br>例如</p>
+<p><code>import java.io.*;</code></p>
+<blockquote>
+<p>命令行将会命令编译器载入java_installation/java/io路径下的所有类</p>
+</blockquote>
+<h4 id="三、Java-基本数据类型"><a href="#三、Java-基本数据类型" class="headerlink" title="三、Java 基本数据类型"></a><strong>三、Java 基本数据类型</strong></h4><p>变量就是申请内存来存储值。也就是说，当创建变量的时候，需要在内存中申请空间。</p>
+<p>内存管理系统根据变量的类型为变量分配存储空间，分配的空间只能用来储存该类型数据。</p>
+<p><img src="http://yangcp.me/uploads/b522774604cffa8373158b5171c3f104.png" alt="\QQ截图20180408084922.png"></p>
+<p> 因此，通过定义不同类型的变量，可以在内存中储存整数、小数或者字符。<br>Java 的两大数据类型:</p>
+<ul>
+<li>内置数据类型</li>
+<li>引用数据类型</li>
+</ul>
+<h5 id="内置数据类型"><a href="#内置数据类型" class="headerlink" title="内置数据类型"></a><strong>内置数据类型</strong></h5><p>ava语言提供了八种基本类型。六种数字类型（四个整数型，两个浮点型），一种字符类型，还有一种布尔型。</p>
+<p><strong>byte：</strong></p>
+<ul>
+<li>byte 数据类型是8位、有符号的，以二进制补码表示的整数；</li>
+<li>最小值是 <code>-128（-2^7）</code>；</li>
+<li>最大值是 <code>127（2^7-1）</code>；</li>
+<li>默认值是 <code>0</code>；</li>
+<li>byte 类型用在大型数组中节约空间，主要代替整数，因为 byte 变量占用的空间只有 int 类型的四分之一；</li>
+<li>例子：byte a = 100，byte b = -50。</li>
+</ul>
+<p><strong> short：</strong></p>
+<ul>
+<li>short 数据类型是 16 位、有符号的以二进制补码表示的整数</li>
+<li>最小值是 <code>-32768（-2^15）</code>；</li>
+<li>最大值是 <code>32767（2^15 - 1）</code>；</li>
+<li>Short 数据类型也可以像 byte 那样节省空间。一个short变量是int型变量所占空间的二分之一；</li>
+<li>默认值是 0；</li>
+<li>例子：<code>short s = 1000，short r = -20000</code>。</li>
+</ul>
+<p><strong>int：</strong></p>
+<ul>
+<li>int 数据类型是32位、有符号的以二进制补码表示的整数；</li>
+<li>最小值是 -2,147,483,648（-2^31）；</li>
+<li>最大值是 2,147,483,647（2^31 - 1）；</li>
+<li>一般地整型变量默认为 int 类型；</li>
+<li>默认值是 0 ；</li>
+<li>例子：<code>int a = 100000, int b = -200000</code>。</li>
+</ul>
+<p><strong>long：</strong></p>
+<ul>
+<li>long 数据类型是 64 位、有符号的以二进制补码表示的整数；</li>
+<li>最小值是 -9,223,372,036,854,775,808（-2^63）；</li>
+<li>最大值是 9,223,372,036,854,775,807（2^63 -1）；</li>
+<li>这种类型主要使用在需要比较大整数的系统上；</li>
+<li>默认值是 0L；</li>
+<li>例子： <code>long a = 100000L，Long b = -200000L</code>。<blockquote>
+<p>“L”理论上不分大小写，但是若写成”l”容易与数字”1”混淆，不容易分辩。所以最好大写。</p>
+</blockquote>
+</li>
+</ul>
+<p><strong>float：</strong></p>
+<ul>
+<li>float 数据类型是单精度、32位、符合IEEE 754标准的浮点数；</li>
+<li>float 在储存大型浮点数组的时候可节省内存空间；</li>
+<li>默认值是 0.0f；</li>
+<li>浮点数不能用来表示精确的值，如货币；</li>
+<li>例子：<code>float f1 = 234.5f</code>。</li>
+</ul>
+<p><strong>double：</strong></p>
+<ul>
+<li>double 数据类型是双精度、64 位、符合IEEE 754标准的浮点数；</li>
+<li>浮点数的默认类型为double类型；</li>
+<li>double类型同样不能表示精确的值，如货币；</li>
+<li>默认值是 0.0d；</li>
+<li>例子：<code>double d1 = 123.4</code>。</li>
+</ul>
+<p><strong>boolean：</strong></p>
+<ul>
+<li>boolean数据类型表示一位的信息；</li>
+<li>只有两个取值：true 和 false；</li>
+<li>这种类型只作为一种标志来记录 true/false 情况；</li>
+<li>默认值是 false；</li>
+<li>例子：<code>boolean one = true</code>。</li>
+</ul>
+<p><strong>char：</strong></p>
+<ul>
+<li>char类型是一个单一的 16 位 Unicode 字符；</li>
+<li>最小值是 \u0000（即为0）；</li>
+<li>最大值是 \uffff（即为65,535）；</li>
+<li>char 数据类型可以储存任何字符；</li>
+<li>例子：<code>char letter = &#39;A&#39;</code>;。</li>
+</ul>
+<blockquote>
+<p>Float和Double的最小值和最大值都是以科学记数法的形式输出的，结尾的”E+数字”表示E之前的数字要乘以10的多少次方。比如3.14E3就是3.14 × 103 =3140，3.14E-3 就是 3.14 x 10-3 =0.00314。<br>实际上，JAVA中还存在另外一种基本类型void，它也有对应的包装类 java.lang.Void，不过我们无法直接对它们进行操作。</p>
+</blockquote>
+<h5 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a><strong>引用类型</strong></h5><ul>
+<li>在Java中，引用类型的变量非常类似于C/C++的指针。引用类型指向一个对象，指向对象的变量是引用变量。这些变量在声明时被指定为一个特定的类型，比如 Employee、Puppy 等。变量一旦声明后，类型就不能被改变了。</li>
+<li>对象、数组都是引用数据类型。</li>
+<li>所有引用类型的默认值都是null。</li>
+<li>一个引用变量可以用来引用任何与之兼容的类型。</li>
+<li>例子：<code>Site site = new Site(&quot;Runoob&quot;)</code>。</li>
+</ul>
+<h5 id="Java-常量"><a href="#Java-常量" class="headerlink" title="Java 常量"></a><strong>Java 常量</strong></h5><p>常量在程序运行时是不能被修改的。</p>
+<p>在 Java 中使用 <code>final</code>关键字来修饰常量，声明方式和变量类似：</p>
+<p><code>final double PI = 3.1415927;</code></p>
+<p>虽然常量名也可以用小写，但为了便于识别，通常使用大写字母表示常量。</p>
+<p>字面量可以赋给任何内置类型的变量。例如：<br><code>byte a = 68;
+char a = &#39;A&#39;</code><br><code>byte、int、long、</code>和<code>short</code>都可以用十进制、16进制以及8进制的方式来表示。</p>
+<p>当使用常量的时候，前缀 0 表示 8 进制，而前缀 0x 代表 16 进制, 例如：<br><code>int decimal = 100;
+int octal = 0144;
+int hexa =  0x64;</code></p>
+<p>和其他语言一样，Java的字符串常量也是包含在两个引号之间的字符序列.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="string">"Hello World"</span></span><br><span class="line"><span class="string">"two\nlines"</span></span><br><span class="line"><span class="string">"\"This is in quotes\""</span></span><br></pre></td></tr></table></figure>
+<p>字符串常量和字符常量都可以包含任何Unicode字符。例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">char a = &apos;\u0001&apos;;</span><br><span class="line">String a = &quot;\u0001&quot;;</span><br></pre></td></tr></table></figure>
+<p>Java语言支持一些特殊的转义字符序列。</p>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>字符含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>\n</td>
+<td>换行 (0x0a)</td>
+</tr>
+<tr>
+<td>\r</td>
+<td>回车 (0x0d)</td>
+</tr>
+<tr>
+<td>\f</td>
+<td>换页符(0x0c)</td>
+</tr>
+<tr>
+<td>\b</td>
+<td>退格 (0x08)</td>
+</tr>
+<tr>
+<td>\0</td>
+<td>空字符 (0x20)</td>
+</tr>
+<tr>
+<td>\s</td>
+<td>字符串</td>
+</tr>
+<tr>
+<td>\t</td>
+<td>制表符</td>
+</tr>
+<tr>
+<td>\”</td>
+<td>双引号</td>
+</tr>
+<tr>
+<td>\’</td>
+<td>单引号</td>
+</tr>
+<tr>
+<td>\</td>
+<td>反斜杠</td>
+</tr>
+<tr>
+<td>\ddd</td>
+<td>八进制字符 (ddd)</td>
+</tr>
+<tr>
+<td>\uxxxx</td>
+<td>16进制Unicode字符 (xxxx)</td>
+</tr>
+</tbody>
+</table>
+<h5 id="自动类型转换"><a href="#自动类型转换" class="headerlink" title="自动类型转换"></a><strong>自动类型转换</strong></h5><p>整型、实型（常量）、字符型数据可以混合运算。运算中，不同类型的数据先转化为同一类型，然后进行运算。<br>转换从低级到高级。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">低  ------------------------------------&gt;  高</span><br><span class="line"></span><br><span class="line"><span class="keyword">byte</span>,<span class="keyword">short</span>,<span class="keyword">char</span>—&gt; <span class="keyword">int</span> —&gt; <span class="keyword">long</span>—&gt; <span class="keyword">float</span> —&gt; <span class="keyword">double</span></span><br></pre></td></tr></table></figure>
+<p>数据类型转换必须满足如下规则：</p>
+<ul>
+<li>1.不能对boolean类型进行类型转换。</li>
+<li>2.不能把对象类型转换成不相关类的对象。</li>
+<li>3.在把容量大的类型转换为容量小的类型时必须使用强制类型转换。</li>
+<li>4.转换过程中可能导致溢出或损失精度<br>因为 byte 类型是 8 位，最大值为127，所以当 int 强制转换为 byte 类型时，值 128 时候就会导致溢出。<br>，例如：<br>int i =128;<br>byte b = (byte)i;</li>
+<li>5.浮点数到整数的转换是通过舍弃小数得到，而不是四舍五入</li>
+</ul>
+<h5 id="自动类型转换-1"><a href="#自动类型转换-1" class="headerlink" title="自动类型转换"></a><strong>自动类型转换</strong></h5><p>必须满足转换前的数据类型的位数要低于转换后的数据类型，例如: short数据类型的位数为16位，就可以自动转换位数为32的int类型，同样float数据类型的位数为32，可以自动转换为64位的double类型。</p>
+<h5 id="强制类型转换"><a href="#强制类型转换" class="headerlink" title="强制类型转换"></a><strong>强制类型转换</strong></h5><ul>
+<li>1.条件是转换的数据类型必须是兼容的。</li>
+<li>2.格式：(type)value type是要强制类型转换后的数据类型</li>
+</ul>
+<h5 id="隐含强制类型转换"><a href="#隐含强制类型转换" class="headerlink" title="隐含强制类型转换"></a><strong>隐含强制类型转换</strong></h5><ul>
+<li>1.整数的默认类型是 int。</li>
+<li>2.浮点型不存在这种情况，因为在定义 float 类型时必须在数字后面跟上 F 或者 f。</li>
+</ul>
+<h4 id="四、Java-变量类型"><a href="#四、Java-变量类型" class="headerlink" title="四、Java 变量类型"></a><strong>四、Java 变量类型</strong></h4><p>在Java语言中，所有的变量在使用前必须声明。声明变量的基本格式如下：</p>
+<p><code>type identifier [ = value][, identifier [= value] ...] ;</code></p>
+<blockquote>
+<p>格式说明：type为Java数据类型。identifier是变量名。可以使用逗号隔开来声明多个同类型变量。</p>
+</blockquote>
+<p>Java语言支持的变量类型有：</p>
+<ul>
+<li>类变量：独立于方法之外的变量，用 static 修饰。</li>
+<li>实例变量：独立于方法之外的变量，不过没有 static 修饰。</li>
+<li>局部变量：类的方法中的变量。</li>
+</ul>
+<h5 id="Java-局部变量"><a href="#Java-局部变量" class="headerlink" title="Java 局部变量"></a><strong>Java 局部变量</strong></h5><ul>
+<li>局部变量声明在方法、构造方法或者语句块中；</li>
+<li>局部变量在方法、构造方法、或者语句块被执行的时候创建，当它们执行完成后，变量将会被销毁；</li>
+<li>访问修饰符不能用于局部变量；</li>
+<li>局部变量只在声明它的方法、构造方法或者语句块中可见；</li>
+<li>局部变量是在栈上分配的。</li>
+<li>局部变量没有默认值，所以局部变量被声明后，必须经过初始化，才可以使用。</li>
+</ul>
+<h5 id="实例变量"><a href="#实例变量" class="headerlink" title="实例变量"></a><strong>实例变量</strong></h5><ul>
+<li><p>实例变量声明在一个类中，但在方法、构造方法和语句块之外；</p>
+</li>
+<li><p>当一个对象被实例化之后，每个实例变量的值就跟着确定；</p>
+</li>
+<li><p>实例变量在对象创建的时候创建，在对象被销毁的时候销毁；</p>
+</li>
+<li><p>实例变量的值应该至少被一个方法、构造方法或者语句块引用，使得外部能够通过这些方式获取实例变量信息；</p>
+</li>
+<li><p>实例变量可以声明在使用前或者使用后；</p>
+</li>
+<li><p>访问修饰符可以修饰实例变量；</p>
+</li>
+<li><p>实例变量对于类中的方法、构造方法或者语句块是可见的。一般情况下应该把实例变量设为私有。通过使用访问修饰符可以使实例变量对子类可见；</p>
+</li>
+<li><p>实例变量具有默认值。数值型变量的默认值是0，布尔型变量的默认值是false，引用类型变量的默认值是null。变量的值可以在声明时指定，也可以在构造方法中指定；</p>
+</li>
+<li><p>实例变量可以直接通过变量名访问。但在静态方法以及其他类中，就应该使用完全限定名：<code>ObejectReference.VariableName</code>。</p>
+</li>
+</ul>
+<h5 id="类变量（静态变量）"><a href="#类变量（静态变量）" class="headerlink" title="类变量（静态变量）"></a><strong>类变量（静态变量）</strong></h5><ul>
+<li>类变量也称为静态变量，在类中以static关键字声明，但必须在方法构造方法和语句块之外。</li>
+<li>无论一个类创建了多少个对象，类只拥有类变量的一份拷贝。</li>
+<li>静态变量除了被声明为常量外很少使用。常量是指声明为public/private，final和static类型的变量。常量初始化后不可改变。</li>
+<li>静态变量储存在静态存储区。经常被声明为常量，很少单独使用static声明变量。</li>
+<li>静态变量在程序开始时创建，在程序结束时销毁。</li>
+<li>与实例变量具有相似的可见性。但为了对类的使用者可见，大多数静态变量声明为public类型。</li>
+<li>默认值和实例变量相似。数值型变量默认值是0，布尔型默认值是false，引用类型默认值是null。变量的值可以在声明的时候指定，也可以在构造方法中指定。此外，静态变量还可以在静态语句块中初始化。</li>
+<li>静态变量可以通过：ClassName.VariableName的方式访问。</li>
+<li>类变量被声明为public static final类型时，类变量名称一般建议使用大写字母。如果静态变量不是public和final类型，其命名方式与实例变量以及局部变量的命名方式一致。</li>
+</ul>
+<blockquote>
+<p>如果其他类想要访问该变量，可以这样访问：<code>Employee.DEPARTMENT</code>。</p>
+</blockquote>
+<h5 id="Java-修饰符"><a href="#Java-修饰符" class="headerlink" title="Java 修饰符"></a><strong>Java 修饰符</strong></h5><p>Java语言提供了很多修饰符，主要分为以下两类：</p>
+<ul>
+<li>访问修饰符</li>
+<li>非访问修饰符</li>
+</ul>
+<p>访问控制修饰符<br>Java中，可以使用访问控制符来保护对类、变量、方法和构造方法的访问。Java 支持 4 种不同的访问权限。</p>
+<ul>
+<li>default (即缺省，什么也不写）: 在同一包内可见，不使用任何修饰符。使用对象：类、接口、变量、方法。</li>
+<li>private : 在同一类内可见。使用对象：变量、方法。 注意：不能修饰类（外部类）</li>
+<li>public : 对所有类可见。使用对象：类、接口、变量、方法</li>
+<li>protected : 对同一包内的类和所有子类可见。使用对象：变量、方法。 注意：不能修饰类（外部类）。</li>
+</ul>
+<h5 id="默认访问修饰符-不使用任何关键字"><a href="#默认访问修饰符-不使用任何关键字" class="headerlink" title="默认访问修饰符-不使用任何关键字"></a><strong>默认访问修饰符-不使用任何关键字</strong></h5><p>使用默认访问修饰符声明的变量和方法，对同一个包内的类是可见的。接口里的变量都隐式声明为 public static final,而接口里的方法默认情况下访问权限为 public。</p>
+<h5 id="私有访问修饰符-private"><a href="#私有访问修饰符-private" class="headerlink" title="私有访问修饰符-private"></a><strong>私有访问修饰符-private</strong></h5><p>私有访问修饰符是最严格的访问级别，所以被声明为 private 的方法、变量和构造方法只能被所属类访问，并且类和接口不能声明为 private。<br>声明为私有访问类型的变量只能通过类中公共的 getter 方法被外部类访问。<br>Private 访问修饰符的使用主要用来隐藏类的实现细节和保护类的数据。</p>
+<h5 id="公有访问修饰符-public"><a href="#公有访问修饰符-public" class="headerlink" title="公有访问修饰符-public"></a><strong>公有访问修饰符-public</strong></h5><p>被声明为 public 的类、方法、构造方法和接口能够被任何其他类访问。</p>
+<p>如果几个相互访问的 public 类分布在不同的包中，则需要导入相应 public 类所在的包。由于类的继承性，类所有的公有方法和变量都能被其子类继承。</p>
+<p>以下函数使用了公有访问控制：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] arguments)</span> </span>&#123;</span><br><span class="line">   <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Java 程序的 main() 方法必须设置成公有的，否则，Java 解释器将不能运行该类</p>
+</blockquote>
+<h5 id="受保护的访问修饰符-protected"><a href="#受保护的访问修饰符-protected" class="headerlink" title="受保护的访问修饰符-protected"></a><strong>受保护的访问修饰符-protected</strong></h5><p>protected 需要从以下两个点来分析说明：</p>
+<ul>
+<li>子类与基类在同一包中：被声明为 protected 的变量、方法和构造器能被同一个包中的任何其他类访问；</li>
+<li>子类与基类不在同一包中：那么在子类中，子类实例可以访问其从基类继承而来的 protected 方法，而不能访问基类实例的protected方法。</li>
+</ul>
+<p>protected 访问修饰符不能修饰类和接口，方法和成员变量能够声明为 protected，但是接口的成员变量和成员方法不能声明为 protected。<br>子类能访问 protected 修饰符声明的方法和变量，这样就能保护不相关的类使用这些方法和变量。</p>
+<h5 id="访问控制和继承"><a href="#访问控制和继承" class="headerlink" title="访问控制和继承"></a><strong>访问控制和继承</strong></h5><p>方法继承的规则：</p>
+<ul>
+<li>父类中声明为 public 的方法在子类中也必须为 public。</li>
+<li>父类中声明为 protected 的方法在子类中要么声明为 protected，要么声明为 public，不能声明为 private。</li>
+<li>父类中声明为 private 的方法，不能够被继承。</li>
+</ul>
+<h5 id="非访问修饰符"><a href="#非访问修饰符" class="headerlink" title="非访问修饰符"></a><strong>非访问修饰符</strong></h5><p>为了实现一些其他的功能，Java 也提供了许多非访问修饰符。</p>
+<p>static 修饰符，用来修饰类方法和类变量。<br>final 修饰符，用来修饰类、方法和变量，final 修饰的类不能够被继承，修饰的方法不能被继承类重新定义，修饰的变量为常量，是不可修改的。<br>abstract 修饰符，用来创建抽象类和抽象方法。<br>synchronized 和 volatile 修饰符，主要用于线程的编程。</p>
+<h5 id="static-修饰符"><a href="#static-修饰符" class="headerlink" title="static 修饰符"></a><strong>static 修饰符</strong></h5><ul>
+<li>静态变量：<br>static 关键字用来声明独立于对象的静态变量，无论一个类实例化多少对象，它的静态变量只有一份拷贝。 静态变量也被称为类变量。局部变量不能被声明为 static 变量。</li>
+<li>静态方法：<br>static 关键字用来声明独立于对象的静态方法。静态方法不能使用类的非静态变量。静态方法从参数列表得到数据，然后计算这些数据。<br>对类变量和方法的访问可以直接使用 classname.variablename 和 classname.methodname 的方式访问。</li>
+</ul>
+<h5 id="final-修饰符"><a href="#final-修饰符" class="headerlink" title="final 修饰符"></a><strong>final 修饰符</strong></h5><p><strong>final 变量：</strong></p>
+<p>final 变量能被显式地初始化并且只能初始化一次。被声明为 final 的对象的引用不能指向不同的对象。但是 final 对象里的数据可以被改变。也就是说 final 对象的引用不能改变，但是里面的值可以改变。<br>final 修饰符通常和 static 修饰符一起使用来创建类常量。</p>
+<p><strong>final 方法</strong></p>
+<p>类中的 final 方法可以被子类继承，但是不能被子类修改。<br>声明 final 方法的主要目的是防止该方法的内容被修改。</p>
+<p><strong>final 类</strong></p>
+<p>final 类不能被继承，没有类能够继承 final 类的任何特性。</p>
+<h5 id="abstract-修饰符"><a href="#abstract-修饰符" class="headerlink" title="abstract 修饰符"></a><strong>abstract 修饰符</strong></h5><p><strong>抽象类：</strong></p>
+<p>抽象类不能用来实例化对象，声明抽象类的唯一目的是为了将来对该类进行扩充。<br>一个类不能同时被 abstract 和 final 修饰。如果一个类包含抽象方法，那么该类一定要声明为抽象类，否则将出现编译错误。<br>抽象类可以包含抽象方法和非抽象方法。</p>
+<h5 id="抽象方法"><a href="#抽象方法" class="headerlink" title="抽象方法"></a><strong>抽象方法</strong></h5><p>抽象方法是一种没有任何实现的方法，该方法的的具体实现由子类提供。<br>抽象方法不能被声明成 final 和 static。<br>任何继承抽象类的子类必须实现父类的所有抽象方法，除非该子类也是抽象类。<br>如果一个类包含若干个抽象方法，那么该类必须声明为抽象类。抽象类可以不包含抽象方法。</p>
+<h5 id="synchronized-修饰符"><a href="#synchronized-修饰符" class="headerlink" title="synchronized 修饰符"></a><strong>synchronized 修饰符</strong></h5><p>synchronized 关键字声明的方法同一时间只能被一个线程访问。synchronized 修饰符可以应用于四个访问修饰符。</p>
+<h5 id="transient-修饰符"><a href="#transient-修饰符" class="headerlink" title="transient 修饰符"></a><strong>transient 修饰符</strong></h5><p>序列化的对象包含被 transient 修饰的实例变量时，java 虚拟机(JVM)跳过该特定的变量。<br>该修饰符包含在定义变量的语句中，用来预处理类和变量的数据类型。</p>
+<h5 id="olatile-修饰符"><a href="#olatile-修饰符" class="headerlink" title="olatile 修饰符"></a><strong>olatile 修饰符</strong></h5><p>volatile 修饰的成员变量在每次被线程访问时，都强制从共享内存中重新读取该成员变量的值。而且，当成员变量发生变化时，会强制线程将变化值回写到共享内存。这样在任何时刻，两个不同的线程总是看到某个成员变量的同一个值。</p>
+<p>一个 volatile 对象引用可能是 null。</p>
+<h4 id="五、Java-Number-amp-Math-类"><a href="#五、Java-Number-amp-Math-类" class="headerlink" title="五、Java Number &amp; Math 类"></a><strong>五、Java Number &amp; Math 类</strong></h4><p>般地，当需要使用数字的时候，我们通常使用内置数据类型，如：byte、int、long、double 等。</p>
+<p>然而，在实际开发过程中，经常会遇到需要使用对象，而不是内置数据类型的情形。为了解决这个问题，Java 语言为每一个内置数据类型提供了对应的包装类。<br>所有的包装类（Integer、Long、Byte、Double、Float、Short）都是抽象类 Number 的子类。</p>
+<p><img src="http://yangcp.me/uploads/1446963809d32a555f69a1ee3c5de735.png" alt="\QQ截图20180408092937.png"></p>
+<p>  这种由编译器特别支持的包装称为装箱，所以当内置数据类型被当作对象使用的时候，编译器会把内置类型装箱为包装类。相似的，编译器也可以把一个对象拆箱为内置类型。Number 类属于 java.lang 包。</p>
+<h5 id="Java-Math-类"><a href="#Java-Math-类" class="headerlink" title="Java Math 类"></a><strong>Java Math 类</strong></h5><p>Java 的 Math 包含了用于执行基本数学运算的属性和方法，如初等指数、对数、平方根和三角函数。</p>
+<p>Math 的方法都被定义为 static 形式，通过 Math 类可以在主函数中直接调用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PuppyTest</span> </span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"90度的正弦"</span>+Math.sin(Math.PI/<span class="number">2</span>));</span><br><span class="line">		System.out.println(<span class="string">"90度的余弦"</span>+Math.cos(<span class="number">0</span>));</span><br><span class="line">		System.out.println(<span class="string">"60度的正切"</span>+Math.tan(Math.PI/<span class="number">3</span>));</span><br><span class="line">		System.out.println(<span class="string">"1的的反正切"</span>+Math.atan(<span class="number">1</span>));</span><br><span class="line">		System.out.println(Math.PI);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="number">90</span>度的正弦<span class="number">1.0</span></span><br><span class="line"><span class="number">90</span>度的余弦<span class="number">1.0</span></span><br><span class="line"><span class="number">60</span>度的正切<span class="number">1.7320508075688767</span></span><br><span class="line"><span class="number">1</span>的的反正切<span class="number">0.7853981633974483</span></span><br><span class="line"><span class="number">3.141592653589793</span></span><br></pre></td></tr></table></figure>
+<h5 id="Number-amp-Math-类方法"><a href="#Number-amp-Math-类方法" class="headerlink" title="Number &amp; Math 类方法"></a><strong>Number &amp; Math 类方法</strong></h5><p>表中列出的是 Number &amp; Math 类常用的一些方法：</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>方法与描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>xxxValue()将 Number 对象转换为xxx数据类型的值并返回。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>compareTo()将number对象与参数比较。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>equals()判断number对象是否与参数相等。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>valueOf()返回一个 Number 对象指定的内置数据类型</td>
+</tr>
+<tr>
+<td>5</td>
+<td>toString()以字符串形式返回值。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>parseInt()将字符串解析为int类型。</td>
+</tr>
+<tr>
+<td>7</td>
+<td>abs()返回参数的绝对值。</td>
+</tr>
+<tr>
+<td>8</td>
+<td>ceil()返回大于等于( &gt;= )给定参数的的最小整数。</td>
+</tr>
+<tr>
+<td>9</td>
+<td>floor()返回小于等于（&lt;=）给定参数的最大整数 。</td>
+</tr>
+<tr>
+<td>10</td>
+<td>rint()返回与参数最接近的整数。返回类型为double。</td>
+</tr>
+<tr>
+<td>11</td>
+<td>round()它表示四舍五入，算法为 Math.floor(x+0.5)，即将原来的数字加上 0.5 后再向下取整，所以，Math.round(11.5) 的结果为12，Math.round(-11.5) 的结果为-11。</td>
+</tr>
+<tr>
+<td>12</td>
+<td>min()返回两个参数中的最小值。</td>
+</tr>
+<tr>
+<td>13</td>
+<td>max()返回两个参数中的最大值。</td>
+</tr>
+<tr>
+<td>14</td>
+<td>exp()返回自然数底数e的参数次方。</td>
+</tr>
+<tr>
+<td>15</td>
+<td>log()返回参数的自然数底数的对数值。</td>
+</tr>
+<tr>
+<td>16</td>
+<td>pow()返回第一个参数的第二个参数次方。</td>
+</tr>
+<tr>
+<td>17</td>
+<td>sqrt()求参数的算术平方根。</td>
+</tr>
+<tr>
+<td>18</td>
+<td>sin()求指定double类型参数的正弦值。</td>
+</tr>
+<tr>
+<td>19</td>
+<td>cos()求指定double类型参数的余弦值。</td>
+</tr>
+<tr>
+<td>20</td>
+<td>tan()求指定double类型参数的正切值。</td>
+</tr>
+<tr>
+<td>21</td>
+<td>asin()求指定double类型参数的反正弦值。</td>
+</tr>
+<tr>
+<td>22</td>
+<td>acos()求指定double类型参数的反余弦值。</td>
+</tr>
+<tr>
+<td>23</td>
+<td>atan()求指定double类型参数的反正切值。</td>
+</tr>
+<tr>
+<td>24</td>
+<td>atan2()将笛卡尔坐标转换为极坐标，并返回极坐标的角度值。</td>
+</tr>
+<tr>
+<td>25</td>
+<td>toDegrees()将参数转化为角度。</td>
+</tr>
+<tr>
+<td>26</td>
+<td>toRadians()将角度转换为弧度。</td>
+</tr>
+<tr>
+<td>27</td>
+<td>random()返回一个随机数。</td>
+</tr>
+</tbody>
+</table>
+<h4 id="六、Java-Character-类"><a href="#六、Java-Character-类" class="headerlink" title="六、Java Character 类"></a><strong>六、Java Character 类</strong></h4><p>Character 类用于对单个字符进行操作。<br>Character 类在对象中包装一个基本类型 char 的值。</p>
+<p>实际开发过程中，经常会遇到需要使用对象，而不是内置数据类型的情况。为了解决这个问题，Java语言为内置数据类型char提供了包装类Character类。<br>Character类提供了一系列方法来操纵字符。你可以使用Character的构造方法创建一个Character类对象，例如：</p>
+<p><code>Character ch = new Character(&#39;a&#39;);</code></p>
+<p>在某些情况下，Java编译器会自动创建一个Character对象。<br>例如，将一个char类型的参数传递给需要一个Character类型参数的方法时，那么编译器会自动地将char类型参数转换为Character对象。 这种特征称为装箱，反过来称为拆箱。</p>
+<h5 id="Character-方法"><a href="#Character-方法" class="headerlink" title="Character 方法"></a><strong>Character 方法</strong></h5><p>下面是Character类的方法：</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>方法与描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>isLetter()是否是一个字母</td>
+</tr>
+<tr>
+<td>2</td>
+<td>isDigit()是否是一个数字字符</td>
+</tr>
+<tr>
+<td>3</td>
+<td>isWhitespace()是否是一个空格</td>
+</tr>
+<tr>
+<td>4</td>
+<td>isUpperCase()是否是大写字母</td>
+</tr>
+<tr>
+<td>5</td>
+<td>isLowerCase()是否是小写字母</td>
+</tr>
+<tr>
+<td>6</td>
+<td>toUpperCase()指定字母的大写形式</td>
+</tr>
+<tr>
+<td>7</td>
+<td>toLowerCase()指定字母的小写形式</td>
+</tr>
+<tr>
+<td>8</td>
+<td>toString()返回字符的字符串形式，字符串的长度仅为1</td>
+</tr>
+</tbody>
+</table>
+<h4 id="七、Java-String-类"><a href="#七、Java-String-类" class="headerlink" title="七、Java String 类"></a><strong>七、Java String 类</strong></h4><p>字符串广泛应用 在Java 编程中，在 Java 中字符串属于对象，Java 提供了 String 类来创建和操作字符串。</p>
+<h5 id="创建字符串"><a href="#创建字符串" class="headerlink" title="创建字符串"></a><strong>创建字符串</strong></h5><p>创建字符串最简单的方式如下:</p>
+<p><code>String greeting = &quot;ycp&quot;;</code></p>
+<p>在代码中遇到字符串常量时，这里的值是 “菜鸟教程””，编译器会使用该值创建一个 String 对象。<br>和其它对象一样，可以使用关键字和构造方法来创建 String 对象。<br>String 类有 11 种构造方法，这些方法提供不同的参数来初始化字符串，比如提供一个字符数组参数:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">StringDemo.java 文件代码：</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StringDemo</span></span>&#123;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span></span>&#123;</span><br><span class="line">      <span class="keyword">char</span>[] helloArray = &#123; <span class="string">'y'</span>, <span class="string">'c'</span>, <span class="string">'p'</span>&#125;;</span><br><span class="line">      String helloString = <span class="keyword">new</span> String(helloArray);  </span><br><span class="line">      System.out.println( helloString );</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上实例编译运行结果如下：<br>`ycp<br>注意:String 类是不可改变的，所以你一旦创建了 String 对象，那它的值就无法改变了</p>
+<p>如果需要对字符串做很多修改，那么应该选择使用 <code>StringBuffer &amp; StringBuilder</code> 类。</p>
+<h5 id="连接字符串"><a href="#连接字符串" class="headerlink" title="连接字符串"></a><strong>连接字符串</strong></h5><p>String 类提供了连接两个字符串的方法：</p>
+<p><code>string1.concat(string2);</code></p>
+<p>返回 string2 连接 string1 的新字符串。也可以对字符串常量使用 concat() 方法，如：</p>
+<p><code>&quot;我的名字是 &quot;.concat(&quot;YCp&quot;);</code><br>更常用的是使用’+’操作符来连接字符串，如：</p>
+<p><code>&quot;Hello,&quot; + &quot; ycp&quot; + &quot;!&quot;</code></p>
+<h5 id="创建格式化字符串"><a href="#创建格式化字符串" class="headerlink" title="创建格式化字符串"></a><strong>创建格式化字符串</strong></h5><p>输出格式化数字可以使用 printf() 和 format() 方法。<br>String 类使用静态方法 format() 返回一个String 对象而不是 PrintStream 对象。<br>String 类的静态方法 format() 能用来创建可复用的格式化字符串，而不仅仅是用于一次打印输出。</p>
+<h5 id="String-方法"><a href="#String-方法" class="headerlink" title="String 方法"></a><strong>String 方法</strong></h5><h4 id="八、Java-StringBuffer-和-StringBuilder-类"><a href="#八、Java-StringBuffer-和-StringBuilder-类" class="headerlink" title="八、Java StringBuffer 和 StringBuilder 类"></a><strong>八、Java StringBuffer 和 StringBuilder 类</strong></h4><p>当对字符串进行修改的时候，需要使用 <code>StringBuffer</code> 和 <code>StringBuilder</code> 类。<br>和 String 类不同的是，<code>StringBuffer</code> 和 <code>StringBuilder</code> 类的对象能够被多次的修改，并且不产生新的未使用对象。</p>
+<p><code>StringBuilder</code> 类在 Java 5 中被提出，它和 <code>StringBuffer</code> 之间的最大不同在于 StringBuilder 的方法不是线程安全的（不能同步访问）。</p>
+<p>由于 StringBuilder 相较于 StringBuffer 有速度优势，所以多数情况下建议使用 <code>StringBuilder</code> 类。然而在应用程序要求线程安全的情况下，则必须使用 StringBuffer 类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PuppyTest</span> </span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> </span>&#123;</span><br><span class="line">		StringBuffer sBuffer =<span class="keyword">new</span> StringBuffer(<span class="string">"ycp"</span>);</span><br><span class="line">		sBuffer.append(<span class="string">"180cm"</span>);</span><br><span class="line">		sBuffer.append(<span class="string">"18cm"</span>);</span><br><span class="line">		System.out.println(sBuffer);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="StringBuffer-方法"><a href="#StringBuffer-方法" class="headerlink" title="StringBuffer 方法"></a><strong>StringBuffer 方法</strong></h5><p>以下是 StringBuffer 类支持的主要方法：</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>方法描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>public StringBuffer append(String s)将指定的字符串追加到此字符序列。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>public StringBuffer reverse()将此字符序列用其反转形式取代。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>public delete(int start, int end)移除此序列的子字符串中的字符。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>public insert(int offset, int i)将 int 参数的字符串表示形式插入此序列中。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>replace(int start, int end, String str)使用给定 String 中的字符替换此序列的子字符串中的字符。</td>
+</tr>
+</tbody>
+</table>
+<p>下面的列表里的方法和 String 类的方法类似：<br>序号    |方法描述<br>-|-<br>1    |int capacity()返回当前容量。<br>2    |char charAt(int index)返回此序列中指定索引处的 char 值。<br>3    |void ensureCapacity(int minimumCapacity)确保容量至少等于指定的最小值。<br>4    |void getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin)将字符从此序列复制到目标字符数组 dst。<br>5    |int indexOf(String str)返回第一次出现的指定子字符串在该字符串中的索引。<br>6    |int indexOf(String str, int fromIndex)从指定的索引处开始，返回第一次出现的指定子字符串在该字符串中的索引。<br>7    |int lastIndexOf(String str)返回最右边出现的指定子字符串在此字符串中的索引。<br>8    |int lastIndexOf(String str, int fromIndex)返回 String 对象中子字符串最后出现的位置。<br>9    |int length() 返回长度（字符数）。<br>10    |void setCharAt(int index, char ch)将给定索引处的字符设置为 ch。<br>11    |void setLength(int newLength)设置字符序列的长度。<br>12    |CharSequence subSequence(int start, int end)返回一个新的字符序列，该字符序列是此序列的子序列。<br>13    |String substring(int start)返回一个新的 String，它包含此字符序列当前所包含的字符子序列。<br>14    |String substring(int start, int end)返回一个新的 String，它包含此序列当前所包含的字符子序列。<br>15    |String toString()返回此序列中数据的字符串表示形式。</p>
+<blockquote>
+<p>Java 中 StringBuffer 和 String 是有一定的区别的，首先，String 是被 final 修饰的，他的长度是不可变的，就算调用 String 的<br>concat 方法，那也是把字符串拼接起来并重新创建一个对象，把拼接后的 String 的值赋给新创建的对象，而 StringBuffer 的长度是可变的，调用StringBuffer 的 append 方法，来改变 StringBuffer 的长度，并且，相比较于 StringBuffer，String 一旦发生长度变化，是非常耗费内存的！</p>
+</blockquote>
+<h4 id="九、Java-数组"><a href="#九、Java-数组" class="headerlink" title="九、Java 数组"></a><strong>九、Java 数组</strong></h4><p>ava 语言中提供的数组是用来存储固定大小的同类型元素。</p>
+<h4 id="十、Java-流-Stream-、文件-File-和IO"><a href="#十、Java-流-Stream-、文件-File-和IO" class="headerlink" title="十、Java 流(Stream)、文件(File)和IO"></a><strong>十、Java 流(Stream)、文件(File)和IO</strong></h4><p>Java.io 包几乎包含了所有操作输入、输出需要的类。所有这些流类代表了输入源和输出目标。<br>Java.io 包中的流支持很多种格式，比如：基本类型、对象、本地化字符集等等。<br>一个流可以理解为一个数据的序列。输入流表示从一个源读取数据，输出流表示向一个目标写数据。<br>Java 为 I/O 提供了强大的而灵活的支持，使其更广泛地应用到文件传输和网络编程中。</p>
+<h5 id="读取控制台输入"><a href="#读取控制台输入" class="headerlink" title="读取控制台输入"></a><strong>读取控制台输入</strong></h5><p>Java 的控制台输入由 System.in 完成。<br>为了获得一个绑定到控制台的字符流，你可以把 System.in 包装在一个 BufferedReader 对象中来创建一个字符流。<br>下面是创建 BufferedReader 的基本语法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">BufferedReader br = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> </span><br><span class="line">                      InputStreamReader(System.in));</span><br></pre></td></tr></table></figure></p>
+<p>BufferedReader 对象创建后，我们便可以使用 read() 方法从控制台读取一个字符，或者用 readLine() 方法读取一个字符串。</p>
+<p>从 BufferedReader 对象读取一个字符要使用 read() 方法，它的语法如下：<br>int read( ) throws IOException<br>每次调用 read() 方法，它从输入流读取一个字符并把该字符作为整数值返回。 当流结束的时候返回 -1。该方法抛出 IOException。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PuppyTest</span> </span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> <span class="keyword">throws</span> IOException</span>&#123;</span><br><span class="line">		<span class="keyword">char</span> c;</span><br><span class="line">		BufferedReader brBufferedReader =<span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">		<span class="keyword">do</span> &#123;</span><br><span class="line">			c = (<span class="keyword">char</span>) brBufferedReader.read();</span><br><span class="line">			System.out.println(c);</span><br><span class="line">		&#125;<span class="keyword">while</span>(c != <span class="string">'q'</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="从控制台读取字符串"><a href="#从控制台读取字符串" class="headerlink" title="从控制台读取字符串"></a><strong>从控制台读取字符串</strong></h4><p>从标准输入读取一个字符串需要使用 BufferedReader 的 readLine() 方法。<br>它的一般格式是：</p>
+<p><code>String readLine( ) throws IOException</code></p>
+<p>下面的程序读取和显示字符行直到你输入了单词”end”。<br>代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 使用 BufferedReader 在控制台读取字符</span></span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BRReadLines</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> <span class="keyword">throws</span> IOException</span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="comment">// 使用 System.in 创建 BufferedReader </span></span><br><span class="line">    BufferedReader br = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span></span><br><span class="line">                            InputStreamReader(System.in));</span><br><span class="line">    String str;</span><br><span class="line">    System.out.println(<span class="string">"Enter lines of text."</span>);</span><br><span class="line">    System.out.println(<span class="string">"Enter 'end' to quit."</span>);</span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">       str = br.readLine();</span><br><span class="line">       System.out.println(str);</span><br><span class="line">    &#125; <span class="keyword">while</span>(!str.equals(<span class="string">"end"</span>));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="控制台输出"><a href="#控制台输出" class="headerlink" title="控制台输出"></a><strong>控制台输出</strong></h5><p>控制台的输出由 print( ) 和 println() 完成。这些方法都由类 PrintStream 定义，System.out 是该类对象的一个引用。<br>PrintStream 继承了 OutputStream类，并且实现了方法 write()。这样，write() 也可以用来往控制台写操作。<br>PrintStream 定义 write() 的最简单格式如下所示：</p>
+<p> <code>void write(int byteval)</code></p>
+<p>该方法将 byteval 的低八位字节写到流中。</p>
+<h5 id="读写文件"><a href="#读写文件" class="headerlink" title="读写文件"></a><strong>读写文件</strong></h5><p>一个流被定义为一个数据序列。输入流用于从源读取数据，输出流用于向目标写数据。</p>
+<p><img src="http://yangcp.me/uploads/3034ce582191f8de7343e2705425f342.png" alt="\QQ截图20180409002815.png"></p>
+<h5 id="FileInputStream"><a href="#FileInputStream" class="headerlink" title="FileInputStream"></a><strong>FileInputStream</strong></h5><p>该流用于从文件读取数据，它的对象可以用关键字 new 来创建。<br>有多种构造方法可用来创建对象。<br>可以使用字符串类型的文件名来创建一个输入流对象来读取文件：</p>
+<p><code>InputStream f = new FileInputStream(&quot;C:/java/hello&quot;);</code></p>
+<p>也可以使用一个文件对象来创建一个输入流对象来读取文件。我们首先得使用 File() 方法来创建一个文件对象：</p>
+<p><code>File f = new File(&quot;C:/java/hello&quot;);</code><br><code>InputStream out = new FileInputStream(f);</code></p>
+<p>创建了InputStream对象，就可以使用下面的方法来读取流或者进行其他的流操作。</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>方法及描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>public void close() throws IOException{}关闭此文件输入流并释放与此流有关的所有系统资源。抛出IOException异常。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>protected void finalize()throws IOException {}这个方法清除与该文件的连接。确保在不再引用文件输入流时调用其 close 方法。抛出IOException异常。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>public int read(int r)throws IOException{}这个方法从 InputStream 对象读取指定字节的数据。返回为整数值。返回下一字节数据，如果已经到结尾则返回-1。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>public int read(byte[] r) throws IOException{}这个方法从输入流读取r.length长度的字节。返回读取的字节数。如果是文件结尾则返回-1。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>public int available() throws IOException{}返回下一次对此输入流调用的方法可以不受阻塞地从此输入流读取的字节数。返回一个整数值。</td>
+</tr>
+</tbody>
+</table>
+<p>除了 InputStream 外，还有一些其他的输入流:</p>
+<ul>
+<li>ByteArrayInputStream</li>
+<li>DataInputStream</li>
+</ul>
+<h5 id="FileOutputStream"><a href="#FileOutputStream" class="headerlink" title="FileOutputStream"></a><strong>FileOutputStream</strong></h5><p>该类用来创建一个文件并向文件中写数据。<br>如果该流在打开文件进行输出前，目标文件不存在，那么该流会创建该文件。<br>有两个构造方法可以用来创建 FileOutputStream 对象。<br>使用字符串类型的文件名来创建一个输出流对象：</p>
+<p><code>OutputStream f = new FileOutputStream(&quot;C:/java/hello&quot;)</code></p>
+<p>也可以使用一个文件对象来创建一个输出流来写文件。我们首先得使用File()方法来创建一个文件对象：</p>
+<p><code>File f = new File(&quot;C:/java/hello&quot;);</code><br><code>OutputStream f = new FileOutputStream(f);</code></p>
+<p>创建OutputStream 对象完成后，就可以使用下面的方法来写入流或者进行其他的流操作。</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>方法及描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>public void close() throws IOException{}关闭此文件输入流并释放与此流有关的所有系统资源。抛出IOException异常。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>protected void finalize()throws IOException {}这个方法清除与该文件的连接。确保在不再引用文件输入流时调用其 close 方法。抛出IOException异常。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>public void write(int w)throws IOException{}这个方法把指定的字节写到输出流中。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>public void write(byte[] w)把指定数组中w.length长度的字节写到OutputStream中。</td>
+</tr>
+</tbody>
+</table>
+<p>除了OutputStream外，还有一些其他的输出流</p>
+<ul>
+<li>ByteArrayOutputStream</li>
+<li>DataOutputStream</li>
+</ul>
+<p>实例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">fileStreamTest2</span></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    </span><br><span class="line">    File f = <span class="keyword">new</span> File(<span class="string">"a.txt"</span>);</span><br><span class="line">    FileOutputStream fop = <span class="keyword">new</span> FileOutputStream(f);</span><br><span class="line">    <span class="comment">// 构建FileOutputStream对象,文件不存在会自动新建</span></span><br><span class="line">    </span><br><span class="line">    OutputStreamWriter writer = <span class="keyword">new</span> OutputStreamWriter(fop, <span class="string">"UTF-8"</span>);</span><br><span class="line">    <span class="comment">// 构建OutputStreamWriter对象,参数可以指定编码,默认为操作系统默认编码,windows上是gbk</span></span><br><span class="line">    </span><br><span class="line">    writer.append(<span class="string">"中文输入"</span>);</span><br><span class="line">    <span class="comment">// 写入到缓冲区</span></span><br><span class="line">    </span><br><span class="line">    writer.append(<span class="string">"\r\n"</span>);</span><br><span class="line">    <span class="comment">//换行</span></span><br><span class="line">    </span><br><span class="line">    writer.append(<span class="string">"English"</span>);</span><br><span class="line">    <span class="comment">// 刷新缓存冲,写入到文件,如果下面已经没有写入的内容了,直接close也会写入</span></span><br><span class="line">    </span><br><span class="line">    writer.close();</span><br><span class="line">    <span class="comment">//关闭写入流,同时会把缓冲区内容写入文件,所以上面的注释掉</span></span><br><span class="line">    </span><br><span class="line">    fop.close();</span><br><span class="line">    <span class="comment">// 关闭输出流,释放系统资源</span></span><br><span class="line"> </span><br><span class="line">    FileInputStream fip = <span class="keyword">new</span> FileInputStream(f);</span><br><span class="line">    <span class="comment">// 构建FileInputStream对象</span></span><br><span class="line">    </span><br><span class="line">    InputStreamReader reader = <span class="keyword">new</span> InputStreamReader(fip, <span class="string">"UTF-8"</span>);</span><br><span class="line">    <span class="comment">// 构建InputStreamReader对象,编码与写入相同</span></span><br><span class="line"> </span><br><span class="line">    StringBuffer sb = <span class="keyword">new</span> StringBuffer();</span><br><span class="line">    <span class="keyword">while</span> (reader.ready()) &#123;</span><br><span class="line">      sb.append((<span class="keyword">char</span>) reader.read());</span><br><span class="line">      <span class="comment">// 转成char加到StringBuffer对象中</span></span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(sb.toString());</span><br><span class="line">    reader.close();</span><br><span class="line">    <span class="comment">// 关闭读取流</span></span><br><span class="line">    </span><br><span class="line">    fip.close();</span><br><span class="line">    <span class="comment">// 关闭输入流,释放系统资源</span></span><br><span class="line"> </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="Java中的目录"><a href="#Java中的目录" class="headerlink" title="Java中的目录"></a><strong>Java中的目录</strong></h5><p><strong>创建目录：</strong><br>File类中有两个方法可以用来创建文件夹：</p>
+<ul>
+<li>mkdir( )方法创建一个文件夹，成功则返回true，失败则返回false。失败表明File对象指定的路径已经存在，或者由于整个路径还不存在，该文件夹不能被创建。</li>
+<li>mkdirs()方法创建一个文件夹和它的所有父文件夹。</li>
+</ul>
+<blockquote>
+<p>Java 在 UNIX 和 Windows 自动按约定分辨文件路径分隔符。如果你在 Windows 版本的 Java 中使用分隔符 (/) ，路径依然能够被正确解析。</p>
+</blockquote>
+<p><strong>读取目录</strong></p>
+<p>一个目录其实就是一个 File 对象，它包含其他文件和文件夹。<br>如果创建一个 File 对象并且它是一个目录，那么调用 isDirectory() 方法会返回 true。<br>可以通过调用该对象上的 list() 方法，来提取它包含的文件和文件夹的列表。</p>
+<p><strong>删除目录或文件</strong></p>
+<p>删除文件可以使用 java.io.File.delete() 方法。<br>以下代码会删除目录/tmp/java/，即便目录不为空。</p>
+<h4 id="十一、Java-Scanner-类"><a href="#十一、Java-Scanner-类" class="headerlink" title="十一、Java Scanner 类"></a><strong>十一、Java Scanner 类</strong></h4><p>java.util.Scanner 是 Java5 的新特征，我们可以通过 <code>Scanner</code> 类来获取用户的输入。<br>下面是创建 Scanner 对象的基本语法：</p>
+<p><code>Scanner s = new Scanner(System.in);</code></p>
+<p>通过 Scanner 类的 next() 与 nextLine() 方法获取输入的字符串，在读取前我们一般需要 使用 hasNext 与 hasNextLine 判断是否还有输入的数据：</p>
+<h4 id="十二、Java-异常处理"><a href="#十二、Java-异常处理" class="headerlink" title="十二、Java 异常处理"></a>十二、Java 异常处理</h4><p>异常是程序中的一些错误，但并不是所有的错误都是异常，并且错误有时候是可以避免的。</p>
+<p>异常发生的原因有很多，通常包含以下几大类：</p>
+<ul>
+<li>用户输入了非法数据。</li>
+<li>要打开的文件不存在。</li>
+</ul>
+<p>网络通信时连接中断，或者JVM内存溢出。</p>
+<p>这些异常有的是因为用户错误引起，有的是程序错误引起的，还有其它一些是因为物理错误引起的。</p>
+<p>要理解Java异常处理是如何工作的，你需要掌握以下三种类型的异常：</p>
+<ul>
+<li>检查性异常：最具代表的检查性异常是用户错误或问题引起的异常，这是程序员无法预见的。例如要打开一个不存在文件时，一个异常就发生了，这些异常在编译时不能被简单地忽略。</li>
+<li>运行时异常： 运行时异常是可能被程序员避免的异常。与检查性异常相反，运行时异常可以在编译时被忽略。</li>
+<li>错误： 错误不是异常，而是脱离程序员控制的问题。错误在代码中通常被忽略。例如，当栈溢出时，一个错误就发生了，它们在编译也检查不到的。</li>
+</ul>
+<h5 id="Exception-类的层次"><a href="#Exception-类的层次" class="headerlink" title="Exception 类的层次"></a><strong>Exception 类的层次</strong></h5><p>所有的异常类是从 java.lang.Exception 类继承的子类。<br>Exception 类是 Throwable 类的子类。除了Exception类外，Throwable还有一个子类Error 。<br>Java 程序通常不捕获错误。错误一般发生在严重故障时，它们在Java程序处理的范畴之外。<br>Error 用来指示运行时环境发生的错误。</p>
+<p>异常类有两个主要的子类：<code>IOException</code> 类和 <code>RuntimeException</code> 类。</p>
+<p><img src="http://yangcp.me/uploads/4be981d223cfc4171f98cf74fe591943.png" alt="\QQ截图20180411055526.png"></p>
+<h5 id="Java-内置异常类"><a href="#Java-内置异常类" class="headerlink" title="Java 内置异常类"></a><strong>Java 内置异常类</strong></h5><p>Java 语言定义了一些异常类在 java.lang 标准包中。<br>标准运行时异常类的子类是最常见的异常类。由于 java.lang 包是默认加载到所有的 Java 程序的，所以大部分从运行时异常类继承而来的异常都可以直接使用。</p>
+<h5 id="finally关键字"><a href="#finally关键字" class="headerlink" title="finally关键字"></a><strong>finally关键字</strong></h5><p>finally 关键字用来创建在 try 代码块后面执行的代码块。<br>无论是否发生异常，finally 代码块中的代码总会被执行。<br>在 finally 代码块中，可以运行清理类型等收尾善后性质的语句。<br>finally 代码块出现在 catch 代码块最后，语法如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">  <span class="comment">// 程序代码</span></span><br><span class="line">&#125;<span class="keyword">catch</span>(异常类型<span class="number">1</span> 异常的变量名<span class="number">1</span>)&#123;</span><br><span class="line">  <span class="comment">// 程序代码</span></span><br><span class="line">&#125;<span class="keyword">catch</span>(异常类型<span class="number">2</span> 异常的变量名<span class="number">2</span>)&#123;</span><br><span class="line">  <span class="comment">// 程序代码</span></span><br><span class="line">&#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">  <span class="comment">// 程序代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="通用异常"><a href="#通用异常" class="headerlink" title="通用异常"></a><strong>通用异常</strong></h5><p>在Java中定义了两种类型的异常和错误。</p>
+<ul>
+<li>JVM(Java虚拟机) 异常：由 JVM 抛出的异常或错误。例如：NullPointerException 类，ArrayIndexOutOfBoundsException 类，ClassCastException 类。</li>
+<li>程序级异常：由程序或者API程序抛出的异常。例如 IllegalArgumentException 类，IllegalStateException 类。</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    YCP
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yangcp.me/2018/07/22/JAVA基础/" title="JAVA基础">http://yangcp.me/2018/07/22/JAVA基础/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://ycp19940225.github.io/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/基础/" rel="tag"># 基础</a>
+          
+            <a href="/tags/JAVA/" rel="tag"># JAVA</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/22/C-资源库/" rel="next" title="C++资源库">
+                <i class="fa fa-chevron-left"></i> C++资源库
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/22/算法题汇总/" rel="prev" title="算法题汇总">
+                算法题汇总 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zODA3NC8xNDYwNA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">YCP</p>
+              <p class="site-description motion-element" itemprop="description">YCP个人博客</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://hanekawasan.com/" title="hanekawasan" target="_blank">hanekawasan</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JAVA基础"><span class="nav-number">1.</span> <span class="nav-text">JAVA基础</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、JAVA基础"><span class="nav-number">1.0.1.</span> <span class="nav-text">一、JAVA基础</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#基本语法"><span class="nav-number">1.0.1.1.</span> <span class="nav-text">基本语法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Java标识符"><span class="nav-number">1.0.1.2.</span> <span class="nav-text">Java标识符</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Java修饰符"><span class="nav-number">1.0.1.3.</span> <span class="nav-text">Java修饰符</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Java变量"><span class="nav-number">1.0.1.4.</span> <span class="nav-text">Java变量</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Java数组"><span class="nav-number">1.0.1.5.</span> <span class="nav-text">Java数组</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Java枚举"><span class="nav-number">1.0.1.6.</span> <span class="nav-text">Java枚举</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Java关键字"><span class="nav-number">1.0.1.7.</span> <span class="nav-text">Java关键字</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#继承"><span class="nav-number">1.0.1.8.</span> <span class="nav-text">继承</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#接口"><span class="nav-number">1.0.1.9.</span> <span class="nav-text">接口</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Java-源程序与编译型运行区别"><span class="nav-number">1.0.1.10.</span> <span class="nav-text">Java 源程序与编译型运行区别</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、Java-对象和类"><span class="nav-number">1.0.2.</span> <span class="nav-text">二、Java 对象和类</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Java中的对象"><span class="nav-number">1.0.2.1.</span> <span class="nav-text">Java中的对象</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Java中的类"><span class="nav-number">1.0.2.2.</span> <span class="nav-text">Java中的类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#构造方法"><span class="nav-number">1.0.2.3.</span> <span class="nav-text">构造方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#创建对象"><span class="nav-number">1.0.2.4.</span> <span class="nav-text">创建对象</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#访问实例变量和方法"><span class="nav-number">1.0.2.5.</span> <span class="nav-text">访问实例变量和方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#源文件声明规则"><span class="nav-number">1.0.2.6.</span> <span class="nav-text">源文件声明规则</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Java包"><span class="nav-number">1.0.2.7.</span> <span class="nav-text">Java包</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Import语句"><span class="nav-number">1.0.2.8.</span> <span class="nav-text">Import语句</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、Java-基本数据类型"><span class="nav-number">1.0.3.</span> <span class="nav-text">三、Java 基本数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#内置数据类型"><span class="nav-number">1.0.3.1.</span> <span class="nav-text">内置数据类型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#引用类型"><span class="nav-number">1.0.3.2.</span> <span class="nav-text">引用类型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Java-常量"><span class="nav-number">1.0.3.3.</span> <span class="nav-text">Java 常量</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#自动类型转换"><span class="nav-number">1.0.3.4.</span> <span class="nav-text">自动类型转换</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#自动类型转换-1"><span class="nav-number">1.0.3.5.</span> <span class="nav-text">自动类型转换</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#强制类型转换"><span class="nav-number">1.0.3.6.</span> <span class="nav-text">强制类型转换</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#隐含强制类型转换"><span class="nav-number">1.0.3.7.</span> <span class="nav-text">隐含强制类型转换</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、Java-变量类型"><span class="nav-number">1.0.4.</span> <span class="nav-text">四、Java 变量类型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Java-局部变量"><span class="nav-number">1.0.4.1.</span> <span class="nav-text">Java 局部变量</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#实例变量"><span class="nav-number">1.0.4.2.</span> <span class="nav-text">实例变量</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#类变量（静态变量）"><span class="nav-number">1.0.4.3.</span> <span class="nav-text">类变量（静态变量）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Java-修饰符"><span class="nav-number">1.0.4.4.</span> <span class="nav-text">Java 修饰符</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#默认访问修饰符-不使用任何关键字"><span class="nav-number">1.0.4.5.</span> <span class="nav-text">默认访问修饰符-不使用任何关键字</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#私有访问修饰符-private"><span class="nav-number">1.0.4.6.</span> <span class="nav-text">私有访问修饰符-private</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#公有访问修饰符-public"><span class="nav-number">1.0.4.7.</span> <span class="nav-text">公有访问修饰符-public</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#受保护的访问修饰符-protected"><span class="nav-number">1.0.4.8.</span> <span class="nav-text">受保护的访问修饰符-protected</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#访问控制和继承"><span class="nav-number">1.0.4.9.</span> <span class="nav-text">访问控制和继承</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#非访问修饰符"><span class="nav-number">1.0.4.10.</span> <span class="nav-text">非访问修饰符</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#static-修饰符"><span class="nav-number">1.0.4.11.</span> <span class="nav-text">static 修饰符</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#final-修饰符"><span class="nav-number">1.0.4.12.</span> <span class="nav-text">final 修饰符</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#abstract-修饰符"><span class="nav-number">1.0.4.13.</span> <span class="nav-text">abstract 修饰符</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#抽象方法"><span class="nav-number">1.0.4.14.</span> <span class="nav-text">抽象方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#synchronized-修饰符"><span class="nav-number">1.0.4.15.</span> <span class="nav-text">synchronized 修饰符</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#transient-修饰符"><span class="nav-number">1.0.4.16.</span> <span class="nav-text">transient 修饰符</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#olatile-修饰符"><span class="nav-number">1.0.4.17.</span> <span class="nav-text">olatile 修饰符</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、Java-Number-amp-Math-类"><span class="nav-number">1.0.5.</span> <span class="nav-text">五、Java Number &amp; Math 类</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Java-Math-类"><span class="nav-number">1.0.5.1.</span> <span class="nav-text">Java Math 类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Number-amp-Math-类方法"><span class="nav-number">1.0.5.2.</span> <span class="nav-text">Number &amp; Math 类方法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#六、Java-Character-类"><span class="nav-number">1.0.6.</span> <span class="nav-text">六、Java Character 类</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Character-方法"><span class="nav-number">1.0.6.1.</span> <span class="nav-text">Character 方法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#七、Java-String-类"><span class="nav-number">1.0.7.</span> <span class="nav-text">七、Java String 类</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#创建字符串"><span class="nav-number">1.0.7.1.</span> <span class="nav-text">创建字符串</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#连接字符串"><span class="nav-number">1.0.7.2.</span> <span class="nav-text">连接字符串</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#创建格式化字符串"><span class="nav-number">1.0.7.3.</span> <span class="nav-text">创建格式化字符串</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#String-方法"><span class="nav-number">1.0.7.4.</span> <span class="nav-text">String 方法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#八、Java-StringBuffer-和-StringBuilder-类"><span class="nav-number">1.0.8.</span> <span class="nav-text">八、Java StringBuffer 和 StringBuilder 类</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#StringBuffer-方法"><span class="nav-number">1.0.8.1.</span> <span class="nav-text">StringBuffer 方法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#九、Java-数组"><span class="nav-number">1.0.9.</span> <span class="nav-text">九、Java 数组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#十、Java-流-Stream-、文件-File-和IO"><span class="nav-number">1.0.10.</span> <span class="nav-text">十、Java 流(Stream)、文件(File)和IO</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#读取控制台输入"><span class="nav-number">1.0.10.1.</span> <span class="nav-text">读取控制台输入</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#从控制台读取字符串"><span class="nav-number">1.0.11.</span> <span class="nav-text">从控制台读取字符串</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#控制台输出"><span class="nav-number">1.0.11.1.</span> <span class="nav-text">控制台输出</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#读写文件"><span class="nav-number">1.0.11.2.</span> <span class="nav-text">读写文件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#FileInputStream"><span class="nav-number">1.0.11.3.</span> <span class="nav-text">FileInputStream</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#FileOutputStream"><span class="nav-number">1.0.11.4.</span> <span class="nav-text">FileOutputStream</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Java中的目录"><span class="nav-number">1.0.11.5.</span> <span class="nav-text">Java中的目录</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#十一、Java-Scanner-类"><span class="nav-number">1.0.12.</span> <span class="nav-text">十一、Java Scanner 类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#十二、Java-异常处理"><span class="nav-number">1.0.13.</span> <span class="nav-text">十二、Java 异常处理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Exception-类的层次"><span class="nav-number">1.0.13.1.</span> <span class="nav-text">Exception 类的层次</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Java-内置异常类"><span class="nav-number">1.0.13.2.</span> <span class="nav-text">Java 内置异常类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#finally关键字"><span class="nav-number">1.0.13.3.</span> <span class="nav-text">finally关键字</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#通用异常"><span class="nav-number">1.0.13.4.</span> <span class="nav-text">通用异常</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">YCP</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">52.4k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 访问总量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
