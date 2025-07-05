@@ -1,6 +1,6 @@
 theme = "PaperMod"
 # 下面是 PaperMod 推荐的最简配置示例：
-baseURL = "https://ycp19940225.github.io/my-blog/"
+baseURL = "https://yangcp25.github.io/"
 languageCode = "zh-CN"
 title = "yangcp-blog"
 [pagination]
