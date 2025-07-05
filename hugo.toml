@@ -2,10 +2,25 @@ theme = "PaperMod"
 # 下面是 PaperMod 推荐的最简配置示例：
 baseURL = "https://yangcp25.github.io/"
 languageCode = "zh-CN"
-title = "yangcp-blog"
+title = "yangcp"
+[menu]
+  [[menu.main]]
+    name = "首页"
+    url = "/"
+    weight = 10
+  [[menu.main]]
+    name = "关于"
+    url = "/about/"
+    weight = 20
+  [[menu.main]]
+    name = "项目"
+    url = "/projects/"
+    weight = 30
 [pagination]
   pagerSize = 5   # 原来 paginate 的值
 [params]
   # PaperMod 的个性化开关示例
   showNewTab = true
   defaultTheme = "auto"    # 可选 "light"/"dark"/"auto"
+  # 是否在侧边栏显示分类
+  showTaxonomies = ["tags", "categories"]
