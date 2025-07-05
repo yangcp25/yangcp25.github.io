@@ -1,0 +1,11 @@
+theme = "PaperMod"
+# 下面是 PaperMod 推荐的最简配置示例：
+baseURL = "https://ycp19940225.github.io/my-blog/"
+languageCode = "zh-CN"
+title = "yangcp-blog"
+[pagination]
+  pagerSize = 5   # 原来 paginate 的值
+[params]
+  # PaperMod 的个性化开关示例
+  showNewTab = true
+  defaultTheme = "auto"    # 可选 "light"/"dark"/"auto"

@@ -1,0 +1,41 @@
+# =========================
+# Hugo build outputs
+# =========================
+/public/               # Hugo 默认生成静态站点的目录
+/resources/_gen/       # Hugo 资源管线自动生成目录
+.hugo_build.lock       # 构建时的锁文件
+
+# 如果你用 Hugo Modules（go.mod），可以忽略 mod 缓存
+/go.mod
+/go.sum
+
+# =========================
+# Theme submodules
+# =========================
+# 如果你通过 git submodule 引入主题，不跟踪 theme 本身改动
+/themes/*              # 忽略所有主题
+!.gitmodules           # 但保留子模块配置文件
+!.gitignore            # 确保 .gitignore 自身不被忽略
+
+# =========================
+# 配置和内容除外
+# =========================
+!/config.toml          # 如果你用的是 config.toml，保留它
+!/config/*.toml        # 或者保留整个 config/ 文件夹里的配置
+!/content/             # 保留你的 Markdown 内容
+
+# =========================
+# 可选：Node / npm 目录
+# =========================
+/node_modules/
+/package-lock.json
+/yarn.lock
+
+# =========================
+# IDE & OS 临时文件
+# =========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
