@@ -5,17 +5,22 @@ languageCode = "zh-CN"
 title = "yangcp"
 [menu]
   [[menu.main]]
-    name = "首页"
-    url = "/"
+    name = "Tag"
+    url = "/tags/"
     weight = 10
+  [[menu.main]]
+   name   = "Archives"
+   url    = "/archives/"
+   weight = 20
 #  [[menu.main]]
 #    name = "项目"
 #    url = "/projects/"
 #    weight = 20
   [[menu.main]]
-    name = "About"
-    url = "/about/me"
-    weight = 30
+    identifier = "About"
+    name       = "About"
+    url        = "/about/me/"
+    weight     = 30
 [pagination]
   pagerSize = 5   # 原来 paginate 的值
 [params]
@@ -24,3 +29,15 @@ title = "yangcp"
   defaultTheme = "auto"    # 可选 "light"/"dark"/"auto"
   # 是否在侧边栏显示分类
   showTaxonomies = ["tags", "categories"]
+  # 启用 Utterances 评论
+
+  # 启用 Utterances 评论
+  commentSystem   = "utterances"
+  utterancesRepo  = "yangcp25/yangcp25.github.io"
+  # issueTerm 可选：使用 pathname（文章路径）或 title（文章标题）来匹配 Issue
+  utterancesIssueTerm = "pathname"
+  # 主题可选：github-light, github-dark, preferred-color-scheme...
+  utterancesTheme  = "github-light"
+[taxonomies]
+  tag = "tags"
+  category = "categories"
