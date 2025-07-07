@@ -8,13 +8,13 @@ title = "yangcp"
     name = "首页"
     url = "/"
     weight = 10
+#  [[menu.main]]
+#    name = "项目"
+#    url = "/projects/"
+#    weight = 20
   [[menu.main]]
-    name = "关于"
-    url = "/about/"
-    weight = 20
-  [[menu.main]]
-    name = "项目"
-    url = "/projects/"
+    name = "About"
+    url = "/about/me"
     weight = 30
 [pagination]
   pagerSize = 5   # 原来 paginate 的值
