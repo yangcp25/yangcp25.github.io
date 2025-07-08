@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
 <title>golang的interface和reflect | yangcp</title>
-<meta name="keywords" content="interface, reflect">
+<meta name="keywords" content="go, interface, reflect">
 <meta name="description" content="interface
 鸭子类型
 如果一个东西，走起来像鸭子，叫起来像鸭子，那么我们认为他就是鸭子。也就是说我们关注对象的行为，而不是对象本身。
@@ -212,7 +212,64 @@ go语言unsafe包提供了一些函数，可以获取指针，修改指针，获
     <div class="post-meta"><span title='2025-07-06 12:44:43 +0800 CST'>July 6, 2025</span>
 
 </div>
-  </header> 
+  </header> <div class="toc">
+    <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#interface" aria-label="interface">interface</a><ul>
+                        
+                <li>
+                    <a href="#%e9%b8%ad%e5%ad%90%e7%b1%bb%e5%9e%8b" aria-label="鸭子类型">鸭子类型</a></li>
+                <li>
+                    <a href="#%e5%a4%9a%e6%80%81" aria-label="多态">多态</a></li>
+                <li>
+                    <a href="#go%e7%9a%84interface" aria-label="go的interface">go的interface</a><ul>
+                        
+                <li>
+                    <a href="#%e5%ae%9a%e4%b9%89" aria-label="定义">定义</a></li>
+                <li>
+                    <a href="#%e5%a6%82%e4%bd%95%e4%bd%bf%e7%94%a8" aria-label="如何使用">如何使用</a><ul>
+                        
+                <li>
+                    <a href="#%e4%bb%80%e4%b9%88%e6%97%b6%e5%80%99%e4%bc%9a%e4%bd%bf%e7%94%a8interface" aria-label="什么时候会使用interface">什么时候会使用interface</a></li>
+                <li>
+                    <a href="#%e4%bd%bf%e7%94%a8%e6%96%b9%e6%b3%95" aria-label="使用方法">使用方法</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e9%9c%80%e8%a6%81%e6%b3%a8%e6%84%8f%e7%9a%84%e7%82%b9%e5%92%8c%e5%9d%91" aria-label="需要注意的点和坑">需要注意的点和坑</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#reflect" aria-label="reflect">reflect</a><ul>
+                        <ul>
+                        
+                <li>
+                    <a href="#unsafepointer" aria-label="unsafe.pointer">unsafe.pointer</a></li>
+                <li>
+                    <a href="#%e5%ae%9a%e4%b9%89-1" aria-label="定义">定义</a></li>
+                <li>
+                    <a href="#%e4%bd%bf%e7%94%a8" aria-label="使用">使用</a><ul>
+                        
+                <li>
+                    <a href="#%e5%b8%b8%e8%a7%81%e4%bd%bf%e7%94%a8%e5%9c%ba%e6%99%af" aria-label="常见使用场景">常见使用场景</a></li>
+                <li>
+                    <a href="#%e4%bd%bf%e7%94%a8%e6%96%b9%e6%b3%95-1" aria-label="使用方法">使用方法</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e9%9c%80%e8%a6%81%e6%b3%a8%e6%84%8f%e7%9a%84%e7%82%b9%e5%92%8c%e5%9d%91-1" aria-label="需要注意的点和坑">需要注意的点和坑</a>
+                </li>
+            </ul>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
   <div class="post-content"><h2 id="interface">interface<a hidden class="anchor" aria-hidden="true" href="#interface">#</a></h2>
 <h3 id="鸭子类型">鸭子类型<a hidden class="anchor" aria-hidden="true" href="#鸭子类型">#</a></h3>
 <p>如果一个东西，走起来像鸭子，叫起来像鸭子，那么我们认为他就是鸭子。也就是说我们关注对象的行为，而不是对象本身。</p>
@@ -339,6 +396,7 @@ go语言提供了一种在运行时能够获取数据本身的状态，数据，
 
   <footer class="post-footer">
     <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/go/">Go</a></li>
       <li><a href="http://localhost:1313/tags/interface/">Interface</a></li>
       <li><a href="http://localhost:1313/tags/reflect/">Reflect</a></li>
     </ul>

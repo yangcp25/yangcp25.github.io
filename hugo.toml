@@ -38,6 +38,8 @@ title = "yangcp"
   utterancesIssueTerm = "pathname"
   # 主题可选：github-light, github-dark, preferred-color-scheme...
   utterancesTheme  = "github-light"
+  ShowToc = true            # 开启文章目录
+  TocOpen = true            # 默认展开目录（可选）
 [taxonomies]
   tag = "tags"
   category = "categories"
