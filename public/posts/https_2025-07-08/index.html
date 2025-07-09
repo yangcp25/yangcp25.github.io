@@ -57,20 +57,10 @@ https怎么解决的这些问题
           ❌
           用私钥签名，公钥验签
       
-      
-          服务器端生成密钥对，将公钥发送给客户端，客户端使用公钥加密对称加密使用的秘钥，发送给服务器端，服务器端使用私钥解密数据，
-          
-          
-          
-      
-      
-          得到秘钥，后续通过这个秘钥对数据进行加密解密。
-          
-          
-          
-      
   
 
+服务器端生成密钥对，将公钥发送给客户端，客户端使用公钥加密对称加密使用的秘钥，发送给服务器端，服务器端使用私钥解密数据，
+得到秘钥，后续通过这个秘钥对数据进行加密解密。
 CA
 CA（Certificate Authority）是证书颁发机构，它负责签发证书，并管理证书的颁发和吊销。
 为什么需要CA
@@ -174,6 +164,11 @@ CA（Certificate Authority）是证书颁发机构，它负责签发证书，并
             <li>
                 <a href="http://localhost:1313/archives/" title="Archives">
                     <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/algorithm/" title="Algorithm">
+                    <span>Algorithm</span>
                 </a>
             </li>
             <li>
@@ -288,20 +283,10 @@ CA（Certificate Authority）是证书颁发机构，它负责签发证书，并
           <td>❌</td>
           <td>用私钥签名，公钥验签</td>
       </tr>
-      <tr>
-          <td>服务器端生成密钥对，将公钥发送给客户端，客户端使用公钥加密对称加密使用的秘钥，发送给服务器端，服务器端使用私钥解密数据，</td>
-          <td></td>
-          <td></td>
-          <td></td>
-      </tr>
-      <tr>
-          <td>得到秘钥，后续通过这个秘钥对数据进行加密解密。</td>
-          <td></td>
-          <td></td>
-          <td></td>
-      </tr>
   </tbody>
 </table>
+<p>服务器端生成密钥对，将公钥发送给客户端，客户端使用公钥加密对称加密使用的秘钥，发送给服务器端，服务器端使用私钥解密数据，
+得到秘钥，后续通过这个秘钥对数据进行加密解密。</p>
 <h4 id="ca">CA<a hidden class="anchor" aria-hidden="true" href="#ca">#</a></h4>
 <p>CA（Certificate Authority）是证书颁发机构，它负责签发证书，并管理证书的颁发和吊销。</p>
 <h5 id="为什么需要ca">为什么需要CA<a hidden class="anchor" aria-hidden="true" href="#为什么需要ca">#</a></h5>

@@ -63,20 +63,10 @@
           &lt;td&gt;❌&lt;/td&gt;
           &lt;td&gt;用私钥签名，公钥验签&lt;/td&gt;
       &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;服务器端生成密钥对，将公钥发送给客户端，客户端使用公钥加密对称加密使用的秘钥，发送给服务器端，服务器端使用私钥解密数据，&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;得到秘钥，后续通过这个秘钥对数据进行加密解密。&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
-      &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
+&lt;p&gt;服务器端生成密钥对，将公钥发送给客户端，客户端使用公钥加密对称加密使用的秘钥，发送给服务器端，服务器端使用私钥解密数据，
+得到秘钥，后续通过这个秘钥对数据进行加密解密。&lt;/p&gt;
 &lt;h4 id=&#34;ca&#34;&gt;CA&lt;/h4&gt;
 &lt;p&gt;CA（Certificate Authority）是证书颁发机构，它负责签发证书，并管理证书的颁发和吊销。&lt;/p&gt;
 &lt;h5 id=&#34;为什么需要ca&#34;&gt;为什么需要CA&lt;/h5&gt;
