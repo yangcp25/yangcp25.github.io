@@ -17,10 +17,6 @@ title = "yangcp"
 #    url = "/projects/"
 #    weight = 20
   [[menu.main]]
-    name   = "Algorithm"
-    url    = "/algorithm/"
-    weight     = 30
-  [[menu.main]]
     identifier = "About"
     name       = "About"
     url        = "/about/me/"
