@@ -51,8 +51,9 @@ ShowBreadCrumbs = true           # 面包屑导航
 ShowPostNavLinks = true          # 上一篇 / 下一篇
 ShowCodeCopyButtons = true       # 代码复制按钮
 
-[params.socialIcons]
-github = "https://github.com/yangcp25"
+[[params.socialIcons]]
+name = "github"
+url = "https://github.com/yangcp25"
 
 [taxonomies]
 tag = "tags"
