@@ -32,7 +32,8 @@ weight     = 40
 pagerSize = 5
 
 [params]
-homeMode = "homeInfo"              # 可改为 "homeInfo" 使用首页简介
+mainSections = ["posts"]
+
 ShowSearch = true                 # 启用搜索框
 showNewTab = true
 defaultTheme = "auto"

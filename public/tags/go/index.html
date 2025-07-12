@@ -1,14 +1,224 @@
-<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Go | yangcp</title>
-<meta name=keywords content><meta name=description content><meta name=author content><link rel=canonical href=https://yangcp25.github.io/tags/go/><link crossorigin=anonymous href=/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css integrity="sha256-IhHKMWS+eDACT2qtKzouUghDpk+PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as=style><link rel=icon href=https://yangcp25.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://yangcp25.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://yangcp25.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://yangcp25.github.io/apple-touch-icon.png><link rel=mask-icon href=https://yangcp25.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate type=application/rss+xml href=https://yangcp25.github.io/tags/go/index.xml><link rel=alternate hreflang=en href=https://yangcp25.github.io/tags/go/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><meta property="og:url" content="https://yangcp25.github.io/tags/go/"><meta property="og:site_name" content="yangcp"><meta property="og:title" content="Go"><meta property="og:locale" content="zh-CN"><meta property="og:type" content="website"><meta name=twitter:card content="summary"><meta name=twitter:title content="Go"><meta name=twitter:description content></head><body class=list id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://yangcp25.github.io/ accesskey=h title="yangcp (Alt + H)">yangcp</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme"><svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://yangcp25.github.io/archives/ title=Archives><span>Archives</span></a></li><li><a href=https://yangcp25.github.io/search/ title="Search (Alt + /)" accesskey=/><span>Search</span></a></li><li><a href=https://yangcp25.github.io/tags/ title=Tag><span>Tag</span></a></li><li><a href=https://yangcp25.github.io/about/me/ title=About><span>About</span></a></li></ul></nav></header><main class=main><header class=page-header><div class=breadcrumbs><a href=https://yangcp25.github.io/>Home</a>&nbsp;»&nbsp;<a href=https://yangcp25.github.io/tags/>Tags</a></div><h1>Go</h1></header><article class="post-entry tag-entry"><header class=entry-header><h2 class=entry-hint-parent>golang的interface和reflect</h2></header><div class=entry-content><p>interface 鸭子类型 如果一个东西，走起来像鸭子，叫起来像鸭子，那么我们认为他就是鸭子。也就是说我们关注对象的行为，而不是对象本身。
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=64074&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Go | yangcp</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:64074/tags/go/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:64074/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:64074/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:64074/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:64074/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:64074/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" type="application/rss+xml" href="http://localhost:64074/tags/go/index.xml">
+<link rel="alternate" hreflang="en" href="http://localhost:64074/tags/go/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="list" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:64074/" accesskey="h" title="yangcp (Alt + H)">yangcp</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:64074/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:64074/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:64074/tags/" title="Tag">
+                    <span>Tag</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:64074/about/me/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main"> 
+<header class="page-header"><div class="breadcrumbs"><a href="http://localhost:64074/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:64074/tags/">Tags</a></div>
+  <h1>
+    Go
+  </h1>
+</header>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">golang的interface和reflect
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>interface 鸭子类型 如果一个东西，走起来像鸭子，叫起来像鸭子，那么我们认为他就是鸭子。也就是说我们关注对象的行为，而不是对象本身。
 go里面通过接口来达到鸭子类型的效果。
 多态 多态是指同一个操作（函数、方法），在不通的对象的作用下，会有不同的行为。 一般多态有两种实现方式：
-继承和组合，比如java、c++。 接口的形式 在go里面它没有继承的概念，但是go里面有组合。组合式是一种更灵活的方式。 他可以通过组合和重写来实现继承。在调用结构体的方法的时候，会优先调用最近的结构体的方法。 我们推荐在go里通过接口来实现多态，会更加清晰明了。
+继承和组合，比如java、c&#43;&#43;。 接口的形式 在go里面它没有继承的概念，但是go里面有组合。组合式是一种更灵活的方式。 他可以通过组合和重写来实现继承。在调用结构体的方法的时候，会优先调用最近的结构体的方法。 我们推荐在go里通过接口来实现多态，会更加清晰明了。
 go的interface 定义 go里面的接口是一种复合数据类型。他的底层有2种实现，eface和iface。
 //eface 结构 type eface struct { tab *typtab data unsafe.Pointer } // iface结构 type iface struct { tab *itab data unsafe.Pointer } go里面的所有数据类型都实现了eface,也就是说可以借助interface来表示他的数据类型。 还可以通过interface来定义方法集合 。
 type A interface { method() } 可能你会有一个疑问，那go是怎么确定interface 到底应该是使用eface 还是 iface呢？ go是在编译阶段就会确定好interface 使用的eface 还是 iface。后面不会改变。
-如何使用 什么时候会使用interface 通过接口来实现解耦合，比如依赖注入、适配器模式。 不确定传入参数的类型，需要在运行时来确定。 使用方法 接口列表 type animal interface { move() } type dog struct {} func (d dog) move() { fmt.Println("dog moving") } type cat struct {} func (c cat) move() { fmt.Println("cat moving") } func main() { var a animal a = dog{} a.move() a = cat{} // a是结构可以同意调用 a.move() // 接口注入 call(a) // 不确定具体的参数 vat func1 = func(param any) {} func1 = func(param any) { fmt.Println("call any", param) } } func call(a animal) { fmt.Println("call animal \n") a.move() } 需要注意的点和坑 使用接口会让编译器无法确定数据类型，导致无法再编译阶段发现类型错误，引发运行时错误。 使用接口会让程序变得难以阅读和理解。 性能会损失大概一倍 reflect unsafe.pointer go语言unsafe包提供了一些函数，可以获取指针，修改指针，获取指针指向的数据，修改指针指向的数据。 简单来讲，go本身不能操作指针，但是提供了reflect包让我们可以操作指针来获得程序的 性能提升。
-...</p></div><footer class=entry-footer><span title='2025-07-06 12:44:43 +0800 CST'>July 6, 2025</span>&nbsp;·&nbsp;1 min</footer><a class=entry-link aria-label="post link to golang的interface和reflect" href=https://yangcp25.github.io/posts/2025-07-06/></a></article></main><footer class=footer><span>&copy; 2025 <a href=https://yangcp25.github.io/>yangcp</a></span> ·
-<span>Powered by
-<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
-        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg>
-</a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script></body></html>
+如何使用 什么时候会使用interface 通过接口来实现解耦合，比如依赖注入、适配器模式。 不确定传入参数的类型，需要在运行时来确定。 使用方法 接口列表 type animal interface { move() } type dog struct {} func (d dog) move() { fmt.Println(&#34;dog moving&#34;) } type cat struct {} func (c cat) move() { fmt.Println(&#34;cat moving&#34;) } func main() { var a animal a = dog{} a.move() a = cat{} // a是结构可以同意调用 a.move() // 接口注入 call(a) // 不确定具体的参数 vat func1 = func(param any) {} func1 = func(param any) { fmt.Println(&#34;call any&#34;, param) } } func call(a animal) { fmt.Println(&#34;call animal \n&#34;) a.move() } 需要注意的点和坑 使用接口会让编译器无法确定数据类型，导致无法再编译阶段发现类型错误，引发运行时错误。 使用接口会让程序变得难以阅读和理解。 性能会损失大概一倍 reflect unsafe.pointer go语言unsafe包提供了一些函数，可以获取指针，修改指针，获取指针指向的数据，修改指针指向的数据。 简单来讲，go本身不能操作指针，但是提供了reflect包让我们可以操作指针来获得程序的 性能提升。
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-07-06 12:44:43 +0800 CST'>July 6, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to golang的interface和reflect" href="http://localhost:64074/posts/go/interfacereflect/"></a>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:64074/">yangcp</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
