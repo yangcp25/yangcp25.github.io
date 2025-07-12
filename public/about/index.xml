@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Abouts on yangcp</title>
-    <link>http://localhost:1313/about/</link>
+    <link>http://localhost:56264/about/</link>
     <description>Recent content in Abouts on yangcp</description>
     <generator>Hugo -- 0.147.4</generator>
     <language>zh-CN</language>
     <lastBuildDate>Sun, 06 Jul 2025 19:42:34 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/about/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:56264/about/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>About Me</title>
-      <link>http://localhost:1313/about/me/</link>
+      <link>http://localhost:56264/about/me/</link>
       <pubDate>Sun, 06 Jul 2025 19:42:34 +0800</pubDate>
-      <guid>http://localhost:1313/about/me/</guid>
+      <guid>http://localhost:56264/about/me/</guid>
       <description>&lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;三年PHP经验，2年全栈经验，三年golang经验，持续学习中&amp;hellip;&lt;/strong&gt;&lt;/li&gt;
 &lt;/ul&gt;</description>

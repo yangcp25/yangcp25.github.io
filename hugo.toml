@@ -1,45 +1,60 @@
 theme = "PaperMod"
-# 下面是 PaperMod 推荐的最简配置示例：
+
 baseURL = "https://yangcp25.github.io/"
 languageCode = "zh-CN"
 title = "yangcp"
-[menu]
-  [[menu.main]]
-    name = "Tag"
-    url = "/tags/"
-    weight = 10
-  [[menu.main]]
-   name   = "Archives"
-   url    = "/archives/"
-   weight = 20
-#  [[menu.main]]
-#    name = "项目"
-#    url = "/projects/"
-#    weight = 20
-  [[menu.main]]
-    identifier = "About"
-    name       = "About"
-    url        = "/about/me/"
-    weight     = 40
-[pagination]
-  pagerSize = 5   # 原来 paginate 的值
-[params]
-  # PaperMod 的个性化开关示例
-  showNewTab = true
-  defaultTheme = "auto"    # 可选 "light"/"dark"/"auto"
-  # 是否在侧边栏显示分类
-  showTaxonomies = ["tags", "categories"]
-  # 启用 Utterances 评论
 
-  # 启用 Utterances 评论
-  commentSystem   = "utterances"
-  utterancesRepo  = "yangcp25/yangcp25.github.io"
-  # issueTerm 可选：使用 pathname（文章路径）或 title（文章标题）来匹配 Issue
-  utterancesIssueTerm = "pathname"
-  # 主题可选：github-light, github-dark, preferred-color-scheme...
-  utterancesTheme  = "github-light"
-  ShowToc = true            # 开启文章目录
-  TocOpen = true            # 默认展开目录（可选）
+[outputs]
+home = ["HTML", "RSS", "JSON"]  # 搜索需要 index.json
+
+[menu]
+[[menu.main]]
+name   = "Archives"
+url    = "/archives/"
+weight = 10
+
+[[menu.main]]
+name = "Search"
+url = "/search/"
+weight = 10
+
+[[menu.main]]
+name   = "Tag"
+url    = "/tags/"
+weight = 30
+
+[[menu.main]]
+identifier = "About"
+name       = "About"
+url        = "/about/me/"
+weight     = 40
+
+[pagination]
+pagerSize = 5
+
+[params]
+homeMode = "homeInfo"              # 可改为 "homeInfo" 使用首页简介
+ShowSearch = true                 # 启用搜索框
+showNewTab = true
+defaultTheme = "auto"
+showTaxonomies = ["tags", "categories"]
+
+comments = true                   # 启用评论
+commentSystem = "utterances"
+utterancesRepo = "yangcp25/yangcp25.github.io"
+utterancesIssueTerm = "pathname"
+utterancesTheme = "github-light"
+
+ShowReadingTime = true           # 阅读时长
+ShowToc = true                   # 显示 TOC
+TocOpen = false                   # 默认展开 TOC
+ShowBreadCrumbs = true           # 面包屑导航
+ShowPostNavLinks = true          # 上一篇 / 下一篇
+ShowCodeCopyButtons = true       # 代码复制按钮
+
+[params.socialIcons]
+github = "https://github.com/yangcp25"
+
 [taxonomies]
-  tag = "tags"
-  category = "categories"
+tag = "tags"
+category = "categories"

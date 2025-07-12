@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=56264&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
@@ -94,16 +94,16 @@ go语言unsafe包提供了一些函数，可以获取指针，修改指针，获
 简单来讲，go本身不能操作指针，但是提供了reflect包让我们可以操作指针来获得程序的
 性能提升。">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/posts/2025-07-06/">
+<link rel="canonical" href="http://localhost:56264/posts/2025-07-06/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="icon" href="http://localhost:56264/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:56264/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:56264/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:56264/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:56264/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/2025-07-06/">
+<link rel="alternate" hreflang="en" href="http://localhost:56264/posts/2025-07-06/">
 <noscript>
     <style>
         #theme-toggle,
@@ -158,7 +158,7 @@ go语言unsafe包提供了一些函数，可以获取指针，修改指针，获
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="yangcp (Alt + H)">yangcp</a>
+            <a href="http://localhost:56264/" accesskey="h" title="yangcp (Alt + H)">yangcp</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -184,17 +184,22 @@ go语言unsafe包提供了一些函数，可以获取指针，修改指针，获
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/tags/" title="Tag">
-                    <span>Tag</span>
-                </a>
-            </li>
-            <li>
-                <a href="http://localhost:1313/archives/" title="Archives">
+                <a href="http://localhost:56264/archives/" title="Archives">
                     <span>Archives</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/about/me/" title="About">
+                <a href="http://localhost:56264/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:56264/tags/" title="Tag">
+                    <span>Tag</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:56264/about/me/" title="About">
                     <span>About</span>
                 </a>
             </li>
@@ -205,15 +210,15 @@ go语言unsafe包提供了一些函数，可以获取指针，修改指针，获
 
 <article class="post-single">
   <header class="post-header">
-    
+    <div class="breadcrumbs"><a href="http://localhost:56264/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:56264/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
       golang的interface和reflect
     </h1>
-    <div class="post-meta"><span title='2025-07-06 12:44:43 +0800 CST'>July 6, 2025</span>
+    <div class="post-meta"><span title='2025-07-06 12:44:43 +0800 CST'>July 6, 2025</span>&nbsp;·&nbsp;1 min
 
 </div>
   </header> <div class="toc">
-    <details  open>
+    <details >
         <summary accesskey="c" title="(Alt + C)">
             <span class="details">Table of Contents</span>
         </summary>
@@ -396,16 +401,32 @@ go语言提供了一种在运行时能够获取数据本身的状态，数据，
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="http://localhost:1313/tags/go/">Go</a></li>
-      <li><a href="http://localhost:1313/tags/interface/">Interface</a></li>
-      <li><a href="http://localhost:1313/tags/reflect/">Reflect</a></li>
+      <li><a href="http://localhost:56264/tags/go/">Go</a></li>
+      <li><a href="http://localhost:56264/tags/interface/">Interface</a></li>
+      <li><a href="http://localhost:56264/tags/reflect/">Reflect</a></li>
     </ul>
-  </footer>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:56264/posts/https_2025-07-08/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>https原理</span>
+  </a>
+</nav>
+
+  </footer><div id="utterances-comments"></div>
+<script src="https://utteranc.es/client.js"
+        repo="yangcp25/yangcp25.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
 </article>
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">yangcp</a></span> · 
+        <span>&copy; 2025 <a href="http://localhost:56264/">yangcp</a></span> · 
 
     <span>
         Powered by
@@ -472,6 +493,53 @@ go语言提供了一种在运行时能够获取数据本身的状态，数据，
         }
     })
 
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
 </script>
 </body>
 

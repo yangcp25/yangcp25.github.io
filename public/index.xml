@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>yangcp</title>
-    <link>http://localhost:1313/</link>
-    <description>Recent content on yangcp</description>
+    <title>Hi, I&#39;m yangcp on yangcp</title>
+    <link>http://localhost:56264/</link>
+    <description>Recent content in Hi, I&#39;m yangcp on yangcp</description>
     <generator>Hugo -- 0.147.4</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 09 Jul 2025 09:20:50 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 12 Jul 2025 14:44:10 +0800</lastBuildDate>
+    <atom:link href="http://localhost:56264/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Socket</title>
+      <link>http://localhost:56264/posts/network/socket/</link>
+      <pubDate>Sat, 12 Jul 2025 14:44:10 +0800</pubDate>
+      <guid>http://localhost:56264/posts/network/socket/</guid>
+      <description>&lt;h2&gt;&lt;/h2&gt;</description>
+    </item>
     <item>
       <title>BFS&amp;&amp;DFS</title>
-      <link>http://localhost:1313/posts/bfs_dfs/</link>
+      <link>http://localhost:56264/posts/bfs_dfs/</link>
       <pubDate>Wed, 09 Jul 2025 09:20:50 +0800</pubDate>
-      <guid>http://localhost:1313/posts/bfs_dfs/</guid>
+      <guid>http://localhost:56264/posts/bfs_dfs/</guid>
       <description>&lt;h3 id=&#34;树的遍历&#34;&gt;树的遍历&lt;/h3&gt;
 &lt;h4 id=&#34;深度优先遍历dfs&#34;&gt;深度优先遍历DFS&lt;/h4&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;广度优先遍历bfs&#34;&gt;广度优先遍历BFS&lt;/h4&gt;
@@ -24,9 +31,9 @@
     </item>
     <item>
       <title>https原理</title>
-      <link>http://localhost:1313/posts/https_2025-07-08/</link>
+      <link>http://localhost:56264/posts/https_2025-07-08/</link>
       <pubDate>Tue, 08 Jul 2025 09:35:24 +0800</pubDate>
-      <guid>http://localhost:1313/posts/https_2025-07-08/</guid>
+      <guid>http://localhost:56264/posts/https_2025-07-08/</guid>
       <description>&lt;h2 id=&#34;定义&#34;&gt;定义&lt;/h2&gt;
 &lt;h3 id=&#34;http&#34;&gt;http&lt;/h3&gt;
 &lt;p&gt;http是超文本传输协议，用于传输网页内容，它基于TCP，所以是可靠性传输。但是它没有解决数据安全性
@@ -84,23 +91,30 @@
 &lt;h4 id=&#34;ca&#34;&gt;CA&lt;/h4&gt;
 &lt;p&gt;CA（Certificate Authority）是证书颁发机构，它负责签发证书，并管理证书的颁发和吊销。&lt;/p&gt;
 &lt;h5 id=&#34;为什么需要ca&#34;&gt;为什么需要CA&lt;/h5&gt;
-&lt;h2 id=&#34;如何使用&#34;&gt;如何使用&lt;/h2&gt;
-&lt;h2 id=&#34;注意事项&#34;&gt;注意事项&lt;/h2&gt;</description>
+&lt;p&gt;客户端无法知晓拿到的公钥是由目标服务器办法的，为了验证证书的合法性，防护中间人攻击，需要CA证书颁发机构签发证书。&lt;/p&gt;
+&lt;h5 id=&#34;证书生成&#34;&gt;证书生成&lt;/h5&gt;
+&lt;p&gt;首先，服务器管理员会向CA提起证书申请，CA会验证域名的所属权，做法通常是在域名解析加一个特定值。
+验证通过后，CA会将服务器的公钥用自己的私钥进行签名，生成证书。并办法给服务器管理员。&lt;/p&gt;
+&lt;h5 id=&#34;证书验证过程&#34;&gt;证书验证过程&lt;/h5&gt;
+&lt;p&gt;客户端发起连接请求，服务器会返回证书，客户端会验证证书的合法性，并获取证书的公钥。
+浏览器会在发版的时候将各大CA机构的公钥预制在浏览器中，使用CA的公钥对服务器的证书进行解密，拿到解密的hash值。同时
+使用同样的摘要算法对原始内容进行加密，用得到的摘要和解密的摘要对比，如果相等，说明证书是CA颁发的，也就证明
+了证书的合法性和完整性。&lt;/p&gt;</description>
     </item>
     <item>
       <title>About Me</title>
-      <link>http://localhost:1313/about/me/</link>
+      <link>http://localhost:56264/about/me/</link>
       <pubDate>Sun, 06 Jul 2025 19:42:34 +0800</pubDate>
-      <guid>http://localhost:1313/about/me/</guid>
+      <guid>http://localhost:56264/about/me/</guid>
       <description>&lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;三年PHP经验，2年全栈经验，三年golang经验，持续学习中&amp;hellip;&lt;/strong&gt;&lt;/li&gt;
 &lt;/ul&gt;</description>
     </item>
     <item>
       <title>golang的interface和reflect</title>
-      <link>http://localhost:1313/posts/2025-07-06/</link>
+      <link>http://localhost:56264/posts/2025-07-06/</link>
       <pubDate>Sun, 06 Jul 2025 12:44:43 +0800</pubDate>
-      <guid>http://localhost:1313/posts/2025-07-06/</guid>
+      <guid>http://localhost:56264/posts/2025-07-06/</guid>
       <description>&lt;h2 id=&#34;interface&#34;&gt;interface&lt;/h2&gt;
 &lt;h3 id=&#34;鸭子类型&#34;&gt;鸭子类型&lt;/h3&gt;
 &lt;p&gt;如果一个东西，走起来像鸭子，叫起来像鸭子，那么我们认为他就是鸭子。也就是说我们关注对象的行为，而不是对象本身。&lt;/p&gt;
