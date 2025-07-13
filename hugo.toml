@@ -32,7 +32,7 @@ weight     = 40
 pagerSize = 5
 
 [params]
-mainSections = ["posts"]
+#mainSections = ["posts"]
 
 ShowSearch = true                 # 启用搜索框
 showNewTab = true

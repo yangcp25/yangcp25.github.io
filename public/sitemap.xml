@@ -2,71 +2,68 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:64074/</loc>
+    <loc>http://localhost:1313/posts/</loc>
     <lastmod>2025-07-12T14:44:10+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:64074/posts/</loc>
+    <loc>http://localhost:1313/</loc>
     <lastmod>2025-07-12T14:44:10+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:64074/posts/network/socket/</loc>
-    <lastmod>2025-07-12T14:44:10+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:64074/posts/network/</loc>
+    <loc>http://localhost:1313/posts/network/</loc>
     <lastmod>2025-07-12T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:64074/tags/bfs/</loc>
+    <loc>http://localhost:1313/tags/bfs/</loc>
     <lastmod>2025-07-09T09:20:50+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:64074/posts/datastructalgorithm/bfs_dfs/</loc>
+    <loc>http://localhost:1313/posts/datastructalgorithm/bfs_dfs/</loc>
     <lastmod>2025-07-09T09:20:50+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:64074/tags/dfs/</loc>
+    <loc>http://localhost:1313/tags/dfs/</loc>
     <lastmod>2025-07-09T09:20:50+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:64074/tags/dijkstra/</loc>
+    <loc>http://localhost:1313/tags/dijkstra/</loc>
     <lastmod>2025-07-09T09:20:50+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:64074/tags/</loc>
+    <loc>http://localhost:1313/tags/</loc>
     <lastmod>2025-07-09T09:20:50+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:64074/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</loc>
+    <loc>http://localhost:1313/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</loc>
     <lastmod>2025-07-09T09:20:50+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:64074/tags/%E7%AE%97%E6%B3%95/</loc>
+    <loc>http://localhost:1313/tags/%E7%AE%97%E6%B3%95/</loc>
     <lastmod>2025-07-09T09:20:50+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:64074/tags/https/</loc>
+    <loc>http://localhost:1313/tags/https/</loc>
     <lastmod>2025-07-08T09:35:24+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:64074/posts/network/https/</loc>
+    <loc>http://localhost:1313/posts/network/https/</loc>
     <lastmod>2025-07-08T09:35:24+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:64074/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</loc>
+    <loc>http://localhost:1313/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</loc>
     <lastmod>2025-07-08T09:35:24+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:64074/archives/</loc>
+    <loc>http://localhost:1313/archives/</loc>
     <lastmod>2025-07-07T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:64074/about/me/</loc>
+    <loc>http://localhost:1313/about/me/</loc>
     <lastmod>2025-07-06T19:42:34+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:64074/about/</loc>
+    <loc>http://localhost:1313/about/</loc>
     <lastmod>2025-07-06T19:42:34+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:64074/tags/go/</loc>
+    <loc>http://localhost:1313/tags/go/</loc>
     <lastmod>2025-07-06T12:44:43+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:64074/posts/go/interfacereflect/</loc>
+    <loc>http://localhost:1313/posts/go/interfacereflect/</loc>
     <lastmod>2025-07-06T12:44:43+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:64074/tags/interface/</loc>
+    <loc>http://localhost:1313/tags/interface/</loc>
     <lastmod>2025-07-06T12:44:43+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:64074/tags/reflect/</loc>
+    <loc>http://localhost:1313/tags/reflect/</loc>
     <lastmod>2025-07-06T12:44:43+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:64074/categories/</loc>
+    <loc>http://localhost:1313/categories/</loc>
   </url><url>
-    <loc>http://localhost:64074/search/</loc>
+    <loc>http://localhost:1313/search/</loc>
   </url>
 </urlset>
