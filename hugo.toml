@@ -32,8 +32,8 @@ weight     = 40
 pagerSize = 5
 
 [params]
-#mainSections = ["posts"]
-
+mainSections = ["posts"]
+showPostImage = true  # 关键参数：开启封面图
 ShowSearch = true                 # 启用搜索框
 showNewTab = true
 defaultTheme = "auto"
@@ -59,3 +59,5 @@ url = "https://github.com/yangcp25"
 [taxonomies]
 tag = "tags"
 category = "categories"
+[params.assets]
+defaultPostImage = "/images/default-cover.png"

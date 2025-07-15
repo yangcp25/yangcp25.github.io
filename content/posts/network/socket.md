@@ -3,6 +3,7 @@ date = '2025-07-12T14:44:10+08:00'
 draft = false
 title = 'Socket'
 tag = ['socket', '计算机网络', 'IO模型']
+images = ["/images/cover.jpg"]
 +++
 ## Socket
 ### IO模型
