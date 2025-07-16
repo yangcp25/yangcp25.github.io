@@ -4,6 +4,9 @@ draft = false
 title = 'golang的interface和reflect'
 tags  = ["go", "interface", "reflect"]
 comments = true    # 确保这一行存在或为 true
+[cover]
+image = "/images/img.png"  # 路径基于 /static/
+relative = true
 +++
 
 ## interface

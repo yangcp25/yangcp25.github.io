@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=61815&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
@@ -94,16 +94,16 @@ go语言unsafe包提供了一些函数，可以获取指针，修改指针，获
 简单来讲，go本身不能操作指针，但是提供了reflect包让我们可以操作指针来获得程序的
 性能提升。">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/posts/go/interfacereflect/">
+<link rel="canonical" href="http://localhost:61815/posts/go/interfacereflect/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="icon" href="http://localhost:61815/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:61815/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:61815/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:61815/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:61815/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/go/interfacereflect/">
+<link rel="alternate" hreflang="en" href="http://localhost:61815/posts/go/interfacereflect/">
 <noscript>
     <style>
         #theme-toggle,
@@ -158,7 +158,7 @@ go语言unsafe包提供了一些函数，可以获取指针，修改指针，获
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="yangcp (Alt + H)">yangcp</a>
+            <a href="http://localhost:61815/" accesskey="h" title="yangcp (Alt + H)">yangcp</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -184,22 +184,22 @@ go语言unsafe包提供了一些函数，可以获取指针，修改指针，获
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/archives/" title="Archives">
+                <a href="http://localhost:61815/archives/" title="Archives">
                     <span>Archives</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="http://localhost:61815/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/tags/" title="Tag">
+                <a href="http://localhost:61815/tags/" title="Tag">
                     <span>Tag</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/about/me/" title="About">
+                <a href="http://localhost:61815/about/me/" title="About">
                     <span>About</span>
                 </a>
             </li>
@@ -210,14 +210,18 @@ go语言unsafe包提供了一些函数，可以获取指针，修改指针，获
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <div class="breadcrumbs"><a href="http://localhost:61815/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:61815/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
       golang的interface和reflect
     </h1>
     <div class="post-meta"><span title='2025-07-06 12:44:43 +0800 CST'>July 6, 2025</span>&nbsp;·&nbsp;1 min
 
 </div>
-  </header> <div class="toc">
+  </header> 
+<figure class="entry-cover">
+        <img loading="eager" src="http://localhost:61815/images/img.png" alt="">
+        
+</figure><div class="toc">
     <details >
         <summary accesskey="c" title="(Alt + C)">
             <span class="details">Table of Contents</span>
@@ -401,12 +405,12 @@ go语言提供了一种在运行时能够获取数据本身的状态，数据，
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="http://localhost:1313/tags/go/">Go</a></li>
-      <li><a href="http://localhost:1313/tags/interface/">Interface</a></li>
-      <li><a href="http://localhost:1313/tags/reflect/">Reflect</a></li>
+      <li><a href="http://localhost:61815/tags/go/">Go</a></li>
+      <li><a href="http://localhost:61815/tags/interface/">Interface</a></li>
+      <li><a href="http://localhost:61815/tags/reflect/">Reflect</a></li>
     </ul>
 <nav class="paginav">
-  <a class="prev" href="http://localhost:1313/posts/network/https/">
+  <a class="prev" href="http://localhost:61815/posts/network/https/">
     <span class="title">« Prev</span>
     <br>
     <span>https原理</span>
@@ -426,7 +430,7 @@ go语言提供了一种在运行时能够获取数据本身的状态，数据，
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">yangcp</a></span> · 
+        <span>&copy; 2025 <a href="http://localhost:61815/">yangcp</a></span> · 
 
     <span>
         Powered by

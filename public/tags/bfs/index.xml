@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>BFS on yangcp</title>
-    <link>http://localhost:1313/tags/bfs/</link>
+    <link>http://localhost:61815/tags/bfs/</link>
     <description>Recent content in BFS on yangcp</description>
     <generator>Hugo -- 0.147.4</generator>
     <language>zh-CN</language>
     <lastBuildDate>Wed, 09 Jul 2025 09:20:50 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/bfs/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:61815/tags/bfs/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>BFS&amp;&amp;DFS</title>
-      <link>http://localhost:1313/posts/datastructalgorithm/bfs_dfs/</link>
+      <link>http://localhost:61815/posts/datastructalgorithm/bfs_dfs/</link>
       <pubDate>Wed, 09 Jul 2025 09:20:50 +0800</pubDate>
-      <guid>http://localhost:1313/posts/datastructalgorithm/bfs_dfs/</guid>
+      <guid>http://localhost:61815/posts/datastructalgorithm/bfs_dfs/</guid>
       <description>&lt;h3 id=&#34;树的遍历&#34;&gt;树的遍历&lt;/h3&gt;
 &lt;h4 id=&#34;深度优先遍历dfs&#34;&gt;深度优先遍历DFS&lt;/h4&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;广度优先遍历bfs&#34;&gt;广度优先遍历BFS&lt;/h4&gt;
