@@ -146,14 +146,18 @@ redis分布式锁在分布式部署情况下的问题 简单来说需要把所�
 </article>
 
 <article class="post-entry"> 
+<figure class="entry-cover">
+        <img loading="lazy" src="http://localhost:1313/static/images/img_1.png" alt="">
+</figure>
   <header class="entry-header">
     <h2 class="entry-hint-parent">HeapSort
     </h2>
   </header>
   <div class="entry-content">
-    <p></p>
+    <p>pSort 堆排序 我发现字节好像很喜欢考这个堆排序，再结合一些其他的场景，所以这里做下堆排序相关的总结。
+通用写法 ```������� </p>
   </div>
-  <footer class="entry-footer"><span title='2025-07-15 09:55:07 +0800 CST'>July 15, 2025</span>&nbsp;·&nbsp;0 min</footer>
+  <footer class="entry-footer"><span title='2025-07-15 09:55:07 +0800 CST'>July 15, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to HeapSort" href="http://localhost:1313/posts/datastructalgorithm/heapsort/"></a>
 </article>
 
@@ -179,14 +183,18 @@ package main import ( &#34;fmt&#34; &#34;os&#34; &#34;syscall&#34; ) func check(
 </article>
 
 <article class="post-entry"> 
+<figure class="entry-cover">
+        <img loading="lazy" src="http://localhost:1313/images/img_2.png" alt="">
+</figure>
   <header class="entry-header">
     <h2 class="entry-hint-parent">BFS&amp;&amp;DFS
     </h2>
   </header>
   <div class="entry-content">
-    <p>树的遍历 深度优先遍历DFS 广度优先遍历BFS 根据先序遍历和中序遍历构造二叉树 图的遍历 深度优先遍历DFS 广度优先遍历BFS 带权图的最短路径算法 dijkstra</p>
+    <p>树的遍历 深度优先遍历DFS package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, } root.Left = &amp;TreeNode{Val: 2} root.Right = &amp;TreeNode{Val: 3} root.Right.Left = &amp;TreeNode{Val: 4} root.Left.Left = &amp;TreeNode{Val: 5} list := make([]int, 0) var treeDFS = func(root *TreeNode) {} treeDFS = func(root *TreeNode) { if root == nil { return } list = append(list, root.Val) treeDFS(root.Left) treeDFS(root.Right) } treeDFS(root) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 函数版本
+package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, } root.Left = &amp;TreeNode{Val: 2} root.Right = &amp;TreeNode{Val: 3} root.Right.Left = &amp;TreeNode{Val: 4} root.Left.Left = &amp;TreeNode{Val: 5} list := make([]int, 0) TreeDFS(root, &amp;list) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } func TreeDFS(root *TreeNode, list *[]int) { if root == nil { return } *list = append(*list, root.Val) TreeDFS(root.Left, list) TreeDFS(root.Right, list) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 广度优先遍历BFS list2 := make([]int, 0) queue := make([]*TreeNode, 0) queue = append(queue, root) for len(queue) &gt; 0 { count := len(queue) for i := 0; i &lt; count; i&#43;&#43; { node := queue[0] queue = queue[1:] list2 = append(list2, node.Val) if node.Left != nil { queue = append(queue, node.Left) } if node.Right != nil { queue = append(queue, node.Right) } } } fmt.Println(list2) 根据先序遍历和中序遍历构造二叉树 图的遍历 深度优先遍历DFS 广度优先遍历BFS 带权图的最短路径算法 dijkstra</p>
   </div>
-  <footer class="entry-footer"><span title='2025-07-09 09:20:50 +0800 CST'>July 9, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <footer class="entry-footer"><span title='2025-07-09 09:20:50 +0800 CST'>July 9, 2025</span>&nbsp;·&nbsp;2 min</footer>
   <a class="entry-link" aria-label="post link to BFS&&DFS" href="http://localhost:1313/posts/datastructalgorithm/bfs_dfs/"></a>
 </article>
 

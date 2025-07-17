@@ -8,8 +8,8 @@
 },{
 "title":"HeapSort",
 "permalink": "http://localhost:1313/posts/datastructalgorithm/heapsort/",
-"summary": "",
-"content": "",
+"summary": "pSort 堆排序 我发现字节好像很喜欢考这个堆排序，再结合一些其他的场景，所以这里做下堆排序相关的总结。\n通用写法 ```\u0000\u0000\u0000\u0000\u0000\u0000\u0000 ",
+"content": "pSort 堆排序 我发现字节好像很喜欢考这个堆排序，再结合一些其他的场景，所以这里做下堆排序相关的总结。\n通用写法 ```\u0000\u0000\u0000\u0000\u0000\u0000\u0000 ",
 "tags":null,
 "categories":null
 },{
@@ -22,8 +22,8 @@
 },{
 "title":"BFS\u0026\u0026DFS",
 "permalink": "http://localhost:1313/posts/datastructalgorithm/bfs_dfs/",
-"summary": "树的遍历 深度优先遍历DFS 广度优先遍历BFS 根据先序遍历和中序遍历构造二叉树 图的遍历 深度优先遍历DFS 广度优先遍历BFS 带权图的最短路径算法 dijkstra",
-"content": "树的遍历 深度优先遍历DFS 广度优先遍历BFS 根据先序遍历和中序遍历构造二叉树 图的遍历 深度优先遍历DFS 广度优先遍历BFS 带权图的最短路径算法 dijkstra ",
+"summary": "树的遍历 深度优先遍历DFS package main import \u0026#34;fmt\u0026#34; func main() { root := \u0026amp;TreeNode{ Val: 1, } root.Left = \u0026amp;TreeNode{Val: 2} root.Right = \u0026amp;TreeNode{Val: 3} root.Right.Left = \u0026amp;TreeNode{Val: 4} root.Left.Left = \u0026amp;TreeNode{Val: 5} list := make([]int, 0) var treeDFS = func(root *TreeNode) {} treeDFS = func(root *TreeNode) { if root == nil { return } list = append(list, root.Val) treeDFS(root.Left) treeDFS(root.Right) } treeDFS(root) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 函数版本\npackage main import \u0026#34;fmt\u0026#34; func main() { root := \u0026amp;TreeNode{ Val: 1, } root.Left = \u0026amp;TreeNode{Val: 2} root.Right = \u0026amp;TreeNode{Val: 3} root.Right.Left = \u0026amp;TreeNode{Val: 4} root.Left.Left = \u0026amp;TreeNode{Val: 5} list := make([]int, 0) TreeDFS(root, \u0026amp;list) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } func TreeDFS(root *TreeNode, list *[]int) { if root == nil { return } *list = append(*list, root.Val) TreeDFS(root.Left, list) TreeDFS(root.Right, list) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 广度优先遍历BFS list2 := make([]int, 0) queue := make([]*TreeNode, 0) queue = append(queue, root) for len(queue) \u0026gt; 0 { count := len(queue) for i := 0; i \u0026lt; count; i++ { node := queue[0] queue = queue[1:] list2 = append(list2, node.Val) if node.Left != nil { queue = append(queue, node.Left) } if node.Right != nil { queue = append(queue, node.Right) } } } fmt.Println(list2) 根据先序遍历和中序遍历构造二叉树 图的遍历 深度优先遍历DFS 广度优先遍历BFS 带权图的最短路径算法 dijkstra",
+"content": "树的遍历 深度优先遍历DFS package main import \u0026#34;fmt\u0026#34; func main() { root := \u0026amp;TreeNode{ Val: 1, } root.Left = \u0026amp;TreeNode{Val: 2} root.Right = \u0026amp;TreeNode{Val: 3} root.Right.Left = \u0026amp;TreeNode{Val: 4} root.Left.Left = \u0026amp;TreeNode{Val: 5} list := make([]int, 0) var treeDFS = func(root *TreeNode) {} treeDFS = func(root *TreeNode) { if root == nil { return } list = append(list, root.Val) treeDFS(root.Left) treeDFS(root.Right) } treeDFS(root) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 函数版本\npackage main import \u0026#34;fmt\u0026#34; func main() { root := \u0026amp;TreeNode{ Val: 1, } root.Left = \u0026amp;TreeNode{Val: 2} root.Right = \u0026amp;TreeNode{Val: 3} root.Right.Left = \u0026amp;TreeNode{Val: 4} root.Left.Left = \u0026amp;TreeNode{Val: 5} list := make([]int, 0) TreeDFS(root, \u0026amp;list) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } func TreeDFS(root *TreeNode, list *[]int) { if root == nil { return } *list = append(*list, root.Val) TreeDFS(root.Left, list) TreeDFS(root.Right, list) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 广度优先遍历BFS list2 := make([]int, 0) queue := make([]*TreeNode, 0) queue = append(queue, root) for len(queue) \u0026gt; 0 { count := len(queue) for i := 0; i \u0026lt; count; i++ { node := queue[0] queue = queue[1:] list2 = append(list2, node.Val) if node.Left != nil { queue = append(queue, node.Left) } if node.Right != nil { queue = append(queue, node.Right) } } } fmt.Println(list2) 根据先序遍历和中序遍历构造二叉树 图的遍历 深度优先遍历DFS 广度优先遍历BFS 带权图的最短路径算法 dijkstra ",
 "tags":["算法","数据结构","BFS","DFS","dijkstra"],
 "categories":null
 },{

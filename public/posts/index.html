@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=61815&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
@@ -9,17 +9,17 @@
 <meta name="keywords" content="">
 <meta name="description" content="Posts - yangcp">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:61815/posts/">
+<link rel="canonical" href="http://localhost:1313/posts/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:61815/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:61815/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:61815/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:61815/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:61815/safari-pinned-tab.svg">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" type="application/rss+xml" href="http://localhost:61815/posts/index.xml">
-<link rel="alternate" hreflang="en" href="http://localhost:61815/posts/">
+<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/posts/index.xml">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/">
 <noscript>
     <style>
         #theme-toggle,
@@ -74,7 +74,7 @@
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:61815/" accesskey="h" title="yangcp (Alt + H)">yangcp</a>
+            <a href="http://localhost:1313/" accesskey="h" title="yangcp (Alt + H)">yangcp</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -100,22 +100,22 @@
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:61815/archives/" title="Archives">
+                <a href="http://localhost:1313/archives/" title="Archives">
                     <span>Archives</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:61815/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:61815/tags/" title="Tag">
+                <a href="http://localhost:1313/tags/" title="Tag">
                     <span>Tag</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:61815/about/me/" title="About">
+                <a href="http://localhost:1313/about/me/" title="About">
                     <span>About</span>
                 </a>
             </li>
@@ -123,50 +123,67 @@
     </nav>
 </header>
 <main class="main"> 
-<header class="page-header"><div class="breadcrumbs"><a href="http://localhost:61815/">Home</a></div>
+<header class="page-header"><div class="breadcrumbs"><a href="http://localhost:1313/">Home</a></div>
   <h1>
     Posts
   </h1>
 </header>
 
 <article class="post-entry"> 
+<figure class="entry-cover">
+        <img loading="lazy" src="http://localhost:1313/images/cap.png" alt="">
+</figure>
   <header class="entry-header">
     <h2 class="entry-hint-parent">CAP
     </h2>
   </header>
   <div class="entry-content">
-    <p>定义 CAP是分布式系统的
-实践 常见的使用场景 注意事项 参考资料 维基百科编者. CAP定理. 维基百科. 最后修订于2023年11月9日. 访问于2025年7月16日. </p>
+    <p>定义 CAP理论是指分布式当中一致性、可用性以及分区容错性三者不可兼得。我们需要根据实际应用场景做出相应的取舍， 其中在现实中，分布式系统中的网络是不可能完全保证可用的，所以就需要在CP和AP中做出选择。
+实践 常见的使用场景 一些常见的开源软件的使用我们会经常遇到这个场景。拿最常见的redis为例，redis的分布式部署方案有三种，主从、哨兵、cluster。
+注意事项 这个理论提醒我们在分布式系统中需要根据具体的需求做出取舍。
+redis分布式锁在分布式部署情况下的问题 简单来说需要把所有锁操作限定到一个槽里面，其次可以使用开源的解决方案比如redlock,以及优秀的redis客户端在发生key在其他节点会自动帮助我们 处理move操作
+参考资料 维基百科编者. CAP定理. 维基百科. 最后修订于2023年11月9日. 访问于2025年7月16日. </p>
   </div>
   <footer class="entry-footer"><span title='2025-07-16 09:21:40 +0800 CST'>July 16, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to CAP" href="http://localhost:61815/posts/architecture/cap/"></a>
+  <a class="entry-link" aria-label="post link to CAP" href="http://localhost:1313/posts/architecture/cap/"></a>
 </article>
 
 <article class="post-entry"> 
+<figure class="entry-cover">
+        <img loading="lazy" src="http://localhost:1313/static/images/img_1.png" alt="">
+</figure>
   <header class="entry-header">
     <h2 class="entry-hint-parent">HeapSort
     </h2>
   </header>
   <div class="entry-content">
-    <p></p>
+    <p>HeapSort 堆排序 我发现字节好像很喜欢考这个堆排序，再结合一些其他的场景，所以这里做下堆排序相关的总结。
+通用写法 </p>
   </div>
-  <footer class="entry-footer"><span title='2025-07-15 09:55:07 +0800 CST'>July 15, 2025</span>&nbsp;·&nbsp;0 min</footer>
-  <a class="entry-link" aria-label="post link to HeapSort" href="http://localhost:61815/posts/datastructalgorithm/heapsort/"></a>
+  <footer class="entry-footer"><span title='2025-07-15 09:55:07 +0800 CST'>July 15, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to HeapSort" href="http://localhost:1313/posts/datastructalgorithm/heapsort/"></a>
 </article>
 
 <article class="post-entry"> 
+<figure class="entry-cover">
+        <img loading="lazy" src="http://localhost:1313/static/images/img_2.png" alt="">
+</figure>
   <header class="entry-header">
     <h2 class="entry-hint-parent">BFS&amp;&amp;DFS
     </h2>
   </header>
   <div class="entry-content">
-    <p>树的遍历 深度优先遍历DFS 广度优先遍历BFS 根据先序遍历和中序遍历构造二叉树 图的遍历 深度优先遍历DFS 广度优先遍历BFS 带权图的最短路径算法 dijkstra</p>
+    <p>树的遍历 深度优先遍历DFS package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, } root.Left = &amp;TreeNode{Val: 2} root.Right = &amp;TreeNode{Val: 3} root.Right.Left = &amp;TreeNode{Val: 4} root.Left.Left = &amp;TreeNode{Val: 5} list := make([]int, 0) var treeDFS = func(root *TreeNode) {} treeDFS = func(root *TreeNode) { if root == nil { return } list = append(list, root.Val) treeDFS(root.Left) treeDFS(root.Right) } treeDFS(root) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 函数版本
+package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, } root.Left = &amp;TreeNode{Val: 2} root.Right = &amp;TreeNode{Val: 3} root.Right.Left = &amp;TreeNode{Val: 4} root.Left.Left = &amp;TreeNode{Val: 5} list := make([]int, 0) TreeDFS(root, &amp;list) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } func TreeDFS(root *TreeNode, list *[]int) { if root == nil { return } *list = append(*list, root.Val) TreeDFS(root.Left, list) TreeDFS(root.Right, list) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 广度优先遍历BFS list2 := make([]int, 0) queue := make([]*TreeNode, 0) queue = append(queue, root) for len(queue) &gt; 0 { count := len(queue) for i := 0; i &lt; count; i&#43;&#43; { node := queue[0] queue = queue[1:] list2 = append(list2, node.Val) if node.Left != nil { queue = append(queue, node.Left) } if node.Right != nil { queue = append(queue, node.Right) } } } fmt.Println(list2) 根据先序遍历和中序遍历构造二叉树 图的遍历 深度优先遍历DFS 广度优先遍历BFS 带权图的最短路径算法 dijkstra</p>
   </div>
-  <footer class="entry-footer"><span title='2025-07-09 09:20:50 +0800 CST'>July 9, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to BFS&&DFS" href="http://localhost:61815/posts/datastructalgorithm/bfs_dfs/"></a>
+  <footer class="entry-footer"><span title='2025-07-09 09:20:50 +0800 CST'>July 9, 2025</span>&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to BFS&&DFS" href="http://localhost:1313/posts/datastructalgorithm/bfs_dfs/"></a>
 </article>
 
 <article class="post-entry"> 
+<figure class="entry-cover">
+        <img loading="lazy" src="http://localhost:1313/images/img.png" alt="">
+</figure>
   <header class="entry-header">
     <h2 class="entry-hint-parent">golang的interface和reflect
     </h2>
@@ -183,7 +200,7 @@ type A interface { method() } 可能你会有一个疑问，那go是怎么确定
 ...</p>
   </div>
   <footer class="entry-footer"><span title='2025-07-06 12:44:43 +0800 CST'>July 6, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to golang的interface和reflect" href="http://localhost:61815/posts/go/interfacereflect/"></a>
+  <a class="entry-link" aria-label="post link to golang的interface和reflect" href="http://localhost:1313/posts/go/interfacereflect/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -195,12 +212,12 @@ type A interface { method() } 可能你会有一个疑问，那go是怎么确定
     <p></p>
   </div>
   <footer class="entry-footer"><span title='2025-07-12 00:00:00 +0000 UTC'>July 12, 2025</span>&nbsp;·&nbsp;0 min</footer>
-  <a class="entry-link" aria-label="post link to Network 系列" href="http://localhost:61815/posts/network/"></a>
+  <a class="entry-link" aria-label="post link to Network 系列" href="http://localhost:1313/posts/network/"></a>
 </article>
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:61815/">yangcp</a></span> · 
+        <span>&copy; 2025 <a href="http://localhost:1313/">yangcp</a></span> · 
 
     <span>
         Powered by
