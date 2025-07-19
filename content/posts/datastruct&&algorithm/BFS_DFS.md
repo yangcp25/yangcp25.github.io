@@ -105,9 +105,50 @@ type TreeNode struct {
 ```
 #### 根据先序遍历和中序遍历构造二叉树
 ```go
+package main
 
+import "fmt"
+func main() {
+//     1
+// [1 2 5 3 4] 先序
+// [2 5 1 3 4] 中序
+// 1 [2 5] [2 5] i = 2 [3 4]
+// [2 5 3 4] [2 5]
+// [5 3 4] [5]
+
+copyTreeRoot := BuildTree([]int{1, 2, 5, 3, 4}, []int{2, 5, 1, 3, 4})
+fmt.Println(copyTreeRoot)
+list3 := make([]int, 0)
+TreeDFS(copyTreeRoot, &list3)
+fmt.Println("list3:", list3)
+//SliceTest()
+}
+
+func BuildTree(first []int, mid []int) *TreeNode {
+	if len(first) == 0 {
+		return nil
+	}
+	root := &TreeNode{Val: first[0]}
+	node := first[0]
+	i := 0
+	for ; i < len(mid); i++ {
+		if mid[i] == node {
+			break
+		}
+	}
+	root.Left = BuildTree(first[1:i+1], mid[:i])
+	root.Right = BuildTree(first[i+1:], mid[i+1:])
+	return root
+}
 ```
 ### 图的遍历
 #### 深度优先遍历DFS
+```go
+
+```
 #### 广度优先遍历BFS
+
 #### 带权图的最短路径算法 dijkstra
+
+### 参考
+1. **可视化网站**. [可视化网站](https://visualgo.net/zh/dfsbfs).
