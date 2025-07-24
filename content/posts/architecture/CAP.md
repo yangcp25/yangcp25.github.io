@@ -239,6 +239,17 @@ func tryFinishCountersign(record *ApprovalRecord) error {
 }
 
 ```
+#### redis 的sentinel 和cluster
+redis有两种分布式部署方案，分别是sentinel哨兵实现主从架构，哨兵负责监控和主节点下线之后的选主。cluster实现数据分片
+和主从切换。
+
+哨兵只有一个主节点，cluster模式通常有多个主节点。cluster要求至少需要三主三从，cluster如果请求的数据不在当前节点会返回moved和ask,需要支持
+cluster的客户端进行重定向，比如go-redis等。
+
+需要注意的是在分布式部署下，分布式锁都会出现问题，比如redis sentinel模式下主从切换、客户端未感知主从切换导致锁失效。
+cluster模式下会出现不能多key操作以及sentinel出现的主备切换客户端无法感知等问题。
+#### 数据分片
+数据分片是指将一个大数据集按照某个规则分散成较小的数据集
 ### 注意事项
 1. 这个理论提醒我们在分布式系统中需要根据具体的需求做出取舍。
 2. raft协议的只保证写强一致，对于读默认是从leader读就没问题，如果从follower可能会不一致。需要注意
