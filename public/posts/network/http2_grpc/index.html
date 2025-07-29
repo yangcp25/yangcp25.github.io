@@ -5,55 +5,47 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
-<title>分布式锁 | yangcp</title>
+<title>Http2_grpc | yangcp</title>
 <meta name="keywords" content="">
-<meta name="description" content="分布式锁
-定义
-分布式锁是用于并发控制的手段，他需要满足一下几点：
+<meta name="description" content="http2
+http1的弊端
 
-互斥，redis单线程，内置nx命令，只有当key不存在是才返回成功。满足互斥性。
-可重入，可重入是指同一个进程或者线程多次加锁要能获锁成功。这种可以为同一线程生成req_id，并且进行
-计数，当计算为0时对锁进行释放
-避免死锁。如果持锁的线程挂掉，从而无法正常释放锁，就会造成死锁。可以给锁设置过期时间，比如nx命令传入ttl。
-正确释放锁。因为设置了过期时间，所以会导致2个问题
+数据以文本传输，十分低效
+header头数据很多
+每个tcp链接只能发送一次链接
+只能单向传递数据，由浏览器发起
+加载无法定义顺序
 
-如果a执行时间过长，ttl自动释放，这时b正常拿锁，之后a执行完成，如果直接释放锁，就把b的锁释放掉了。解决办法是在加锁的时候
-生成唯一ID,在解锁的时候进行判断，相同才删除。也就是说只有持锁的才能删除。
-删除操作是2个命令，第一个是get,第二个是删除，注意需要保证原子性，因为get的时候并发，aget到锁
-，之后ttl过期，b拿锁，a再释放，就出问题了。需要用lua脚本保证原子性。
+http2
+http2针对这些缺点进行了优化
 
+对数据进行二进制分帧，基于流传输提高了传输效率，还可以进行流量控制，提升安全性和可靠性
+对头数据进行了压缩，采用hpack算法对数据进行压缩，提升了传输效率
+采用多路复用，每个tcp连接可以发起任意多的传输请求，减少了tcp的三次握手等频繁建立请求
+可以实现服务端推送，从单向传输改为双向传输
+可以根据页面不同资源的重要程度设置优先级进行加载
+通过以上五个方面http2对h1进行了升级，提高了传输效率，增加更多实现的功能，提升了客户端用户体验。
 
-续期机制。如果持锁的线程执行时间过长超过了ttl设置的时间，就需要能够自动续期。我们可以采用看门狗机制，启动一个线程，轮训key的剩余过期时间，
-比如到了3/2的过期时间，自动续期。
-分布式下部署下的分布式锁。上面五点基本可以保证单机状态下分布式锁的可靠性。但是单机系统的可用性比较低。如果采用分布式锁需要注意几个问题。
+如何使用
+反向代理软件如nginx/apache等设置http2选项
+如nginx,首先必须支持ssl/tsl证书，再加上listen 443 ssl http2
+go的net组件自动支持http2,无需手动升级
+grpc
+rpc
+rpc是远程过程调用，是一种在不同进程或组件上让函数调用如同本地调用一样的技术。有多种实现，比如json-rpc,xrpc(基于xml),gprc
+googole推出，基于protobuf,通过IDL定义同义的方法和参数，使用代码生成工具生成不同语言的代码。
+grpc也是基于http2,所以他可以利用http2的各种特性
+浏览器一次完整的请求过程
 
-redis的哨兵Sentinel 和 cluster 模式下，不适合做分布式锁。
-
-哨兵模式可能主从延迟、主备切换，比如主节点写入后还没来得及同步就挂掉，从节点成为主节点，锁丢失。
-分布式下不允许多key操作，需要视同tag标签将锁落入同一个slot。其次也会发生哨兵模式的主从延迟、主备切换问题
-
-
-高可以架构可以用redLock或者zookeeper、etcd实现
-
-redLock就是采用多个独立的redis,采用多数派写入保证数据的一致性。
-zookeeper可以在某个目录下建立节点，节点最新获取成功，并删除节点。否则循环或者守护进程监听最近的节点，当发生变化，在判断自己是不是最小的
-节点
-
-
-
-
-
-使用
-使用场景
-使用方法
-注意事项
-参考资料
-
-美团技术团队. 分布式锁. google. 最后修订于2016年09月29日. 访问于2025年7月20日.
-掘金. 分布式锁
+通过DNS解析域名拿到目标IP,依次通过浏览器、本地缓存查询，没有就往根dns服务器查询。
+如果是http协议需要先通过ssl建立安全通道。
+建立TCP连接，通过五元组：协议 ip 端口 目标IP 目标端口 进行三次握手，握手完成后开始发送数据
+数据从应用层-&gt;传输层-&gt;网络IP层-&gt;数据链路层-&gt;物理层这个层次依次进行传输
+服务器会启动进程监听某个端口，当端口监听到请求，进行处理
+服务器处理响应，返回给客户端
 ">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/posts/architecture/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">
+<link rel="canonical" href="http://localhost:1313/posts/network/http2_grpc/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
@@ -62,7 +54,7 @@ zookeeper可以在某个目录下建立节点，节点最新获取成功，并�
 <link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/architecture/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/network/http2_grpc/">
 <noscript>
     <style>
         #theme-toggle,
@@ -169,11 +161,11 @@ zookeeper可以在某个目录下建立节点，节点最新获取成功，并�
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/network/">Network 系列</a></div>
     <h1 class="post-title entry-hint-parent">
-      分布式锁
+      Http2_grpc
     </h1>
-    <div class="post-meta"><span title='2025-07-18 09:29:04 +0800 CST'>July 18, 2025</span>&nbsp;·&nbsp;1 min
+    <div class="post-meta"><span title='2025-07-23 22:28:18 +0800 CST'>July 23, 2025</span>&nbsp;·&nbsp;1 min
 
 </div>
   </header> <div class="toc">
@@ -184,72 +176,72 @@ zookeeper可以在某个目录下建立节点，节点最新获取成功，并�
 
         <div class="inner"><ul>
                 <li>
-                    <a href="#%e5%88%86%e5%b8%83%e5%bc%8f%e9%94%81" aria-label="分布式锁">分布式锁</a></li>
-                <li>
-                    <a href="#%e5%ae%9a%e4%b9%89" aria-label="定义">定义</a></li>
-                <li>
-                    <a href="#%e4%bd%bf%e7%94%a8" aria-label="使用">使用</a><ul>
+                    <a href="#http2" aria-label="http2">http2</a><ul>
                         
                 <li>
-                    <a href="#%e4%bd%bf%e7%94%a8%e5%9c%ba%e6%99%af" aria-label="使用场景">使用场景</a></li>
+                    <a href="#http1%e7%9a%84%e5%bc%8a%e7%ab%af" aria-label="http1的弊端">http1的弊端</a></li>
                 <li>
-                    <a href="#%e4%bd%bf%e7%94%a8%e6%96%b9%e6%b3%95" aria-label="使用方法">使用方法</a></li></ul>
+                    <a href="#http2-1" aria-label="http2">http2</a></li>
+                <li>
+                    <a href="#%e5%a6%82%e4%bd%95%e4%bd%bf%e7%94%a8" aria-label="如何使用">如何使用</a><ul>
+                        
+                <li>
+                    <a href="#%e5%8f%8d%e5%90%91%e4%bb%a3%e7%90%86%e8%bd%af%e4%bb%b6%e5%a6%82nginxapache%e7%ad%89%e8%ae%be%e7%bd%aehttp2%e9%80%89%e9%a1%b9" aria-label="反向代理软件如nginx/apache等设置http2选项">反向代理软件如nginx/apache等设置http2选项</a></li>
+                <li>
+                    <a href="#go%e7%9a%84net%e7%bb%84%e4%bb%b6%e8%87%aa%e5%8a%a8%e6%94%af%e6%8c%81http2%e6%97%a0%e9%9c%80%e6%89%8b%e5%8a%a8%e5%8d%87%e7%ba%a7" aria-label="go的net组件自动支持http2,无需手动升级">go的net组件自动支持http2,无需手动升级</a></li></ul>
+                </li></ul>
                 </li>
                 <li>
-                    <a href="#%e6%b3%a8%e6%84%8f%e4%ba%8b%e9%a1%b9" aria-label="注意事项">注意事项</a></li>
+                    <a href="#grpc" aria-label="grpc">grpc</a><ul>
+                        
                 <li>
-                    <a href="#%e5%8f%82%e8%80%83%e8%b5%84%e6%96%99" aria-label="参考资料">参考资料</a>
+                    <a href="#rpc" aria-label="rpc">rpc</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e6%b5%8f%e8%a7%88%e5%99%a8%e4%b8%80%e6%ac%a1%e5%ae%8c%e6%95%b4%e7%9a%84%e8%af%b7%e6%b1%82%e8%bf%87%e7%a8%8b" aria-label="浏览器一次完整的请求过程">浏览器一次完整的请求过程</a>
                 </li>
             </ul>
         </div>
     </details>
 </div>
 
-  <div class="post-content"><h3 id="分布式锁">分布式锁<a hidden class="anchor" aria-hidden="true" href="#分布式锁">#</a></h3>
-<h3 id="定义">定义<a hidden class="anchor" aria-hidden="true" href="#定义">#</a></h3>
-<p>分布式锁是用于并发控制的手段，他需要满足一下几点：</p>
+  <div class="post-content"><h3 id="http2">http2<a hidden class="anchor" aria-hidden="true" href="#http2">#</a></h3>
+<h4 id="http1的弊端">http1的弊端<a hidden class="anchor" aria-hidden="true" href="#http1的弊端">#</a></h4>
 <ul>
-<li>互斥，redis单线程，内置nx命令，只有当key不存在是才返回成功。满足互斥性。</li>
-<li>可重入，可重入是指同一个进程或者线程多次加锁要能获锁成功。这种可以为同一线程生成req_id，并且进行
-计数，当计算为0时对锁进行释放</li>
-<li>避免死锁。如果持锁的线程挂掉，从而无法正常释放锁，就会造成死锁。可以给锁设置过期时间，比如nx命令传入ttl。</li>
-<li>正确释放锁。因为设置了过期时间，所以会导致2个问题
+<li>数据以文本传输，十分低效</li>
+<li>header头数据很多</li>
+<li>每个tcp链接只能发送一次链接</li>
+<li>只能单向传递数据，由浏览器发起</li>
+<li>加载无法定义顺序</li>
+</ul>
+<h4 id="http2-1">http2<a hidden class="anchor" aria-hidden="true" href="#http2-1">#</a></h4>
+<p>http2针对这些缺点进行了优化</p>
 <ul>
-<li>如果a执行时间过长，ttl自动释放，这时b正常拿锁，之后a执行完成，如果直接释放锁，就把b的锁释放掉了。解决办法是在加锁的时候
-生成唯一ID,在解锁的时候进行判断，相同才删除。也就是说只有持锁的才能删除。</li>
-<li>删除操作是2个命令，第一个是get,第二个是删除，注意需要保证原子性，因为get的时候并发，aget到锁
-，之后ttl过期，b拿锁，a再释放，就出问题了。需要用lua脚本保证原子性。</li>
+<li>对数据进行二进制分帧，基于流传输提高了传输效率，还可以进行流量控制，提升安全性和可靠性</li>
+<li>对头数据进行了压缩，采用hpack算法对数据进行压缩，提升了传输效率</li>
+<li>采用多路复用，每个tcp连接可以发起任意多的传输请求，减少了tcp的三次握手等频繁建立请求</li>
+<li>可以实现服务端推送，从单向传输改为双向传输</li>
+<li>可以根据页面不同资源的重要程度设置优先级进行加载
+通过以上五个方面http2对h1进行了升级，提高了传输效率，增加更多实现的功能，提升了客户端用户体验。</li>
 </ul>
-</li>
-<li>续期机制。如果持锁的线程执行时间过长超过了ttl设置的时间，就需要能够自动续期。我们可以采用看门狗机制，启动一个线程，轮训key的剩余过期时间，
-比如到了3/2的过期时间，自动续期。</li>
-<li>分布式下部署下的分布式锁。上面五点基本可以保证单机状态下分布式锁的可靠性。但是单机系统的可用性比较低。如果采用分布式锁需要注意几个问题。
+<h4 id="如何使用">如何使用<a hidden class="anchor" aria-hidden="true" href="#如何使用">#</a></h4>
+<h5 id="反向代理软件如nginxapache等设置http2选项">反向代理软件如nginx/apache等设置http2选项<a hidden class="anchor" aria-hidden="true" href="#反向代理软件如nginxapache等设置http2选项">#</a></h5>
+<p>如nginx,首先必须支持ssl/tsl证书，再加上<code>listen 443 ssl http2</code></p>
+<h5 id="go的net组件自动支持http2无需手动升级">go的net组件自动支持http2,无需手动升级<a hidden class="anchor" aria-hidden="true" href="#go的net组件自动支持http2无需手动升级">#</a></h5>
+<h3 id="grpc">grpc<a hidden class="anchor" aria-hidden="true" href="#grpc">#</a></h3>
+<h4 id="rpc">rpc<a hidden class="anchor" aria-hidden="true" href="#rpc">#</a></h4>
+<p>rpc是远程过程调用，是一种在不同进程或组件上让函数调用如同本地调用一样的技术。有多种实现，比如json-rpc,xrpc(基于xml),gprc
+googole推出，基于protobuf,通过IDL定义同义的方法和参数，使用代码生成工具生成不同语言的代码。</p>
+<p>grpc也是基于http2,所以他可以利用http2的各种特性</p>
+<h3 id="浏览器一次完整的请求过程">浏览器一次完整的请求过程<a hidden class="anchor" aria-hidden="true" href="#浏览器一次完整的请求过程">#</a></h3>
 <ul>
-<li>redis的哨兵Sentinel 和 cluster 模式下，不适合做分布式锁。
-<ul>
-<li>哨兵模式可能主从延迟、主备切换，比如主节点写入后还没来得及同步就挂掉，从节点成为主节点，锁丢失。</li>
-<li>分布式下不允许多key操作，需要视同tag标签将锁落入同一个slot。其次也会发生哨兵模式的主从延迟、主备切换问题</li>
+<li>通过DNS解析域名拿到目标IP,依次通过浏览器、本地缓存查询，没有就往根dns服务器查询。</li>
+<li>如果是http协议需要先通过ssl建立安全通道。</li>
+<li>建立TCP连接，通过五元组：协议 ip 端口 目标IP 目标端口 进行三次握手，握手完成后开始发送数据</li>
+<li>数据从应用层-&gt;传输层-&gt;网络IP层-&gt;数据链路层-&gt;物理层这个层次依次进行传输</li>
+<li>服务器会启动进程监听某个端口，当端口监听到请求，进行处理</li>
+<li>服务器处理响应，返回给客户端</li>
 </ul>
-</li>
-<li>高可以架构可以用redLock或者zookeeper、etcd实现
-<ul>
-<li>redLock就是采用多个独立的redis,采用多数派写入保证数据的一致性。</li>
-<li>zookeeper可以在某个目录下建立节点，节点最新获取成功，并删除节点。否则循环或者守护进程监听最近的节点，当发生变化，在判断自己是不是最小的
-节点</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="使用">使用<a hidden class="anchor" aria-hidden="true" href="#使用">#</a></h3>
-<h4 id="使用场景">使用场景<a hidden class="anchor" aria-hidden="true" href="#使用场景">#</a></h4>
-<h4 id="使用方法">使用方法<a hidden class="anchor" aria-hidden="true" href="#使用方法">#</a></h4>
-<h3 id="注意事项">注意事项<a hidden class="anchor" aria-hidden="true" href="#注意事项">#</a></h3>
-<h3 id="参考资料">参考资料<a hidden class="anchor" aria-hidden="true" href="#参考资料">#</a></h3>
-<ol>
-<li><strong>美团技术团队</strong>. <a href="https://tech.meituan.com/2016/09/29/distributed-system-mutually-exclusive-idempotence-cerberus-gtis.html">分布式锁</a>. <em>google</em>. 最后修订于2016年09月29日. 访问于2025年7月20日.</li>
-<li><strong>掘金</strong>. <a href="https://juejin.cn/post/6887740972168380429">分布式锁</a></li>
-</ol>
 
 
   </div>
@@ -258,15 +250,15 @@ zookeeper可以在某个目录下建立节点，节点最新获取成功，并�
     <ul class="post-tags">
     </ul>
 <nav class="paginav">
-  <a class="prev" href="http://localhost:1313/posts/network/http2_grpc/">
+  <a class="prev" href="http://localhost:1313/posts/architecture/distributed_transaction/">
     <span class="title">« Prev</span>
     <br>
-    <span>Http2_grpc</span>
+    <span>Distributed_transaction</span>
   </a>
-  <a class="next" href="http://localhost:1313/posts/architecture/cap/">
+  <a class="next" href="http://localhost:1313/posts/architecture/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">
     <span class="title">Next »</span>
     <br>
-    <span>CAP</span>
+    <span>分布式锁</span>
   </a>
 </nav>
 
