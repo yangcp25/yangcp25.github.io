@@ -6,8 +6,15 @@
     <description>Recent content on yangcp</description>
     <generator>Hugo -- 0.147.4</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 29 Jul 2025 09:23:59 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 30 Jul 2025 12:45:45 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Base</title>
+      <link>http://localhost:1313/posts/ai/base/</link>
+      <pubDate>Wed, 30 Jul 2025 12:45:45 +0800</pubDate>
+      <guid>http://localhost:1313/posts/ai/base/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Map</title>
       <link>http://localhost:1313/posts/go/map/</link>
@@ -15,9 +22,33 @@
       <guid>http://localhost:1313/posts/go/map/</guid>
       <description>&lt;h3 id=&#34;go的哈希实现&#34;&gt;go的哈希实现&lt;/h3&gt;
 &lt;h4 id=&#34;通用哈希实现&#34;&gt;通用哈希实现&lt;/h4&gt;
+&lt;p&gt;哈希表是一个高效的数据结构，通过对key经过哈希函数计算的值和存储数据的数组的长度，两者求余得到在数组插入的位置。高效的查找效率
+时间复杂度为O(1)。&lt;/p&gt;
+&lt;h5 id=&#34;哈希函数&#34;&gt;哈希函数&lt;/h5&gt;
+&lt;ul&gt;
+&lt;li&gt;任意长度的输入有固定输出&lt;/li&gt;
+&lt;li&gt;同一输入会产生同一个输出&lt;/li&gt;
+&lt;li&gt;输入的细小改变会造成输入的完全不一样&lt;/li&gt;
+&lt;li&gt;速度快&lt;/li&gt;
+&lt;li&gt;单项不可逆&lt;/li&gt;
+&lt;/ul&gt;
 &lt;h4 id=&#34;go的哈希底层实现&#34;&gt;go的哈希底层实现&lt;/h4&gt;
+&lt;p&gt;通过底层结构体hmap来实例化map对象，hmap 包含指向[]bucket数组的指针。bucket结构里面会存储真实的数据
+以key1key2 val1value2 的形式进行排列，方便内存对齐。头部有top哈希方便bucket内部进行数据定位，底部有指向溢出bucket的指针。
+当发生哈希冲突，冲突的数据会存放到溢出bucket链表。&lt;/p&gt;
+&lt;h5 id=&#34;插入过程&#34;&gt;插入过程&lt;/h5&gt;
+&lt;p&gt;首先用哈希函数对key计算，得到64位数据（64位机器上）。低B位决定数据落入哪个桶。B是log2count，也就是以2为底bucket元素的长度的对数。
+高8位决定落入bucket具体的位置。如果发送哈希冲突，就把数据存入溢出桶。&lt;/p&gt;
+&lt;h5 id=&#34;遍历过程查找过程&#34;&gt;遍历过程、查找过程&lt;/h5&gt;
+&lt;ul&gt;
+&lt;li&gt;遍历：从0-bucket长度随机一个数字选择bucket进行遍历。所以go的map是无序。如果bucket遍历完，溢出桶不为空，继续遍历溢出桶。&lt;/li&gt;
+&lt;li&gt;查找：哈希函数对key计算，低8位找到具体的桶。高8位拿来和bucket的top哈希进行比较，如果一致，再比较具体的key,如果相同就返回，
+否则再看溢出桶是否为空，不会空对链表进行遍历。如果都没有就返回查找失败。&lt;/li&gt;
+&lt;/ul&gt;
 &lt;h4 id=&#34;go的扩容过程&#34;&gt;go的扩容过程&lt;/h4&gt;
 &lt;h4 id=&#34;为什么是线程不安全的&#34;&gt;为什么是线程不安全的&lt;/h4&gt;
+&lt;h4 id=&#34;syncmap使用&#34;&gt;sync.map使用&lt;/h4&gt;
+&lt;h5 id=&#34;syncmap如何实现的&#34;&gt;sync.map如何实现的&lt;/h5&gt;
 &lt;h4 id=&#34;注意事项&#34;&gt;注意事项&lt;/h4&gt;</description>
     </item>
     <item>
@@ -58,16 +89,21 @@
 &lt;h3 id=&#34;grpc&#34;&gt;grpc&lt;/h3&gt;
 &lt;h4 id=&#34;rpc&#34;&gt;rpc&lt;/h4&gt;
 &lt;p&gt;rpc是远程过程调用，是一种在不同进程或组件上让函数调用如同本地调用一样的技术。有多种实现，比如json-rpc,xrpc(基于xml),gprc
-googole推出，基于protobuf,通过IDL定义同义的方法和参数，使用代码生成工具生成不同语言的代码。&lt;/p&gt;
+google推出，基于protobuf,通过IDL定义同义的方法和参数，使用代码生成工具生成不同语言的代码。&lt;/p&gt;
 &lt;p&gt;grpc也是基于http2,所以他可以利用http2的各种特性&lt;/p&gt;
 &lt;h3 id=&#34;浏览器一次完整的请求过程&#34;&gt;浏览器一次完整的请求过程&lt;/h3&gt;
 &lt;ul&gt;
+&lt;li&gt;服务器会启动进程监听某个端口，当端口监听到请求，进行处理&lt;/li&gt;
 &lt;li&gt;通过DNS解析域名拿到目标IP,依次通过浏览器、本地缓存查询，没有就往根dns服务器查询。&lt;/li&gt;
 &lt;li&gt;如果是http协议需要先通过ssl建立安全通道。&lt;/li&gt;
 &lt;li&gt;建立TCP连接，通过五元组：协议 ip 端口 目标IP 目标端口 进行三次握手，握手完成后开始发送数据&lt;/li&gt;
-&lt;li&gt;数据从应用层-&amp;gt;传输层-&amp;gt;网络IP层-&amp;gt;数据链路层-&amp;gt;物理层这个层次依次进行传输&lt;/li&gt;
-&lt;li&gt;服务器会启动进程监听某个端口，当端口监听到请求，进行处理&lt;/li&gt;
+&lt;li&gt;数据进行封装,数据从应用层（报文+端口号）-&amp;gt;传输层（数据段+IP）-&amp;gt;网络IP层（数据包+mac主机物理地址）-&amp;gt;数据链路层(数据帧)-&amp;gt;物理层这个层次依次进行传输&lt;/li&gt;
 &lt;li&gt;服务器处理响应，返回给客户端&lt;/li&gt;
+&lt;li&gt;断开连接、4次挥手，最后一次等待服务器发送完毕数据&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;参考资料&#34;&gt;参考资料&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.csdn.net/u012914309/article/details/127507726?spm=1001.2014.3001.5501&#34;&gt;https://blog.csdn.net/u012914309/article/details/127507726?spm=1001.2014.3001.5501&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</description>
     </item>
     <item>

@@ -128,11 +128,26 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Base
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p></p>
+  </div>
+  <footer class="entry-footer"><span title='2025-07-30 12:45:45 +0800 CST'>July 30, 2025</span>&nbsp;·&nbsp;0 min</footer>
+  <a class="entry-link" aria-label="post link to Base" href="http://localhost:1313/posts/ai/base/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Map
     </h2>
   </header>
   <div class="entry-content">
-    <p>go的哈希实现 通用哈希实现 go的哈希底层实现 go的扩容过程 为什么是线程不安全的 注意事项</p>
+    <p>go的哈希实现 通用哈希实现 哈希表是一个高效的数据结构，通过对key经过哈希函数计算的值和存储数据的数组的长度，两者求余得到在数组插入的位置。高效的查找效率 时间复杂度为O(1)。
+哈希函数 任意长度的输入有固定输出 同一输入会产生同一个输出 输入的细小改变会造成输入的完全不一样 速度快 单项不可逆 go的哈希底层实现 通过底层结构体hmap来实例化map对象，hmap 包含指向[]bucket数组的指针。bucket结构里面会存储真实的数据 以key1key2 val1value2 的形式进行排列，方便内存对齐。头部有top哈希方便bucket内部进行数据定位，底部有指向溢出bucket的指针。 当发生哈希冲突，冲突的数据会存放到溢出bucket链表。
+插入过程 首先用哈希函数对key计算，得到64位数据（64位机器上）。低B位决定数据落入哪个桶。B是log2count，也就是以2为底bucket元素的长度的对数。 高8位决定落入bucket具体的位置。如果发送哈希冲突，就把数据存入溢出桶。
+遍历过程、查找过程 遍历：从0-bucket长度随机一个数字选择bucket进行遍历。所以go的map是无序。如果bucket遍历完，溢出桶不为空，继续遍历溢出桶。 查找：哈希函数对key计算，低8位找到具体的桶。高8位拿来和bucket的top哈希进行比较，如果一致，再比较具体的key,如果相同就返回， 否则再看溢出桶是否为空，不会空对链表进行遍历。如果都没有就返回查找失败。 go的扩容过程 为什么是线程不安全的 sync.map使用 sync.map如何实现的 注意事项</p>
   </div>
   <footer class="entry-footer"><span title='2025-07-29 09:23:59 +0800 CST'>July 29, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to Map" href="http://localhost:1313/posts/go/map/"></a>
@@ -158,9 +173,9 @@
   <div class="entry-content">
     <p>http2 http1的弊端 数据以文本传输，十分低效 header头数据很多 每个tcp链接只能发送一次链接 只能单向传递数据，由浏览器发起 加载无法定义顺序 http2 http2针对这些缺点进行了优化
 对数据进行二进制分帧，基于流传输提高了传输效率，还可以进行流量控制，提升安全性和可靠性 对头数据进行了压缩，采用hpack算法对数据进行压缩，提升了传输效率 采用多路复用，每个tcp连接可以发起任意多的传输请求，减少了tcp的三次握手等频繁建立请求 可以实现服务端推送，从单向传输改为双向传输 可以根据页面不同资源的重要程度设置优先级进行加载 通过以上五个方面http2对h1进行了升级，提高了传输效率，增加更多实现的功能，提升了客户端用户体验。 如何使用 反向代理软件如nginx/apache等设置http2选项 如nginx,首先必须支持ssl/tsl证书，再加上listen 443 ssl http2
-go的net组件自动支持http2,无需手动升级 grpc rpc rpc是远程过程调用，是一种在不同进程或组件上让函数调用如同本地调用一样的技术。有多种实现，比如json-rpc,xrpc(基于xml),gprc googole推出，基于protobuf,通过IDL定义同义的方法和参数，使用代码生成工具生成不同语言的代码。
+go的net组件自动支持http2,无需手动升级 grpc rpc rpc是远程过程调用，是一种在不同进程或组件上让函数调用如同本地调用一样的技术。有多种实现，比如json-rpc,xrpc(基于xml),gprc google推出，基于protobuf,通过IDL定义同义的方法和参数，使用代码生成工具生成不同语言的代码。
 grpc也是基于http2,所以他可以利用http2的各种特性
-浏览器一次完整的请求过程 通过DNS解析域名拿到目标IP,依次通过浏览器、本地缓存查询，没有就往根dns服务器查询。 如果是http协议需要先通过ssl建立安全通道。 建立TCP连接，通过五元组：协议 ip 端口 目标IP 目标端口 进行三次握手，握手完成后开始发送数据 数据从应用层-&gt;传输层-&gt;网络IP层-&gt;数据链路层-&gt;物理层这个层次依次进行传输 服务器会启动进程监听某个端口，当端口监听到请求，进行处理 服务器处理响应，返回给客户端 </p>
+浏览器一次完整的请求过程 服务器会启动进程监听某个端口，当端口监听到请求，进行处理 通过DNS解析域名拿到目标IP,依次通过浏览器、本地缓存查询，没有就往根dns服务器查询。 如果是http协议需要先通过ssl建立安全通道。 建立TCP连接，通过五元组：协议 ip 端口 目标IP 目标端口 进行三次握手，握手完成后开始发送数据 数据进行封装,数据从应用层（报文&#43;端口号）-&gt;传输层（数据段&#43;IP）-&gt;网络IP层（数据包&#43;mac主机物理地址）-&gt;数据链路层(数据帧)-&gt;物理层这个层次依次进行传输 服务器处理响应，返回给客户端 断开连接、4次挥手，最后一次等待服务器发送完毕数据 参考资料 https://blog.csdn.net/u012914309/article/details/127507726?spm=1001.2014.3001.5501 </p>
   </div>
   <footer class="entry-footer"><span title='2025-07-23 22:28:18 +0800 CST'>July 23, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to Http2_grpc" href="http://localhost:1313/posts/network/http2_grpc/"></a>
@@ -177,28 +192,6 @@ grpc也是基于http2,所以他可以利用http2的各种特性
   </div>
   <footer class="entry-footer"><span title='2025-07-18 09:29:04 +0800 CST'>July 18, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to 分布式锁" href="http://localhost:1313/posts/architecture/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"></a>
-</article>
-
-<article class="post-entry"> 
-<figure class="entry-cover">
-        <img loading="lazy" src="http://localhost:1313/images/cap.png" alt="">
-</figure>
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CAP
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>定义 CAP理论是指分布式当中一致性、可用性以及分区容错性三者不可兼得。我们需要根据实际应用场景做出相应的取舍， 在现实中，一般来说分布式系统中的网络是不可能完全保证可用的，所以就需要在CP和AP中做出选择。
-拜占庭将军问题 是指分布式系统中可能有恶意节点对数据一致性造成破坏。如果系统中的节点是f个，为了解决非拜占庭将军问题，至少需要3f&#43;1 个节点。能容忍拜占庭容错的系统一般是高安全性要求的系统，比如区跨链、金融、军事等。
-脑裂 脑裂是指分布式系统中由于网络波动或中断，导致系统被分成多个子系统，子系统在内部选举leader，对外提供服务。这会导致 严重的问题，比如
-数据不一致	两个分区同时写入同一数据（如账户余额），导致冲突且无法自动合并。 资源冲突	两个“领导者”同时操作共享资源（如分配同一IP地址、锁定同一文件）。 状态混乱	客户端可能被不同分区响应矛盾的结果（如A分区说“支付成功”，B分区说“未支付”）。 数据永久丢失	分区恢复后，冲突写入可能导致部分数据被覆盖或丢弃。 为了防止脑裂，一般分布式一致性协议都会采用多数派原则进行避免，比如五个节点的分布式系统中，需要3个节点的确认才能成为leader,否则会 因为无法选主而停止对外提供服务。
-raft协议 raft协议是分布式系统中多个节点对于某个资源的一致性的达成所采用的一种协议，主要有三个部分：
-主从选择 日志复制 安全性和一致性保证 raft协议是强一致的。还有一些其他的一致性组件比如zookeeper。raft协议提供了强一致性的方案。 zookeeper 实践 常见的使用场景 一些常见的开源软件的使用我们会经常遇到这个场景。拿最常见的redis为例，redis的分布式部署方案有三种，主从、哨兵、cluster。
-go 简单的实践 package main import ( &#34;fmt&#34; &#34;io&#34; &#34;log&#34; &#34;net&#34; &#34;os&#34; &#34;time&#34; &#34;github.com/hashicorp/raft&#34; bolt &#34;github.com/hashicorp/raft-boltdb&#34; ) // 简单的 FSM：提交即打印 type FSM struct{} func (f *FSM) Apply(l *raft.Log) interface{} { fmt.Printf(&#34;Apply: %s\n&#34;, string(l.Data)) return nil } func (f *FSM) Snapshot() (raft.FSMSnapshot, error) { return &amp;snapshot{}, nil } func (f *FSM) Restore(io.ReadCloser) error { return nil } type snapshot struct{} func (s *snapshot) Persist(sink raft.SnapshotSink) error { return sink.Close() } func (s *snapshot) Release() {} func main() { // 1) 配置 config := raft.DefaultConfig() config.LocalID = raft.ServerID(os.Args[1]) // 节点 ID 来自第一个参数 // 2) 网络传输：TCP addr, err := net.ResolveTCPAddr(&#34;tcp&#34;, os.Args[2]) if err != nil { log.Fatal(err) } transport, err := raft.NewTCPTransport(os.Args[2], addr, 3, 10*time.Second, os.Stdout) if err != nil { log.Fatal(err) } // 3) 日志与快照存储 store, err := bolt.NewBoltStore(fmt.Sprintf(&#34;raft-%s.db&#34;, os.Args[1])) if err != nil { log.Fatal(err) } snapshotStore := raft.NewInmemSnapshotStore() // 4) 创建 Raft 实例 r, err := raft.NewRaft(config, &amp;FSM{}, store, store, snapshotStore, transport) if err != nil { log.Fatal(err) } // 5) Bootstrap 第一个节点 if os.Args[1] == &#34;node1&#34; { cfg := raft.Configuration{ Servers: []raft.Server{ {ID: &#34;node1&#34;, Address: transport.LocalAddr()}, {ID: &#34;node2&#34;, Address: raft.ServerAddress(&#34;127.0.0.1:12002&#34;)}, {ID: &#34;node3&#34;, Address: raft.ServerAddress(&#34;127.0.0.1:12003&#34;)}, }, } r.BootstrapCluster(cfg) } // 6) 简单命令行提交 if config.LocalID == &#34;node1&#34; { go func() { for { time.Sleep(3 * time.Second) f := r.Apply([]byte(&#34;hello raft&#34;), 5*time.Second) if err := f.Error(); err != nil { log.Println(&#34;apply error:&#34;, err) } } }() } select {} // 阻塞 } `
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-16 09:21:40 +0800 CST'>July 16, 2025</span>&nbsp;·&nbsp;4 min</footer>
-  <a class="entry-link" aria-label="post link to CAP" href="http://localhost:1313/posts/architecture/cap/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

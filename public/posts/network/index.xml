@@ -39,16 +39,21 @@
 &lt;h3 id=&#34;grpc&#34;&gt;grpc&lt;/h3&gt;
 &lt;h4 id=&#34;rpc&#34;&gt;rpc&lt;/h4&gt;
 &lt;p&gt;rpc是远程过程调用，是一种在不同进程或组件上让函数调用如同本地调用一样的技术。有多种实现，比如json-rpc,xrpc(基于xml),gprc
-googole推出，基于protobuf,通过IDL定义同义的方法和参数，使用代码生成工具生成不同语言的代码。&lt;/p&gt;
+google推出，基于protobuf,通过IDL定义同义的方法和参数，使用代码生成工具生成不同语言的代码。&lt;/p&gt;
 &lt;p&gt;grpc也是基于http2,所以他可以利用http2的各种特性&lt;/p&gt;
 &lt;h3 id=&#34;浏览器一次完整的请求过程&#34;&gt;浏览器一次完整的请求过程&lt;/h3&gt;
 &lt;ul&gt;
+&lt;li&gt;服务器会启动进程监听某个端口，当端口监听到请求，进行处理&lt;/li&gt;
 &lt;li&gt;通过DNS解析域名拿到目标IP,依次通过浏览器、本地缓存查询，没有就往根dns服务器查询。&lt;/li&gt;
 &lt;li&gt;如果是http协议需要先通过ssl建立安全通道。&lt;/li&gt;
 &lt;li&gt;建立TCP连接，通过五元组：协议 ip 端口 目标IP 目标端口 进行三次握手，握手完成后开始发送数据&lt;/li&gt;
-&lt;li&gt;数据从应用层-&amp;gt;传输层-&amp;gt;网络IP层-&amp;gt;数据链路层-&amp;gt;物理层这个层次依次进行传输&lt;/li&gt;
-&lt;li&gt;服务器会启动进程监听某个端口，当端口监听到请求，进行处理&lt;/li&gt;
+&lt;li&gt;数据进行封装,数据从应用层（报文+端口号）-&amp;gt;传输层（数据段+IP）-&amp;gt;网络IP层（数据包+mac主机物理地址）-&amp;gt;数据链路层(数据帧)-&amp;gt;物理层这个层次依次进行传输&lt;/li&gt;
 &lt;li&gt;服务器处理响应，返回给客户端&lt;/li&gt;
+&lt;li&gt;断开连接、4次挥手，最后一次等待服务器发送完毕数据&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;参考资料&#34;&gt;参考资料&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.csdn.net/u012914309/article/details/127507726?spm=1001.2014.3001.5501&#34;&gt;https://blog.csdn.net/u012914309/article/details/127507726?spm=1001.2014.3001.5501&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</description>
     </item>
     <item>

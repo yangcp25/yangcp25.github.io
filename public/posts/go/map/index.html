@@ -9,9 +9,33 @@
 <meta name="keywords" content="">
 <meta name="description" content="go的哈希实现
 通用哈希实现
+哈希表是一个高效的数据结构，通过对key经过哈希函数计算的值和存储数据的数组的长度，两者求余得到在数组插入的位置。高效的查找效率
+时间复杂度为O(1)。
+哈希函数
+
+任意长度的输入有固定输出
+同一输入会产生同一个输出
+输入的细小改变会造成输入的完全不一样
+速度快
+单项不可逆
+
 go的哈希底层实现
+通过底层结构体hmap来实例化map对象，hmap 包含指向[]bucket数组的指针。bucket结构里面会存储真实的数据
+以key1key2 val1value2 的形式进行排列，方便内存对齐。头部有top哈希方便bucket内部进行数据定位，底部有指向溢出bucket的指针。
+当发生哈希冲突，冲突的数据会存放到溢出bucket链表。
+插入过程
+首先用哈希函数对key计算，得到64位数据（64位机器上）。低B位决定数据落入哪个桶。B是log2count，也就是以2为底bucket元素的长度的对数。
+高8位决定落入bucket具体的位置。如果发送哈希冲突，就把数据存入溢出桶。
+遍历过程、查找过程
+
+遍历：从0-bucket长度随机一个数字选择bucket进行遍历。所以go的map是无序。如果bucket遍历完，溢出桶不为空，继续遍历溢出桶。
+查找：哈希函数对key计算，低8位找到具体的桶。高8位拿来和bucket的top哈希进行比较，如果一致，再比较具体的key,如果相同就返回，
+否则再看溢出桶是否为空，不会空对链表进行遍历。如果都没有就返回查找失败。
+
 go的扩容过程
 为什么是线程不安全的
+sync.map使用
+sync.map如何实现的
 注意事项">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/posts/go/map/">
@@ -148,13 +172,29 @@ go的扩容过程
                     <a href="#go%e7%9a%84%e5%93%88%e5%b8%8c%e5%ae%9e%e7%8e%b0" aria-label="go的哈希实现">go的哈希实现</a><ul>
                         
                 <li>
-                    <a href="#%e9%80%9a%e7%94%a8%e5%93%88%e5%b8%8c%e5%ae%9e%e7%8e%b0" aria-label="通用哈希实现">通用哈希实现</a></li>
+                    <a href="#%e9%80%9a%e7%94%a8%e5%93%88%e5%b8%8c%e5%ae%9e%e7%8e%b0" aria-label="通用哈希实现">通用哈希实现</a><ul>
+                        
                 <li>
-                    <a href="#go%e7%9a%84%e5%93%88%e5%b8%8c%e5%ba%95%e5%b1%82%e5%ae%9e%e7%8e%b0" aria-label="go的哈希底层实现">go的哈希底层实现</a></li>
+                    <a href="#%e5%93%88%e5%b8%8c%e5%87%bd%e6%95%b0" aria-label="哈希函数">哈希函数</a></li></ul>
+                </li>
+                <li>
+                    <a href="#go%e7%9a%84%e5%93%88%e5%b8%8c%e5%ba%95%e5%b1%82%e5%ae%9e%e7%8e%b0" aria-label="go的哈希底层实现">go的哈希底层实现</a><ul>
+                        
+                <li>
+                    <a href="#%e6%8f%92%e5%85%a5%e8%bf%87%e7%a8%8b" aria-label="插入过程">插入过程</a></li>
+                <li>
+                    <a href="#%e9%81%8d%e5%8e%86%e8%bf%87%e7%a8%8b%e6%9f%a5%e6%89%be%e8%bf%87%e7%a8%8b" aria-label="遍历过程、查找过程">遍历过程、查找过程</a></li></ul>
+                </li>
                 <li>
                     <a href="#go%e7%9a%84%e6%89%a9%e5%ae%b9%e8%bf%87%e7%a8%8b" aria-label="go的扩容过程">go的扩容过程</a></li>
                 <li>
                     <a href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e6%98%af%e7%ba%bf%e7%a8%8b%e4%b8%8d%e5%ae%89%e5%85%a8%e7%9a%84" aria-label="为什么是线程不安全的">为什么是线程不安全的</a></li>
+                <li>
+                    <a href="#syncmap%e4%bd%bf%e7%94%a8" aria-label="sync.map使用">sync.map使用</a><ul>
+                        
+                <li>
+                    <a href="#syncmap%e5%a6%82%e4%bd%95%e5%ae%9e%e7%8e%b0%e7%9a%84" aria-label="sync.map如何实现的">sync.map如何实现的</a></li></ul>
+                </li>
                 <li>
                     <a href="#%e6%b3%a8%e6%84%8f%e4%ba%8b%e9%a1%b9" aria-label="注意事项">注意事项</a>
                 </li>
@@ -167,9 +207,33 @@ go的扩容过程
 
   <div class="post-content"><h3 id="go的哈希实现">go的哈希实现<a hidden class="anchor" aria-hidden="true" href="#go的哈希实现">#</a></h3>
 <h4 id="通用哈希实现">通用哈希实现<a hidden class="anchor" aria-hidden="true" href="#通用哈希实现">#</a></h4>
+<p>哈希表是一个高效的数据结构，通过对key经过哈希函数计算的值和存储数据的数组的长度，两者求余得到在数组插入的位置。高效的查找效率
+时间复杂度为O(1)。</p>
+<h5 id="哈希函数">哈希函数<a hidden class="anchor" aria-hidden="true" href="#哈希函数">#</a></h5>
+<ul>
+<li>任意长度的输入有固定输出</li>
+<li>同一输入会产生同一个输出</li>
+<li>输入的细小改变会造成输入的完全不一样</li>
+<li>速度快</li>
+<li>单项不可逆</li>
+</ul>
 <h4 id="go的哈希底层实现">go的哈希底层实现<a hidden class="anchor" aria-hidden="true" href="#go的哈希底层实现">#</a></h4>
+<p>通过底层结构体hmap来实例化map对象，hmap 包含指向[]bucket数组的指针。bucket结构里面会存储真实的数据
+以key1key2 val1value2 的形式进行排列，方便内存对齐。头部有top哈希方便bucket内部进行数据定位，底部有指向溢出bucket的指针。
+当发生哈希冲突，冲突的数据会存放到溢出bucket链表。</p>
+<h5 id="插入过程">插入过程<a hidden class="anchor" aria-hidden="true" href="#插入过程">#</a></h5>
+<p>首先用哈希函数对key计算，得到64位数据（64位机器上）。低B位决定数据落入哪个桶。B是log2count，也就是以2为底bucket元素的长度的对数。
+高8位决定落入bucket具体的位置。如果发送哈希冲突，就把数据存入溢出桶。</p>
+<h5 id="遍历过程查找过程">遍历过程、查找过程<a hidden class="anchor" aria-hidden="true" href="#遍历过程查找过程">#</a></h5>
+<ul>
+<li>遍历：从0-bucket长度随机一个数字选择bucket进行遍历。所以go的map是无序。如果bucket遍历完，溢出桶不为空，继续遍历溢出桶。</li>
+<li>查找：哈希函数对key计算，低8位找到具体的桶。高8位拿来和bucket的top哈希进行比较，如果一致，再比较具体的key,如果相同就返回，
+否则再看溢出桶是否为空，不会空对链表进行遍历。如果都没有就返回查找失败。</li>
+</ul>
 <h4 id="go的扩容过程">go的扩容过程<a hidden class="anchor" aria-hidden="true" href="#go的扩容过程">#</a></h4>
 <h4 id="为什么是线程不安全的">为什么是线程不安全的<a hidden class="anchor" aria-hidden="true" href="#为什么是线程不安全的">#</a></h4>
+<h4 id="syncmap使用">sync.map使用<a hidden class="anchor" aria-hidden="true" href="#syncmap使用">#</a></h4>
+<h5 id="syncmap如何实现的">sync.map如何实现的<a hidden class="anchor" aria-hidden="true" href="#syncmap如何实现的">#</a></h5>
 <h4 id="注意事项">注意事项<a hidden class="anchor" aria-hidden="true" href="#注意事项">#</a></h4>
 
 
@@ -179,6 +243,11 @@ go的扩容过程
     <ul class="post-tags">
     </ul>
 <nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/ai/base/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Base</span>
+  </a>
   <a class="next" href="http://localhost:1313/posts/architecture/distributed_transaction/">
     <span class="title">Next »</span>
     <br>

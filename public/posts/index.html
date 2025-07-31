@@ -131,11 +131,26 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Base
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p></p>
+  </div>
+  <footer class="entry-footer"><span title='2025-07-30 12:45:45 +0800 CST'>July 30, 2025</span>&nbsp;·&nbsp;0 min</footer>
+  <a class="entry-link" aria-label="post link to Base" href="http://localhost:1313/posts/ai/base/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Map
     </h2>
   </header>
   <div class="entry-content">
-    <p>go的哈希实现 通用哈希实现 go的哈希底层实现 go的扩容过程 为什么是线程不安全的 注意事项</p>
+    <p>go的哈希实现 通用哈希实现 哈希表是一个高效的数据结构，通过对key经过哈希函数计算的值和存储数据的数组的长度，两者求余得到在数组插入的位置。高效的查找效率 时间复杂度为O(1)。
+哈希函数 任意长度的输入有固定输出 同一输入会产生同一个输出 输入的细小改变会造成输入的完全不一样 速度快 单项不可逆 go的哈希底层实现 通过底层结构体hmap来实例化map对象，hmap 包含指向[]bucket数组的指针。bucket结构里面会存储真实的数据 以key1key2 val1value2 的形式进行排列，方便内存对齐。头部有top哈希方便bucket内部进行数据定位，底部有指向溢出bucket的指针。 当发生哈希冲突，冲突的数据会存放到溢出bucket链表。
+插入过程 首先用哈希函数对key计算，得到64位数据（64位机器上）。低B位决定数据落入哪个桶。B是log2count，也就是以2为底bucket元素的长度的对数。 高8位决定落入bucket具体的位置。如果发送哈希冲突，就把数据存入溢出桶。
+遍历过程、查找过程 遍历：从0-bucket长度随机一个数字选择bucket进行遍历。所以go的map是无序。如果bucket遍历完，溢出桶不为空，继续遍历溢出桶。 查找：哈希函数对key计算，低8位找到具体的桶。高8位拿来和bucket的top哈希进行比较，如果一致，再比较具体的key,如果相同就返回， 否则再看溢出桶是否为空，不会空对链表进行遍历。如果都没有就返回查找失败。 go的扩容过程 为什么是线程不安全的 sync.map使用 sync.map如何实现的 注意事项</p>
   </div>
   <footer class="entry-footer"><span title='2025-07-29 09:23:59 +0800 CST'>July 29, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to Map" href="http://localhost:1313/posts/go/map/"></a>
@@ -186,22 +201,6 @@ go 简单的实践 package main import ( &#34;fmt&#34; &#34;io&#34; &#34;log&#34
   </div>
   <footer class="entry-footer"><span title='2025-07-16 09:21:40 +0800 CST'>July 16, 2025</span>&nbsp;·&nbsp;4 min</footer>
   <a class="entry-link" aria-label="post link to CAP" href="http://localhost:1313/posts/architecture/cap/"></a>
-</article>
-
-<article class="post-entry"> 
-<figure class="entry-cover">
-        <img loading="lazy" src="http://localhost:1313/images/img_1.png" alt="">
-</figure>
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">HeapSort
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>HeapSort 堆排序 我发现字节好像很喜欢考这个堆排序，再结合一些其他的场景，所以这里做下堆排序相关的总结。
-通用写法 </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-15 09:55:07 +0800 CST'>July 15, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to HeapSort" href="http://localhost:1313/posts/datastructalgorithm/heapsort/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">
