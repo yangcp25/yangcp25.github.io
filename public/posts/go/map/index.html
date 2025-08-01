@@ -33,6 +33,12 @@ go的哈希底层实现
 否则再看溢出桶是否为空，不会空对链表进行遍历。如果都没有就返回查找失败。
 
 go的扩容过程
+当哈希函数产生过多的哈希碰撞时，就会导致查询效率低下，为了减少哈希碰撞，需要对底层数组的容量扩容或者对数据进行从新排列。
+当满足一下任意条件会触发扩容
+
+当碰撞因子&gt;6.5, 碰撞因子=count(实际元素个数)/2的B次方（bucket数组总的元素长度）
+当溢出桶过多时，当B &lt; 15 , 当溢出桶的个数&gt;B次方，触发扩容。当B&gt;15时，overflow超过2的15次方。
+
 为什么是线程不安全的
 sync.map使用
 sync.map如何实现的
@@ -231,6 +237,12 @@ sync.map如何实现的
 否则再看溢出桶是否为空，不会空对链表进行遍历。如果都没有就返回查找失败。</li>
 </ul>
 <h4 id="go的扩容过程">go的扩容过程<a hidden class="anchor" aria-hidden="true" href="#go的扩容过程">#</a></h4>
+<p>当哈希函数产生过多的哈希碰撞时，就会导致查询效率低下，为了减少哈希碰撞，需要对底层数组的容量扩容或者对数据进行从新排列。
+当满足一下任意条件会触发扩容</p>
+<ul>
+<li>当碰撞因子&gt;6.5, 碰撞因子=count(实际元素个数)/2的B次方（bucket数组总的元素长度）</li>
+<li>当溢出桶过多时，当B &lt; 15 , 当溢出桶的个数&gt;B次方，触发扩容。当B&gt;15时，overflow超过2的15次方。</li>
+</ul>
 <h4 id="为什么是线程不安全的">为什么是线程不安全的<a hidden class="anchor" aria-hidden="true" href="#为什么是线程不安全的">#</a></h4>
 <h4 id="syncmap使用">sync.map使用<a hidden class="anchor" aria-hidden="true" href="#syncmap使用">#</a></h4>
 <h5 id="syncmap如何实现的">sync.map如何实现的<a hidden class="anchor" aria-hidden="true" href="#syncmap如何实现的">#</a></h5>

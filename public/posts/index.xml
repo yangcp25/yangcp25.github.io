@@ -46,6 +46,12 @@
 否则再看溢出桶是否为空，不会空对链表进行遍历。如果都没有就返回查找失败。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h4 id=&#34;go的扩容过程&#34;&gt;go的扩容过程&lt;/h4&gt;
+&lt;p&gt;当哈希函数产生过多的哈希碰撞时，就会导致查询效率低下，为了减少哈希碰撞，需要对底层数组的容量扩容或者对数据进行从新排列。
+当满足一下任意条件会触发扩容&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;当碰撞因子&amp;gt;6.5, 碰撞因子=count(实际元素个数)/2的B次方（bucket数组总的元素长度）&lt;/li&gt;
+&lt;li&gt;当溢出桶过多时，当B &amp;lt; 15 , 当溢出桶的个数&amp;gt;B次方，触发扩容。当B&amp;gt;15时，overflow超过2的15次方。&lt;/li&gt;
+&lt;/ul&gt;
 &lt;h4 id=&#34;为什么是线程不安全的&#34;&gt;为什么是线程不安全的&lt;/h4&gt;
 &lt;h4 id=&#34;syncmap使用&#34;&gt;sync.map使用&lt;/h4&gt;
 &lt;h5 id=&#34;syncmap如何实现的&#34;&gt;sync.map如何实现的&lt;/h5&gt;
