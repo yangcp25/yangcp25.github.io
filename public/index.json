@@ -1,4 +1,11 @@
 [{
+"title":"初始化方法比较",
+"permalink": "http://localhost:1313/posts/go/%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95%E6%AF%94%E8%BE%83/",
+"summary": "make和new的初始化比较 make new 返回值 返回实例化对象本身 返回类型并清空返回实例化对象的指针 作用类型、常见用法 slice、map、channel 所有类型 内部作用机制 初始化结构体，并初始化结构体内部的相关字段机构 初始化对象，清空内存，分配内存，置为零值 为什么new slice map 得到是nil 首先 new 严格遵守返回的是初始化对象指针的原则，而new slice、map的时候，返回的就是对象的引用，只是切片和哈希的 零值就是nil,所有如果new切片和map会出现无法使用的情况。\n",
+"content": "make和new的初始化比较 make new 返回值 返回实例化对象本身 返回类型并清空返回实例化对象的指针 作用类型、常见用法 slice、map、channel 所有类型 内部作用机制 初始化结构体，并初始化结构体内部的相关字段机构 初始化对象，清空内存，分配内存，置为零值 为什么new slice map 得到是nil 首先 new 严格遵守返回的是初始化对象指针的原则，而new slice、map的时候，返回的就是对象的引用，只是切片和哈希的 零值就是nil,所有如果new切片和map会出现无法使用的情况。\n",
+"tags":["go","make","new","初始化"],
+"categories":null
+},{
 "title":"数据粘包",
 "permalink": "http://localhost:1313/posts/network/%E6%95%B0%E6%8D%AE%E7%B2%98%E5%8C%85/",
 "summary": "",
@@ -6,10 +13,10 @@
 "tags":null,
 "categories":null
 },{
-"title":"Base",
-"permalink": "http://localhost:1313/posts/ai/base/",
-"summary": "",
-"content": "",
+"title":"逃逸分析",
+"permalink": "http://localhost:1313/posts/go/%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/",
+"summary": "什么是逃逸分析 计算机科学中对指针作用范围进行分析就叫做逃逸分析。就是分析变量是分配到堆上还是栈上。\n分配到栈上还是分配到堆上，对于后续编译器进行优化有很大的影响。\n栈 堆 分配方式 如果对go的程序进行逃逸分析 逃逸分析需要注意的点",
+"content": "什么是逃逸分析 计算机科学中对指针作用范围进行分析就叫做逃逸分析。就是分析变量是分配到堆上还是栈上。\n分配到栈上还是分配到堆上，对于后续编译器进行优化有很大的影响。\n栈 堆 分配方式 如果对go的程序进行逃逸分析 逃逸分析需要注意的点 ",
 "tags":null,
 "categories":null
 },{

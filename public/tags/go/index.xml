@@ -6,8 +6,44 @@
     <description>Recent content in Go on yangcp</description>
     <generator>Hugo -- 0.147.4</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sun, 06 Jul 2025 12:44:43 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 03 Aug 2025 11:01:53 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/go/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>初始化方法比较</title>
+      <link>http://localhost:1313/posts/go/%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95%E6%AF%94%E8%BE%83/</link>
+      <pubDate>Sun, 03 Aug 2025 11:01:53 +0800</pubDate>
+      <guid>http://localhost:1313/posts/go/%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95%E6%AF%94%E8%BE%83/</guid>
+      <description>&lt;h3 id=&#34;make和new的初始化比较&#34;&gt;make和new的初始化比较&lt;/h3&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: center&#34;&gt;&lt;/th&gt;
+          &lt;th style=&#34;text-align: center&#34;&gt;make&lt;/th&gt;
+          &lt;th style=&#34;text-align: center&#34;&gt;new&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;返回值&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;返回实例化对象本身&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;返回类型并清空返回实例化对象的指针&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;作用类型、常见用法&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;slice、map、channel&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;所有类型&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;内部作用机制&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;初始化结构体，并初始化结构体内部的相关字段机构&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;初始化对象，清空内存，分配内存，置为零值&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;为什么new-slice-map-得到是nil&#34;&gt;为什么new slice map 得到是nil&lt;/h4&gt;
+&lt;p&gt;首先 &lt;code&gt;new&lt;/code&gt; 严格遵守返回的是初始化对象指针的原则，而&lt;code&gt;new&lt;/code&gt; &lt;code&gt;slice&lt;/code&gt;、&lt;code&gt;map&lt;/code&gt;的时候，返回的就是对象的引用，只是切片和哈希的
+零值就是nil,所有如果new切片和map会出现无法使用的情况。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>golang的interface和reflect</title>
       <link>http://localhost:1313/posts/go/interfacereflect/</link>

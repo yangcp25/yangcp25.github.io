@@ -128,6 +128,23 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Http2_grpc
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>http2 http1的弊端 数据以文本传输，十分低效 header头数据很多 每个tcp链接只能发送一次链接 只能单向传递数据，由浏览器发起 加载无法定义顺序 http2 http2针对这些缺点进行了优化
+对数据进行二进制分帧，基于流传输提高了传输效率，还可以进行流量控制，提升安全性和可靠性 对头数据进行了压缩，采用hpack算法对数据进行压缩，提升了传输效率 采用多路复用，每个tcp连接可以发起任意多的传输请求，减少了tcp的三次握手等频繁建立请求 可以实现服务端推送，从单向传输改为双向传输 可以根据页面不同资源的重要程度设置优先级进行加载 通过以上五个方面http2对h1进行了升级，提高了传输效率，增加更多实现的功能，提升了客户端用户体验。 如何使用 反向代理软件如nginx/apache等设置http2选项 如nginx,首先必须支持ssl/tsl证书，再加上listen 443 ssl http2
+go的net组件自动支持http2,无需手动升级 grpc rpc rpc是远程过程调用，是一种在不同进程或组件上让函数调用如同本地调用一样的技术。有多种实现，比如json-rpc,xrpc(基于xml),gprc google推出，基于protobuf,通过IDL(接口定义)定义同义的方法和参数，使用代码生成工具生成不同语言的代码。
+grpc也是基于http2,所以他可以利用http2的各种特性，他有google推出，采用protobuf传输。
+他有以下特点：
+基于IDL生成，接口及定义，可以生成多语言，被客户端和服务端共用。 数据传输效率高，基于http2,拥有双向传输、tcp多路复用、二进制数据帧传输、流量控制等特性 常见于微服务当中，可以方便的定义中间件，进行限流、降级等特性 浏览器一次完整的请求过程 服务器会启动进程监听某个端口，当端口监听到请求，进行处理 通过DNS解析域名拿到目标IP,依次通过浏览器、本地缓存查询，没有就往根dns服务器查询。 如果是http协议需要先通过ssl建立安全通道。 建立TCP连接，通过五元组：协议 ip 端口 目标IP 目标端口 进行三次握手，握手完成后开始发送数据 数据进行封装,数据从应用层（报文）-&gt;传输层（报文&#43;端口号）-&gt;网络IP层（数据段&#43;IP）-&gt;数据链路层(数据包&#43;mac主机物理地址-&gt;数据帧)-&gt;物理层(二进制流)这个层次依次进行传输 通过网络层找到目的主机，通过端口号找到主机监听目的端口的程序。应用程序处理请求。 服务器处理响应，完成后，返回给客户端 断开连接、4次挥手，最后一次等待服务器发送完毕数据 参考资料 https://blog.csdn.net/u012914309/article/details/127507726?spm=1001.2014.3001.5501 </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-07-23 22:28:18 +0800 CST'>July 23, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Http2_grpc" href="http://localhost:1313/posts/network/http2_grpc/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">分布式锁
     </h2>
   </header>
@@ -196,22 +213,6 @@ package main import ( &#34;fmt&#34; &#34;os&#34; &#34;syscall&#34; ) func check(
   </div>
   <footer class="entry-footer"><span title='2025-07-12 14:44:10 +0800 CST'>July 12, 2025</span>&nbsp;·&nbsp;3 min</footer>
   <a class="entry-link" aria-label="post link to Socket" href="http://localhost:1313/posts/network/socket/"></a>
-</article>
-
-<article class="post-entry"> 
-<figure class="entry-cover">
-        <img loading="lazy" src="http://localhost:1313/images/img_2.png" alt="">
-</figure>
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">BFS&amp;&amp;DFS
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>树的遍历 深度优先遍历DFS package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, } root.Left = &amp;TreeNode{Val: 2} root.Right = &amp;TreeNode{Val: 3} root.Right.Left = &amp;TreeNode{Val: 4} root.Left.Left = &amp;TreeNode{Val: 5} list := make([]int, 0) var treeDFS = func(root *TreeNode) {} treeDFS = func(root *TreeNode) { if root == nil { return } list = append(list, root.Val) treeDFS(root.Left) treeDFS(root.Right) } treeDFS(root) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 函数版本
-package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, } root.Left = &amp;TreeNode{Val: 2} root.Right = &amp;TreeNode{Val: 3} root.Right.Left = &amp;TreeNode{Val: 4} root.Left.Left = &amp;TreeNode{Val: 5} list := make([]int, 0) TreeDFS(root, &amp;list) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } func TreeDFS(root *TreeNode, list *[]int) { if root == nil { return } *list = append(*list, root.Val) TreeDFS(root.Left, list) TreeDFS(root.Right, list) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 广度优先遍历BFS list2 := make([]int, 0) queue := make([]*TreeNode, 0) queue = append(queue, root) for len(queue) &gt; 0 { count := len(queue) for i := 0; i &lt; count; i&#43;&#43; { node := queue[0] queue = queue[1:] list2 = append(list2, node.Val) if node.Left != nil { queue = append(queue, node.Left) } if node.Right != nil { queue = append(queue, node.Right) } } } fmt.Println(list2) 根据先序遍历和中序遍历构造二叉树 package main import &#34;fmt&#34; func main() { // 1 // [1 2 5 3 4] 先序 // [2 5 1 3 4] 中序 // 1 [2 5] [2 5] i = 2 [3 4] // [2 5 3 4] [2 5] // [5 3 4] [5] copyTreeRoot := BuildTree([]int{1, 2, 5, 3, 4}, []int{2, 5, 1, 3, 4}) fmt.Println(copyTreeRoot) list3 := make([]int, 0) TreeDFS(copyTreeRoot, &amp;list3) fmt.Println(&#34;list3:&#34;, list3) //SliceTest() } func BuildTree(first []int, mid []int) *TreeNode { if len(first) == 0 { return nil } root := &amp;TreeNode{Val: first[0]} node := first[0] i := 0 for ; i &lt; len(mid); i&#43;&#43; { if mid[i] == node { break } } root.Left = BuildTree(first[1:i&#43;1], mid[:i]) root.Right = BuildTree(first[i&#43;1:], mid[i&#43;1:]) return root } 图的遍历 深度优先遍历DFS &amp;&amp; 广度优先遍历BFS package main import ( &#34;container/list&#34; &#34;fmt&#34; ) func main() { // 0 // 1 -&gt; 4 -&gt; 5 // 0 2 -&gt; 6 -&gt; 7 // 3 -&gt;^ g := make([][]int, 8) //g = append(g, []int{1, 2, 3} g[0] = []int{1, 2, 3} g[1] = []int{4} g[2] = []int{6} g[3] = []int{6} g[4] = []int{5} g[6] = []int{7} g2 := make(map[int][]int) g2[0] = []int{1, 2, 3} g2[1] = []int{4} g2[2] = []int{6} g2[3] = []int{6} g2[4] = []int{5} g2[6] = []int{7} graphDFS(0, g) //graphBFS(g) fmt.Println(&#34;-----&#34;) graphBFSWithQueue(g2) fmt.Println(&#34;-----&#34;) listC := graphBFSWithC(g2) fmt.Println(listC) } func graphDFS(root int, graph [][]int) { fmt.Println(root) if graph[root] == nil { return } //fmt.Println(root) for i := 0; i &lt; len(graph[root]); i&#43;&#43; { graphDFS(graph[root][i], graph) } return } func graphBFSWithQueue(graph map[int][]int) { queue := make([]int, 0) queue = append(queue, 0) fmt.Println(0) visited := make(map[int]bool) for len(queue) &gt; 0 { node := queue[0] queue = queue[1:] g := graph[node] size := len(g) for i := 0; i &lt; size; i&#43;&#43; { if visited[g[i]] { continue } else { fmt.Println(g[i]) queue = append(queue, g[i]) visited[g[i]] = true } } } } func graphBFSWithC(graph map[int][]int) []int { queue := list.New() order := make([]int, 0) visited := make(map[int]bool) queue.PushBack(0) for queue.Len() &gt; 0 { node := queue.Remove(queue.Front()).(int) order = append(order, node) neighbor := graph[node] size := len(neighbor) for i := 0; i &lt; size; i&#43;&#43; { if visited[neighbor[i]] { continue } else { queue.PushBack(neighbor[i]) visited[neighbor[i]] = true } } } return order } 带权图的最短路径算法 dijkstra 参考 可视化网站. 可视化网站. </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-09 09:20:50 +0800 CST'>July 9, 2025</span>&nbsp;·&nbsp;3 min</footer>
-  <a class="entry-link" aria-label="post link to BFS&&DFS" href="http://localhost:1313/posts/datastructalgorithm/bfs_dfs/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">
