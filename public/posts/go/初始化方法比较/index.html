@@ -36,7 +36,7 @@
 
 为什么new slice map 得到是nil
 首先 new 严格遵守返回的是初始化对象指针的原则，而new slice、map的时候，返回的就是对象的引用，只是切片和哈希的
-零值就是nil,所有如果new切片和map会出现无法使用的情况。">
+零值就是nil,所以如果new切片和map会出现无法使用的情况。">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/posts/go/%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95%E6%AF%94%E8%BE%83/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
@@ -210,7 +210,7 @@
 </table>
 <h4 id="为什么new-slice-map-得到是nil">为什么new slice map 得到是nil<a hidden class="anchor" aria-hidden="true" href="#为什么new-slice-map-得到是nil">#</a></h4>
 <p>首先 <code>new</code> 严格遵守返回的是初始化对象指针的原则，而<code>new</code> <code>slice</code>、<code>map</code>的时候，返回的就是对象的引用，只是切片和哈希的
-零值就是nil,所有如果new切片和map会出现无法使用的情况。</p>
+零值就是nil,所以如果new切片和map会出现无法使用的情况。</p>
 
 
   </div>
@@ -223,10 +223,10 @@
       <li><a href="http://localhost:1313/tags/%E5%88%9D%E5%A7%8B%E5%8C%96/">初始化</a></li>
     </ul>
 <nav class="paginav">
-  <a class="next" href="http://localhost:1313/posts/network/%E6%95%B0%E6%8D%AE%E7%B2%98%E5%8C%85/">
+  <a class="next" href="http://localhost:1313/posts/network/tcp%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BF%9D%E8%AF%81/">
     <span class="title">Next »</span>
     <br>
-    <span>数据粘包</span>
+    <span>TCP可靠性保证</span>
   </a>
 </nav>
 

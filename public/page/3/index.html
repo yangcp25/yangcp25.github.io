@@ -127,6 +127,78 @@
 <main class="main"> 
 
 <article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">分布式锁
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>分布式锁 定义 分布式锁是用于并发控制的手段，他需要满足一下几点：
+互斥，redis单线程，内置nx命令，只有当key不存在是才返回成功。满足互斥性。 可重入，可重入是指同一个进程或者线程多次加锁要能获锁成功。这种可以为同一线程生成req_id，并且进行 计数，当计算为0时对锁进行释放 避免死锁。如果持锁的线程挂掉，从而无法正常释放锁，就会造成死锁。可以给锁设置过期时间，比如nx命令传入ttl。 正确释放锁。因为设置了过期时间，所以会导致2个问题 如果a执行时间过长，ttl自动释放，这时b正常拿锁，之后a执行完成，如果直接释放锁，就把b的锁释放掉了。解决办法是在加锁的时候 生成唯一ID,在解锁的时候进行判断，相同才删除。也就是说只有持锁的才能删除。 删除操作是2个命令，第一个是get,第二个是删除，注意需要保证原子性，因为get的时候并发，aget到锁 ，之后ttl过期，b拿锁，a再释放，就出问题了。需要用lua脚本保证原子性。 续期机制。如果持锁的线程执行时间过长超过了ttl设置的时间，就需要能够自动续期。我们可以采用看门狗机制，启动一个线程，轮训key的剩余过期时间， 比如到了3/2的过期时间，自动续期。 分布式下部署下的分布式锁。上面五点基本可以保证单机状态下分布式锁的可靠性。但是单机系统的可用性比较低。如果采用分布式锁需要注意几个问题。 redis的哨兵Sentinel 和 cluster 模式下，不适合做分布式锁。 哨兵模式可能主从延迟、主备切换，比如主节点写入后还没来得及同步就挂掉，从节点成为主节点，锁丢失。 分布式下不允许多key操作，需要视同tag标签将锁落入同一个slot。其次也会发生哨兵模式的主从延迟、主备切换问题 高可以架构可以用redLock或者zookeeper、etcd实现 redLock就是采用多个独立的redis,采用多数派写入保证数据的一致性。 zookeeper可以在某个目录下建立节点，节点最新获取成功，并删除节点。否则循环或者守护进程监听最近的节点，当发生变化，在判断自己是不是最小的 节点 使用 使用场景 使用方法 注意事项 参考资料 美团技术团队. 分布式锁. google. 最后修订于2016年09月29日. 访问于2025年7月20日. 掘金. 分布式锁 </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-07-18 09:29:04 +0800 CST'>July 18, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 分布式锁" href="http://localhost:1313/posts/architecture/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"></a>
+</article>
+
+<article class="post-entry"> 
+<figure class="entry-cover">
+        <img loading="lazy" src="http://localhost:1313/images/cap.png" alt="">
+</figure>
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CAP
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>定义 CAP理论是指分布式当中一致性、可用性以及分区容错性三者不可兼得。我们需要根据实际应用场景做出相应的取舍， 在现实中，一般来说分布式系统中的网络是不可能完全保证可用的，所以就需要在CP和AP中做出选择。
+拜占庭将军问题 是指分布式系统中可能有恶意节点对数据一致性造成破坏。如果系统中的节点是f个，为了解决非拜占庭将军问题，至少需要3f&#43;1 个节点。能容忍拜占庭容错的系统一般是高安全性要求的系统，比如区跨链、金融、军事等。
+脑裂 脑裂是指分布式系统中由于网络波动或中断，导致系统被分成多个子系统，子系统在内部选举leader，对外提供服务。这会导致 严重的问题，比如
+数据不一致	两个分区同时写入同一数据（如账户余额），导致冲突且无法自动合并。 资源冲突	两个“领导者”同时操作共享资源（如分配同一IP地址、锁定同一文件）。 状态混乱	客户端可能被不同分区响应矛盾的结果（如A分区说“支付成功”，B分区说“未支付”）。 数据永久丢失	分区恢复后，冲突写入可能导致部分数据被覆盖或丢弃。 为了防止脑裂，一般分布式一致性协议都会采用多数派原则进行避免，比如五个节点的分布式系统中，需要3个节点的确认才能成为leader,否则会 因为无法选主而停止对外提供服务。
+raft协议 raft协议是分布式系统中多个节点对于某个资源的一致性的达成所采用的一种协议，主要有三个部分：
+主从选择 日志复制 安全性和一致性保证 raft协议是强一致的。还有一些其他的一致性组件比如zookeeper。raft协议提供了强一致性的方案。 zookeeper 实践 常见的使用场景 一些常见的开源软件的使用我们会经常遇到这个场景。拿最常见的redis为例，redis的分布式部署方案有三种，主从、哨兵、cluster。
+go 简单的实践 package main import ( &#34;fmt&#34; &#34;io&#34; &#34;log&#34; &#34;net&#34; &#34;os&#34; &#34;time&#34; &#34;github.com/hashicorp/raft&#34; bolt &#34;github.com/hashicorp/raft-boltdb&#34; ) // 简单的 FSM：提交即打印 type FSM struct{} func (f *FSM) Apply(l *raft.Log) interface{} { fmt.Printf(&#34;Apply: %s\n&#34;, string(l.Data)) return nil } func (f *FSM) Snapshot() (raft.FSMSnapshot, error) { return &amp;snapshot{}, nil } func (f *FSM) Restore(io.ReadCloser) error { return nil } type snapshot struct{} func (s *snapshot) Persist(sink raft.SnapshotSink) error { return sink.Close() } func (s *snapshot) Release() {} func main() { // 1) 配置 config := raft.DefaultConfig() config.LocalID = raft.ServerID(os.Args[1]) // 节点 ID 来自第一个参数 // 2) 网络传输：TCP addr, err := net.ResolveTCPAddr(&#34;tcp&#34;, os.Args[2]) if err != nil { log.Fatal(err) } transport, err := raft.NewTCPTransport(os.Args[2], addr, 3, 10*time.Second, os.Stdout) if err != nil { log.Fatal(err) } // 3) 日志与快照存储 store, err := bolt.NewBoltStore(fmt.Sprintf(&#34;raft-%s.db&#34;, os.Args[1])) if err != nil { log.Fatal(err) } snapshotStore := raft.NewInmemSnapshotStore() // 4) 创建 Raft 实例 r, err := raft.NewRaft(config, &amp;FSM{}, store, store, snapshotStore, transport) if err != nil { log.Fatal(err) } // 5) Bootstrap 第一个节点 if os.Args[1] == &#34;node1&#34; { cfg := raft.Configuration{ Servers: []raft.Server{ {ID: &#34;node1&#34;, Address: transport.LocalAddr()}, {ID: &#34;node2&#34;, Address: raft.ServerAddress(&#34;127.0.0.1:12002&#34;)}, {ID: &#34;node3&#34;, Address: raft.ServerAddress(&#34;127.0.0.1:12003&#34;)}, }, } r.BootstrapCluster(cfg) } // 6) 简单命令行提交 if config.LocalID == &#34;node1&#34; { go func() { for { time.Sleep(3 * time.Second) f := r.Apply([]byte(&#34;hello raft&#34;), 5*time.Second) if err := f.Error(); err != nil { log.Println(&#34;apply error:&#34;, err) } } }() } select {} // 阻塞 } `
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-07-16 09:21:40 +0800 CST'>July 16, 2025</span>&nbsp;·&nbsp;4 min</footer>
+  <a class="entry-link" aria-label="post link to CAP" href="http://localhost:1313/posts/architecture/cap/"></a>
+</article>
+
+<article class="post-entry"> 
+<figure class="entry-cover">
+        <img loading="lazy" src="http://localhost:1313/images/img_1.png" alt="">
+</figure>
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">HeapSort
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>HeapSort 堆排序 我发现字节好像很喜欢考这个堆排序，再结合一些其他的场景，所以这里做下堆排序相关的总结。
+通用写法 </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-07-15 09:55:07 +0800 CST'>July 15, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to HeapSort" href="http://localhost:1313/posts/datastructalgorithm/heapsort/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Socket
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Socket IO模型 常见的IO模型有四种：多进程、多线程、IO复用、协程
+多进程：最原始的一种模式，好处是开发难度小，同一个进程共享内容，缺点是创建和销毁的成本很高。常见的比如php的php-fpm 多线程：相比于多进程开销更小，但是遇到C10K问题还是会出现瓶颈，线程的内存占用通常以M为单位。提高了效率，但是遇到高并发，资源占用还是比较大。常见的比如java的多线程 IO模型: 基于事件的IO处理机制，是单线程模型，通过监听文件句柄socket,注册事件， 当有IO事件发生时，会触发回调函数。由于在单线程模型，开销更小，适合处理高并发。常见的如nodejs、redis。 协程: 协程是态线程，协程的切换开销小，通常以kb为单位，通常一个协程只占用4KB，适合处理高并发。常见的如go语言。 Socket定义 socket是应用层和传输层的一组API接口，用于实现网络通信。 linux当中一切皆文件，操作系统为了统一处理IO模型，将socket也视作文件句柄。
+特性 普通文件 Socket（网络文件） 底层对象 struct inode &#43; struct file struct socket &#43; struct file 操作集 read/write 操作读写磁盘数据 recv/send（也支持 read/write，最终映射到网络收发） 偏移量（offset） 有，指示文件读写位置 无意义，总是以流／报文方式收发 阻塞／非阻塞 可设置阻塞或非阻塞 同样支持阻塞模式和非阻塞模式 I/O 多路复用 支持 select/poll/epoll 完全支持 通过监听文件句柄，结合select/pull/epoll, 可以实现网络编程。
+websocket websocket是一种基于http的协议，用于浏览器和服务器之间进行长连接实时通信。一般会通过对http请求升级upgrade，将http协议升级为websocket协议。
+如何使用 tcp连接需要指定五元组：ip、端口、协议、源ip、源端口，同样的socket也需要指定这些参数。 server端的建立过程：
+socket() bind() listen() accept() close client端的建立过程：
+socket() connect() accept() close() 代码示例 原始方案，使用net包:
+sever端
+package main import ( &#34;fmt&#34; &#34;os&#34; &#34;syscall&#34; ) func check(err error) { if err != nil { fmt.Fprintln(os.Stderr, &#34;错误：&#34;, err) os.Exit(1) } } func main() { // 1. 创建 socket fd, err := syscall.Socket(syscall.AF_INET, syscall.SOCK_STREAM, syscall.IPPROTO_TCP) check(err) defer syscall.Close(fd) // 2. 绑定到本地地址 0.0.0.0:8888 sa := &amp;syscall.SockaddrInet4{Port: 8888} // IP 全 0 表示 INADDR_ANY check(syscall.Bind(fd, sa)) // 3. 开始监听（backlog 128） check(syscall.Listen(fd, 128)) fmt.Println(&#34;raw socket 服务器已启动，端口 8888&#34;) // 4. 接受连接 nfd, rsa, err := syscall.Accept(fd) check(err) fmt.Printf(&#34;接收到客户端：%v\n&#34;, rsa) defer syscall.Close(nfd) // 5. 全双工：一个 goroutine 从 stdin 发出去，一个 goroutine 从 socket 读进来 go func() { buf := make([]byte, 1024) for { // 从标准输入读 n, err := syscall.Read(syscall.Stdin, buf) if err != nil { fmt.Fprintln(os.Stderr, &#34;stdin 读取错误：&#34;, err) return } if n &gt; 0 { _, err = syscall.Write(nfd, buf[:n]) if err != nil { fmt.Fprintln(os.Stderr, &#34;向客户端写入错误：&#34;, err) return } } } }() // 主 goroutine 负责从 socket 读并写到 stdout buf := make([]byte, 1024) for { n, err := syscall.Read(nfd, buf) if err != nil { fmt.Fprintln(os.Stderr, &#34;从客户端读取错误：&#34;, err) return } if n &gt; 0 { // 打印到标准输出 _, err = syscall.Write(syscall.Stdout, buf[:n]) if err != nil { fmt.Fprintln(os.Stderr, &#34;写到 stdout 错误：&#34;, err) return } } } } client端
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-07-12 14:44:10 +0800 CST'>July 12, 2025</span>&nbsp;·&nbsp;3 min</footer>
+  <a class="entry-link" aria-label="post link to Socket" href="http://localhost:1313/posts/network/socket/"></a>
+</article>
+
+<article class="post-entry"> 
 <figure class="entry-cover">
         <img loading="lazy" src="http://localhost:1313/images/img_2.png" alt="">
 </figure>
@@ -141,53 +213,12 @@ package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, }
   <footer class="entry-footer"><span title='2025-07-09 09:20:50 +0800 CST'>July 9, 2025</span>&nbsp;·&nbsp;3 min</footer>
   <a class="entry-link" aria-label="post link to BFS&&DFS" href="http://localhost:1313/posts/datastructalgorithm/bfs_dfs/"></a>
 </article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">https原理
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>定义 http http是超文本传输协议，用于传输网页内容，它基于TCP，所以是可靠性传输。但是它没有解决数据安全性 方面的问题
-http安全方面的问题 http没有对数据进行加密，任何人都可以随意读取这些数据，遭成数据的泄密。 其次没有认证，也就是没有办法知道数据来源的可靠性，攻击者可以中间人攻击来伪造数据 数据完整性，任何人可以读取也可以修改数据 https是什么 https是http的安全版本，https基于ssl，ssl基于tls。http&#43;数据加密&#43;认证&#43;数据完整性就是https。
-https怎么解决的这些问题 数据加密 加密算法 加密算法分为对称加密和非对称加密，还有一些摘要算法 / 哈希算法，一下是一些常见的加密算法
-类型 示例 是否可逆 说明 对称加密 DES / AES / 3DES ✅ 加密解密用同一密钥 非对称加密 RSA / ECC ✅ 公钥加密，私钥解密 摘要算法 MD5 / SHA256 ❌ 不可逆，用于校验完整性 签名算法 DSA / RSA签名 ❌ 用私钥签名，公钥验签 服务器端生成密钥对，将公钥发送给客户端，客户端使用公钥加密对称加密使用的秘钥，发送给服务器端，服务器端使用私钥解密数据， 得到秘钥，后续通过这个秘钥对数据进行加密解密。
-CA CA（Certificate Authority）是证书颁发机构，它负责签发证书，并管理证书的颁发和吊销。
-为什么需要CA 客户端无法知晓拿到的公钥是由目标服务器颁发的，为了验证证书的合法性，防护中间人攻击，需要CA证书颁发机构签发证书。
-证书生成 首先，服务器管理员会向CA提起证书申请，CA会验证域名的所属权，做法通常是在域名解析加一个特定值。 验证通过后，CA会将服务器的公钥用自己的私钥进行签名，生成证书。并颁发给服务器管理员。
-证书验证过程 客户端发起连接请求，服务器会返回证书，客户端会验证证书的合法性，并获取证书的公钥。 浏览器会在发版的时候将各大CA机构的公钥预制在浏览器中，使用CA的公钥对服务器的证书进行解密，拿到解密的hash值。同时 使用同样的摘要算法对原始内容进行加密，用得到的摘要和解密的摘要对比，如果相等，说明证书是CA颁发的，也就证明 了证书的合法性和完整性。
-</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-08 09:35:24 +0800 CST'>July 8, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to https原理" href="http://localhost:1313/posts/network/https/"></a>
-</article>
-
-<article class="post-entry"> 
-<figure class="entry-cover">
-        <img loading="lazy" src="http://localhost:1313/images/img.png" alt="">
-</figure>
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">golang的interface和reflect
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>interface 鸭子类型 如果一个东西，走起来像鸭子，叫起来像鸭子，那么我们认为他就是鸭子。也就是说我们关注对象的行为，而不是对象本身。
-go里面通过接口来达到鸭子类型的效果。
-多态 多态是指同一个操作（函数、方法），在不通的对象的作用下，会有不同的行为。 一般多态有两种实现方式：
-继承和组合，比如java、c&#43;&#43;。 接口的形式 在go里面它没有继承的概念，但是go里面有组合。组合式是一种更灵活的方式。 他可以通过组合和重写来实现继承。在调用结构体的方法的时候，会优先调用最近的结构体的方法。 我们推荐在go里通过接口来实现多态，会更加清晰明了。
-go的interface 定义 go里面的接口是一种复合数据类型。他的底层有2种实现，eface和iface。
-//eface 结构 type eface struct { tab *typtab data unsafe.Pointer } // iface结构 type iface struct { tab *itab data unsafe.Pointer } go里面的所有数据类型都实现了eface,也就是说可以借助interface来表示他的数据类型。 还可以通过interface来定义方法集合 。
-type A interface { method() } 可能你会有一个疑问，那go是怎么确定interface 到底应该是使用eface 还是 iface呢？ go是在编译阶段就会确定好interface 使用的eface 还是 iface。后面不会改变。
-如何使用 什么时候会使用interface 通过接口来实现解耦合，比如依赖注入、适配器模式。 不确定传入参数的类型，需要在运行时来确定。 使用方法 接口列表 type animal interface { move() } type dog struct {} func (d dog) move() { fmt.Println(&#34;dog moving&#34;) } type cat struct {} func (c cat) move() { fmt.Println(&#34;cat moving&#34;) } func main() { var a animal a = dog{} a.move() a = cat{} // a是结构可以同意调用 a.move() // 接口注入 call(a) // 不确定具体的参数 vat func1 = func(param any) {} func1 = func(param any) { fmt.Println(&#34;call any&#34;, param) } } func call(a animal) { fmt.Println(&#34;call animal \n&#34;) a.move() } 需要注意的点和坑 使用接口会让编译器无法确定数据类型，导致无法再编译阶段发现类型错误，引发运行时错误。 使用接口会让程序变得难以阅读和理解。 性能会损失大概一倍 reflect unsafe.pointer go语言unsafe包提供了一些函数，可以获取指针，修改指针，获取指针指向的数据，修改指针指向的数据。 简单来讲，go本身不能操作指针，但是提供了reflect包让我们可以操作指针来获得程序的 性能提升。
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-06 12:44:43 +0800 CST'>July 6, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to golang的interface和reflect" href="http://localhost:1313/posts/go/interfacereflect/"></a>
-</article>
 <footer class="page-footer">
   <nav class="pagination">
     <a class="prev" href="http://localhost:1313/page/2/">
       «&nbsp;Prev&nbsp;
+    </a>
+    <a class="next" href="http://localhost:1313/page/4/">Next&nbsp;&nbsp;»
     </a>
   </nav>
 </footer>

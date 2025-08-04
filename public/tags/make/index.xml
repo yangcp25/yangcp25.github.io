@@ -42,7 +42,7 @@
 &lt;/table&gt;
 &lt;h4 id=&#34;为什么new-slice-map-得到是nil&#34;&gt;为什么new slice map 得到是nil&lt;/h4&gt;
 &lt;p&gt;首先 &lt;code&gt;new&lt;/code&gt; 严格遵守返回的是初始化对象指针的原则，而&lt;code&gt;new&lt;/code&gt; &lt;code&gt;slice&lt;/code&gt;、&lt;code&gt;map&lt;/code&gt;的时候，返回的就是对象的引用，只是切片和哈希的
-零值就是nil,所有如果new切片和map会出现无法使用的情况。&lt;/p&gt;</description>
+零值就是nil,所以如果new切片和map会出现无法使用的情况。&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

@@ -7,7 +7,27 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Gc | yangcp</title>
 <meta name="keywords" content="">
-<meta name="description" content="Gc - yangcp">
+<meta name="description" content="什么是GC
+gc就是内存垃圾回收。c/c&#43;&#43;这类语言可以由程序员申请内存，分配到堆上，堆上的数据随着函数结束并不会自动被清零，需要程序员手动清理。
+这会给编程增加负担和隐患。高级语言如java/go支持gc,自动分析没有被引用的变量，进行内存回收。
+常见的GC方法
+引用计数法
+简单的对变量的引用次数进行计数，当计数为0就会被回收。它实现简单，但无法解决循环引用的问题
+三色标记法
+所有的根对象被置为灰色，遍历所有的灰色对象，完成后将灰色对象置为黑色对象，将灰色对象的子对象引用置为灰色。
+再次遍历灰色对象，循环直到所有灰色对象遍历完。只剩下黑色对象和白色对象。黑色对象是具有引用关系的内存对象，不能被回收。
+对白色对象进行回收。
+go的GC实现
+扫描过程
+同三色标记法
+混合写屏障
+作用是减少stw的时间，具体的做法如下：
+
+插入对象直接置为黑色对象
+
+
+分析工具和分析方法
+如何针对GC进行优化">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/posts/go/gc/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
@@ -129,11 +149,73 @@
     <h1 class="post-title entry-hint-parent">
       Gc
     </h1>
-    <div class="post-meta"><span title='2025-08-01 09:10:00 +0800 CST'>August 1, 2025</span>&nbsp;·&nbsp;0 min
+    <div class="post-meta"><span title='2025-08-01 09:10:00 +0800 CST'>August 1, 2025</span>&nbsp;·&nbsp;1 min
 
 </div>
-  </header> 
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
 
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e4%bb%80%e4%b9%88%e6%98%afgc" aria-label="什么是GC">什么是GC</a><ul>
+                        
+                <li>
+                    <a href="#%e5%b8%b8%e8%a7%81%e7%9a%84gc%e6%96%b9%e6%b3%95" aria-label="常见的GC方法">常见的GC方法</a><ul>
+                        
+                <li>
+                    <a href="#%e5%bc%95%e7%94%a8%e8%ae%a1%e6%95%b0%e6%b3%95" aria-label="引用计数法">引用计数法</a></li>
+                <li>
+                    <a href="#%e4%b8%89%e8%89%b2%e6%a0%87%e8%ae%b0%e6%b3%95" aria-label="三色标记法">三色标记法</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#go%e7%9a%84gc%e5%ae%9e%e7%8e%b0" aria-label="go的GC实现">go的GC实现</a><ul>
+                        
+                <li>
+                    <a href="#%e6%89%ab%e6%8f%8f%e8%bf%87%e7%a8%8b" aria-label="扫描过程">扫描过程</a></li>
+                <li>
+                    <a href="#%e6%b7%b7%e5%90%88%e5%86%99%e5%b1%8f%e9%9a%9c" aria-label="混合写屏障">混合写屏障</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%88%86%e6%9e%90%e5%b7%a5%e5%85%b7%e5%92%8c%e5%88%86%e6%9e%90%e6%96%b9%e6%b3%95" aria-label="分析工具和分析方法">分析工具和分析方法</a><ul>
+                        
+                <li>
+                    <a href="#%e5%a6%82%e4%bd%95%e9%92%88%e5%af%b9gc%e8%bf%9b%e8%a1%8c%e4%bc%98%e5%8c%96" aria-label="如何针对GC进行优化">如何针对GC进行优化</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h3 id="什么是gc">什么是GC<a hidden class="anchor" aria-hidden="true" href="#什么是gc">#</a></h3>
+<p>gc就是内存垃圾回收。c/c++这类语言可以由程序员申请内存，分配到堆上，堆上的数据随着函数结束并不会自动被清零，需要程序员手动清理。
+这会给编程增加负担和隐患。高级语言如java/go支持gc,自动分析没有被引用的变量，进行内存回收。</p>
+<h4 id="常见的gc方法">常见的GC方法<a hidden class="anchor" aria-hidden="true" href="#常见的gc方法">#</a></h4>
+<h5 id="引用计数法">引用计数法<a hidden class="anchor" aria-hidden="true" href="#引用计数法">#</a></h5>
+<p>简单的对变量的引用次数进行计数，当计数为0就会被回收。它实现简单，但无法解决循环引用的问题</p>
+<h5 id="三色标记法">三色标记法<a hidden class="anchor" aria-hidden="true" href="#三色标记法">#</a></h5>
+<p>所有的根对象被置为灰色，遍历所有的灰色对象，完成后将灰色对象置为黑色对象，将灰色对象的子对象引用置为灰色。
+再次遍历灰色对象，循环直到所有灰色对象遍历完。只剩下黑色对象和白色对象。黑色对象是具有引用关系的内存对象，不能被回收。
+对白色对象进行回收。</p>
+<h3 id="go的gc实现">go的GC实现<a hidden class="anchor" aria-hidden="true" href="#go的gc实现">#</a></h3>
+<h4 id="扫描过程">扫描过程<a hidden class="anchor" aria-hidden="true" href="#扫描过程">#</a></h4>
+<p>同三色标记法</p>
+<h4 id="混合写屏障">混合写屏障<a hidden class="anchor" aria-hidden="true" href="#混合写屏障">#</a></h4>
+<p>作用是减少stw的时间，具体的做法如下：</p>
+<ul>
+<li>插入对象直接置为黑色对象</li>
+<li></li>
+</ul>
+<h3 id="分析工具和分析方法">分析工具和分析方法<a hidden class="anchor" aria-hidden="true" href="#分析工具和分析方法">#</a></h3>
+<h4 id="如何针对gc进行优化">如何针对GC进行优化<a hidden class="anchor" aria-hidden="true" href="#如何针对gc进行优化">#</a></h4>
+
+
+  </div>
 
   <footer class="post-footer">
     <ul class="post-tags">

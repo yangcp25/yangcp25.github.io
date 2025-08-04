@@ -130,6 +130,47 @@
 </header>
 
 <article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Map
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>go的哈希实现 通用哈希实现 哈希表是一个高效的数据结构，通过对key经过哈希函数计算的值和存储数据的数组的长度，两者求余得到在数组插入的位置。高效的查找效率 时间复杂度为O(1)。
+哈希函数 任意长度的输入有固定输出 同一输入会产生同一个输出 输入的细小改变会造成输入的完全不一样 速度快 单项不可逆 go的哈希底层实现 通过底层结构体hmap来实例化map对象，hmap 包含指向[]bucket数组的指针。bucket结构里面会存储真实的数据 以key1key2 val1value2 的形式进行排列，方便内存对齐。头部有top哈希方便bucket内部进行数据定位，底部有指向溢出bucket的指针。 当发生哈希冲突，冲突的数据会存放到溢出bucket链表。
+插入过程 首先用哈希函数对key计算，得到64位数据（64位机器上）。低B位决定数据落入哪个桶。B是log2count，也就是以2为底bucket元素的长度的对数。 高8位决定落入bucket具体的位置。如果发送哈希冲突，就把数据存入溢出桶。
+遍历过程、查找过程 遍历：从0-bucket长度随机一个数字选择bucket进行遍历。所以go的map是无序。如果bucket遍历完，溢出桶不为空，继续遍历溢出桶。 查找：哈希函数对key计算，低8位找到具体的桶。高8位拿来和bucket的top哈希进行比较，如果一致，再比较具体的key,如果相同就返回， 否则再看溢出桶是否为空，不会空对链表进行遍历。如果都没有就返回查找失败。 go的扩容过程 当哈希函数产生过多的哈希碰撞时，就会导致查询效率低下，为了减少哈希碰撞，需要对底层数组的容量扩容或者对数据进行从新排列。 当满足一下任意条件会触发扩容
+当碰撞因子&gt;6.5, 碰撞因子=count(实际元素个数)/2的B次方（bucket数组总的元素长度） 当溢出桶过多时，当B &lt; 15 , 当溢出桶的个数&gt;B次方，触发扩容。当B&gt;15时，overflow超过2的15次方。 为什么是线程不安全的 sync.map使用 sync.map如何实现的 注意事项</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-07-29 09:23:59 +0800 CST'>July 29, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Map" href="http://localhost:1313/posts/go/map/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Distributed_transaction
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>分布式事务</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-07-29 09:18:53 +0800 CST'>July 29, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Distributed_transaction" href="http://localhost:1313/posts/architecture/distributed_transaction/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">分布式锁
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>分布式锁 定义 分布式锁是用于并发控制的手段，他需要满足一下几点：
+互斥，redis单线程，内置nx命令，只有当key不存在是才返回成功。满足互斥性。 可重入，可重入是指同一个进程或者线程多次加锁要能获锁成功。这种可以为同一线程生成req_id，并且进行 计数，当计算为0时对锁进行释放 避免死锁。如果持锁的线程挂掉，从而无法正常释放锁，就会造成死锁。可以给锁设置过期时间，比如nx命令传入ttl。 正确释放锁。因为设置了过期时间，所以会导致2个问题 如果a执行时间过长，ttl自动释放，这时b正常拿锁，之后a执行完成，如果直接释放锁，就把b的锁释放掉了。解决办法是在加锁的时候 生成唯一ID,在解锁的时候进行判断，相同才删除。也就是说只有持锁的才能删除。 删除操作是2个命令，第一个是get,第二个是删除，注意需要保证原子性，因为get的时候并发，aget到锁 ，之后ttl过期，b拿锁，a再释放，就出问题了。需要用lua脚本保证原子性。 续期机制。如果持锁的线程执行时间过长超过了ttl设置的时间，就需要能够自动续期。我们可以采用看门狗机制，启动一个线程，轮训key的剩余过期时间， 比如到了3/2的过期时间，自动续期。 分布式下部署下的分布式锁。上面五点基本可以保证单机状态下分布式锁的可靠性。但是单机系统的可用性比较低。如果采用分布式锁需要注意几个问题。 redis的哨兵Sentinel 和 cluster 模式下，不适合做分布式锁。 哨兵模式可能主从延迟、主备切换，比如主节点写入后还没来得及同步就挂掉，从节点成为主节点，锁丢失。 分布式下不允许多key操作，需要视同tag标签将锁落入同一个slot。其次也会发生哨兵模式的主从延迟、主备切换问题 高可以架构可以用redLock或者zookeeper、etcd实现 redLock就是采用多个独立的redis,采用多数派写入保证数据的一致性。 zookeeper可以在某个目录下建立节点，节点最新获取成功，并删除节点。否则循环或者守护进程监听最近的节点，当发生变化，在判断自己是不是最小的 节点 使用 使用场景 使用方法 注意事项 参考资料 美团技术团队. 分布式锁. google. 最后修订于2016年09月29日. 访问于2025年7月20日. 掘金. 分布式锁 </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-07-18 09:29:04 +0800 CST'>July 18, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 分布式锁" href="http://localhost:1313/posts/architecture/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"></a>
+</article>
+
+<article class="post-entry"> 
 <figure class="entry-cover">
         <img loading="lazy" src="http://localhost:1313/images/cap.png" alt="">
 </figure>
@@ -166,61 +207,12 @@ go 简单的实践 package main import ( &#34;fmt&#34; &#34;io&#34; &#34;log&#34
   <footer class="entry-footer"><span title='2025-07-15 09:55:07 +0800 CST'>July 15, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to HeapSort" href="http://localhost:1313/posts/datastructalgorithm/heapsort/"></a>
 </article>
-
-<article class="post-entry"> 
-<figure class="entry-cover">
-        <img loading="lazy" src="http://localhost:1313/images/img_2.png" alt="">
-</figure>
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">BFS&amp;&amp;DFS
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>树的遍历 深度优先遍历DFS package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, } root.Left = &amp;TreeNode{Val: 2} root.Right = &amp;TreeNode{Val: 3} root.Right.Left = &amp;TreeNode{Val: 4} root.Left.Left = &amp;TreeNode{Val: 5} list := make([]int, 0) var treeDFS = func(root *TreeNode) {} treeDFS = func(root *TreeNode) { if root == nil { return } list = append(list, root.Val) treeDFS(root.Left) treeDFS(root.Right) } treeDFS(root) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 函数版本
-package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, } root.Left = &amp;TreeNode{Val: 2} root.Right = &amp;TreeNode{Val: 3} root.Right.Left = &amp;TreeNode{Val: 4} root.Left.Left = &amp;TreeNode{Val: 5} list := make([]int, 0) TreeDFS(root, &amp;list) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } func TreeDFS(root *TreeNode, list *[]int) { if root == nil { return } *list = append(*list, root.Val) TreeDFS(root.Left, list) TreeDFS(root.Right, list) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 广度优先遍历BFS list2 := make([]int, 0) queue := make([]*TreeNode, 0) queue = append(queue, root) for len(queue) &gt; 0 { count := len(queue) for i := 0; i &lt; count; i&#43;&#43; { node := queue[0] queue = queue[1:] list2 = append(list2, node.Val) if node.Left != nil { queue = append(queue, node.Left) } if node.Right != nil { queue = append(queue, node.Right) } } } fmt.Println(list2) 根据先序遍历和中序遍历构造二叉树 package main import &#34;fmt&#34; func main() { // 1 // [1 2 5 3 4] 先序 // [2 5 1 3 4] 中序 // 1 [2 5] [2 5] i = 2 [3 4] // [2 5 3 4] [2 5] // [5 3 4] [5] copyTreeRoot := BuildTree([]int{1, 2, 5, 3, 4}, []int{2, 5, 1, 3, 4}) fmt.Println(copyTreeRoot) list3 := make([]int, 0) TreeDFS(copyTreeRoot, &amp;list3) fmt.Println(&#34;list3:&#34;, list3) //SliceTest() } func BuildTree(first []int, mid []int) *TreeNode { if len(first) == 0 { return nil } root := &amp;TreeNode{Val: first[0]} node := first[0] i := 0 for ; i &lt; len(mid); i&#43;&#43; { if mid[i] == node { break } } root.Left = BuildTree(first[1:i&#43;1], mid[:i]) root.Right = BuildTree(first[i&#43;1:], mid[i&#43;1:]) return root } 图的遍历 深度优先遍历DFS &amp;&amp; 广度优先遍历BFS package main import ( &#34;container/list&#34; &#34;fmt&#34; ) func main() { // 0 // 1 -&gt; 4 -&gt; 5 // 0 2 -&gt; 6 -&gt; 7 // 3 -&gt;^ g := make([][]int, 8) //g = append(g, []int{1, 2, 3} g[0] = []int{1, 2, 3} g[1] = []int{4} g[2] = []int{6} g[3] = []int{6} g[4] = []int{5} g[6] = []int{7} g2 := make(map[int][]int) g2[0] = []int{1, 2, 3} g2[1] = []int{4} g2[2] = []int{6} g2[3] = []int{6} g2[4] = []int{5} g2[6] = []int{7} graphDFS(0, g) //graphBFS(g) fmt.Println(&#34;-----&#34;) graphBFSWithQueue(g2) fmt.Println(&#34;-----&#34;) listC := graphBFSWithC(g2) fmt.Println(listC) } func graphDFS(root int, graph [][]int) { fmt.Println(root) if graph[root] == nil { return } //fmt.Println(root) for i := 0; i &lt; len(graph[root]); i&#43;&#43; { graphDFS(graph[root][i], graph) } return } func graphBFSWithQueue(graph map[int][]int) { queue := make([]int, 0) queue = append(queue, 0) fmt.Println(0) visited := make(map[int]bool) for len(queue) &gt; 0 { node := queue[0] queue = queue[1:] g := graph[node] size := len(g) for i := 0; i &lt; size; i&#43;&#43; { if visited[g[i]] { continue } else { fmt.Println(g[i]) queue = append(queue, g[i]) visited[g[i]] = true } } } } func graphBFSWithC(graph map[int][]int) []int { queue := list.New() order := make([]int, 0) visited := make(map[int]bool) queue.PushBack(0) for queue.Len() &gt; 0 { node := queue.Remove(queue.Front()).(int) order = append(order, node) neighbor := graph[node] size := len(neighbor) for i := 0; i &lt; size; i&#43;&#43; { if visited[neighbor[i]] { continue } else { queue.PushBack(neighbor[i]) visited[neighbor[i]] = true } } } return order } 带权图的最短路径算法 dijkstra 参考 可视化网站. 可视化网站. </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-09 09:20:50 +0800 CST'>July 9, 2025</span>&nbsp;·&nbsp;3 min</footer>
-  <a class="entry-link" aria-label="post link to BFS&&DFS" href="http://localhost:1313/posts/datastructalgorithm/bfs_dfs/"></a>
-</article>
-
-<article class="post-entry"> 
-<figure class="entry-cover">
-        <img loading="lazy" src="http://localhost:1313/images/img.png" alt="">
-</figure>
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">golang的interface和reflect
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>interface 鸭子类型 如果一个东西，走起来像鸭子，叫起来像鸭子，那么我们认为他就是鸭子。也就是说我们关注对象的行为，而不是对象本身。
-go里面通过接口来达到鸭子类型的效果。
-多态 多态是指同一个操作（函数、方法），在不通的对象的作用下，会有不同的行为。 一般多态有两种实现方式：
-继承和组合，比如java、c&#43;&#43;。 接口的形式 在go里面它没有继承的概念，但是go里面有组合。组合式是一种更灵活的方式。 他可以通过组合和重写来实现继承。在调用结构体的方法的时候，会优先调用最近的结构体的方法。 我们推荐在go里通过接口来实现多态，会更加清晰明了。
-go的interface 定义 go里面的接口是一种复合数据类型。他的底层有2种实现，eface和iface。
-//eface 结构 type eface struct { tab *typtab data unsafe.Pointer } // iface结构 type iface struct { tab *itab data unsafe.Pointer } go里面的所有数据类型都实现了eface,也就是说可以借助interface来表示他的数据类型。 还可以通过interface来定义方法集合 。
-type A interface { method() } 可能你会有一个疑问，那go是怎么确定interface 到底应该是使用eface 还是 iface呢？ go是在编译阶段就会确定好interface 使用的eface 还是 iface。后面不会改变。
-如何使用 什么时候会使用interface 通过接口来实现解耦合，比如依赖注入、适配器模式。 不确定传入参数的类型，需要在运行时来确定。 使用方法 接口列表 type animal interface { move() } type dog struct {} func (d dog) move() { fmt.Println(&#34;dog moving&#34;) } type cat struct {} func (c cat) move() { fmt.Println(&#34;cat moving&#34;) } func main() { var a animal a = dog{} a.move() a = cat{} // a是结构可以同意调用 a.move() // 接口注入 call(a) // 不确定具体的参数 vat func1 = func(param any) {} func1 = func(param any) { fmt.Println(&#34;call any&#34;, param) } } func call(a animal) { fmt.Println(&#34;call animal \n&#34;) a.move() } 需要注意的点和坑 使用接口会让编译器无法确定数据类型，导致无法再编译阶段发现类型错误，引发运行时错误。 使用接口会让程序变得难以阅读和理解。 性能会损失大概一倍 reflect unsafe.pointer go语言unsafe包提供了一些函数，可以获取指针，修改指针，获取指针指向的数据，修改指针指向的数据。 简单来讲，go本身不能操作指针，但是提供了reflect包让我们可以操作指针来获得程序的 性能提升。
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-06 12:44:43 +0800 CST'>July 6, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to golang的interface和reflect" href="http://localhost:1313/posts/go/interfacereflect/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Network 系列
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p></p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-12 00:00:00 +0000 UTC'>July 12, 2025</span>&nbsp;·&nbsp;0 min</footer>
-  <a class="entry-link" aria-label="post link to Network 系列" href="http://localhost:1313/posts/network/"></a>
-</article>
 <footer class="page-footer">
   <nav class="pagination">
     <a class="prev" href="http://localhost:1313/posts/">
       «&nbsp;Prev&nbsp;
+    </a>
+    <a class="next" href="http://localhost:1313/posts/page/3/">Next&nbsp;&nbsp;»
     </a>
   </nav>
 </footer>

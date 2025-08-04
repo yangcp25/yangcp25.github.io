@@ -42,7 +42,45 @@
 &lt;/table&gt;
 &lt;h4 id=&#34;为什么new-slice-map-得到是nil&#34;&gt;为什么new slice map 得到是nil&lt;/h4&gt;
 &lt;p&gt;首先 &lt;code&gt;new&lt;/code&gt; 严格遵守返回的是初始化对象指针的原则，而&lt;code&gt;new&lt;/code&gt; &lt;code&gt;slice&lt;/code&gt;、&lt;code&gt;map&lt;/code&gt;的时候，返回的就是对象的引用，只是切片和哈希的
-零值就是nil,所有如果new切片和map会出现无法使用的情况。&lt;/p&gt;</description>
+零值就是nil,所以如果new切片和map会出现无法使用的情况。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>内存泄漏</title>
+      <link>http://localhost:1313/posts/go/%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F/</link>
+      <pubDate>Fri, 01 Aug 2025 09:10:55 +0800</pubDate>
+      <guid>http://localhost:1313/posts/go/%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F/</guid>
+      <description>&lt;h3 id=&#34;什么是内存泄漏&#34;&gt;什么是内存泄漏&lt;/h3&gt;
+&lt;p&gt;指内存资源长期得不到释放，导致内存溢出&lt;/p&gt;
+&lt;h3 id=&#34;内存泄漏的常见场景&#34;&gt;内存泄漏的常见场景&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;协程的泄漏
+&lt;ol&gt;
+&lt;li&gt;耗时任务或者http请求一直得不到响应，又没有设置超时时间&lt;/li&gt;
+&lt;li&gt;chan未正确关闭、阻塞&lt;/li&gt;
+&lt;li&gt;锁未正确释放、导致协程未能释放&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;channel泄漏&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;内存泄漏分析工具&#34;&gt;内存泄漏分析工具&lt;/h3&gt;
+&lt;p&gt;pprof分析协程数量，内存占用情况等&lt;/p&gt;
+&lt;h3 id=&#34;如何针对内存泄漏进行优化&#34;&gt;如何针对内存泄漏进行优化&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;针对协程泄漏
+&lt;ol&gt;
+&lt;li&gt;设置超时时间&lt;/li&gt;
+&lt;li&gt;正确使用channel&lt;/li&gt;
+&lt;li&gt;正确使用互斥锁，配对使用&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;针对channel的泄漏
+&lt;ol&gt;
+&lt;li&gt;配对使用&lt;/li&gt;
+&lt;li&gt;在发送方关闭channel&lt;/li&gt;
+&lt;li&gt;正确使用缓冲channel和非缓冲channel&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;</description>
     </item>
     <item>
       <title>逃逸分析</title>
@@ -63,13 +101,62 @@
   &lt;tbody&gt;
       &lt;tr&gt;
           &lt;td&gt;分配方式&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
+          &lt;td&gt;随着函数创建自动分配&lt;/td&gt;
+          &lt;td&gt;程序员手动分配&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;资源消耗&lt;/td&gt;
+          &lt;td&gt;很小&lt;/td&gt;
+          &lt;td&gt;比较大&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;回收方式&lt;/td&gt;
+          &lt;td&gt;随着函数的结束进行销毁&lt;/td&gt;
+          &lt;td&gt;需要手动回收,或者根据gc算法进行回收&lt;/td&gt;
       &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;h3 id=&#34;如果对go的程序进行逃逸分析&#34;&gt;如果对go的程序进行逃逸分析&lt;/h3&gt;
-&lt;h3 id=&#34;逃逸分析需要注意的点&#34;&gt;逃逸分析需要注意的点&lt;/h3&gt;</description>
+&lt;p&gt;使用源码go build 分析，看变量是否发生了逃逸&lt;/p&gt;
+&lt;h3 id=&#34;如何使用&#34;&gt;如何使用&lt;/h3&gt;
+&lt;h3 id=&#34;逃逸分析需要注意的点&#34;&gt;逃逸分析需要注意的点&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    <item>
+      <title>Gc</title>
+      <link>http://localhost:1313/posts/go/gc/</link>
+      <pubDate>Fri, 01 Aug 2025 09:10:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts/go/gc/</guid>
+      <description>&lt;h3 id=&#34;什么是gc&#34;&gt;什么是GC&lt;/h3&gt;
+&lt;p&gt;gc就是内存垃圾回收。c/c++这类语言可以由程序员申请内存，分配到堆上，堆上的数据随着函数结束并不会自动被清零，需要程序员手动清理。
+这会给编程增加负担和隐患。高级语言如java/go支持gc,自动分析没有被引用的变量，进行内存回收。&lt;/p&gt;
+&lt;h4 id=&#34;常见的gc方法&#34;&gt;常见的GC方法&lt;/h4&gt;
+&lt;h5 id=&#34;引用计数法&#34;&gt;引用计数法&lt;/h5&gt;
+&lt;p&gt;简单的对变量的引用次数进行计数，当计数为0就会被回收。它实现简单，但无法解决循环引用的问题&lt;/p&gt;
+&lt;h5 id=&#34;三色标记法&#34;&gt;三色标记法&lt;/h5&gt;
+&lt;p&gt;所有的根对象被置为灰色，遍历所有的灰色对象，完成后将灰色对象置为黑色对象，将灰色对象的子对象引用置为灰色。
+再次遍历灰色对象，循环直到所有灰色对象遍历完。只剩下黑色对象和白色对象。黑色对象是具有引用关系的内存对象，不能被回收。
+对白色对象进行回收。&lt;/p&gt;
+&lt;h3 id=&#34;go的gc实现&#34;&gt;go的GC实现&lt;/h3&gt;
+&lt;h4 id=&#34;扫描过程&#34;&gt;扫描过程&lt;/h4&gt;
+&lt;p&gt;同三色标记法&lt;/p&gt;
+&lt;h4 id=&#34;混合写屏障&#34;&gt;混合写屏障&lt;/h4&gt;
+&lt;p&gt;作用是减少stw的时间，具体的做法如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;插入对象直接置为黑色对象&lt;/li&gt;
+&lt;li&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;分析工具和分析方法&#34;&gt;分析工具和分析方法&lt;/h3&gt;
+&lt;h4 id=&#34;如何针对gc进行优化&#34;&gt;如何针对GC进行优化&lt;/h4&gt;</description>
+    </item>
+    <item>
+      <title>分库分表</title>
+      <link>http://localhost:1313/posts/database/%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/</link>
+      <pubDate>Fri, 01 Aug 2025 09:08:53 +0800</pubDate>
+      <guid>http://localhost:1313/posts/database/%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/</guid>
+      <description></description>
     </item>
     <item>
       <title>Map</title>

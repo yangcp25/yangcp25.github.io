@@ -1,7 +1,7 @@
 +++
 date = '2025-08-01T09:10:00+08:00'
 title = 'Gc'
-draft = true
+draft = false
 tag = ['go', 'gc']
 +++
 ### 什么是GC
