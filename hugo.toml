@@ -29,7 +29,7 @@ url        = "/about/me/"
 weight     = 40
 
 [pagination]
-pagerSize = 5
+pagerSize = 10
 
 [params]
 mainSections = ["posts"]
