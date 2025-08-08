@@ -263,13 +263,6 @@ c对b的引用。b本来应该被正确标记成黑色的，由于对象c为黑�
 &lt;h4 id=&#34;注意事项&#34;&gt;注意事项&lt;/h4&gt;</description>
     </item>
     <item>
-      <title>Distributed_transaction</title>
-      <link>http://localhost:1313/posts/architecture/distributed_transaction/</link>
-      <pubDate>Tue, 29 Jul 2025 09:18:53 +0800</pubDate>
-      <guid>http://localhost:1313/posts/architecture/distributed_transaction/</guid>
-      <description>&lt;h3 id=&#34;分布式事务&#34;&gt;分布式事务&lt;/h3&gt;</description>
-    </item>
-    <item>
       <title>Http2_grpc</title>
       <link>http://localhost:1313/posts/network/http2_grpc/</link>
       <pubDate>Wed, 23 Jul 2025 22:28:18 +0800</pubDate>
