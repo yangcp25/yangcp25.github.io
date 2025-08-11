@@ -131,6 +131,18 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">fun_stack
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>函数调用另一个函数栈上有什么操作</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-11 09:55:10 +0800 CST'>August 11, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to fun_stack" href="http://localhost:1313/posts/system/fun_stack/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">初始化方法比较
     </h2>
   </header>
@@ -189,8 +201,10 @@ go为什么采用三色标记法 go采用tcmalloc所以对内存碎片优化的�
 白色对象（可能存活的对象）：一开始所有对象都标记成白色对象，当扫描完成后，白色对象不可达 灰色对象（波面）：正在被访问器访问到的对象，他可能指向白色对象 黑色对象（确定存活）：已经被回收期扫描。 扫描过程 分为4步
 所有根对象标记为白色 将根对象放入待扫描队列，标记成灰色 扫描队列所有的灰色对象，标记成黑色，并将引用对象标记成灰色。 重复步骤三，直到待扫描的灰色对象为空，所有对象标记成黑色或者白色。白色对象不可达，进行回收。 根对象在垃圾回收术语中被称为根集合，它包含 全局对象，程序在编译阶段就能确定的存在于程序整个生命周期的对象 执行栈，每个goroutine都有自己的内存栈，会有自己的栈对象和指向堆区块的指针 寄存器，计算过程中可能指向的一些堆区块的指针 没有stw可能得问题，对象被错误删除 假设以下场景：扫描到某个节点，存在a灰色对象引用白色对象b,存在一个黑色对象c。此时现将删除a对b的引用，同时添加 c对b的引用。b本来应该被正确标记成黑色的，由于对象c为黑色不会对它进行扫描，而a又删除了对b的引用，就会造成c始终不可达 造成误删除。
 当同事满足以下2个条件时，会出现误删除：
-赋值器创建一个黑色对象对白色对象的引用 删除灰色对象对这个白色的引用 只要破坏任意条件就可以避免误删除 避免条件一，也就避免了修改对象池当中需要被删除的对象的存活状态，应该存活的对象均可达。出现条件二，删除了灰色对象对白色对象的引用 这个白色对象也应该被删除。 避免条件二，白色对象最终可以由灰色访问到，进行正常标记。就算创建了黑色对象对白色对象的引用，也可以由灰色对象触达。 混合写屏障 作用是减少stw的时间，具体的做法如下：
-插入对象直接置为黑色对象 分析工具和分析方法 如何针对GC进行优化</p>
+赋值器创建一个黑色对象对白色对象的引用 删除灰色对象对这个白色的引用 只要破坏任意条件就可以避免误删除 避免条件一，也就避免了修改对象池当中需要被删除的对象的存活状态，应该存活的对象均可达。出现条件二，删除了灰色对象对白色对象的引用 这个白色对象也应该被删除。 避免条件二，白色对象最终可以由灰色访问到，进行正常标记。就算创建了黑色对象对白色对象的引用，也可以由灰色对象触达。 屏障机制 分成2种赋值器，插入时使用灰色赋值器，删除时使用黑色赋值器
+插入屏障 当添加一新的对象引用时，会先将插入对象赋值成灰色。破坏条件一，破坏了增加了一个黑色对象对白色对象的引用。有个一个细节，由于对所有对象进行插入屏障会比较 影响性能，golang团队后来决定只对堆区的对象启用插入屏障，栈区的对象会在第一次gc完成之后stw重新扫描一次栈区。
+删除屏障 当删除一个对象时，现将对象赋值为黑色。破坏条件二，破坏了删除一个灰色对象对白色对象的引用。
+...</p>
   </div>
   <footer class="entry-footer"><span title='2025-08-01 09:10:00 +0800 CST'>August 1, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to Gc" href="http://localhost:1313/posts/go/gc/"></a>
@@ -273,22 +287,6 @@ go 简单的实践 package main import ( &#34;fmt&#34; &#34;io&#34; &#34;log&#34
   </div>
   <footer class="entry-footer"><span title='2025-07-15 09:55:07 +0800 CST'>July 15, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to HeapSort" href="http://localhost:1313/posts/datastructalgorithm/heapsort/"></a>
-</article>
-
-<article class="post-entry"> 
-<figure class="entry-cover">
-        <img loading="lazy" src="http://localhost:1313/images/img_2.png" alt="">
-</figure>
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">BFS&amp;&amp;DFS
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>树的遍历 深度优先遍历DFS package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, } root.Left = &amp;TreeNode{Val: 2} root.Right = &amp;TreeNode{Val: 3} root.Right.Left = &amp;TreeNode{Val: 4} root.Left.Left = &amp;TreeNode{Val: 5} list := make([]int, 0) var treeDFS = func(root *TreeNode) {} treeDFS = func(root *TreeNode) { if root == nil { return } list = append(list, root.Val) treeDFS(root.Left) treeDFS(root.Right) } treeDFS(root) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 函数版本
-package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, } root.Left = &amp;TreeNode{Val: 2} root.Right = &amp;TreeNode{Val: 3} root.Right.Left = &amp;TreeNode{Val: 4} root.Left.Left = &amp;TreeNode{Val: 5} list := make([]int, 0) TreeDFS(root, &amp;list) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } func TreeDFS(root *TreeNode, list *[]int) { if root == nil { return } *list = append(*list, root.Val) TreeDFS(root.Left, list) TreeDFS(root.Right, list) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 广度优先遍历BFS list2 := make([]int, 0) queue := make([]*TreeNode, 0) queue = append(queue, root) for len(queue) &gt; 0 { count := len(queue) for i := 0; i &lt; count; i&#43;&#43; { node := queue[0] queue = queue[1:] list2 = append(list2, node.Val) if node.Left != nil { queue = append(queue, node.Left) } if node.Right != nil { queue = append(queue, node.Right) } } } fmt.Println(list2) 根据先序遍历和中序遍历构造二叉树 package main import &#34;fmt&#34; func main() { // 1 // [1 2 5 3 4] 先序 // [2 5 1 3 4] 中序 // 1 [2 5] [2 5] i = 2 [3 4] // [2 5 3 4] [2 5] // [5 3 4] [5] copyTreeRoot := BuildTree([]int{1, 2, 5, 3, 4}, []int{2, 5, 1, 3, 4}) fmt.Println(copyTreeRoot) list3 := make([]int, 0) TreeDFS(copyTreeRoot, &amp;list3) fmt.Println(&#34;list3:&#34;, list3) //SliceTest() } func BuildTree(first []int, mid []int) *TreeNode { if len(first) == 0 { return nil } root := &amp;TreeNode{Val: first[0]} node := first[0] i := 0 for ; i &lt; len(mid); i&#43;&#43; { if mid[i] == node { break } } root.Left = BuildTree(first[1:i&#43;1], mid[:i]) root.Right = BuildTree(first[i&#43;1:], mid[i&#43;1:]) return root } 图的遍历 深度优先遍历DFS &amp;&amp; 广度优先遍历BFS package main import ( &#34;container/list&#34; &#34;fmt&#34; ) func main() { // 0 // 1 -&gt; 4 -&gt; 5 // 0 2 -&gt; 6 -&gt; 7 // 3 -&gt;^ g := make([][]int, 8) //g = append(g, []int{1, 2, 3} g[0] = []int{1, 2, 3} g[1] = []int{4} g[2] = []int{6} g[3] = []int{6} g[4] = []int{5} g[6] = []int{7} g2 := make(map[int][]int) g2[0] = []int{1, 2, 3} g2[1] = []int{4} g2[2] = []int{6} g2[3] = []int{6} g2[4] = []int{5} g2[6] = []int{7} graphDFS(0, g) //graphBFS(g) fmt.Println(&#34;-----&#34;) graphBFSWithQueue(g2) fmt.Println(&#34;-----&#34;) listC := graphBFSWithC(g2) fmt.Println(listC) } func graphDFS(root int, graph [][]int) { fmt.Println(root) if graph[root] == nil { return } //fmt.Println(root) for i := 0; i &lt; len(graph[root]); i&#43;&#43; { graphDFS(graph[root][i], graph) } return } func graphBFSWithQueue(graph map[int][]int) { queue := make([]int, 0) queue = append(queue, 0) fmt.Println(0) visited := make(map[int]bool) for len(queue) &gt; 0 { node := queue[0] queue = queue[1:] g := graph[node] size := len(g) for i := 0; i &lt; size; i&#43;&#43; { if visited[g[i]] { continue } else { fmt.Println(g[i]) queue = append(queue, g[i]) visited[g[i]] = true } } } } func graphBFSWithC(graph map[int][]int) []int { queue := list.New() order := make([]int, 0) visited := make(map[int]bool) queue.PushBack(0) for queue.Len() &gt; 0 { node := queue.Remove(queue.Front()).(int) order = append(order, node) neighbor := graph[node] size := len(neighbor) for i := 0; i &lt; size; i&#43;&#43; { if visited[neighbor[i]] { continue } else { queue.PushBack(neighbor[i]) visited[neighbor[i]] = true } } } return order } 带权图的最短路径算法 dijkstra 参考 可视化网站. 可视化网站. </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-09 09:20:50 +0800 CST'>July 9, 2025</span>&nbsp;·&nbsp;3 min</footer>
-  <a class="entry-link" aria-label="post link to BFS&&DFS" href="http://localhost:1313/posts/datastructalgorithm/bfs_dfs/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

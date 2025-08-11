@@ -16,13 +16,6 @@
       <description></description>
     </item>
     <item>
-      <title>数据粘包</title>
-      <link>http://localhost:1313/posts/network/%E6%95%B0%E6%8D%AE%E7%B2%98%E5%8C%85/</link>
-      <pubDate>Fri, 01 Aug 2025 09:19:46 +0800</pubDate>
-      <guid>http://localhost:1313/posts/network/%E6%95%B0%E6%8D%AE%E7%B2%98%E5%8C%85/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Http2_grpc</title>
       <link>http://localhost:1313/posts/network/http2_grpc/</link>
       <pubDate>Wed, 23 Jul 2025 22:28:18 +0800</pubDate>

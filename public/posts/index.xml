@@ -6,8 +6,15 @@
     <description>Recent content in Posts on yangcp</description>
     <generator>Hugo -- 0.147.4</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sun, 03 Aug 2025 11:01:53 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 11 Aug 2025 09:55:10 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>fun_stack</title>
+      <link>http://localhost:1313/posts/system/fun_stack/</link>
+      <pubDate>Mon, 11 Aug 2025 09:55:10 +0800</pubDate>
+      <guid>http://localhost:1313/posts/system/fun_stack/</guid>
+      <description>&lt;h3 id=&#34;函数调用另一个函数栈上有什么操作&#34;&gt;函数调用另一个函数栈上有什么操作&lt;/h3&gt;</description>
+    </item>
     <item>
       <title>初始化方法比较</title>
       <link>http://localhost:1313/posts/go/%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95%E6%AF%94%E8%BE%83/</link>
@@ -191,13 +198,13 @@ c对b的引用。b本来应该被正确标记成黑色的，由于对象c为黑�
 这个白色对象也应该被删除。&lt;/li&gt;
 &lt;li&gt;避免条件二，白色对象最终可以由灰色访问到，进行正常标记。就算创建了黑色对象对白色对象的引用，也可以由灰色对象触达。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h4 id=&#34;混合写屏障&#34;&gt;混合写屏障&lt;/h4&gt;
-&lt;p&gt;作用是减少stw的时间，具体的做法如下：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;插入对象直接置为黑色对象&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;分析工具和分析方法&#34;&gt;分析工具和分析方法&lt;/h3&gt;
-&lt;h4 id=&#34;如何针对gc进行优化&#34;&gt;如何针对GC进行优化&lt;/h4&gt;</description>
+&lt;h3 id=&#34;屏障机制&#34;&gt;屏障机制&lt;/h3&gt;
+&lt;p&gt;分成2种赋值器，插入时使用灰色赋值器，删除时使用黑色赋值器&lt;/p&gt;
+&lt;h4 id=&#34;插入屏障&#34;&gt;插入屏障&lt;/h4&gt;
+&lt;p&gt;当添加一新的对象引用时，会先将插入对象赋值成灰色。破坏条件一，破坏了增加了一个黑色对象对白色对象的引用。有个一个细节，由于对所有对象进行插入屏障会比较
+影响性能，golang团队后来决定只对堆区的对象启用插入屏障，栈区的对象会在第一次gc完成之后stw重新扫描一次栈区。&lt;/p&gt;
+&lt;h4 id=&#34;删除屏障&#34;&gt;删除屏障&lt;/h4&gt;
+&lt;p&gt;当删除一个对象时，现将对象赋值为黑色。破坏条件二，破坏了删除一个灰色对象对白色对象的引用。&lt;/p&gt;</description>
     </item>
     <item>
       <title>分库分表</title>
