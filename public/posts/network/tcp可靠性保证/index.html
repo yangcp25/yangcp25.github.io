@@ -7,7 +7,17 @@
 <meta name="robots" content="noindex, nofollow">
 <title>TCP可靠性保证 | yangcp</title>
 <meta name="keywords" content="">
-<meta name="description" content="TCP可靠性保证 - yangcp">
+<meta name="description" content="保证的手段
+分为7个方面
+
+三次握手，保证双方的连通性，4次挥手，保证数据最后能够发送完整
+序号机制，握手协议当中确定的序列号会作为数据发送的序号
+差错校验，tcp会对数据进行校验，检测数据的完整性和正确性
+分块传输，提升传输效率
+
+滑动窗口，控制流量大小
+拥塞控制，根据网络状况自动调节传输数据大小
+">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/posts/network/tcp%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BF%9D%E8%AF%81/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
@@ -129,11 +139,38 @@
     <h1 class="post-title entry-hint-parent">
       TCP可靠性保证
     </h1>
-    <div class="post-meta"><span title='2025-08-01 09:20:03 +0800 CST'>August 1, 2025</span>&nbsp;·&nbsp;0 min
+    <div class="post-meta"><span title='2025-08-01 09:20:03 +0800 CST'>August 1, 2025</span>&nbsp;·&nbsp;1 min
 
 </div>
-  </header> 
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
 
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e4%bf%9d%e8%af%81%e7%9a%84%e6%89%8b%e6%ae%b5" aria-label="保证的手段">保证的手段</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h3 id="保证的手段">保证的手段<a hidden class="anchor" aria-hidden="true" href="#保证的手段">#</a></h3>
+<p>分为7个方面</p>
+<ul>
+<li>三次握手，保证双方的连通性，4次挥手，保证数据最后能够发送完整</li>
+<li>序号机制，握手协议当中确定的序列号会作为数据发送的序号</li>
+<li>差错校验，tcp会对数据进行校验，检测数据的完整性和正确性</li>
+<li>分块传输，提升传输效率</li>
+<li></li>
+<li>滑动窗口，控制流量大小</li>
+<li>拥塞控制，根据网络状况自动调节传输数据大小</li>
+</ul>
+
+
+  </div>
 
   <footer class="post-footer">
     <ul class="post-tags">
