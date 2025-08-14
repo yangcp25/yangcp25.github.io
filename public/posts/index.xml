@@ -6,8 +6,29 @@
     <description>Recent content in Posts on yangcp</description>
     <generator>Hugo -- 0.147.4</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 13 Aug 2025 09:55:57 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 14 Aug 2025 09:59:38 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Pprof</title>
+      <link>http://localhost:1313/posts/go/pprof/</link>
+      <pubDate>Thu, 14 Aug 2025 09:59:38 +0800</pubDate>
+      <guid>http://localhost:1313/posts/go/pprof/</guid>
+      <description>&lt;h3 id=&#34;pprof使用&#34;&gt;pprof使用&lt;/h3&gt;</description>
+    </item>
+    <item>
+      <title>Rabbitmq</title>
+      <link>http://localhost:1313/posts/architecture/rabbitmq/</link>
+      <pubDate>Thu, 14 Aug 2025 09:33:13 +0800</pubDate>
+      <guid>http://localhost:1313/posts/architecture/rabbitmq/</guid>
+      <description>&lt;h3 id=&#34;rabbitmq介绍和使用&#34;&gt;rabbitmq介绍和使用&lt;/h3&gt;
+&lt;h4 id=&#34;介绍&#34;&gt;介绍&lt;/h4&gt;
+&lt;h4 id=&#34;基本使用&#34;&gt;基本使用&lt;/h4&gt;
+&lt;h5 id=&#34;消息队列需要关注的问题&#34;&gt;消息队列需要关注的问题&lt;/h5&gt;
+&lt;h6 id=&#34;可用性&#34;&gt;可用性&lt;/h6&gt;
+&lt;h6 id=&#34;可靠性&#34;&gt;可靠性&lt;/h6&gt;
+&lt;h6 id=&#34;顺序性&#34;&gt;顺序性&lt;/h6&gt;
+&lt;h6 id=&#34;幂等性&#34;&gt;幂等性&lt;/h6&gt;</description>
+    </item>
     <item>
       <title>Bff</title>
       <link>http://localhost:1313/posts/architecture/bff/</link>
@@ -102,8 +123,8 @@
       <pubDate>Fri, 01 Aug 2025 09:10:17 +0800</pubDate>
       <guid>http://localhost:1313/posts/go/%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/</guid>
       <description>&lt;h3 id=&#34;什么是逃逸分析&#34;&gt;什么是逃逸分析&lt;/h3&gt;
-&lt;p&gt;计算机科学中对指针作用范围进行分析就叫做逃逸分析。就是分析变量是分配到堆上还是栈上。&lt;br&gt;
-分配到栈上还是分配到堆上，对于后续编译器进行优化有很大的影响。&lt;/p&gt;
+&lt;p&gt;计算机科学中对指针作用范围进行分析就叫做逃逸分析。分析变量是分配到堆上还是栈上。
+分配到堆上和栈上的对比&lt;/p&gt;
 &lt;table&gt;
   &lt;thead&gt;
       &lt;tr&gt;
@@ -121,12 +142,17 @@
       &lt;tr&gt;
           &lt;td&gt;资源消耗&lt;/td&gt;
           &lt;td&gt;很小&lt;/td&gt;
-          &lt;td&gt;比较大&lt;/td&gt;
+          &lt;td&gt;比较大，且容易产生内存碎片&lt;/td&gt;
       &lt;/tr&gt;
       &lt;tr&gt;
           &lt;td&gt;回收方式&lt;/td&gt;
           &lt;td&gt;随着函数的结束进行销毁&lt;/td&gt;
           &lt;td&gt;需要手动回收,或者根据gc算法进行回收&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;go的编译器会&lt;/td&gt;
+          &lt;td&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;/td&gt;
       &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
