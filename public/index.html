@@ -207,8 +207,8 @@
   </header>
   <div class="entry-content">
     <p>什么是内存泄漏 指内存资源长期得不到释放，导致内存溢出
-内存泄漏的常见场景 协程的泄漏 耗时任务或者http请求一直得不到响应，又没有设置超时时间 chan未正确关闭、阻塞 锁未正确释放、导致协程未能释放 channel泄漏 内存泄漏分析工具 pprof分析协程数量，内存占用情况等
-如何针对内存泄漏进行优化 针对协程泄漏 设置超时时间 正确使用channel 正确使用互斥锁，配对使用 针对channel的泄漏 配对使用 在发送方关闭channel 正确使用缓冲channel和非缓冲channel </p>
+内存泄漏的常见场景 协程的泄漏 耗时任务或者http请求一直得不到响应，又没有设置超时时间 chan未正确关闭、阻塞。range channel 发送端未关闭导致死循环。 锁未正确释放、导致协程未能释放 资源未关闭，如file、数据库连接、timer定时器 cgo 其他的一些 内存泄漏分析工具 pprof分析协程数量，内存占用情况等
+如何针对内存泄漏进行优化 针对协程泄漏 设置超时时间 context.deadline timeout 结合select进行超时控制 正确使用channel 正确使用互斥锁，配对使用 针对channel的泄漏 配对使用 在发送方关闭channel 正确使用缓冲channel和非缓冲channel 养成关闭资源的习惯，使用defer,clear up 等工具 cgo和其他场景记得防止协程泄漏 </p>
   </div>
   <footer class="entry-footer"><span title='2025-08-01 09:10:55 +0800 CST'>August 1, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to 内存泄漏" href="http://localhost:1313/posts/go/%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F/"></a>
@@ -221,8 +221,8 @@
   </header>
   <div class="entry-content">
     <p>什么是逃逸分析 计算机科学中对指针作用范围进行分析就叫做逃逸分析。分析变量是分配到堆上还是栈上。 分配到堆上和栈上的对比
-栈 堆 分配方式 随着函数创建自动分配 程序员手动分配 资源消耗 很小 比较大，且容易产生内存碎片 回收方式 随着函数的结束进行销毁 需要手动回收,或者根据gc算法进行回收 go的编译器会 如果对go的程序进行逃逸分析 使用源码go build 分析，看变量是否发生了逃逸
-如何使用 逃逸分析需要注意的点 </p>
+栈 堆 分配方式 随着函数创建自动分配 程序员手动分配 资源消耗 很小 ，大小固定 比较大，大小不固定，需要寻找到合适的大小。容易产生内存碎片 回收方式 随着函数的结束进行销毁 需要手动回收,或者根据gc算法进行回收 所以说编译器会尽可能的将变量分配到栈上， go会在静态编译阶段就确定变量到底应该分配到堆上还是栈上。 当一个变量在函数之外的地方还会被使用就会发生逃逸。 以下几个场景会发生逃逸 返回一个变量的指针 返回一个闭包函数，闭包函数捕获了调用函数的变量 往channel发送了变量的指针 巨大的变量，编译器为了防止栈内存不够，会将其分配到堆上 引用类型的使用，比如传递slice、map、chan、interface等 如何对go的程序进行逃逸分析 使用源码go build –gcflags ‘-m -l’分析，看变量是否发生了逃逸 还可以结合pprof对堆内存的分配进行查看，结合热点路径使用go gc flag 进行分析
+如何使用 逃逸分析需要注意的点 在不影响代码结构合理性的情况下，进行减少使用指针（变量的内存占用不大的情况下）。 不要过度设计，持续重构。也就是先实现业务，再去结合工具来进行调整 </p>
   </div>
   <footer class="entry-footer"><span title='2025-08-01 09:10:17 +0800 CST'>August 1, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to 逃逸分析" href="http://localhost:1313/posts/go/%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/"></a>

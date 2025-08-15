@@ -14,11 +14,13 @@
 协程的泄漏
 
 耗时任务或者http请求一直得不到响应，又没有设置超时时间
-chan未正确关闭、阻塞
+chan未正确关闭、阻塞。range channel 发送端未关闭导致死循环。
 锁未正确释放、导致协程未能释放
 
 
-channel泄漏
+资源未关闭，如file、数据库连接、timer定时器
+cgo
+其他的一些
 
 内存泄漏分析工具
 pprof分析协程数量，内存占用情况等
@@ -26,11 +28,9 @@ pprof分析协程数量，内存占用情况等
 
 针对协程泄漏
 
-设置超时时间
+设置超时时间 context.deadline timeout 结合select进行超时控制
 正确使用channel
 正确使用互斥锁，配对使用
-
-
 针对channel的泄漏
 
 配对使用
@@ -38,6 +38,10 @@ pprof分析协程数量，内存占用情况等
 正确使用缓冲channel和非缓冲channel
 
 
+
+
+养成关闭资源的习惯，使用defer,clear up 等工具
+cgo和其他场景记得防止协程泄漏
 ">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/posts/go/%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F/">
@@ -191,11 +195,13 @@ pprof分析协程数量，内存占用情况等
 <li>协程的泄漏
 <ol>
 <li>耗时任务或者http请求一直得不到响应，又没有设置超时时间</li>
-<li>chan未正确关闭、阻塞</li>
+<li>chan未正确关闭、阻塞。range channel 发送端未关闭导致死循环。</li>
 <li>锁未正确释放、导致协程未能释放</li>
 </ol>
 </li>
-<li>channel泄漏</li>
+<li>资源未关闭，如file、数据库连接、timer定时器</li>
+<li>cgo</li>
+<li>其他的一些</li>
 </ol>
 <h3 id="内存泄漏分析工具">内存泄漏分析工具<a hidden class="anchor" aria-hidden="true" href="#内存泄漏分析工具">#</a></h3>
 <p>pprof分析协程数量，内存占用情况等</p>
@@ -203,11 +209,9 @@ pprof分析协程数量，内存占用情况等
 <ol>
 <li>针对协程泄漏
 <ol>
-<li>设置超时时间</li>
+<li>设置超时时间 context.deadline timeout 结合select进行超时控制</li>
 <li>正确使用channel</li>
 <li>正确使用互斥锁，配对使用</li>
-</ol>
-</li>
 <li>针对channel的泄漏
 <ol>
 <li>配对使用</li>
@@ -215,6 +219,10 @@ pprof分析协程数量，内存占用情况等
 <li>正确使用缓冲channel和非缓冲channel</li>
 </ol>
 </li>
+</ol>
+</li>
+<li>养成关闭资源的习惯，使用defer,clear up 等工具</li>
+<li>cgo和其他场景记得防止协程泄漏</li>
 </ol>
 
 

@@ -6,8 +6,29 @@
     <description>Recent content on yangcp</description>
     <generator>Hugo -- 0.147.4</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 14 Aug 2025 09:59:38 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 15 Aug 2025 09:36:43 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>常见设计模式</title>
+      <link>http://localhost:1313/post/design_pattern/%E5%B8%B8%E8%A7%81%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Fri, 15 Aug 2025 09:36:43 +0800</pubDate>
+      <guid>http://localhost:1313/post/design_pattern/%E5%B8%B8%E8%A7%81%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>设计原则</title>
+      <link>http://localhost:1313/post/design_pattern/%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/</link>
+      <pubDate>Fri, 15 Aug 2025 09:36:27 +0800</pubDate>
+      <guid>http://localhost:1313/post/design_pattern/%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>超卖</title>
+      <link>http://localhost:1313/post/scenario/%E8%B6%85%E5%8D%96/</link>
+      <pubDate>Fri, 15 Aug 2025 09:14:46 +0800</pubDate>
+      <guid>http://localhost:1313/post/scenario/%E8%B6%85%E5%8D%96/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Pprof</title>
       <link>http://localhost:1313/posts/go/pprof/</link>
@@ -108,11 +129,13 @@
 &lt;li&gt;协程的泄漏
 &lt;ol&gt;
 &lt;li&gt;耗时任务或者http请求一直得不到响应，又没有设置超时时间&lt;/li&gt;
-&lt;li&gt;chan未正确关闭、阻塞&lt;/li&gt;
+&lt;li&gt;chan未正确关闭、阻塞。range channel 发送端未关闭导致死循环。&lt;/li&gt;
 &lt;li&gt;锁未正确释放、导致协程未能释放&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/li&gt;
-&lt;li&gt;channel泄漏&lt;/li&gt;
+&lt;li&gt;资源未关闭，如file、数据库连接、timer定时器&lt;/li&gt;
+&lt;li&gt;cgo&lt;/li&gt;
+&lt;li&gt;其他的一些&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h3 id=&#34;内存泄漏分析工具&#34;&gt;内存泄漏分析工具&lt;/h3&gt;
 &lt;p&gt;pprof分析协程数量，内存占用情况等&lt;/p&gt;
@@ -120,11 +143,9 @@
 &lt;ol&gt;
 &lt;li&gt;针对协程泄漏
 &lt;ol&gt;
-&lt;li&gt;设置超时时间&lt;/li&gt;
+&lt;li&gt;设置超时时间 context.deadline timeout 结合select进行超时控制&lt;/li&gt;
 &lt;li&gt;正确使用channel&lt;/li&gt;
 &lt;li&gt;正确使用互斥锁，配对使用&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
 &lt;li&gt;针对channel的泄漏
 &lt;ol&gt;
 &lt;li&gt;配对使用&lt;/li&gt;
@@ -132,6 +153,10 @@
 &lt;li&gt;正确使用缓冲channel和非缓冲channel&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;养成关闭资源的习惯，使用defer,clear up 等工具&lt;/li&gt;
+&lt;li&gt;cgo和其他场景记得防止协程泄漏&lt;/li&gt;
 &lt;/ol&gt;</description>
     </item>
     <item>
@@ -158,8 +183,8 @@
       &lt;/tr&gt;
       &lt;tr&gt;
           &lt;td&gt;资源消耗&lt;/td&gt;
-          &lt;td&gt;很小&lt;/td&gt;
-          &lt;td&gt;比较大，且容易产生内存碎片&lt;/td&gt;
+          &lt;td&gt;很小  ，大小固定&lt;/td&gt;
+          &lt;td&gt;比较大，大小不固定，需要寻找到合适的大小。容易产生内存碎片&lt;/td&gt;
       &lt;/tr&gt;
       &lt;tr&gt;
           &lt;td&gt;回收方式&lt;/td&gt;
@@ -167,18 +192,33 @@
           &lt;td&gt;需要手动回收,或者根据gc算法进行回收&lt;/td&gt;
       &lt;/tr&gt;
       &lt;tr&gt;
-          &lt;td&gt;go的编译器会&lt;/td&gt;
+          &lt;td&gt;所以说编译器会尽可能的将变量分配到栈上， go会在静态编译阶段就确定变量到底应该分配到堆上还是栈上。&lt;/td&gt;
+          &lt;td&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;当一个变量在函数之外的地方还会被使用就会发生逃逸。&lt;/td&gt;
           &lt;td&gt;&lt;/td&gt;
           &lt;td&gt;&lt;/td&gt;
       &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;h3 id=&#34;如果对go的程序进行逃逸分析&#34;&gt;如果对go的程序进行逃逸分析&lt;/h3&gt;
-&lt;p&gt;使用源码go build 分析，看变量是否发生了逃逸&lt;/p&gt;
-&lt;h3 id=&#34;如何使用&#34;&gt;如何使用&lt;/h3&gt;
+&lt;h4 id=&#34;以下几个场景会发生逃逸&#34;&gt;以下几个场景会发生逃逸&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;返回一个变量的指针&lt;/li&gt;
+&lt;li&gt;返回一个闭包函数，闭包函数捕获了调用函数的变量&lt;/li&gt;
+&lt;li&gt;往channel发送了变量的指针&lt;/li&gt;
+&lt;li&gt;巨大的变量，编译器为了防止栈内存不够，会将其分配到堆上&lt;/li&gt;
+&lt;li&gt;引用类型的使用，比如传递slice、map、chan、interface等&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;如何对go的程序进行逃逸分析&#34;&gt;如何对go的程序进行逃逸分析&lt;/h3&gt;
+&lt;p&gt;使用源码go build &amp;ndash;gcflags &amp;lsquo;-m -l&amp;rsquo;分析，看变量是否发生了逃逸
+还可以结合pprof对堆内存的分配进行查看，结合热点路径使用go gc flag 进行分析&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;如何使用&#34;&gt;如何使用&lt;/h3&gt;
 &lt;h3 id=&#34;逃逸分析需要注意的点&#34;&gt;逃逸分析需要注意的点&lt;/h3&gt;
 &lt;ol&gt;
-&lt;li&gt;&lt;/li&gt;
+&lt;li&gt;在不影响代码结构合理性的情况下，进行减少使用指针（变量的内存占用不大的情况下）。&lt;/li&gt;
+&lt;li&gt;不要过度设计，持续重构。也就是先实现业务，再去结合工具来进行调整&lt;/li&gt;
 &lt;/ol&gt;</description>
     </item>
     <item>
