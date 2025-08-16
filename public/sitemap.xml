@@ -2,23 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/post/</loc>
-    <lastmod>2025-08-15T09:36:43+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/</loc>
-    <lastmod>2025-08-15T09:36:43+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/post/design_pattern/%E5%B8%B8%E8%A7%81%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</loc>
-    <lastmod>2025-08-15T09:36:43+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/post/design_pattern/%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/</loc>
-    <lastmod>2025-08-15T09:36:27+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/post/scenario/%E8%B6%85%E5%8D%96/</loc>
-    <lastmod>2025-08-15T09:14:46+08:00</lastmod>
+    <loc>http://localhost:1313/posts/go/channel/</loc>
+    <lastmod>2025-08-16T09:49:21+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/</loc>
-    <lastmod>2025-08-14T09:59:38+08:00</lastmod>
+    <lastmod>2025-08-16T09:49:21+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2025-08-16T09:49:21+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/design_pattern/%E5%B8%B8%E8%A7%81%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</loc>
+    <lastmod>2025-08-15T09:36:43+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/design_pattern/%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/</loc>
+    <lastmod>2025-08-15T09:36:27+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/scenario/%E8%B6%85%E5%8D%96/</loc>
+    <lastmod>2025-08-15T09:14:46+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/go/pprof/</loc>
     <lastmod>2025-08-14T09:59:38+08:00</lastmod>
