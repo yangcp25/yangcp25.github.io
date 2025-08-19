@@ -1,6 +1,6 @@
 +++
 date = '2025-08-13T09:55:57+08:00'
-draft = false
+draft = true
 title = 'Bff'
 +++
-### BFF模式
+### BFF架构

@@ -1,6 +1,6 @@
 +++
 date = '2025-08-14T09:33:13+08:00'
-draft = false
+draft = true
 title = 'Rabbitmq'
 +++
 ### rabbitmq介绍和使用
