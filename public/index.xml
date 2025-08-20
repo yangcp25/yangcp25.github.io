@@ -30,46 +30,11 @@
       <description></description>
     </item>
     <item>
-      <title>超卖</title>
-      <link>http://localhost:1313/posts/scenario/%E8%B6%85%E5%8D%96/</link>
-      <pubDate>Fri, 15 Aug 2025 09:14:46 +0800</pubDate>
-      <guid>http://localhost:1313/posts/scenario/%E8%B6%85%E5%8D%96/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Pprof</title>
       <link>http://localhost:1313/posts/go/pprof/</link>
       <pubDate>Thu, 14 Aug 2025 09:59:38 +0800</pubDate>
       <guid>http://localhost:1313/posts/go/pprof/</guid>
       <description>&lt;h3 id=&#34;pprof使用&#34;&gt;pprof使用&lt;/h3&gt;</description>
-    </item>
-    <item>
-      <title>Rabbitmq</title>
-      <link>http://localhost:1313/posts/architecture/rabbitmq/</link>
-      <pubDate>Thu, 14 Aug 2025 09:33:13 +0800</pubDate>
-      <guid>http://localhost:1313/posts/architecture/rabbitmq/</guid>
-      <description>&lt;h3 id=&#34;rabbitmq介绍和使用&#34;&gt;rabbitmq介绍和使用&lt;/h3&gt;
-&lt;h4 id=&#34;介绍&#34;&gt;介绍&lt;/h4&gt;
-&lt;h4 id=&#34;基本使用&#34;&gt;基本使用&lt;/h4&gt;
-&lt;h5 id=&#34;消息队列需要关注的问题&#34;&gt;消息队列需要关注的问题&lt;/h5&gt;
-&lt;h6 id=&#34;可用性&#34;&gt;可用性&lt;/h6&gt;
-&lt;h6 id=&#34;可靠性&#34;&gt;可靠性&lt;/h6&gt;
-&lt;h6 id=&#34;顺序性&#34;&gt;顺序性&lt;/h6&gt;
-&lt;h6 id=&#34;幂等性&#34;&gt;幂等性&lt;/h6&gt;</description>
-    </item>
-    <item>
-      <title>Bff</title>
-      <link>http://localhost:1313/posts/architecture/bff/</link>
-      <pubDate>Wed, 13 Aug 2025 09:55:57 +0800</pubDate>
-      <guid>http://localhost:1313/posts/architecture/bff/</guid>
-      <description>&lt;h3 id=&#34;bff模式&#34;&gt;BFF模式&lt;/h3&gt;</description>
-    </item>
-    <item>
-      <title>fun_stack</title>
-      <link>http://localhost:1313/posts/system/fun_stack/</link>
-      <pubDate>Mon, 11 Aug 2025 09:55:10 +0800</pubDate>
-      <guid>http://localhost:1313/posts/system/fun_stack/</guid>
-      <description>&lt;h3 id=&#34;函数调用另一个函数栈上有什么操作&#34;&gt;函数调用另一个函数栈上有什么操作&lt;/h3&gt;</description>
     </item>
     <item>
       <title>初始化方法比较</title>
@@ -106,23 +71,6 @@
 &lt;h4 id=&#34;为什么new-slice-map-得到是nil&#34;&gt;为什么new slice map 得到是nil&lt;/h4&gt;
 &lt;p&gt;首先 &lt;code&gt;new&lt;/code&gt; 严格遵守返回的是初始化对象指针的原则，而&lt;code&gt;new&lt;/code&gt; &lt;code&gt;slice&lt;/code&gt;、&lt;code&gt;map&lt;/code&gt;的时候，返回的就是对象的引用，只是切片和哈希的
 零值就是nil,所以如果new切片和map会出现无法使用的情况。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>TCP可靠性保证</title>
-      <link>http://localhost:1313/posts/network/tcp%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BF%9D%E8%AF%81/</link>
-      <pubDate>Fri, 01 Aug 2025 09:20:03 +0800</pubDate>
-      <guid>http://localhost:1313/posts/network/tcp%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BF%9D%E8%AF%81/</guid>
-      <description>&lt;h3 id=&#34;保证的手段&#34;&gt;保证的手段&lt;/h3&gt;
-&lt;p&gt;分为7个方面&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;三次握手，保证双方的连通性，4次挥手，保证数据最后能够发送完整&lt;/li&gt;
-&lt;li&gt;序号机制，握手协议当中确定的序列号会作为数据发送的序号&lt;/li&gt;
-&lt;li&gt;差错校验，tcp会对数据进行校验，检测数据的完整性和正确性&lt;/li&gt;
-&lt;li&gt;分块传输，提升传输效率&lt;/li&gt;
-&lt;li&gt;&lt;/li&gt;
-&lt;li&gt;滑动窗口，控制流量大小&lt;/li&gt;
-&lt;li&gt;拥塞控制，根据网络状况自动调节传输数据大小&lt;/li&gt;
-&lt;/ul&gt;</description>
     </item>
     <item>
       <title>内存泄漏</title>
@@ -244,9 +192,9 @@
 &lt;h5 id=&#34;复制法&#34;&gt;复制法&lt;/h5&gt;
 &lt;p&gt;准备2个大小一样的内存块，将存活的对象放到新的内存块。优点是解决了内存碎片问题，但内存复制比较消耗资源，还需要将引用关系进行复制。&lt;/p&gt;
 &lt;h5 id=&#34;分代法&#34;&gt;分代法&lt;/h5&gt;
-&lt;p&gt;将对象创建的不同时间分为青年代、中年代、老年代。&lt;/p&gt;
+&lt;p&gt;将对象创建的不同时间分为青年代、老年代。分代发基于一种实践思想，大多数对象的生命周期都很短。&lt;/p&gt;
 &lt;h5 id=&#34;三色标记法&#34;&gt;三色标记法&lt;/h5&gt;
-&lt;p&gt;stw可以是start the world 或者 stop zhe world的缩写，他指的是stop the word 到 start the world 这个间隔的时间。在gc过程总需要暂停用户
+&lt;p&gt;stw可以是start the world 或者 stop zhe world的缩写，他指的是stop the word 到 start the world 这个间隔的时间。在gc过程需要暂停用户
 代码执行，进行内存扫描，这个stw时间越短，对程序的性能提升越高。&lt;/p&gt;
 &lt;h3 id=&#34;go的gc实现&#34;&gt;go的GC实现&lt;/h3&gt;
 &lt;p&gt;go因为内存分配是采用tcmalloc分配法，所有不需要处理内存碎片问题，同时go团队更加希望的是gc操作可以和用户代码一起执行，不仅是减少
@@ -284,7 +232,7 @@ stw的时间。go采用三色标记法对内存进行回收，并采用混合屏
 &lt;p&gt;假设以下场景：扫描到某个节点，存在a灰色对象引用白色对象b,存在一个黑色对象c。此时现将删除a对b的引用，同时添加
 c对b的引用。b本来应该被正确标记成黑色的，由于对象c为黑色不会对它进行扫描，而a又删除了对b的引用，就会造成c始终不可达
 造成误删除。&lt;br&gt;
-当同事满足以下2个条件时，会出现误删除：&lt;/p&gt;
+当同时满足以下2个条件时，会出现误删除：&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;赋值器创建一个黑色对象对白色对象的引用&lt;/li&gt;
 &lt;li&gt;删除灰色对象对这个白色的引用
@@ -406,57 +354,6 @@ google推出，基于protobuf,通过IDL(接口定义)定义同义的方法和参
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://blog.csdn.net/u012914309/article/details/127507726?spm=1001.2014.3001.5501&#34;&gt;https://blog.csdn.net/u012914309/article/details/127507726?spm=1001.2014.3001.5501&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</description>
-    </item>
-    <item>
-      <title>分布式锁</title>
-      <link>http://localhost:1313/posts/architecture/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/</link>
-      <pubDate>Fri, 18 Jul 2025 09:29:04 +0800</pubDate>
-      <guid>http://localhost:1313/posts/architecture/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/</guid>
-      <description>&lt;h3 id=&#34;分布式锁&#34;&gt;分布式锁&lt;/h3&gt;
-&lt;h3 id=&#34;定义&#34;&gt;定义&lt;/h3&gt;
-&lt;p&gt;分布式锁是用于并发控制的手段，他需要满足一下几点：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;互斥，redis单线程，内置nx命令，只有当key不存在是才返回成功。满足互斥性。&lt;/li&gt;
-&lt;li&gt;可重入，可重入是指同一个进程或者线程多次加锁要能获锁成功。这种可以为同一线程生成req_id，并且进行
-计数，当计算为0时对锁进行释放&lt;/li&gt;
-&lt;li&gt;避免死锁。如果持锁的线程挂掉，从而无法正常释放锁，就会造成死锁。可以给锁设置过期时间，比如nx命令传入ttl。&lt;/li&gt;
-&lt;li&gt;正确释放锁。因为设置了过期时间，所以会导致2个问题
-&lt;ul&gt;
-&lt;li&gt;如果a执行时间过长，ttl自动释放，这时b正常拿锁，之后a执行完成，如果直接释放锁，就把b的锁释放掉了。解决办法是在加锁的时候
-生成唯一ID,在解锁的时候进行判断，相同才删除。也就是说只有持锁的才能删除。&lt;/li&gt;
-&lt;li&gt;删除操作是2个命令，第一个是get,第二个是删除，注意需要保证原子性，因为get的时候并发，aget到锁
-，之后ttl过期，b拿锁，a再释放，就出问题了。需要用lua脚本保证原子性。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;续期机制。如果持锁的线程执行时间过长超过了ttl设置的时间，就需要能够自动续期。我们可以采用看门狗机制，启动一个线程，轮训key的剩余过期时间，
-比如到了3/2的过期时间，自动续期。&lt;/li&gt;
-&lt;li&gt;分布式下部署下的分布式锁。上面五点基本可以保证单机状态下分布式锁的可靠性。但是单机系统的可用性比较低。如果采用分布式锁需要注意几个问题。
-&lt;ul&gt;
-&lt;li&gt;redis的哨兵Sentinel 和 cluster 模式下，不适合做分布式锁。
-&lt;ul&gt;
-&lt;li&gt;哨兵模式可能主从延迟、主备切换，比如主节点写入后还没来得及同步就挂掉，从节点成为主节点，锁丢失。&lt;/li&gt;
-&lt;li&gt;分布式下不允许多key操作，需要视同tag标签将锁落入同一个slot。其次也会发生哨兵模式的主从延迟、主备切换问题&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;高可以架构可以用redLock或者zookeeper、etcd实现
-&lt;ul&gt;
-&lt;li&gt;redLock就是采用多个独立的redis,采用多数派写入保证数据的一致性。&lt;/li&gt;
-&lt;li&gt;zookeeper可以在某个目录下建立节点，节点最新获取成功，并删除节点。否则循环或者守护进程监听最近的节点，当发生变化，在判断自己是不是最小的
-节点&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;使用&#34;&gt;使用&lt;/h3&gt;
-&lt;h4 id=&#34;使用场景&#34;&gt;使用场景&lt;/h4&gt;
-&lt;h4 id=&#34;使用方法&#34;&gt;使用方法&lt;/h4&gt;
-&lt;h3 id=&#34;注意事项&#34;&gt;注意事项&lt;/h3&gt;
-&lt;h3 id=&#34;参考资料&#34;&gt;参考资料&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;strong&gt;美团技术团队&lt;/strong&gt;. &lt;a href=&#34;https://tech.meituan.com/2016/09/29/distributed-system-mutually-exclusive-idempotence-cerberus-gtis.html&#34;&gt;分布式锁&lt;/a&gt;. &lt;em&gt;google&lt;/em&gt;. 最后修订于2016年09月29日. 访问于2025年7月20日.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;掘金&lt;/strong&gt;. &lt;a href=&#34;https://juejin.cn/post/6887740972168380429&#34;&gt;分布式锁&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;</description>
     </item>
     <item>
       <title>CAP</title>
