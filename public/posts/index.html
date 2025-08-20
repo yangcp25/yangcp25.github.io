@@ -131,54 +131,6 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Channel
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p></p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-16 09:49:21 +0800 CST'>August 16, 2025</span>&nbsp;·&nbsp;0 min</footer>
-  <a class="entry-link" aria-label="post link to Channel" href="http://localhost:1313/posts/go/channel/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">常见设计模式
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p></p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-15 09:36:43 +0800 CST'>August 15, 2025</span>&nbsp;·&nbsp;0 min</footer>
-  <a class="entry-link" aria-label="post link to 常见设计模式" href="http://localhost:1313/posts/design_pattern/%E5%B8%B8%E8%A7%81%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">设计原则
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p></p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-15 09:36:27 +0800 CST'>August 15, 2025</span>&nbsp;·&nbsp;0 min</footer>
-  <a class="entry-link" aria-label="post link to 设计原则" href="http://localhost:1313/posts/design_pattern/%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Pprof
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>pprof使用</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-14 09:59:38 +0800 CST'>August 14, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Pprof" href="http://localhost:1313/posts/go/pprof/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
     <h2 class="entry-hint-parent">初始化方法比较
     </h2>
   </header>
@@ -247,18 +199,6 @@ go为什么采用三色标记法 go采用tcmalloc所以对内存碎片优化的�
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">分库分表
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p></p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-01 09:08:53 +0800 CST'>August 1, 2025</span>&nbsp;·&nbsp;0 min</footer>
-  <a class="entry-link" aria-label="post link to 分库分表" href="http://localhost:1313/posts/database/%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
     <h2 class="entry-hint-parent">Map
     </h2>
   </header>
@@ -272,12 +212,79 @@ go为什么采用三色标记法 go采用tcmalloc所以对内存碎片优化的�
   <footer class="entry-footer"><span title='2025-07-29 09:23:59 +0800 CST'>July 29, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to Map" href="http://localhost:1313/posts/go/map/"></a>
 </article>
-<footer class="page-footer">
-  <nav class="pagination">
-    <a class="next" href="http://localhost:1313/posts/page/2/">Next&nbsp;&nbsp;»
-    </a>
-  </nav>
-</footer>
+
+<article class="post-entry"> 
+<figure class="entry-cover">
+        <img loading="lazy" src="http://localhost:1313/images/cap.png" alt="">
+</figure>
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CAP
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>定义 CAP理论是指分布式当中一致性、可用性以及分区容错性三者不可兼得。我们需要根据实际应用场景做出相应的取舍， 在现实中，一般来说分布式系统中的网络是不可能完全保证可用的，所以就需要在CP和AP中做出选择。
+拜占庭将军问题 是指分布式系统中可能有恶意节点对数据一致性造成破坏。如果系统中的节点是f个，为了解决非拜占庭将军问题，至少需要3f&#43;1 个节点。能容忍拜占庭容错的系统一般是高安全性要求的系统，比如区跨链、金融、军事等。
+脑裂 脑裂是指分布式系统中由于网络波动或中断，导致系统被分成多个子系统，子系统在内部选举leader，对外提供服务。这会导致 严重的问题，比如
+数据不一致	两个分区同时写入同一数据（如账户余额），导致冲突且无法自动合并。 资源冲突	两个“领导者”同时操作共享资源（如分配同一IP地址、锁定同一文件）。 状态混乱	客户端可能被不同分区响应矛盾的结果（如A分区说“支付成功”，B分区说“未支付”）。 数据永久丢失	分区恢复后，冲突写入可能导致部分数据被覆盖或丢弃。 为了防止脑裂，一般分布式一致性协议都会采用多数派原则进行避免，比如五个节点的分布式系统中，需要3个节点的确认才能成为leader,否则会 因为无法选主而停止对外提供服务。
+raft协议 raft协议是分布式系统中多个节点对于某个资源的一致性的达成所采用的一种协议，主要有三个部分：
+主从选择 日志复制 安全性和一致性保证 raft协议是强一致的。还有一些其他的一致性组件比如zookeeper。raft协议提供了强一致性的方案。 zookeeper 实践 常见的使用场景 一些常见的开源软件的使用我们会经常遇到这个场景。拿最常见的redis为例，redis的分布式部署方案有三种，主从、哨兵、cluster。
+go 简单的实践 package main import ( &#34;fmt&#34; &#34;io&#34; &#34;log&#34; &#34;net&#34; &#34;os&#34; &#34;time&#34; &#34;github.com/hashicorp/raft&#34; bolt &#34;github.com/hashicorp/raft-boltdb&#34; ) // 简单的 FSM：提交即打印 type FSM struct{} func (f *FSM) Apply(l *raft.Log) interface{} { fmt.Printf(&#34;Apply: %s\n&#34;, string(l.Data)) return nil } func (f *FSM) Snapshot() (raft.FSMSnapshot, error) { return &amp;snapshot{}, nil } func (f *FSM) Restore(io.ReadCloser) error { return nil } type snapshot struct{} func (s *snapshot) Persist(sink raft.SnapshotSink) error { return sink.Close() } func (s *snapshot) Release() {} func main() { // 1) 配置 config := raft.DefaultConfig() config.LocalID = raft.ServerID(os.Args[1]) // 节点 ID 来自第一个参数 // 2) 网络传输：TCP addr, err := net.ResolveTCPAddr(&#34;tcp&#34;, os.Args[2]) if err != nil { log.Fatal(err) } transport, err := raft.NewTCPTransport(os.Args[2], addr, 3, 10*time.Second, os.Stdout) if err != nil { log.Fatal(err) } // 3) 日志与快照存储 store, err := bolt.NewBoltStore(fmt.Sprintf(&#34;raft-%s.db&#34;, os.Args[1])) if err != nil { log.Fatal(err) } snapshotStore := raft.NewInmemSnapshotStore() // 4) 创建 Raft 实例 r, err := raft.NewRaft(config, &amp;FSM{}, store, store, snapshotStore, transport) if err != nil { log.Fatal(err) } // 5) Bootstrap 第一个节点 if os.Args[1] == &#34;node1&#34; { cfg := raft.Configuration{ Servers: []raft.Server{ {ID: &#34;node1&#34;, Address: transport.LocalAddr()}, {ID: &#34;node2&#34;, Address: raft.ServerAddress(&#34;127.0.0.1:12002&#34;)}, {ID: &#34;node3&#34;, Address: raft.ServerAddress(&#34;127.0.0.1:12003&#34;)}, }, } r.BootstrapCluster(cfg) } // 6) 简单命令行提交 if config.LocalID == &#34;node1&#34; { go func() { for { time.Sleep(3 * time.Second) f := r.Apply([]byte(&#34;hello raft&#34;), 5*time.Second) if err := f.Error(); err != nil { log.Println(&#34;apply error:&#34;, err) } } }() } select {} // 阻塞 } `
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-07-16 09:21:40 +0800 CST'>July 16, 2025</span>&nbsp;·&nbsp;4 min</footer>
+  <a class="entry-link" aria-label="post link to CAP" href="http://localhost:1313/posts/architecture/cap/"></a>
+</article>
+
+<article class="post-entry"> 
+<figure class="entry-cover">
+        <img loading="lazy" src="http://localhost:1313/images/img_2.png" alt="">
+</figure>
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">BFS&amp;&amp;DFS
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>树的遍历 深度优先遍历DFS package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, } root.Left = &amp;TreeNode{Val: 2} root.Right = &amp;TreeNode{Val: 3} root.Right.Left = &amp;TreeNode{Val: 4} root.Left.Left = &amp;TreeNode{Val: 5} list := make([]int, 0) var treeDFS = func(root *TreeNode) {} treeDFS = func(root *TreeNode) { if root == nil { return } list = append(list, root.Val) treeDFS(root.Left) treeDFS(root.Right) } treeDFS(root) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 函数版本
+package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, } root.Left = &amp;TreeNode{Val: 2} root.Right = &amp;TreeNode{Val: 3} root.Right.Left = &amp;TreeNode{Val: 4} root.Left.Left = &amp;TreeNode{Val: 5} list := make([]int, 0) TreeDFS(root, &amp;list) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } func TreeDFS(root *TreeNode, list *[]int) { if root == nil { return } *list = append(*list, root.Val) TreeDFS(root.Left, list) TreeDFS(root.Right, list) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 广度优先遍历BFS list2 := make([]int, 0) queue := make([]*TreeNode, 0) queue = append(queue, root) for len(queue) &gt; 0 { count := len(queue) for i := 0; i &lt; count; i&#43;&#43; { node := queue[0] queue = queue[1:] list2 = append(list2, node.Val) if node.Left != nil { queue = append(queue, node.Left) } if node.Right != nil { queue = append(queue, node.Right) } } } fmt.Println(list2) 根据先序遍历和中序遍历构造二叉树 package main import &#34;fmt&#34; func main() { // 1 // [1 2 5 3 4] 先序 // [2 5 1 3 4] 中序 // 1 [2 5] [2 5] i = 2 [3 4] // [2 5 3 4] [2 5] // [5 3 4] [5] copyTreeRoot := BuildTree([]int{1, 2, 5, 3, 4}, []int{2, 5, 1, 3, 4}) fmt.Println(copyTreeRoot) list3 := make([]int, 0) TreeDFS(copyTreeRoot, &amp;list3) fmt.Println(&#34;list3:&#34;, list3) //SliceTest() } func BuildTree(first []int, mid []int) *TreeNode { if len(first) == 0 { return nil } root := &amp;TreeNode{Val: first[0]} node := first[0] i := 0 for ; i &lt; len(mid); i&#43;&#43; { if mid[i] == node { break } } root.Left = BuildTree(first[1:i&#43;1], mid[:i]) root.Right = BuildTree(first[i&#43;1:], mid[i&#43;1:]) return root } 图的遍历 深度优先遍历DFS &amp;&amp; 广度优先遍历BFS package main import ( &#34;container/list&#34; &#34;fmt&#34; ) func main() { // 0 // 1 -&gt; 4 -&gt; 5 // 0 2 -&gt; 6 -&gt; 7 // 3 -&gt;^ g := make([][]int, 8) //g = append(g, []int{1, 2, 3} g[0] = []int{1, 2, 3} g[1] = []int{4} g[2] = []int{6} g[3] = []int{6} g[4] = []int{5} g[6] = []int{7} g2 := make(map[int][]int) g2[0] = []int{1, 2, 3} g2[1] = []int{4} g2[2] = []int{6} g2[3] = []int{6} g2[4] = []int{5} g2[6] = []int{7} graphDFS(0, g) //graphBFS(g) fmt.Println(&#34;-----&#34;) graphBFSWithQueue(g2) fmt.Println(&#34;-----&#34;) listC := graphBFSWithC(g2) fmt.Println(listC) } func graphDFS(root int, graph [][]int) { fmt.Println(root) if graph[root] == nil { return } //fmt.Println(root) for i := 0; i &lt; len(graph[root]); i&#43;&#43; { graphDFS(graph[root][i], graph) } return } func graphBFSWithQueue(graph map[int][]int) { queue := make([]int, 0) queue = append(queue, 0) fmt.Println(0) visited := make(map[int]bool) for len(queue) &gt; 0 { node := queue[0] queue = queue[1:] g := graph[node] size := len(g) for i := 0; i &lt; size; i&#43;&#43; { if visited[g[i]] { continue } else { fmt.Println(g[i]) queue = append(queue, g[i]) visited[g[i]] = true } } } } func graphBFSWithC(graph map[int][]int) []int { queue := list.New() order := make([]int, 0) visited := make(map[int]bool) queue.PushBack(0) for queue.Len() &gt; 0 { node := queue.Remove(queue.Front()).(int) order = append(order, node) neighbor := graph[node] size := len(neighbor) for i := 0; i &lt; size; i&#43;&#43; { if visited[neighbor[i]] { continue } else { queue.PushBack(neighbor[i]) visited[neighbor[i]] = true } } } return order } 带权图的最短路径算法 dijkstra 参考 可视化网站. 可视化网站. </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-07-09 09:20:50 +0800 CST'>July 9, 2025</span>&nbsp;·&nbsp;3 min</footer>
+  <a class="entry-link" aria-label="post link to BFS&&DFS" href="http://localhost:1313/posts/datastructalgorithm/bfs_dfs/"></a>
+</article>
+
+<article class="post-entry"> 
+<figure class="entry-cover">
+        <img loading="lazy" src="http://localhost:1313/images/img.png" alt="">
+</figure>
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">golang的interface和reflect
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>interface 鸭子类型 如果一个东西，走起来像鸭子，叫起来像鸭子，那么我们认为他就是鸭子。也就是说我们关注对象的行为，而不是对象本身。
+go里面通过接口来达到鸭子类型的效果。
+多态 多态是指同一个操作（函数、方法），在不通的对象的作用下，会有不同的行为。 一般多态有两种实现方式：
+继承和组合，比如java、c&#43;&#43;。 接口的形式 在go里面它没有继承的概念，但是go里面有组合。组合式是一种更灵活的方式。 他可以通过组合和重写来实现继承。在调用结构体的方法的时候，会优先调用最近的结构体的方法。 我们推荐在go里通过接口来实现多态，会更加清晰明了。
+go的interface 定义 go里面的接口是一种复合数据类型。他的底层有2种实现，eface和iface。
+//eface 结构 type eface struct { tab *typtab data unsafe.Pointer } // iface结构 type iface struct { tab *itab data unsafe.Pointer } go里面的所有数据类型都实现了eface,也就是说可以借助interface来表示他的数据类型。 还可以通过interface来定义方法集合 。
+type A interface { method() } 可能你会有一个疑问，那go是怎么确定interface 到底应该是使用eface 还是 iface呢？ go是在编译阶段就会确定好interface 使用的eface 还是 iface。后面不会改变。
+如何使用 什么时候会使用interface 通过接口来实现解耦合，比如依赖注入、适配器模式。 不确定传入参数的类型，需要在运行时来确定。 使用方法 接口列表 type animal interface { move() } type dog struct {} func (d dog) move() { fmt.Println(&#34;dog moving&#34;) } type cat struct {} func (c cat) move() { fmt.Println(&#34;cat moving&#34;) } func main() { var a animal a = dog{} a.move() a = cat{} // a是结构可以同意调用 a.move() // 接口注入 call(a) // 不确定具体的参数 vat func1 = func(param any) {} func1 = func(param any) { fmt.Println(&#34;call any&#34;, param) } } func call(a animal) { fmt.Println(&#34;call animal \n&#34;) a.move() } 需要注意的点和坑 使用接口会让编译器无法确定数据类型，导致无法再编译阶段发现类型错误，引发运行时错误。 使用接口会让程序变得难以阅读和理解。 性能会损失大概一倍 reflect unsafe.pointer go语言unsafe包提供了一些函数，可以获取指针，修改指针，获取指针指向的数据，修改指针指向的数据。 简单来讲，go本身不能操作指针，但是提供了reflect包让我们可以操作指针来获得程序的 性能提升。
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-07-06 12:44:43 +0800 CST'>July 6, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to golang的interface和reflect" href="http://localhost:1313/posts/go/interfacereflect/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Network 系列
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p></p>
+  </div>
+  <footer class="entry-footer"><span title='2025-07-12 00:00:00 +0000 UTC'>July 12, 2025</span>&nbsp;·&nbsp;0 min</footer>
+  <a class="entry-link" aria-label="post link to Network 系列" href="http://localhost:1313/posts/network/"></a>
+</article>
     </main>
     
 <footer class="footer">
