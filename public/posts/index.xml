@@ -118,18 +118,10 @@
           &lt;td&gt;随着函数的结束进行销毁&lt;/td&gt;
           &lt;td&gt;需要手动回收,或者根据gc算法进行回收&lt;/td&gt;
       &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;所以说编译器会尽可能的将变量分配到栈上， go会在静态编译阶段就确定变量到底应该分配到堆上还是栈上。&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;当一个变量在函数之外的地方还会被使用就会发生逃逸。&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
-      &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
+&lt;p&gt;所以说编译器会尽可能的将变量分配到栈上， go会在静态编译阶段就确定变量到底应该分配到堆上还是栈上。
+当一个变量在函数之外的地方还会被使用就会发生逃逸。&lt;/p&gt;
 &lt;h4 id=&#34;以下几个场景会发生逃逸&#34;&gt;以下几个场景会发生逃逸&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;返回一个变量的指针&lt;/li&gt;
@@ -141,7 +133,7 @@
 &lt;h3 id=&#34;如何对go的程序进行逃逸分析&#34;&gt;如何对go的程序进行逃逸分析&lt;/h3&gt;
 &lt;p&gt;使用源码go build &amp;ndash;gcflags &amp;lsquo;-m -l&amp;rsquo;分析，看变量是否发生了逃逸
 还可以结合pprof对堆内存的分配进行查看，结合热点路径使用go gc flag 进行分析&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;如何使用&#34;&gt;如何使用&lt;/h3&gt;
+&lt;h3 id=&#34;如何使用&#34;&gt;如何使用&lt;/h3&gt;
 &lt;h3 id=&#34;逃逸分析需要注意的点&#34;&gt;逃逸分析需要注意的点&lt;/h3&gt;
 &lt;ol&gt;
 &lt;li&gt;在不影响代码结构合理性的情况下，进行减少使用指针（变量的内存占用不大的情况下）。&lt;/li&gt;
@@ -272,7 +264,7 @@ c对b的引用。b本来应该被正确标记成黑色的，由于对象c为黑�
       <guid>http://localhost:1313/posts/architecture/cap/</guid>
       <description>&lt;h3 id=&#34;定义&#34;&gt;定义&lt;/h3&gt;
 &lt;p&gt;CAP理论是指分布式当中一致性、可用性以及分区容错性三者不可兼得。我们需要根据实际应用场景做出相应的取舍，
-在现实中，一般来说分布式系统中的网络是不可能完全保证可用的，所以就需要在CP和AP中做出选择。&lt;/p&gt;
+在现实中，一般来说分布式系统中的网络是不可能完全保证可用的，所以就需要在CA和CP中做出选择。&lt;/p&gt;
 &lt;h4 id=&#34;拜占庭将军问题&#34;&gt;拜占庭将军问题&lt;/h4&gt;
 &lt;p&gt;是指分布式系统中可能有恶意节点对数据一致性造成破坏。如果系统中的节点是f个，为了解决非拜占庭将军问题，至少需要3f+1
 个节点。能容忍拜占庭容错的系统一般是高安全性要求的系统，比如区跨链、金融、军事等。&lt;/p&gt;

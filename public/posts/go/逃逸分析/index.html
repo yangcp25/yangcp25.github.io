@@ -34,18 +34,10 @@
           随着函数的结束进行销毁
           需要手动回收,或者根据gc算法进行回收
       
-      
-          所以说编译器会尽可能的将变量分配到栈上， go会在静态编译阶段就确定变量到底应该分配到堆上还是栈上。
-          
-          
-      
-      
-          当一个变量在函数之外的地方还会被使用就会发生逃逸。
-          
-          
-      
   
 
+所以说编译器会尽可能的将变量分配到栈上， go会在静态编译阶段就确定变量到底应该分配到堆上还是栈上。
+当一个变量在函数之外的地方还会被使用就会发生逃逸。
 以下几个场景会发生逃逸
 
 返回一个变量的指针
@@ -239,18 +231,10 @@
           <td>随着函数的结束进行销毁</td>
           <td>需要手动回收,或者根据gc算法进行回收</td>
       </tr>
-      <tr>
-          <td>所以说编译器会尽可能的将变量分配到栈上， go会在静态编译阶段就确定变量到底应该分配到堆上还是栈上。</td>
-          <td></td>
-          <td></td>
-      </tr>
-      <tr>
-          <td>当一个变量在函数之外的地方还会被使用就会发生逃逸。</td>
-          <td></td>
-          <td></td>
-      </tr>
   </tbody>
 </table>
+<p>所以说编译器会尽可能的将变量分配到栈上， go会在静态编译阶段就确定变量到底应该分配到堆上还是栈上。
+当一个变量在函数之外的地方还会被使用就会发生逃逸。</p>
 <h4 id="以下几个场景会发生逃逸">以下几个场景会发生逃逸<a hidden class="anchor" aria-hidden="true" href="#以下几个场景会发生逃逸">#</a></h4>
 <ul>
 <li>返回一个变量的指针</li>
@@ -262,7 +246,7 @@
 <h3 id="如何对go的程序进行逃逸分析">如何对go的程序进行逃逸分析<a hidden class="anchor" aria-hidden="true" href="#如何对go的程序进行逃逸分析">#</a></h3>
 <p>使用源码go build &ndash;gcflags &lsquo;-m -l&rsquo;分析，看变量是否发生了逃逸
 还可以结合pprof对堆内存的分配进行查看，结合热点路径使用go gc flag 进行分析</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"></code></pre></div><h3 id="如何使用">如何使用<a hidden class="anchor" aria-hidden="true" href="#如何使用">#</a></h3>
+<h3 id="如何使用">如何使用<a hidden class="anchor" aria-hidden="true" href="#如何使用">#</a></h3>
 <h3 id="逃逸分析需要注意的点">逃逸分析需要注意的点<a hidden class="anchor" aria-hidden="true" href="#逃逸分析需要注意的点">#</a></h3>
 <ol>
 <li>在不影响代码结构合理性的情况下，进行减少使用指针（变量的内存占用不大的情况下）。</li>
