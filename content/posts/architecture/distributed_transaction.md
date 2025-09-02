@@ -22,6 +22,16 @@ title = 'Distributed_transaction'
 2. ebay事件队列
 #### go的实现方案
 ##### DTM
+##### sega
+```go
+dtmgrpc.NewSagaGrpc(server, gid).
+					Add(busi.BusiGrpc+"/busi.Busi/TransOut", busi.BusiGrpc+"/busi.Busi/TransOutRevert", nil).
+					Add(busi.BusiGrpc+"/busi.Busi/TransIn", busi.BusiGrpc+"/busi.Busi/TransInRevert", nil)
+				err = saga.Submit()
+				if err != nil {
+					return
+				}
+```
 ### 参考资料
 1. **DTM**. [DTM](https://dtm.pub/guide/start.html)
 2. **分布式事务介绍**. [微信公众号](https://mp.weixin.qq.com/s/dgt-V6MwEYs0zU36nSFy7w)
