@@ -10,6 +10,12 @@
 <meta name="description" content="定义
 CAP理论是指分布式当中一致性、可用性以及分区容错性三者不可兼得。我们需要根据实际应用场景做出相应的取舍，
 在现实中，一般来说分布式系统中的网络是不可能完全保证可用的，所以就需要在CA和CP中做出选择。
+c一致性(consistency)
+同一份数据同一时间在不同的节点看到的结果应该是一致性的
+a可用性（availability）
+当系统当中某些节点故障仍然可以在一定时间内响应用户请求，也就是说系统在任何时间对于非错请求都能在一定时间做出响应，且不返回错误。
+p分区容错性（partition tolerance）
+当集群中发生网络分区，因为网络故障导致节点之间不能正常通信，系统仍然正常运行，能够对外提供服务。
 拜占庭将军问题
 是指分布式系统中可能有恶意节点对数据一致性造成破坏。如果系统中的节点是f个，为了解决非拜占庭将军问题，至少需要3f&#43;1
 个节点。能容忍拜占庭容错的系统一般是高安全性要求的系统，比如区跨链、金融、军事等。
@@ -261,6 +267,12 @@ func main() {
                     <a href="#%e5%ae%9a%e4%b9%89" aria-label="定义">定义</a><ul>
                         
                 <li>
+                    <a href="#c%e4%b8%80%e8%87%b4%e6%80%a7consistency" aria-label="c一致性(consistency)">c一致性(consistency)</a></li>
+                <li>
+                    <a href="#a%e5%8f%af%e7%94%a8%e6%80%a7availability" aria-label="a可用性（availability）">a可用性（availability）</a></li>
+                <li>
+                    <a href="#p%e5%88%86%e5%8c%ba%e5%ae%b9%e9%94%99%e6%80%a7partition-tolerance" aria-label="p分区容错性（partition tolerance）">p分区容错性（partition tolerance）</a></li>
+                <li>
                     <a href="#%e6%8b%9c%e5%8d%a0%e5%ba%ad%e5%b0%86%e5%86%9b%e9%97%ae%e9%a2%98" aria-label="拜占庭将军问题">拜占庭将军问题</a></li>
                 <li>
                     <a href="#%e8%84%91%e8%a3%82" aria-label="脑裂">脑裂</a></li>
@@ -300,6 +312,12 @@ func main() {
   <div class="post-content"><h3 id="定义">定义<a hidden class="anchor" aria-hidden="true" href="#定义">#</a></h3>
 <p>CAP理论是指分布式当中一致性、可用性以及分区容错性三者不可兼得。我们需要根据实际应用场景做出相应的取舍，
 在现实中，一般来说分布式系统中的网络是不可能完全保证可用的，所以就需要在CA和CP中做出选择。</p>
+<h4 id="c一致性consistency">c一致性(consistency)<a hidden class="anchor" aria-hidden="true" href="#c一致性consistency">#</a></h4>
+<p>同一份数据同一时间在不同的节点看到的结果应该是一致性的</p>
+<h4 id="a可用性availability">a可用性（availability）<a hidden class="anchor" aria-hidden="true" href="#a可用性availability">#</a></h4>
+<p>当系统当中某些节点故障仍然可以在一定时间内响应用户请求，也就是说系统在任何时间对于非错请求都能在一定时间做出响应，且不返回错误。</p>
+<h4 id="p分区容错性partition-tolerance">p分区容错性（partition tolerance）<a hidden class="anchor" aria-hidden="true" href="#p分区容错性partition-tolerance">#</a></h4>
+<p>当集群中发生网络分区，因为网络故障导致节点之间不能正常通信，系统仍然正常运行，能够对外提供服务。</p>
 <h4 id="拜占庭将军问题">拜占庭将军问题<a hidden class="anchor" aria-hidden="true" href="#拜占庭将军问题">#</a></h4>
 <p>是指分布式系统中可能有恶意节点对数据一致性造成破坏。如果系统中的节点是f个，为了解决非拜占庭将军问题，至少需要3f+1
 个节点。能容忍拜占庭容错的系统一般是高安全性要求的系统，比如区跨链、金融、军事等。</p>
