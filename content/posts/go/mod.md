@@ -13,7 +13,8 @@ go从1.11开始，加入了 go mod。开启 go mod 之后，不需要讲所有�
 #### go 的加载机制
 go 会把`go mod`所在的目录当成工作目录，先加载相对路径下的本地包，如果没有会去`go mod`文件查找，go mod
 会尝试从go proxy 拉取代码，go proxy 是Google维护的go的包仓库，即使某些包的源码被删除，也还是可以从包仓库
-下载，这保证了包引入的稳定性。如果go proxy没有，那么go会尝试从代码仓库拉取源码，比如github上的源码。
+下载，这保证了包引入的稳定性。如果go proxy没有，那么go会尝试从代码仓库拉取源码，比如github上的源码。go mod 当中
+带有 `// indirect`的就是直接源码下载的。
 
 还可以使用 `go mod edit -replace [old git package]@[version]=[new git package]@[version]` 命令将远程代码仓库替换成本地的代码。
 使用`go private` 设置私有化代码仓库的路径，然后配置认证就可以使用内部代码库。
