@@ -13,19 +13,22 @@ go的安装目录
 go path
 go的源代码工作目录
 go mod
-go从1.11开始，加入了 go mod。开启 go mod 之后，不要讲所有的源代码放到gopath。
+go从1.11开始，加入了 go mod。开启 go mod 之后，不需要讲所有的源代码放到gopath。
 go 的加载机制
 go 会把go mod所在的目录当成工作目录，先加载相对路径下的本地包，如果没有会去go mod文件查找，go mod
 会尝试从go proxy 拉取代码，go proxy 是Google维护的go的包仓库，即使某些包的源码被删除，也还是可以从包仓库
-下载，这保证了包引入的稳定性。如果go proxy没有，那么go会尝试从代码仓库拉取源码，比如github上的源码。
+下载，这保证了包引入的稳定性。如果go proxy没有，那么go会尝试从代码仓库拉取源码，比如github上的源码。go mod 当中
+带有 // indirect的就是直接源码下载的。
 还可以使用 go mod edit -replace [old git package]@[version]=[new git package]@[version] 命令将远程代码仓库替换成本地的代码。
 使用go private 设置私有化代码仓库的路径，然后配置认证就可以使用内部代码库。
 常用命令
+
 go mod init 初始化模块，生成 go mod
 go mod tidy 拉取依赖，自动增删依赖，生成go.sum
 go mod download 将依赖预下载到本地缓存
 go mod vendor 将下载的依赖缓存到 ./vendor,用于离线构建
-go mod edit ">
+go mod edit 
+">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/posts/go/mod/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
@@ -184,19 +187,22 @@ go mod edit ">
 <h4 id="go-path">go path<a hidden class="anchor" aria-hidden="true" href="#go-path">#</a></h4>
 <p>go的源代码工作目录</p>
 <h4 id="go-mod">go mod<a hidden class="anchor" aria-hidden="true" href="#go-mod">#</a></h4>
-<p>go从1.11开始，加入了 go mod。开启 go mod 之后，不要讲所有的源代码放到gopath。</p>
+<p>go从1.11开始，加入了 go mod。开启 go mod 之后，不需要讲所有的源代码放到gopath。</p>
 <h4 id="go-的加载机制">go 的加载机制<a hidden class="anchor" aria-hidden="true" href="#go-的加载机制">#</a></h4>
 <p>go 会把<code>go mod</code>所在的目录当成工作目录，先加载相对路径下的本地包，如果没有会去<code>go mod</code>文件查找，go mod
 会尝试从go proxy 拉取代码，go proxy 是Google维护的go的包仓库，即使某些包的源码被删除，也还是可以从包仓库
-下载，这保证了包引入的稳定性。如果go proxy没有，那么go会尝试从代码仓库拉取源码，比如github上的源码。</p>
+下载，这保证了包引入的稳定性。如果go proxy没有，那么go会尝试从代码仓库拉取源码，比如github上的源码。go mod 当中
+带有 <code>// indirect</code>的就是直接源码下载的。</p>
 <p>还可以使用 <code>go mod edit -replace [old git package]@[version]=[new git package]@[version]</code> 命令将远程代码仓库替换成本地的代码。
 使用<code>go private</code> 设置私有化代码仓库的路径，然后配置认证就可以使用内部代码库。</p>
 <h4 id="常用命令">常用命令<a hidden class="anchor" aria-hidden="true" href="#常用命令">#</a></h4>
-<p><code>go mod init</code> 初始化模块，生成 go mod
-<code>go mod tidy</code> 拉取依赖，自动增删依赖，生成go.sum
-<code>go mod download</code> 将依赖预下载到本地缓存
-<code>go mod vendor</code> 将下载的依赖缓存到 ./vendor,用于离线构建
-<code>go mod edit </code></p>
+<ul>
+<li><code>go mod init</code> 初始化模块，生成 go mod</li>
+<li><code>go mod tidy</code> 拉取依赖，自动增删依赖，生成go.sum</li>
+<li><code>go mod download</code> 将依赖预下载到本地缓存</li>
+<li><code>go mod vendor</code> 将下载的依赖缓存到 ./vendor,用于离线构建</li>
+<li><code>go mod edit </code></li>
+</ul>
 
 
   </div>
@@ -205,6 +211,11 @@ go mod edit ">
     <ul class="post-tags">
     </ul>
 <nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/datastructalgorithm/go%E5%AE%9E%E7%8E%B0lru/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Go实现lru</span>
+  </a>
   <a class="next" href="http://localhost:1313/posts/go/%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95%E6%AF%94%E8%BE%83/">
     <span class="title">Next »</span>
     <br>

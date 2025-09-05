@@ -131,14 +131,50 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Matrix_多源扩散
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>package main import ( &#34;bufio&#34; &#34;fmt&#34; &#34;os&#34; &#34;strconv&#34; &#34;strings&#34; ) // 题目描述 // // 存在一个mxn的二维数组，其成员取值范围为0或1，其中值为1的成员具备扩散性，每经过1S，将上下左右值为0的成员同化为1，二维数组的成员初始值都为0，将第[i,j]和[k,l]两个个位置上元素修改成1后，求矩阵的所有，元素变为1需要多长时间 // // 输入描述 // // 输入数据中的前2个数字表示这是一个mxn的矩阵，m和n不会超过1024大小; // // 中间两个数字表示一个初始扩散点位置为I,j // // 最后2个数字表示另一个扩散点位置为k,l // // 输出描述 // // 输出矩阵的所有元素变为1所需要秒数 // // 用例 func main() { input := bufio.NewScanner(os.Stdin) input.Scan() str := input.Text() strArr := strings.Split(str, &#34;,&#34;) m, n := Atoi(strArr[0]), Atoi(strArr[1]) pos1, pos2, pos3, pos4 := Atoi(strArr[2]), Atoi(strArr[3]), Atoi(strArr[4]), Atoi(strArr[5]) time := getMatrixBroadcastTime(m, n, pos1, pos2, pos3, pos4) fmt.Println(time) } func getMatrixBroadcastTime(m, n, pos1, pos2, pos3, pos4 int) (res int) { path := make([]string, 0) path = append(path, getPos(pos1, pos2)) path = append(path, getPos(pos3, pos4)) check := make(map[string]bool) check[getPos(pos1, pos2)] = true check[getPos(pos3, pos4)] = true count := 2 for len(path) &gt; 0 { length := len(path) for i := 0; i &lt; length; i&#43;&#43; { pos := strings.Split(path[i], &#34;_&#34;) x, y := Atoi(pos[0]), Atoi(pos[1]) // 上 if x-1 &gt;= 0 &amp;&amp; check[getPos(x-1, y)] != true { path = append(path, getPos(x-1, y)) check[getPos(x-1, y)] = true count&#43;&#43; } // 下 if x&#43;1 &lt; m &amp;&amp; check[getPos(x&#43;1, y)] != true { path = append(path, getPos(x&#43;1, y)) check[getPos(x&#43;1, y)] = true count&#43;&#43; } // 左 if y-1 &gt;= 0 &amp;&amp; check[getPos(x, y-1)] != true { path = append(path, getPos(x, y-1)) check[getPos(x, y-1)] = true count&#43;&#43; } // 右 if y&#43;1 &lt; n &amp;&amp; check[getPos(x, y&#43;1)] != true { path = append(path, getPos(x, y&#43;1)) check[getPos(x, y&#43;1)] = true count&#43;&#43; } } res&#43;&#43; if count &gt;= m*n { return } } return } func getPos(x, y int) string { return fmt.Sprintf(&#34;%d_%d&#34;, x, y) } func Atoi(str string) int { res, _ := strconv.Atoi(str) return res } </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-09-05 09:23:51 +0800 CST'>September 5, 2025</span>&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to Matrix_多源扩散" href="http://localhost:1313/posts/algorithm/matrix_%E5%A4%9A%E6%BA%90%E6%89%A9%E6%95%A3/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Str_判断字符顺序和存在
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>package test1 import &#34;sort&#34; //题目 // 题目描述输入两个字符串S和L，都只包含英文小写字母。S长度&lt;=100，L长度&lt;=500,000。 //判定S是否是L的有效子串。判定规则：S中的每个字符在L中都能找到（可以不连续），且S在Ｌ中字符的前后顺序与S中顺序要保持一致。 //（例如，S=”ace”是L=”abcde”的一个子序列且有效字符是a、c、e，而”aec”不是有效子序列，且有效字符只有a、e） //输入输出 //输入输入两个字符串S和L，都只包含英文小写字母。S长度&lt;=100，L长度&lt;=500,000。 //先输入S，再输入L，每个字符串占一行。输出S串最后一个有效字符在L中的位置。 //（首位从0开始计算，无有效字符返回-1） func SubStrLasPos(str string, sub string) int { // aabcdabc 8 // abc findKey := -1 // 循环找到所有的字符在str中的位置 预处理 strPos := make(map[byte][]int) for i := 0; i &lt; len(str); i&#43;&#43; { strPos[str[i]] = append(strPos[str[i]], i) } // limit 限制每个字符的位置 当前值比后一个值的最大位置要小才行 limit := len(str) for i := len(sub) - 1; i &gt;= 0; i-- { if _, ok := strPos[sub[i]]; !ok { return -1 } else { subArr := strPos[sub[i]] //sort.SearchInts() // 如果满足子数组的位置比Limit 小 就ok key := sort.SearchInts(subArr, limit) if key == 0 { return -1 } limit = subArr[key-1] if i == len(sub)-1 { findKey = limit } } // 排序拿到最大的值 //sort.Slice(strPos[sub[i]], func(i, j int) bool { //	return strPos[sub[i]][i] &lt; strPos[sub[i]][j] //}) } return findKey } func search(arr []int, limit int) int { low, high := 0, len(arr)-1 for low &lt;= high { mid := low &#43; (high-low)/2 if arr[mid] == limit { return mid } else if arr[mid] &gt; limit { high = mid - 1 } else { low = mid &#43; 1 } } return -1 } </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-09-05 09:22:10 +0800 CST'>September 5, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Str_判断字符顺序和存在" href="http://localhost:1313/posts/algorithm/str_%E5%88%A4%E6%96%AD%E5%AD%97%E7%AC%A6%E9%A1%BA%E5%BA%8F%E5%92%8C%E5%AD%98%E5%9C%A8/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Go实现lru
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>package main import &#34;fmt&#34; // func main() { // //	//LRU //	//实现一个 LRU 缓存，要求支持以下操作： //	//- Get(key int)(int, bool)：如果缓存中存在该 key，返回其对应的值，否则返回 0,false。 //	//- Put(key, value int)：将一个 key-value 对插入缓存。如果缓存已经满了，淘汰最久未使用的元素。 //	// //	//示例： //	//func main() { //	// // 构造 一个 LRU cache //	// cache := Constructor(2) //	// cache.Put(1, 1) //	// cache.Put(2, 2) //	// //	// // 测试缓存获取 //	// fmt.Println(cache.Get(1)) // 输出: 1 true //	// fmt.Println(cache.Get(3)) // 输出: 0 false //	// //	// cache.Put(3, 3) //	// fmt.Println(cache.Get(2)) // 输出: 0 false //	// //	// cache.Put(4, 4) //	// fmt.Println(cache.Get(1)) // 输出: 0 false //	// fmt.Println(cache.Get(3)) // 输出: 3 true //	// fmt.Println(cache.Get(4)) // 输出: 4 true //	//} //	} func main() { // 构造 一个 LRU cache cache := Constructor(2) cache.Put(2, 1) cache.Put(1, 1) cache.Put(2, 3) cache.Put(4, 1) fmt.Println(cache.Get(1)) fmt.Println(cache.Get(2)) } type Node struct { next *Node pre *Node val int key int } type LRUCache struct { capacity int size int cache map[int]*Node head, tail *Node } func Constructor(capacity int) LRUCache { l := LRUCache{ capacity: capacity, cache: make(map[int]*Node, capacity), head: &amp;Node{}, tail: &amp;Node{}, } l.head.next = l.tail l.tail.pre = l.head return l } // 1 2 3 4 func (l *LRUCache) Get(key int) int { // 从map拿数据 if _, ok := l.cache[key]; !ok { return -1 } node := l.cache[key] l.MoveToHead(node) return node.val } func (l *LRUCache) Put(key int, val int) { if _, ok := l.cache[key]; ok { l.cache[key].val = val l.MoveToHead(l.cache[key]) } else { l.size&#43;&#43; node := InitNode(key, val) l.cache[key] = node l.AddToHead(node) if l.size &gt; l.capacity { node := l.RemoveTail() l.size-- delete(l.cache, node.key) } } } func InitNode(key, val int) *Node { return &amp;Node{ key: key, val: val, } } // 添加到头节点 func (l *LRUCache) AddToHead(newNode *Node) *Node { newNode.next = l.head.next newNode.pre = l.head l.head.next.pre = newNode l.head.next = newNode return newNode } func (l *LRUCache) RemoveNode(node *Node) { node.pre.next = node.next node.next.pre = node.pre } func (l *LRUCache) RemoveTail() *Node { node := l.tail.pre //l.tail.pre = node.pre l.RemoveNode(node) return node } func (l *LRUCache) MoveToHead(node *Node) { l.RemoveNode(node) l.AddToHead(node) } </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-29 09:43:18 +0800 CST'>August 29, 2025</span>&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to Go实现lru" href="http://localhost:1313/posts/datastructalgorithm/go%E5%AE%9E%E7%8E%B0lru/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Mod
     </h2>
   </header>
   <div class="entry-content">
     <p>go mod 加载机制 go root go的安装目录
 go path go的源代码工作目录
-go mod go从1.11开始，加入了 go mod。开启 go mod 之后，不要讲所有的源代码放到gopath。
-go 的加载机制 go 会把go mod所在的目录当成工作目录，先加载相对路径下的本地包，如果没有会去go mod文件查找，go mod 会尝试从go proxy 拉取代码，go proxy 是Google维护的go的包仓库，即使某些包的源码被删除，也还是可以从包仓库 下载，这保证了包引入的稳定性。如果go proxy没有，那么go会尝试从代码仓库拉取源码，比如github上的源码。
+go mod go从1.11开始，加入了 go mod。开启 go mod 之后，不需要讲所有的源代码放到gopath。
+go 的加载机制 go 会把go mod所在的目录当成工作目录，先加载相对路径下的本地包，如果没有会去go mod文件查找，go mod 会尝试从go proxy 拉取代码，go proxy 是Google维护的go的包仓库，即使某些包的源码被删除，也还是可以从包仓库 下载，这保证了包引入的稳定性。如果go proxy没有，那么go会尝试从代码仓库拉取源码，比如github上的源码。go mod 当中 带有 // indirect的就是直接源码下载的。
 还可以使用 go mod edit -replace [old git package]@[version]=[new git package]@[version] 命令将远程代码仓库替换成本地的代码。 使用go private 设置私有化代码仓库的路径，然后配置认证就可以使用内部代码库。
 常用命令 go mod init 初始化模块，生成 go mod go mod tidy 拉取依赖，自动增删依赖，生成go.sum go mod download 将依赖预下载到本地缓存 go mod vendor 将下载的依赖缓存到 ./vendor,用于离线构建 go mod edit </p>
   </div>
@@ -255,57 +291,12 @@ go 简单的实践 package main import ( &#34;fmt&#34; &#34;io&#34; &#34;log&#34
   <footer class="entry-footer"><span title='2025-07-16 09:21:40 +0800 CST'>July 16, 2025</span>&nbsp;·&nbsp;4 min</footer>
   <a class="entry-link" aria-label="post link to CAP" href="http://localhost:1313/posts/architecture/cap/"></a>
 </article>
-
-<article class="post-entry"> 
-<figure class="entry-cover">
-        <img loading="lazy" src="http://localhost:1313/images/img_2.png" alt="">
-</figure>
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">BFS&amp;&amp;DFS
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>树的遍历 深度优先遍历DFS package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, } root.Left = &amp;TreeNode{Val: 2} root.Right = &amp;TreeNode{Val: 3} root.Right.Left = &amp;TreeNode{Val: 4} root.Left.Left = &amp;TreeNode{Val: 5} list := make([]int, 0) var treeDFS = func(root *TreeNode) {} treeDFS = func(root *TreeNode) { if root == nil { return } list = append(list, root.Val) treeDFS(root.Left) treeDFS(root.Right) } treeDFS(root) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 函数版本
-package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, } root.Left = &amp;TreeNode{Val: 2} root.Right = &amp;TreeNode{Val: 3} root.Right.Left = &amp;TreeNode{Val: 4} root.Left.Left = &amp;TreeNode{Val: 5} list := make([]int, 0) TreeDFS(root, &amp;list) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } func TreeDFS(root *TreeNode, list *[]int) { if root == nil { return } *list = append(*list, root.Val) TreeDFS(root.Left, list) TreeDFS(root.Right, list) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 广度优先遍历BFS list2 := make([]int, 0) queue := make([]*TreeNode, 0) queue = append(queue, root) for len(queue) &gt; 0 { count := len(queue) for i := 0; i &lt; count; i&#43;&#43; { node := queue[0] queue = queue[1:] list2 = append(list2, node.Val) if node.Left != nil { queue = append(queue, node.Left) } if node.Right != nil { queue = append(queue, node.Right) } } } fmt.Println(list2) 根据先序遍历和中序遍历构造二叉树 package main import &#34;fmt&#34; func main() { // 1 // [1 2 5 3 4] 先序 // [2 5 1 3 4] 中序 // 1 [2 5] [2 5] i = 2 [3 4] // [2 5 3 4] [2 5] // [5 3 4] [5] copyTreeRoot := BuildTree([]int{1, 2, 5, 3, 4}, []int{2, 5, 1, 3, 4}) fmt.Println(copyTreeRoot) list3 := make([]int, 0) TreeDFS(copyTreeRoot, &amp;list3) fmt.Println(&#34;list3:&#34;, list3) //SliceTest() } func BuildTree(first []int, mid []int) *TreeNode { if len(first) == 0 { return nil } root := &amp;TreeNode{Val: first[0]} node := first[0] i := 0 for ; i &lt; len(mid); i&#43;&#43; { if mid[i] == node { break } } root.Left = BuildTree(first[1:i&#43;1], mid[:i]) root.Right = BuildTree(first[i&#43;1:], mid[i&#43;1:]) return root } 图的遍历 深度优先遍历DFS &amp;&amp; 广度优先遍历BFS package main import ( &#34;container/list&#34; &#34;fmt&#34; ) func main() { // 0 // 1 -&gt; 4 -&gt; 5 // 0 2 -&gt; 6 -&gt; 7 // 3 -&gt;^ g := make([][]int, 8) //g = append(g, []int{1, 2, 3} g[0] = []int{1, 2, 3} g[1] = []int{4} g[2] = []int{6} g[3] = []int{6} g[4] = []int{5} g[6] = []int{7} g2 := make(map[int][]int) g2[0] = []int{1, 2, 3} g2[1] = []int{4} g2[2] = []int{6} g2[3] = []int{6} g2[4] = []int{5} g2[6] = []int{7} graphDFS(0, g) //graphBFS(g) fmt.Println(&#34;-----&#34;) graphBFSWithQueue(g2) fmt.Println(&#34;-----&#34;) listC := graphBFSWithC(g2) fmt.Println(listC) } func graphDFS(root int, graph [][]int) { fmt.Println(root) if graph[root] == nil { return } //fmt.Println(root) for i := 0; i &lt; len(graph[root]); i&#43;&#43; { graphDFS(graph[root][i], graph) } return } func graphBFSWithQueue(graph map[int][]int) { queue := make([]int, 0) queue = append(queue, 0) fmt.Println(0) visited := make(map[int]bool) for len(queue) &gt; 0 { node := queue[0] queue = queue[1:] g := graph[node] size := len(g) for i := 0; i &lt; size; i&#43;&#43; { if visited[g[i]] { continue } else { fmt.Println(g[i]) queue = append(queue, g[i]) visited[g[i]] = true } } } } func graphBFSWithC(graph map[int][]int) []int { queue := list.New() order := make([]int, 0) visited := make(map[int]bool) queue.PushBack(0) for queue.Len() &gt; 0 { node := queue.Remove(queue.Front()).(int) order = append(order, node) neighbor := graph[node] size := len(neighbor) for i := 0; i &lt; size; i&#43;&#43; { if visited[neighbor[i]] { continue } else { queue.PushBack(neighbor[i]) visited[neighbor[i]] = true } } } return order } 带权图的最短路径算法 dijkstra 参考 可视化网站. 可视化网站. </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-09 09:20:50 +0800 CST'>July 9, 2025</span>&nbsp;·&nbsp;3 min</footer>
-  <a class="entry-link" aria-label="post link to BFS&&DFS" href="http://localhost:1313/posts/datastructalgorithm/bfs_dfs/"></a>
-</article>
-
-<article class="post-entry"> 
-<figure class="entry-cover">
-        <img loading="lazy" src="http://localhost:1313/images/img.png" alt="">
-</figure>
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">golang的interface和reflect
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>interface 鸭子类型 如果一个东西，走起来像鸭子，叫起来像鸭子，那么我们认为他就是鸭子。也就是说我们关注对象的行为，而不是对象本身。
-go里面通过接口来达到鸭子类型的效果。
-多态 多态是指同一个操作（函数、方法），在不通的对象的作用下，会有不同的行为。 一般多态有两种实现方式：
-继承和组合，比如java、c&#43;&#43;。 接口的形式 在go里面它没有继承的概念，但是go里面有组合。组合式是一种更灵活的方式。 他可以通过组合和重写来实现继承。在调用结构体的方法的时候，会优先调用最近的结构体的方法。 我们推荐在go里通过接口来实现多态，会更加清晰明了。
-go的interface 定义 go里面的接口是一种复合数据类型。他的底层有2种实现，eface和iface。
-//eface 结构 type eface struct { tab *typtab data unsafe.Pointer } // iface结构 type iface struct { tab *itab data unsafe.Pointer } go里面的所有数据类型都实现了eface,也就是说可以借助interface来表示他的数据类型。 还可以通过interface来定义方法集合 。
-type A interface { method() } 可能你会有一个疑问，那go是怎么确定interface 到底应该是使用eface 还是 iface呢？ go是在编译阶段就会确定好interface 使用的eface 还是 iface。后面不会改变。
-如何使用 什么时候会使用interface 通过接口来实现解耦合，比如依赖注入、适配器模式。 不确定传入参数的类型，需要在运行时来确定。 使用方法 接口列表 type animal interface { move() } type dog struct {} func (d dog) move() { fmt.Println(&#34;dog moving&#34;) } type cat struct {} func (c cat) move() { fmt.Println(&#34;cat moving&#34;) } func main() { var a animal a = dog{} a.move() a = cat{} // a是结构可以同意调用 a.move() // 接口注入 call(a) // 不确定具体的参数 vat func1 = func(param any) {} func1 = func(param any) { fmt.Println(&#34;call any&#34;, param) } } func call(a animal) { fmt.Println(&#34;call animal \n&#34;) a.move() } 需要注意的点和坑 使用接口会让编译器无法确定数据类型，导致无法再编译阶段发现类型错误，引发运行时错误。 使用接口会让程序变得难以阅读和理解。 性能会损失大概一倍 reflect unsafe.pointer go语言unsafe包提供了一些函数，可以获取指针，修改指针，获取指针指向的数据，修改指针指向的数据。 简单来讲，go本身不能操作指针，但是提供了reflect包让我们可以操作指针来获得程序的 性能提升。
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-06 12:44:43 +0800 CST'>July 6, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to golang的interface和reflect" href="http://localhost:1313/posts/go/interfacereflect/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Network 系列
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p></p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-12 00:00:00 +0000 UTC'>July 12, 2025</span>&nbsp;·&nbsp;0 min</footer>
-  <a class="entry-link" aria-label="post link to Network 系列" href="http://localhost:1313/posts/network/"></a>
-</article>
+<footer class="page-footer">
+  <nav class="pagination">
+    <a class="next" href="http://localhost:1313/posts/page/2/">Next&nbsp;&nbsp;»
+    </a>
+  </nav>
+</footer>
     </main>
     
 <footer class="footer">

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Matrix_多源扩散 | yangcp</title>
+<meta name="keywords" content="">
+<meta name="description" content="package main
+
+import (
+	&#34;bufio&#34;
+	&#34;fmt&#34;
+	&#34;os&#34;
+	&#34;strconv&#34;
+	&#34;strings&#34;
+)
+
+// 题目描述
+//
+// 存在一个mxn的二维数组，其成员取值范围为0或1，其中值为1的成员具备扩散性，每经过1S，将上下左右值为0的成员同化为1，二维数组的成员初始值都为0，将第[i,j]和[k,l]两个个位置上元素修改成1后，求矩阵的所有，元素变为1需要多长时间
+//
+// 输入描述
+//
+// 输入数据中的前2个数字表示这是一个mxn的矩阵，m和n不会超过1024大小;
+//
+// 中间两个数字表示一个初始扩散点位置为I,j
+//
+// 最后2个数字表示另一个扩散点位置为k,l
+//
+// 输出描述
+//
+// 输出矩阵的所有元素变为1所需要秒数
+//
+// 用例
+func main() {
+	input := bufio.NewScanner(os.Stdin)
+	input.Scan()
+	str := input.Text()
+	strArr := strings.Split(str, &#34;,&#34;)
+	m, n := Atoi(strArr[0]), Atoi(strArr[1])
+	pos1, pos2, pos3, pos4 := Atoi(strArr[2]), Atoi(strArr[3]), Atoi(strArr[4]), Atoi(strArr[5])
+
+	time := getMatrixBroadcastTime(m, n, pos1, pos2, pos3, pos4)
+	fmt.Println(time)
+}
+
+func getMatrixBroadcastTime(m, n, pos1, pos2, pos3, pos4 int) (res int) {
+	path := make([]string, 0)
+
+	path = append(path, getPos(pos1, pos2))
+	path = append(path, getPos(pos3, pos4))
+
+	check := make(map[string]bool)
+	check[getPos(pos1, pos2)] = true
+	check[getPos(pos3, pos4)] = true
+	count := 2
+	for len(path) &gt; 0 {
+		length := len(path)
+		for i := 0; i &lt; length; i&#43;&#43; {
+			pos := strings.Split(path[i], &#34;_&#34;)
+			x, y := Atoi(pos[0]), Atoi(pos[1])
+			// 上
+			if x-1 &gt;= 0 &amp;&amp; check[getPos(x-1, y)] != true {
+				path = append(path, getPos(x-1, y))
+				check[getPos(x-1, y)] = true
+				count&#43;&#43;
+			}
+			// 下
+			if x&#43;1 &lt; m &amp;&amp; check[getPos(x&#43;1, y)] != true {
+				path = append(path, getPos(x&#43;1, y))
+				check[getPos(x&#43;1, y)] = true
+				count&#43;&#43;
+			}
+			// 左
+			if y-1 &gt;= 0 &amp;&amp; check[getPos(x, y-1)] != true {
+				path = append(path, getPos(x, y-1))
+				check[getPos(x, y-1)] = true
+				count&#43;&#43;
+			}
+			// 右
+			if y&#43;1 &lt; n &amp;&amp; check[getPos(x, y&#43;1)] != true {
+				path = append(path, getPos(x, y&#43;1))
+				check[getPos(x, y&#43;1)] = true
+				count&#43;&#43;
+			}
+		}
+		res&#43;&#43;
+		if count &gt;= m*n {
+			return
+		}
+	}
+
+	return
+}
+
+func getPos(x, y int) string {
+	return fmt.Sprintf(&#34;%d_%d&#34;, x, y)
+}
+
+func Atoi(str string) int {
+	res, _ := strconv.Atoi(str)
+	return res
+}
+">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/algorithm/matrix_%E5%A4%9A%E6%BA%90%E6%89%A9%E6%95%A3/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/algorithm/matrix_%E5%A4%9A%E6%BA%90%E6%89%A9%E6%95%A3/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="yangcp (Alt + H)">yangcp</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tag">
+                    <span>Tag</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/me/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Matrix_多源扩散
+    </h1>
+    <div class="post-meta"><span title='2025-09-05 09:23:51 +0800 CST'>September 5, 2025</span>&nbsp;·&nbsp;2 min
+
+</div>
+  </header> 
+
+  <div class="post-content"><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;bufio&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;os&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;strconv&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;strings&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 题目描述</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 存在一个mxn的二维数组，其成员取值范围为0或1，其中值为1的成员具备扩散性，每经过1S，将上下左右值为0的成员同化为1，二维数组的成员初始值都为0，将第[i,j]和[k,l]两个个位置上元素修改成1后，求矩阵的所有，元素变为1需要多长时间</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 输入描述</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 输入数据中的前2个数字表示这是一个mxn的矩阵，m和n不会超过1024大小;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 中间两个数字表示一个初始扩散点位置为I,j</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 最后2个数字表示另一个扩散点位置为k,l</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 输出描述</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 输出矩阵的所有元素变为1所需要秒数</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 用例</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">input</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">bufio</span>.<span style="color:#a6e22e">NewScanner</span>(<span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Stdin</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">input</span>.<span style="color:#a6e22e">Scan</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">str</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">input</span>.<span style="color:#a6e22e">Text</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">strArr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">Split</span>(<span style="color:#a6e22e">str</span>, <span style="color:#e6db74">&#34;,&#34;</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">m</span>, <span style="color:#a6e22e">n</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">Atoi</span>(<span style="color:#a6e22e">strArr</span>[<span style="color:#ae81ff">0</span>]), <span style="color:#a6e22e">Atoi</span>(<span style="color:#a6e22e">strArr</span>[<span style="color:#ae81ff">1</span>])
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">pos1</span>, <span style="color:#a6e22e">pos2</span>, <span style="color:#a6e22e">pos3</span>, <span style="color:#a6e22e">pos4</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">Atoi</span>(<span style="color:#a6e22e">strArr</span>[<span style="color:#ae81ff">2</span>]), <span style="color:#a6e22e">Atoi</span>(<span style="color:#a6e22e">strArr</span>[<span style="color:#ae81ff">3</span>]), <span style="color:#a6e22e">Atoi</span>(<span style="color:#a6e22e">strArr</span>[<span style="color:#ae81ff">4</span>]), <span style="color:#a6e22e">Atoi</span>(<span style="color:#a6e22e">strArr</span>[<span style="color:#ae81ff">5</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">time</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">getMatrixBroadcastTime</span>(<span style="color:#a6e22e">m</span>, <span style="color:#a6e22e">n</span>, <span style="color:#a6e22e">pos1</span>, <span style="color:#a6e22e">pos2</span>, <span style="color:#a6e22e">pos3</span>, <span style="color:#a6e22e">pos4</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">time</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">getMatrixBroadcastTime</span>(<span style="color:#a6e22e">m</span>, <span style="color:#a6e22e">n</span>, <span style="color:#a6e22e">pos1</span>, <span style="color:#a6e22e">pos2</span>, <span style="color:#a6e22e">pos3</span>, <span style="color:#a6e22e">pos4</span> <span style="color:#66d9ef">int</span>) (<span style="color:#a6e22e">res</span> <span style="color:#66d9ef">int</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">path</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">string</span>, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">path</span> = append(<span style="color:#a6e22e">path</span>, <span style="color:#a6e22e">getPos</span>(<span style="color:#a6e22e">pos1</span>, <span style="color:#a6e22e">pos2</span>))
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">path</span> = append(<span style="color:#a6e22e">path</span>, <span style="color:#a6e22e">getPos</span>(<span style="color:#a6e22e">pos3</span>, <span style="color:#a6e22e">pos4</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">check</span> <span style="color:#f92672">:=</span> make(<span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#66d9ef">bool</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">check</span>[<span style="color:#a6e22e">getPos</span>(<span style="color:#a6e22e">pos1</span>, <span style="color:#a6e22e">pos2</span>)] = <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">check</span>[<span style="color:#a6e22e">getPos</span>(<span style="color:#a6e22e">pos3</span>, <span style="color:#a6e22e">pos4</span>)] = <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">count</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> len(<span style="color:#a6e22e">path</span>) &gt; <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">length</span> <span style="color:#f92672">:=</span> len(<span style="color:#a6e22e">path</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#a6e22e">length</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">pos</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">Split</span>(<span style="color:#a6e22e">path</span>[<span style="color:#a6e22e">i</span>], <span style="color:#e6db74">&#34;_&#34;</span>)
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">x</span>, <span style="color:#a6e22e">y</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">Atoi</span>(<span style="color:#a6e22e">pos</span>[<span style="color:#ae81ff">0</span>]), <span style="color:#a6e22e">Atoi</span>(<span style="color:#a6e22e">pos</span>[<span style="color:#ae81ff">1</span>])
+</span></span><span style="display:flex;"><span>			<span style="color:#75715e">// 上</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">x</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">check</span>[<span style="color:#a6e22e">getPos</span>(<span style="color:#a6e22e">x</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">y</span>)] <span style="color:#f92672">!=</span> <span style="color:#66d9ef">true</span> {
+</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">path</span> = append(<span style="color:#a6e22e">path</span>, <span style="color:#a6e22e">getPos</span>(<span style="color:#a6e22e">x</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">y</span>))
+</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">check</span>[<span style="color:#a6e22e">getPos</span>(<span style="color:#a6e22e">x</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">y</span>)] = <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">count</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>			<span style="color:#75715e">// 下</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">x</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span> &lt; <span style="color:#a6e22e">m</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">check</span>[<span style="color:#a6e22e">getPos</span>(<span style="color:#a6e22e">x</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">y</span>)] <span style="color:#f92672">!=</span> <span style="color:#66d9ef">true</span> {
+</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">path</span> = append(<span style="color:#a6e22e">path</span>, <span style="color:#a6e22e">getPos</span>(<span style="color:#a6e22e">x</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">y</span>))
+</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">check</span>[<span style="color:#a6e22e">getPos</span>(<span style="color:#a6e22e">x</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">y</span>)] = <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">count</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>			<span style="color:#75715e">// 左</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">y</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">check</span>[<span style="color:#a6e22e">getPos</span>(<span style="color:#a6e22e">x</span>, <span style="color:#a6e22e">y</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)] <span style="color:#f92672">!=</span> <span style="color:#66d9ef">true</span> {
+</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">path</span> = append(<span style="color:#a6e22e">path</span>, <span style="color:#a6e22e">getPos</span>(<span style="color:#a6e22e">x</span>, <span style="color:#a6e22e">y</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>))
+</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">check</span>[<span style="color:#a6e22e">getPos</span>(<span style="color:#a6e22e">x</span>, <span style="color:#a6e22e">y</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)] = <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">count</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>			<span style="color:#75715e">// 右</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">y</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span> &lt; <span style="color:#a6e22e">n</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">check</span>[<span style="color:#a6e22e">getPos</span>(<span style="color:#a6e22e">x</span>, <span style="color:#a6e22e">y</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)] <span style="color:#f92672">!=</span> <span style="color:#66d9ef">true</span> {
+</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">path</span> = append(<span style="color:#a6e22e">path</span>, <span style="color:#a6e22e">getPos</span>(<span style="color:#a6e22e">x</span>, <span style="color:#a6e22e">y</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>))
+</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">check</span>[<span style="color:#a6e22e">getPos</span>(<span style="color:#a6e22e">x</span>, <span style="color:#a6e22e">y</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)] = <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">count</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">res</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">count</span> <span style="color:#f92672">&gt;=</span> <span style="color:#a6e22e">m</span><span style="color:#f92672">*</span><span style="color:#a6e22e">n</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">getPos</span>(<span style="color:#a6e22e">x</span>, <span style="color:#a6e22e">y</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">string</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;%d_%d&#34;</span>, <span style="color:#a6e22e">x</span>, <span style="color:#a6e22e">y</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Atoi</span>(<span style="color:#a6e22e">str</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">res</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">strconv</span>.<span style="color:#a6e22e">Atoi</span>(<span style="color:#a6e22e">str</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">res</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="next" href="http://localhost:1313/posts/algorithm/str_%E5%88%A4%E6%96%AD%E5%AD%97%E7%AC%A6%E9%A1%BA%E5%BA%8F%E5%92%8C%E5%AD%98%E5%9C%A8/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Str_判断字符顺序和存在</span>
+  </a>
+</nav>
+
+  </footer><div id="utterances-comments"></div>
+<script src="https://utteranc.es/client.js"
+        repo="yangcp25/yangcp25.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">yangcp</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
