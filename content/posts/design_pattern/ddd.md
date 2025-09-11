@@ -24,16 +24,67 @@ DDD是domain design driver 的简称，根本的目的是为了解决软件的�
 ### 战术构件和战略构件
 DDD是一套架构思想方法论，它为代码层面和架构层面都提供了对应的构件帮我我们设计构架。
 #### 战术构件（代码层面）
-1. 值对象
-2. 聚合根
-3. repository
-4. domain
-5. service
+1. 实体
+2. 值对象
+3. 根/聚合根
+4. repository
+5. domain
+6. 工厂
+7. 事件
 #### 战略构件（架构层面）
 1. 界限上下文（模块）
 2. 通用语言（业务和技术用同一种专业术语沟通，防止鸡同鸭讲）
 3. 上下文映射（模块之间如何关联）
 ### 实际架构示例
+                ┌──────────────────────────────────────────────┐
+                │                战略构件 (Strategic)           │
+                │----------------------------------------------│
+                │  限界上下文 (Bounded Contexts)                │
+                │    ├── 用户上下文 (User Context)              │
+                │    ├── 订单上下文 (Order Context)             │
+                │    ├── 商品上下文 (Product Context)           │
+                │    └── 支付上下文 (Payment Context)           │
+                │                                              │
+                │  上下文映射 (Context Map)                     │
+                │    ├── 上下游 (Upstream/Downstream)           │
+                │    ├── 防腐层 (ACL)                          │
+                │    ├── 合作伙伴 (Partnership)                 │
+                │    └── 开放主机服务 (OHS)                    │
+                │                                              │
+                │  通用语言 (Ubiquitous Language)               │
+                │    └── "订单"、"支付单"、"退款单"             │
+                └──────────────────────────────────────────────┘
+
+                                    │
+                                    ▼
+
+                ┌──────────────────────────────────────────────┐
+                │                战术构件 (Tactical)            │
+                │----------------------------------------------│
+                │  接口层 (Interface Layer)                    │
+                │    └── Kratos Handler (HTTP/gRPC 接口)       │
+                │                                              │
+                │  应用层 (Application Layer)                  │
+                │    └── 应用服务 (Application Service)        │
+                │         → OrderUsecase                      │
+                │                                              │
+                │  领域层 (Domain Layer)                       │
+                │    ├── 实体 (Entity) & 聚合根 (AggregateRoot) │
+                │    │      → Order, OrderItem                 │
+                │    ├── 值对象 (Value Object)                 │
+                │    │      → Money, Address                   │
+                │    ├── 领域服务 (Domain Service)             │
+                │    │      → PaymentService                   │
+                │    ├── 工厂 (Factory)                        │
+                │    │      → NewOrder                         │
+                │    ├── 领域事件 (Domain Event)               │
+                │    │      → OrderPaidEvent                   │
+                │    └── 仓储接口 (Repository Interface)        │
+                │                                              │
+                │  基础设施层 (Infrastructure Layer)            │
+                │    └── 仓储实现 (Repository Impl, GORM)      │
+                │         → orderRepo (MySQL)                  │
+                └──────────────────────────────────────────────┘
 
 ### 参考资料
 
