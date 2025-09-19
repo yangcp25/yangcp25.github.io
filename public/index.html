@@ -128,6 +128,84 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">如何保证数据录入不混乱
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>如何保证数据录入不混乱 数据并发 可以采用go的sync.mutex/数据库的锁/分布式锁来实现并发访问控制，在单机服务下，可以采用go的互斥锁保护临界资源。在分布式场景下，并发量不高的情况下，采用 数据库的行锁，行锁从逻辑上可以分为悲观锁和乐观锁，悲观锁通过直接for update 语句加互斥锁，在本次事务未提交之前，其他事务都不能读写当前的临界资源。乐观锁可以使用版本号， 先查询版本号，在写入数据的时候再次验证版本号，如果相同再更新。
+</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-09-18 09:34:21 +0800 CST'>September 18, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 如何保证数据录入不混乱" href="http://localhost:1313/posts/scenario/%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E5%BD%95%E5%85%A5%E4%B8%8D%E6%B7%B7%E4%B9%B1/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">一次mysql的执行过程
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>一次mysql的执行过程 连接器 客户端需要先和服务器连接，检查帐号密码、权限，建立连接。 分析器 将客户端发送过来的sql语句进行分析，分为词法分析，将关键词提取出来，进行语法分析，检查是否有 语法错误，最后对语句进行语义分析。 优化器 根据用户的sql 执行查询计划，选择成本和时间最小的方案执行。 执行器 向存储引擎发送请求，执行具体的sql执行 </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-09-12 09:47:57 +0800 CST'>September 12, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 一次mysql的执行过程" href="http://localhost:1313/posts/database/%E4%B8%80%E6%AC%A1mysql%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Mysql_分组统计排序
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>记录一些面试遇到的题目
+CREATE TABLE students ( id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), age INT, sex CHAR(1), class VARCHAR(50) ); INSERT INTO students (name, age, sex, class) VALUES (&#39;沉默王二&#39;, 18, &#39;女&#39;, &#39;三年二班&#39;), (&#39;沉默王一&#39;, 20, &#39;男&#39;, &#39;三年二班&#39;), (&#39;沉默王三&#39;, 19, &#39;男&#39;, &#39;三年三班&#39;), (&#39;沉默王四&#39;, 17, &#39;男&#39;, &#39;三年三班&#39;), (&#39;沉默王五&#39;, 20, &#39;女&#39;, &#39;三年四班&#39;), (&#39;沉默王六&#39;, 21, &#39;男&#39;, &#39;三年四班&#39;), (&#39;沉默王七&#39;, 18, &#39;女&#39;, &#39;三年四班&#39;); select * from students s1 join ( select id, row_number() over (partition by class order by age) as rank_num from students ) s2 on s2.id = s1.id where s2.rank_num &lt;= 2 </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-09-12 09:41:41 +0800 CST'>September 12, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Mysql_分组统计排序" href="http://localhost:1313/posts/interview_code/mysql_%E5%88%86%E7%BB%84%E7%BB%9F%E8%AE%A1%E6%8E%92%E5%BA%8F/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">数组交集
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p> package main import &#34;fmt&#34; func main() { //4.1 实现一个函数，可以计算返回多个切片元素交集，如入参[1,2,3],[2,3,4] 返回 [2,3] arrays := make([][]int, 0) arrays = append(arrays, []int{1, 2, 3}) arrays = append(arrays, []int{2, 3, 4}) arrays = append(arrays, []int{3, 4}) res := calMerge(arrays...) fmt.Println(res) } func calMerge(arrays ...[]int) []int { // 数组先去重，就不实现了 check := make(map[int]int) for i := 0; i &lt; len(arrays); i&#43;&#43; { for j := 0; j &lt; len(arrays[i]); j&#43;&#43; { check[arrays[i][j]] &#43;= 1 } } newArray := make([]int, 0) for k, val := range check { if val &gt;= len(arrays) { newArray = append(newArray, k) } } return newArray } </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-09-12 09:41:25 +0800 CST'>September 12, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 数组交集" href="http://localhost:1313/posts/interview_code/%E6%95%B0%E7%BB%84%E4%BA%A4%E9%9B%86/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">分布式锁的实现
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>分布式锁的实现 分布式锁需要满足几个要点
+高性能、互斥，redis高性能，处理模型单线程天然支持互斥 原子性操作（主要是redis），高并发情况下，需要保证加锁、删除、自动续期的并发安全，所以需要原子性保证 安全释放锁、锁的删除，在并发情况下，可能出现A执行任务过长，锁已经自动过期了，B拿到锁在执行了，A执行完毕，释放锁，如果不进行锁的Val判断，会导致锁的异常释放。 自动过期/自动续期 可重入 基于redis的实现 cache.go
+package cache import ( &#34;context&#34; &#34;github.com/redis/go-redis/v9&#34; &#34;time&#34; ) type Cache interface { // 通用封装 需要解决 //（1）缓存三大问题 a 穿透 b 击穿 c 缓存雪崩 //（2）缓存不一致的问题 //（3）分布式锁 // 设置通用前缀 app_name , 数据类型 data, 模块名字 ， SetPrefix(prefix ...string) Cache Set(ctx context.Context, key, value string, short bool) error Get(ctx context.Context, key string, handler func(context.Context) (string, error)) (string, error) // 增加 删除 修改的时候调用 Flush(ctx context.Context, handler func(context.Context) error) error FlushWithConsistency(ctx context.Context, handler func(context.Context) error) error // 以下是简单封装 SimpleSet(ctx context.Context, key string, data any, expiration time.Duration) (err error) SimpleGet(ctx context.Context, key string) (data string, err error) SimpleIncr(ctx context.Context, key string) (count int64, err error) SimpleDel(ctx context.Context, keys ...string) (deletedCount int64, err error) Pipelined(ctx context.Context, callback func(redis.Pipeliner) error) (cmder []redis.Cmder, err error) // 批量删除 key 比如 app_name:* DeleteKeysByPattern(ctx context.Context, pattern string) (err error) // 集合操作 SAdd(ctx context.Context, key string, members ...string) (err error) SMembers(ctx context.Context, key string) (members []string, err error) // 过期集合 设置获取 AddMemberWithTTL(ctx context.Context, setKey, member string, ttl time.Duration) error GetValidMembers(ctx context.Context, setKey string) ([]string, error) RemoveMember(ctx context.Context, setKey string, members ...string) (int64, error) // 分布式加解锁 DistributedLock(ctx context.Context, key string, ttl time.Duration) error DistributedUnlock(ctx context.Context, key string) error } redis.go
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-09-11 09:23:32 +0800 CST'>September 11, 2025</span>&nbsp;·&nbsp;7 min</footer>
+  <a class="entry-link" aria-label="post link to 分布式锁的实现" href="http://localhost:1313/posts/scenario/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E7%9A%84%E5%AE%9E%E7%8E%B0/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">零拷贝
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>零拷贝技术 通过sendfile 等函数减少用户态和内核态的切换，减少拷贝次数，加快文件传输速度，但只适用于原样传输的场景，比如静态文件服务器，消息队列等，比如mysql 也是磁盘加载数据，但是需要对取出来的数据做各种处理就不适合这种场景。
+</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-09-10 20:40:50 +0800 CST'>September 10, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 零拷贝" href="http://localhost:1313/posts/cs/%E9%9B%B6%E6%8B%B7%E8%B4%9D/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Str_百度真题原地置换大小写
     </h2>
   </header>
@@ -172,108 +250,6 @@
   </div>
   <footer class="entry-footer"><span title='2025-08-29 09:43:18 +0800 CST'>August 29, 2025</span>&nbsp;·&nbsp;2 min</footer>
   <a class="entry-link" aria-label="post link to Go实现lru" href="http://localhost:1313/posts/datastructalgorithm/go%E5%AE%9E%E7%8E%B0lru/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Mod
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>go mod 加载机制 go root go的安装目录
-go path go的源代码工作目录
-go mod go从1.11开始，加入了 go mod。开启 go mod 之后，不需要讲所有的源代码放到gopath。
-go 的加载机制 go 会把go mod所在的目录当成工作目录，先加载相对路径下的本地包，如果没有会去go mod文件查找，go mod 会尝试从go proxy 拉取代码，go proxy 是Google维护的go的包仓库，即使某些包的源码被删除，也还是可以从包仓库 下载，这保证了包引入的稳定性。如果go proxy没有，那么go会尝试从代码仓库拉取源码，比如github上的源码。go mod 当中 带有 // indirect的就是直接源码下载的。
-还可以使用 go mod edit -replace [old git package]@[version]=[new git package]@[version] 命令将远程代码仓库替换成本地的代码。 使用go private 设置私有化代码仓库的路径，然后配置认证就可以使用内部代码库。
-常用命令 go mod init 初始化模块，生成 go mod go mod tidy 拉取依赖，自动增删依赖，生成go.sum go mod download 将依赖预下载到本地缓存 go mod vendor 将下载的依赖缓存到 ./vendor,用于离线构建 go mod edit </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-27 09:47:18 +0800 CST'>August 27, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Mod" href="http://localhost:1313/posts/go/mod/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">初始化方法比较
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>make和new的初始化比较 make new 返回值 返回实例化对象本身 返回类型并清空返回实例化对象的指针 作用类型、常见用法 slice、map、channel 所有类型 内部作用机制 初始化结构体，并初始化结构体内部的相关字段机构 初始化对象，清空内存，分配内存，置为零值 为什么new slice map 得到是nil 首先 new 严格遵守返回的是初始化对象指针的原则，而new slice、map的时候，返回的就是对象的引用，只是切片和哈希的 零值就是nil,所以如果new切片和map会出现无法使用的情况。
-</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-03 11:01:53 +0800 CST'>August 3, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to 初始化方法比较" href="http://localhost:1313/posts/go/%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95%E6%AF%94%E8%BE%83/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">内存泄漏
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>什么是内存泄漏 指内存资源长期得不到释放，导致内存持续增长，最终导致内存溢出
-内存泄漏的常见场景 协程的泄漏 耗时任务或者http请求一直得不到响应，又没有设置超时时间 chan未正确关闭、阻塞。range channel 发送端未关闭导致死循环。 锁未正确释放、导致协程未能释放 资源未关闭，如file、数据库、redis连接、timer定时器、channel cgo 其他的一些 内存泄漏分析工具 pprof分析协程数量，内存占用情况等
-如何针对内存泄漏进行优化 针对协程泄漏 设置超时时间 context.deadline timeout 结合select进行超时控制 正确使用channel 正确使用互斥锁，配对使用 针对channel的泄漏 配对使用 在发送方关闭channel 正确使用缓冲channel和非缓冲channel 养成关闭资源的习惯，使用defer,clear up 等工具 cgo和其他场景记得防止协程泄漏 </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-01 09:10:55 +0800 CST'>August 1, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to 内存泄漏" href="http://localhost:1313/posts/go/%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">逃逸分析
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>什么是逃逸分析 计算机科学中对指针作用范围进行分析就叫做逃逸分析。分析变量是分配到堆上还是栈上。 分配到堆上和栈上的对比
-栈 堆 分配方式 随着函数创建自动分配 程序员手动分配 资源消耗 很小 ，大小固定 比较大，大小不固定，需要寻找到合适的大小。容易产生内存碎片 回收方式 随着函数的结束进行销毁 需要手动回收,或者根据gc算法进行回收 所以说编译器会尽可能的将变量分配到栈上， go会在静态编译阶段就确定变量到底应该分配到堆上还是栈上。 当一个变量在函数之外的地方还会被使用就会发生逃逸。
-以下几个场景会发生逃逸 返回一个变量的指针 返回一个闭包函数，闭包函数捕获了调用函数的变量 往channel发送了变量的指针 巨大的变量，编译器为了防止栈内存不够，会将其分配到堆上 引用类型的使用，比如传递slice、map、chan、interface等 如何对go的程序进行逃逸分析 使用源码go build –gcflags ‘-m -l’分析，看变量是否发生了逃逸 还可以结合pprof对堆内存的分配进行查看，结合热点路径使用go gc flag 进行分析
-如何使用 逃逸分析需要注意的点 在不影响代码结构合理性的情况下，进行减少使用指针（变量的内存占用不大的情况下）。 不要过度设计，持续重构。也就是先实现业务，再去结合工具来进行调整 </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-01 09:10:17 +0800 CST'>August 1, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to 逃逸分析" href="http://localhost:1313/posts/go/%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Gc
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>什么是GC gc就是内存垃圾回收。c/c&#43;&#43;这类语言可以由程序员申请内存，分配到堆上，堆上的数据随着函数结束并不会自动被清零，需要程序员手动清理。 这会给编程增加负担和隐患。高级语言如java/go支持gc,自动分析没有被引用的变量，进行内存回收。
-常见的GC方法 引用计数法 对变量对象的引用次数进行计数，当计数为0就会被回收。它实现简单，但效率不高无法解决循环引用的问题。
-标记清除法 扫描所有对象，将有引用的进行标记。优点是实现简单，但可能出现很多内存碎片，不利于内存重新分配。
-复制法 准备2个大小一样的内存块，将存活的对象放到新的内存块。优点是解决了内存碎片问题，但内存复制比较消耗资源，还需要将引用关系进行复制。
-分代法 将对象创建的不同时间分为青年代、老年代。分代发基于一种实践思想，大多数对象的生命周期都很短。
-三色标记法 stw可以是start the world 或者 stop zhe world的缩写，他指的是stop the word 到 start the world 这个间隔的时间。在gc过程需要暂停用户 代码执行，进行内存扫描，这个stw时间越短，对程序的性能提升越高。
-go的GC实现 go因为内存分配是采用tcmalloc分配法，所有不需要处理内存碎片问题，同时go团队更加希望的是gc操作可以和用户代码一起执行，不仅是减少 stw的时间。go采用三色标记法对内存进行回收，并采用混合屏障提升并发时的回收效率。
-tcmalloc内存分配 首先每个协程都有自己的内存分配器，由一系列递增的内存大小块组成，每次内存申请回优先在本地分配器进行申请，当内存不足会向更高一级的内存分配器进行申请。 内存分类器会定时整理内存碎片，当空闲内存超过一定数量时会进行内存回收，不足时会进行内存分配。
-go为什么采用三色标记法 go采用tcmalloc所以对内存碎片优化的方案的gc算法并不会带来明显的性能提升 go团队的目标不仅仅是减少stw的时候，还希望回收过程可以和用户代码共同执行，提升程序性能。 定义 go的gc扫描器将所有对象分为三类，分别是：
-白色对象（可能存活的对象）：一开始所有对象都标记成白色对象，当扫描完成后，白色对象不可达 灰色对象（波面）：正在被访问器访问到的对象，他可能指向白色对象 黑色对象（确定存活）：已经被回收期扫描。 扫描过程 分为4步
-所有根对象标记为白色 将根对象放入待扫描队列，标记成灰色 扫描队列所有的灰色对象，标记成黑色，并将引用对象标记成灰色。 重复步骤三，直到待扫描的灰色对象为空，所有对象标记成黑色或者白色。白色对象不可达，进行回收。 根对象在垃圾回收术语中被称为根集合，它包含 全局对象，程序在编译阶段就能确定的存在于程序整个生命周期的对象 执行栈，每个goroutine都有自己的内存栈，会有自己的栈对象和指向堆区块的指针 寄存器，计算过程中可能指向的一些堆区块的指针 没有stw可能得问题，对象被错误删除 假设以下场景：扫描到某个节点，存在a灰色对象引用白色对象b,存在一个黑色对象c。此时现将删除a对b的引用，同时添加 c对b的引用。b本来应该被正确标记成黑色的，由于对象c为黑色不会对它进行扫描，而a又删除了对b的引用，就会造成c始终不可达 造成误删除。
-当同时满足以下2个条件时，会出现误删除：
-赋值器创建一个黑色对象对白色对象的引用 删除灰色对象对这个白色的引用 只要破坏任意条件就可以避免误删除 避免条件一，也就避免了修改对象池当中需要被删除的对象的存活状态，应该存活的对象均可达。出现条件二，删除了灰色对象对白色对象的引用 这个白色对象也应该被删除。 避免条件二，白色对象最终可以由灰色访问到，进行正常标记。就算创建了黑色对象对白色对象的引用，也可以由灰色对象触达。 屏障机制 分成2种赋值器，插入时使用灰色赋值器，删除时使用黑色赋值器
-插入屏障 当添加一新的对象引用时，会先将插入对象赋值成灰色。破坏条件一，破坏了增加了一个黑色对象对白色对象的引用。有个一个细节，由于对所有对象进行插入屏障会比较 影响性能，golang团队后来决定只对堆区的对象启用插入屏障，栈区的对象会在第一次gc完成之后stw重新扫描一次栈区。
-删除屏障 当删除一个对象时，现将对象赋值为黑色。破坏条件二，破坏了删除一个灰色对象对白色对象的引用。
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-01 09:10:00 +0800 CST'>August 1, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Gc" href="http://localhost:1313/posts/go/gc/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Map
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>go的哈希实现 通用哈希实现 哈希表是一个高效的数据结构，通过对key经过哈希函数计算的值和存储数据的数组的长度，两者求余得到在数组插入的位置。高效的查找效率 时间复杂度为O(1)。
-哈希函数 任意长度的输入有固定输出 同一输入会产生同一个输出 输入的细小改变会造成输入的完全不一样 速度快 单项不可逆 go的哈希底层实现 通过底层结构体hmap来实例化map对象，hmap 包含指向[]bucket数组的指针。bucket结构里面会存储真实的数据 以key1key2 val1value2 的形式进行排列，方便内存对齐。头部有top哈希方便bucket内部进行数据定位，底部有指向溢出bucket的指针。 当发生哈希冲突，冲突的数据会存放到溢出bucket链表。
-插入过程 首先用哈希函数对key计算，得到64位数据（64位机器上）。低B位决定数据落入哪个桶。B是log2count，也就是以2为底bucket元素的长度的对数。 高8位决定落入bucket具体的位置。如果发送哈希冲突，就把数据存入溢出桶。
-遍历过程、查找过程 遍历：从0-bucket长度随机一个数字选择bucket进行遍历。所以go的map是无序。如果bucket遍历完，溢出桶不为空，继续遍历溢出桶。 查找：哈希函数对key计算，低8位找到具体的桶。高8位拿来和bucket的top哈希进行比较，如果一致，再比较具体的key,如果相同就返回， 否则再看溢出桶是否为空，不会空对链表进行遍历。如果都没有就返回查找失败。 go的扩容过程 当哈希函数产生过多的哈希碰撞时，就会导致查询效率低下，为了减少哈希碰撞，需要对底层数组的容量扩容或者对数据进行从新排列。 当满足一下任意条件会触发扩容
-当碰撞因子&gt;6.5, 碰撞因子=count(实际元素个数)/2的B次方（bucket数组总的元素长度） 当溢出桶过多时，当B &lt; 15 , 当溢出桶的个数&gt;B次方，触发扩容。当B&gt;15时，overflow超过2的15次方。 为什么是线程不安全的 sync.map使用 sync.map如何实现的 注意事项</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-29 09:23:59 +0800 CST'>July 29, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Map" href="http://localhost:1313/posts/go/map/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">
