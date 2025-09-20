@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>分布式锁的实现 | yangcp</title>
+<meta name="keywords" content="">
+<meta name="description" content="分布式锁的实现
+分布式锁需要满足几个要点
+
+高性能、互斥，redis高性能，处理模型单线程天然支持互斥
+原子性操作（主要是redis），高并发情况下，需要保证加锁、删除、自动续期的并发安全，所以需要原子性保证
+安全释放锁、锁的删除，在并发情况下，可能出现A执行任务过长，锁已经自动过期了，B拿到锁在执行了，A执行完毕，释放锁，如果不进行锁的Val判断，会导致锁的异常释放。
+自动过期/自动续期
+可重入
+
+基于redis的实现
+cache.go
+package cache
+
+import (
+&#34;context&#34;
+&#34;github.com/redis/go-redis/v9&#34;
+&#34;time&#34;
+)
+
+type Cache interface {
+
+// 通用封装 需要解决
+//（1）缓存三大问题 a 穿透 b 击穿 c 缓存雪崩
+//（2）缓存不一致的问题
+//（3）分布式锁
+// 设置通用前缀 app_name , 数据类型 data, 模块名字 ，
+SetPrefix(prefix ...string) Cache
+Set(ctx context.Context, key, value string, short bool) error
+Get(ctx context.Context, key string, handler func(context.Context) (string, error)) (string, error)
+// 增加 删除 修改的时候调用
+Flush(ctx context.Context, handler func(context.Context) error) error
+FlushWithConsistency(ctx context.Context, handler func(context.Context) error) error
+
+// 以下是简单封装
+SimpleSet(ctx context.Context, key string, data any, expiration time.Duration) (err error)
+SimpleGet(ctx context.Context, key string) (data string, err error)
+SimpleIncr(ctx context.Context, key string) (count int64, err error)
+SimpleDel(ctx context.Context, keys ...string) (deletedCount int64, err error)
+Pipelined(ctx context.Context, callback func(redis.Pipeliner) error) (cmder []redis.Cmder, err error)
+// 批量删除 key 比如 app_name:*
+DeleteKeysByPattern(ctx context.Context, pattern string) (err error)
+
+// 集合操作
+SAdd(ctx context.Context, key string, members ...string) (err error)
+SMembers(ctx context.Context, key string) (members []string, err error)
+
+// 过期集合 设置获取
+AddMemberWithTTL(ctx context.Context, setKey, member string, ttl time.Duration) error
+GetValidMembers(ctx context.Context, setKey string) ([]string, error)
+RemoveMember(ctx context.Context, setKey string, members ...string) (int64, error)
+
+// 分布式加解锁
+DistributedLock(ctx context.Context, key string, ttl time.Duration) error
+DistributedUnlock(ctx context.Context, key string) error
+}
+redis.go">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/scenario/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E7%9A%84%E5%AE%9E%E7%8E%B0/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/scenario/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E7%9A%84%E5%AE%9E%E7%8E%B0/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="yangcp (Alt + H)">yangcp</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tag">
+                    <span>Tag</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/me/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      分布式锁的实现
+    </h1>
+    <div class="post-meta"><span title='2025-09-11 09:23:32 +0800 CST'>September 11, 2025</span>&nbsp;·&nbsp;7 min
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e5%88%86%e5%b8%83%e5%bc%8f%e9%94%81%e7%9a%84%e5%ae%9e%e7%8e%b0" aria-label="分布式锁的实现">分布式锁的实现</a></li>
+                <li>
+                    <a href="#%e5%9f%ba%e4%ba%8eredis%e7%9a%84%e5%ae%9e%e7%8e%b0" aria-label="基于redis的实现">基于redis的实现</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h3 id="分布式锁的实现">分布式锁的实现<a hidden class="anchor" aria-hidden="true" href="#分布式锁的实现">#</a></h3>
+<p>分布式锁需要满足几个要点</p>
+<ol>
+<li>高性能、互斥，redis高性能，处理模型单线程天然支持互斥</li>
+<li>原子性操作（主要是redis），高并发情况下，需要保证加锁、删除、自动续期的并发安全，所以需要原子性保证</li>
+<li>安全释放锁、锁的删除，在并发情况下，可能出现A执行任务过长，锁已经自动过期了，B拿到锁在执行了，A执行完毕，释放锁，如果不进行锁的Val判断，会导致锁的异常释放。</li>
+<li>自动过期/自动续期</li>
+<li>可重入</li>
+</ol>
+<h3 id="基于redis的实现">基于redis的实现<a hidden class="anchor" aria-hidden="true" href="#基于redis的实现">#</a></h3>
+<p><code>cache.go</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#f92672">package</span> <span style="color:#a6e22e">cache</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> (
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;context&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;github.com/redis/go-redis/v9&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;time&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Cache</span> <span style="color:#66d9ef">interface</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 通用封装 需要解决</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//（1）缓存三大问题 a 穿透 b 击穿 c 缓存雪崩</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//（2）缓存不一致的问题</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//（3）分布式锁</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 设置通用前缀 app_name , 数据类型 data, 模块名字 ，</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">SetPrefix</span>(<span style="color:#a6e22e">prefix</span> <span style="color:#f92672">...</span><span style="color:#66d9ef">string</span>) <span style="color:#a6e22e">Cache</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Set</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">key</span>, <span style="color:#a6e22e">value</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">short</span> <span style="color:#66d9ef">bool</span>) <span style="color:#66d9ef">error</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Get</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">handler</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>) (<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">error</span>)) (<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">error</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 增加 删除 修改的时候调用</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Flush</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">handler</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>) <span style="color:#66d9ef">error</span>) <span style="color:#66d9ef">error</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">FlushWithConsistency</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">handler</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>) <span style="color:#66d9ef">error</span>) <span style="color:#66d9ef">error</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 以下是简单封装</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">SimpleSet</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">data</span> <span style="color:#66d9ef">any</span>, <span style="color:#a6e22e">expiration</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Duration</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">SimpleGet</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">data</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">SimpleIncr</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">count</span> <span style="color:#66d9ef">int64</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">SimpleDel</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">keys</span> <span style="color:#f92672">...</span><span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">deletedCount</span> <span style="color:#66d9ef">int64</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Pipelined</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">callback</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">redis</span>.<span style="color:#a6e22e">Pipeliner</span>) <span style="color:#66d9ef">error</span>) (<span style="color:#a6e22e">cmder</span> []<span style="color:#a6e22e">redis</span>.<span style="color:#a6e22e">Cmder</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 批量删除 key 比如 app_name:*</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">DeleteKeysByPattern</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">pattern</span> <span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 集合操作</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">SAdd</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">members</span> <span style="color:#f92672">...</span><span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">SMembers</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">members</span> []<span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 过期集合 设置获取</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">AddMemberWithTTL</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">setKey</span>, <span style="color:#a6e22e">member</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">ttl</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Duration</span>) <span style="color:#66d9ef">error</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">GetValidMembers</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">setKey</span> <span style="color:#66d9ef">string</span>) ([]<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">error</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">RemoveMember</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">setKey</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">members</span> <span style="color:#f92672">...</span><span style="color:#66d9ef">string</span>) (<span style="color:#66d9ef">int64</span>, <span style="color:#66d9ef">error</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 分布式加解锁</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">DistributedLock</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">ttl</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Duration</span>) <span style="color:#66d9ef">error</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">DistributedUnlock</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>redis.go</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#f92672">package</span> <span style="color:#a6e22e">cache</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;codeup.aliyun.com/619b3cb12f595dbd1b9b0b3e/go/common.git/log&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;context&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;github.com/go-kratos/kratos/v2/errors&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;github.com/redis/go-redis/v9&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;math/rand&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;strings&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;time&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">RedisCache</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Redis</span>      <span style="color:#a6e22e">redis</span>.<span style="color:#a6e22e">UniversalClient</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Prefix</span>     []<span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">RootPrefix</span> []<span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Locks</span>      <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#f92672">*</span><span style="color:#a6e22e">Lock</span> <span style="color:#75715e">// key: 业务锁名, value: Lock实例</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">RedisCache</span>) <span style="color:#a6e22e">DistributedLock</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">ttl</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Duration</span>) <span style="color:#66d9ef">error</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Locks</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Locks</span> = make(<span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#f92672">*</span><span style="color:#a6e22e">Lock</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">lockKey</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">getKey</span>(<span style="color:#a6e22e">key</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">lock</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewLock</span>(<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Redis</span>, <span style="color:#a6e22e">lockKey</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">lock</span>.<span style="color:#a6e22e">Lock</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">ttl</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Locks</span>[<span style="color:#a6e22e">lockKey</span>] = <span style="color:#a6e22e">lock</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">RedisCache</span>) <span style="color:#a6e22e">DistributedUnlock</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Locks</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;no lock map found&#34;</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">lockKey</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">getKey</span>(<span style="color:#a6e22e">key</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">lock</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Locks</span>[<span style="color:#a6e22e">lockKey</span>]
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">ok</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">lock</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;no lock found for key: %s&#34;</span>, <span style="color:#a6e22e">lockKey</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">lock</span>.<span style="color:#a6e22e">UnLock</span>(<span style="color:#a6e22e">ctx</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	delete(<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Locks</span>, <span style="color:#a6e22e">lockKey</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">RedisCache</span>) <span style="color:#a6e22e">SetPrefix</span>(<span style="color:#a6e22e">prefix</span> <span style="color:#f92672">...</span><span style="color:#66d9ef">string</span>) <span style="color:#a6e22e">Cache</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">RedisCache</span>{
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">Redis</span>:      <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Redis</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">Prefix</span>:     <span style="color:#a6e22e">prefix</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">RootPrefix</span>: <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">RootPrefix</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">Locks</span>:      <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Locks</span>,
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">RedisCache</span>) <span style="color:#a6e22e">Set</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">key</span>, <span style="color:#a6e22e">value</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">short</span> <span style="color:#66d9ef">bool</span>) <span style="color:#66d9ef">error</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 默认五分钟 如果空数据 设置 1 分钟</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// set random expiration avoid a large number of keys expire at the same time</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">seconds</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rand</span>.<span style="color:#a6e22e">New</span>(<span style="color:#a6e22e">rand</span>.<span style="color:#a6e22e">NewSource</span>(<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Now</span>().<span style="color:#a6e22e">UnixNano</span>())).<span style="color:#a6e22e">Int63n</span>(<span style="color:#ae81ff">300</span>) <span style="color:#f92672">+</span> <span style="color:#ae81ff">300</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">short</span> { <span style="color:#75715e">// 防止缓存穿透</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// if record not found, set a short expiration</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">seconds</span> = <span style="color:#ae81ff">60</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">rand</span>.<span style="color:#a6e22e">New</span>(<span style="color:#a6e22e">rand</span>.<span style="color:#a6e22e">NewSource</span>(<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Now</span>().<span style="color:#a6e22e">UnixNano</span>())).<span style="color:#a6e22e">Int63n</span>(<span style="color:#ae81ff">60</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Redis</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">getKey</span>(<span style="color:#a6e22e">key</span>), <span style="color:#a6e22e">value</span>, <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Duration</span>(<span style="color:#a6e22e">seconds</span>)<span style="color:#f92672">*</span><span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Second</span>).<span style="color:#a6e22e">Err</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">RedisCache</span>) <span style="color:#a6e22e">Get</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">handler</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>) (<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">error</span>)) (<span style="color:#a6e22e">result</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 分布式锁解决 缓存击穿</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">currentKey</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">getKey</span>(<span style="color:#a6e22e">key</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">result</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Redis</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">currentKey</span>).<span style="color:#a6e22e">Result</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 加锁 去 数据库 读 数据</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">lock</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewLock</span>(<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Redis</span>, <span style="color:#a6e22e">currentKey</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">GetLock</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">lock</span>, <span style="color:#a6e22e">currentKey</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">lock</span>.<span style="color:#a6e22e">UnLock</span>(<span style="color:#a6e22e">ctx</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 双重检测</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">result</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Redis</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">currentKey</span>).<span style="color:#a6e22e">Result</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">result</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">handler</span>(<span style="color:#a6e22e">ctx</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 数据回填</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">result</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;&#34;</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">key</span>, <span style="color:#a6e22e">result</span>, <span style="color:#66d9ef">true</span>)
+</span></span><span style="display:flex;"><span>	} <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">key</span>, <span style="color:#a6e22e">result</span>, <span style="color:#66d9ef">false</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">RedisCache</span>) <span style="color:#a6e22e">GetLock</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">lock</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Lock</span>, <span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 自旋 1s</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">retry</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">retry</span> &lt; <span style="color:#ae81ff">20</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">lock</span>.<span style="color:#a6e22e">Lock</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#ae81ff">5</span><span style="color:#f92672">*</span><span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Second</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Sleep</span>(<span style="color:#ae81ff">50</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Millisecond</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">retry</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">Err</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#ae81ff">500</span>, <span style="color:#e6db74">&#34;not get lock&#34;</span>, <span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">RedisCache</span>) <span style="color:#a6e22e">Flush</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">handler</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>) <span style="color:#66d9ef">error</span>) <span style="color:#66d9ef">error</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">DeleteKeysByPattern</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">getKey</span>(<span style="color:#e6db74">&#34;*&#34;</span>))
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">handler</span>(<span style="color:#a6e22e">ctx</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">RedisCache</span>) <span style="color:#a6e22e">getKey</span>(<span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">string</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">temp</span> <span style="color:#f92672">:=</span> append(<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">RootPrefix</span>, <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Prefix</span><span style="color:#f92672">...</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">key</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">temp</span> = append(<span style="color:#a6e22e">temp</span>, <span style="color:#a6e22e">key</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">temp</span>, <span style="color:#e6db74">&#34;:&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// FlushWithConsistency 缓存双删</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">RedisCache</span>) <span style="color:#a6e22e">FlushWithConsistency</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">handler</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>) <span style="color:#66d9ef">error</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">DeleteKeysByPattern</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">getKey</span>(<span style="color:#e6db74">&#34;*&#34;</span>))
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">handler</span>(<span style="color:#a6e22e">ctx</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">go</span> <span style="color:#66d9ef">func</span>() {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">cancel</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">WithTimeout</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Background</span>(), <span style="color:#ae81ff">2</span><span style="color:#f92672">*</span><span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Second</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">cancel</span>()
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Sleep</span>(<span style="color:#ae81ff">1</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Second</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">DeleteKeysByPattern</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">getKey</span>(<span style="color:#e6db74">&#34;*&#34;</span>))
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Info</span>(<span style="color:#a6e22e">err</span>.<span style="color:#a6e22e">Error</span>())
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}()
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewRedisCache</span>(<span style="color:#a6e22e">redis</span> <span style="color:#a6e22e">redis</span>.<span style="color:#a6e22e">UniversalClient</span>, <span style="color:#a6e22e">prefix</span> <span style="color:#66d9ef">string</span>) <span style="color:#a6e22e">Cache</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">RedisCache</span>{
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">Redis</span>:      <span style="color:#a6e22e">redis</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">Prefix</span>:     []<span style="color:#66d9ef">string</span>{<span style="color:#a6e22e">prefix</span>},
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">RootPrefix</span>: []<span style="color:#66d9ef">string</span>{<span style="color:#a6e22e">prefix</span>},
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">RedisCache</span>) <span style="color:#a6e22e">Pipelined</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">callback</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">redis</span>.<span style="color:#a6e22e">Pipeliner</span>) <span style="color:#66d9ef">error</span>) (<span style="color:#a6e22e">cmder</span> []<span style="color:#a6e22e">redis</span>.<span style="color:#a6e22e">Cmder</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Redis</span>.<span style="color:#a6e22e">Pipelined</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">callback</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">RedisCache</span>) <span style="color:#a6e22e">DeleteKeysByPattern</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">pattern</span> <span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">iter</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Redis</span>.<span style="color:#a6e22e">Scan</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">pattern</span>, <span style="color:#ae81ff">0</span>).<span style="color:#a6e22e">Iterator</span>()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 删除计数器</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">deleted</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 分批删除键以避免一次删除太多键</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">keys</span> []<span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">pipe</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Redis</span>.<span style="color:#a6e22e">Pipeline</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">iter</span>.<span style="color:#a6e22e">Next</span>(<span style="color:#a6e22e">ctx</span>) {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">keys</span> = append(<span style="color:#a6e22e">keys</span>, <span style="color:#a6e22e">iter</span>.<span style="color:#a6e22e">Val</span>())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 每积累100个键执行一次删除操作</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">keys</span>) <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">100</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">k</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">keys</span> {
+</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">pipe</span>.<span style="color:#a6e22e">Unlink</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">k</span>)
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">pipe</span>.<span style="color:#a6e22e">Exec</span>(<span style="color:#a6e22e">ctx</span>)
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">deleted</span> <span style="color:#f92672">+=</span> len(<span style="color:#a6e22e">keys</span>)
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">keys</span> = []<span style="color:#66d9ef">string</span>{}
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 删除剩余的键</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">keys</span>) &gt; <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">k</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">keys</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">pipe</span>.<span style="color:#a6e22e">Unlink</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">k</span>)
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">pipe</span>.<span style="color:#a6e22e">Exec</span>(<span style="color:#a6e22e">ctx</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">deleted</span> <span style="color:#f92672">+=</span> len(<span style="color:#a6e22e">keys</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 检查迭代过程中是否有错误</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">iter</span>.<span style="color:#a6e22e">Err</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Info</span>(<span style="color:#e6db74">&#34;成功删除 %d 个匹配 &#39;%s&#39; 的键\n&#34;</span>, <span style="color:#a6e22e">deleted</span>, <span style="color:#a6e22e">pattern</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">RedisCache</span>) <span style="color:#a6e22e">RemoveMember</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">setKey</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">members</span> <span style="color:#f92672">...</span><span style="color:#66d9ef">string</span>) (<span style="color:#66d9ef">int64</span>, <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 返回成功删除的成员数量</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Redis</span>.<span style="color:#a6e22e">ZRem</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">setKey</span>, <span style="color:#a6e22e">members</span>).<span style="color:#a6e22e">Result</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">RedisCache</span>) <span style="color:#a6e22e">AddMemberWithTTL</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">setKey</span>, <span style="color:#a6e22e">member</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">ttl</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Duration</span>) <span style="color:#66d9ef">error</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">expireTs</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Now</span>().<span style="color:#a6e22e">Add</span>(<span style="color:#a6e22e">ttl</span>).<span style="color:#a6e22e">Unix</span>() <span style="color:#75715e">// 过期时间戳（秒）</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// ZADD myzset expireTs member</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Redis</span>.<span style="color:#a6e22e">ZAdd</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">setKey</span>, <span style="color:#a6e22e">redis</span>.<span style="color:#a6e22e">Z</span>{
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">Score</span>:  float64(<span style="color:#a6e22e">expireTs</span>),
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">Member</span>: <span style="color:#a6e22e">member</span>,
+</span></span><span style="display:flex;"><span>	}).<span style="color:#a6e22e">Err</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">RedisCache</span>) <span style="color:#a6e22e">GetValidMembers</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">setKey</span> <span style="color:#66d9ef">string</span>) ([]<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">now</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Now</span>().<span style="color:#a6e22e">Unix</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 只取 score &gt; now 的成员</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">members</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Redis</span>.<span style="color:#a6e22e">ZRangeByScore</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">setKey</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">redis</span>.<span style="color:#a6e22e">ZRangeBy</span>{
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">Min</span>: <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;(%d&#34;</span>, <span style="color:#a6e22e">now</span>), <span style="color:#75715e">// (now 表示严格大于 now</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">Max</span>: <span style="color:#e6db74">&#34;+inf&#34;</span>,
+</span></span><span style="display:flex;"><span>	}).<span style="color:#a6e22e">Result</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">go</span> <span style="color:#66d9ef">func</span>() {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">subCtx</span>, <span style="color:#a6e22e">cancel</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">WithTimeout</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Background</span>(), <span style="color:#ae81ff">5</span><span style="color:#f92672">*</span><span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Second</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">cancel</span>()
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">CleanupExpired</span>(<span style="color:#a6e22e">subCtx</span>, <span style="color:#a6e22e">setKey</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Info</span>(<span style="color:#a6e22e">err</span>)
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}()
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">members</span>, <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">RedisCache</span>) <span style="color:#a6e22e">CleanupExpired</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">setKey</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">now</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Now</span>().<span style="color:#a6e22e">Unix</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 删除所有 score ≤ now 的成员</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Redis</span>.<span style="color:#a6e22e">ZRemRangeByScore</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">setKey</span>, <span style="color:#e6db74">&#34;-inf&#34;</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;%d&#34;</span>, <span style="color:#a6e22e">now</span>)).<span style="color:#a6e22e">Result</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">RedisCache</span>) <span style="color:#a6e22e">SAdd</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">members</span> <span style="color:#f92672">...</span><span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Redis</span>.<span style="color:#a6e22e">SAdd</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">key</span>, <span style="color:#a6e22e">members</span>).<span style="color:#a6e22e">Err</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">RedisCache</span>) <span style="color:#a6e22e">SMembers</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">members</span> []<span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Redis</span>.<span style="color:#a6e22e">SMembers</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">key</span>).<span style="color:#a6e22e">Result</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">RedisCache</span>) <span style="color:#a6e22e">SimpleDel</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">keys</span> <span style="color:#f92672">...</span><span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">deletedCount</span> <span style="color:#66d9ef">int64</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 7. Del: 删除键</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Redis</span>.<span style="color:#a6e22e">Del</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">keys</span><span style="color:#f92672">...</span>).<span style="color:#a6e22e">Result</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">RedisCache</span>) <span style="color:#a6e22e">SimpleIncr</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">count</span> <span style="color:#66d9ef">int64</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 6. Incr: 对数字进行原子递增</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Redis</span>.<span style="color:#a6e22e">Incr</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">key</span>).<span style="color:#a6e22e">Result</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">RedisCache</span>) <span style="color:#a6e22e">SimpleSet</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">data</span> <span style="color:#66d9ef">any</span>, <span style="color:#a6e22e">expiration</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Duration</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 2. Set: 设置键值对 (key: &#34;mykey&#34;, value: &#34;hello Redis&#34;)，没有过期时间</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Redis</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">key</span>, <span style="color:#a6e22e">data</span>, <span style="color:#a6e22e">expiration</span>).<span style="color:#a6e22e">Err</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">RedisCache</span>) <span style="color:#a6e22e">SimpleGet</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">data</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 4. Get: 获取键的值</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">data</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Redis</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">key</span>).<span style="color:#a6e22e">Result</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">Is</span>(<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">redis</span>.<span style="color:#a6e22e">Nil</span>) <span style="color:#f92672">||</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	} <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">data</span>, <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>redislock.go</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">package</span> <span style="color:#a6e22e">cache</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//&#34;codeup.aliyun.com/619b3cb12f595dbd1b9b0b3e/go/common.git/id&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;codeup.aliyun.com/619b3cb12f595dbd1b9b0b3e/go/common.git/log&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;context&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;github.com/google/uuid&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;github.com/pkg/errors&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;github.com/redis/go-redis/v9&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;sync&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;time&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 实现分布式锁</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 几个 要点</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 互斥 redis 天然支持</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 1.set nx px 设置过期时间 5.0之后可以一条命令设置</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 2.释放锁的时候需要判断，线程卡住，自动过期，其他线程加锁，你再删除九五删除了</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 3.需要 lua 脚本 执行删除操作 因为判断和删除是2个操作 。 判断和删除的过程中，锁过期，刚好其他线程上锁，</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//   就会导致误删除。</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 4.可重入（看具体业务）、 自动续期（看门狗）</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Lock</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">client</span> <span style="color:#a6e22e">redis</span>.<span style="color:#a6e22e">UniversalClient</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">key</span>    <span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">uuID</span>   <span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">MaxTtl</span> <span style="color:#66d9ef">int</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">wg</span>     <span style="color:#f92672">*</span><span style="color:#a6e22e">sync</span>.<span style="color:#a6e22e">WaitGroup</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">cancel</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">CancelFunc</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewLock</span>(<span style="color:#a6e22e">client</span> <span style="color:#a6e22e">redis</span>.<span style="color:#a6e22e">UniversalClient</span>, <span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">Lock</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//sf := id.NewSonyflake()</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">uuID</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">uuid</span>.<span style="color:#a6e22e">NewString</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">Lock</span>{
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">client</span>: <span style="color:#a6e22e">client</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">uuID</span>:   <span style="color:#a6e22e">uuID</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">MaxTtl</span>: <span style="color:#ae81ff">5</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">key</span>:    <span style="color:#a6e22e">key</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;:lock&#34;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">wg</span>:     <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">sync</span>.<span style="color:#a6e22e">WaitGroup</span>{},
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">l</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Lock</span>) <span style="color:#a6e22e">Lock</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">expire</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Duration</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">ok</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">l</span>.<span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">SetNX</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">l</span>.<span style="color:#a6e22e">key</span>, <span style="color:#a6e22e">l</span>.<span style="color:#a6e22e">uuID</span>, <span style="color:#a6e22e">expire</span>).<span style="color:#a6e22e">Result</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">ok</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;lock failed&#34;</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 设置最大延期时间</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 在 Lock 方法中修正 maxTtl 的计算</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">maxTtl</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Duration</span>(<span style="color:#a6e22e">l</span>.<span style="color:#a6e22e">MaxTtl</span>) <span style="color:#f92672">*</span> <span style="color:#a6e22e">expire</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">cancel</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">WithCancel</span>(<span style="color:#a6e22e">ctx</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">l</span>.<span style="color:#a6e22e">cancel</span> = <span style="color:#a6e22e">cancel</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">go</span> <span style="color:#a6e22e">l</span>.<span style="color:#a6e22e">startWatchdog</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">expire</span>, <span style="color:#a6e22e">maxTtl</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">l</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Lock</span>) <span style="color:#a6e22e">startWatchdog</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">expire</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Duration</span>, <span style="color:#a6e22e">maxTtl</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Duration</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">l</span>.<span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">l</span>.<span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Done</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">cancel</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">WithTimeout</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">maxTtl</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">cancel</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">timer</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">NewTicker</span>(<span style="color:#a6e22e">expire</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">timer</span>.<span style="color:#a6e22e">Stop</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">select</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">case</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">timer</span>.<span style="color:#a6e22e">C</span>:
+</span></span><span style="display:flex;"><span>			<span style="color:#75715e">// 延期</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">extensionScript</span> <span style="color:#f92672">:=</span> <span style="color:#e6db74">`
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    if redis.call(&#34;GET&#34;, KEYS[1]) == ARGV[1] then
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        return redis.call(&#34;PEXPIRE&#34;, KEYS[1], ARGV[2])
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    else
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        return 0
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    end
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    `</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">expireMs</span> <span style="color:#f92672">:=</span> int64(<span style="color:#a6e22e">expire</span>.<span style="color:#a6e22e">Milliseconds</span>())
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">l</span>.<span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">Eval</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">extensionScript</span>, []<span style="color:#66d9ef">string</span>{<span style="color:#a6e22e">l</span>.<span style="color:#a6e22e">key</span>}, <span style="color:#a6e22e">l</span>.<span style="color:#a6e22e">uuID</span>, <span style="color:#a6e22e">expireMs</span>).<span style="color:#a6e22e">Err</span>()
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Info</span>(<span style="color:#a6e22e">err</span>.<span style="color:#a6e22e">Error</span>())
+</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">case</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">Done</span>():
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">l</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Lock</span>) <span style="color:#a6e22e">UnLock</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">l</span>.<span style="color:#a6e22e">cancel</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;lock not held&#34;</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 释放watchdog</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">l</span>.<span style="color:#a6e22e">cancel</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">l</span>.<span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Wait</span>()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">script</span> <span style="color:#f92672">:=</span> <span style="color:#e6db74">`
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    if redis.call(&#34;GET&#34;, KEYS[1]) == ARGV[1] then
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        return redis.call(&#34;DEL&#34;, KEYS[1])
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    else
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        return 0
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    end
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    `</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">ok</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">l</span>.<span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">Eval</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">script</span>, []<span style="color:#66d9ef">string</span>{<span style="color:#a6e22e">l</span>.<span style="color:#a6e22e">key</span>}, <span style="color:#a6e22e">l</span>.<span style="color:#a6e22e">uuID</span>).<span style="color:#a6e22e">Result</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">ok</span>.(<span style="color:#66d9ef">int64</span>) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;unlock failed: lock not held&#34;</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/interview_code/%E6%95%B0%E7%BB%84%E4%BA%A4%E9%9B%86/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>数组交集</span>
+  </a>
+  <a class="next" href="http://localhost:1313/posts/cs/%E9%9B%B6%E6%8B%B7%E8%B4%9D/">
+    <span class="title">Next »</span>
+    <br>
+    <span>零拷贝</span>
+  </a>
+</nav>
+
+  </footer><div id="utterances-comments"></div>
+<script src="https://utteranc.es/client.js"
+        repo="yangcp25/yangcp25.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">yangcp</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
