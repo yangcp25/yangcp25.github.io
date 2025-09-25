@@ -4,7 +4,7 @@ draft = false
 title = 'Link_合并升序链表'
 +++
 
-```
+````go
 package main
 
 import "fmt"
