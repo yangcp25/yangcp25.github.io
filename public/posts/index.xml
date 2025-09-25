@@ -6,8 +6,213 @@
     <description>Recent content in Posts on yangcp</description>
     <generator>Hugo -- 0.147.4</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 18 Sep 2025 09:34:21 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 25 Sep 2025 09:16:35 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Link_合并升序链表</title>
+      <link>http://localhost:1313/posts/algorithm/link_%E5%90%88%E5%B9%B6%E5%8D%87%E5%BA%8F%E9%93%BE%E8%A1%A8/</link>
+      <pubDate>Thu, 25 Sep 2025 09:16:35 +0800</pubDate>
+      <guid>http://localhost:1313/posts/algorithm/link_%E5%90%88%E5%B9%B6%E5%8D%87%E5%BA%8F%E9%93%BE%E8%A1%A8/</guid>
+      <description>&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;package main
+
+import &amp;#34;fmt&amp;#34;
+
+func main() {
+	//两个升序链表合并一个新的升序链表
+	link1 := NewLink()
+	link1.head.next = &amp;amp;node{
+		value: 1,
+		next: &amp;amp;node{next: &amp;amp;node{
+			value: 4,
+		}, value: 3},
+	}
+	link2 := NewLink()
+
+	link2.head.next = &amp;amp;node{
+		value: 2,
+		next: &amp;amp;node{next: &amp;amp;node{
+			value: 6,
+		}, value: 5},
+	}
+
+	newLink := mergerSortLink(link1, link2)
+
+	fmt.Println(newLink)
+
+	head := newLink.head.next
+	for head != nil {
+		fmt.Println(head.value)
+		head = head.next
+	}
+}
+
+func mergerSortLink(link1, link2 *Link) *Link {
+	// 插入
+	newNode := &amp;amp;node{}
+	newLink := &amp;amp;Link{
+		head: newNode,
+	}
+	head1 := link1.head.next
+	head2 := link2.head.next
+	for head1 != nil &amp;amp;&amp;amp; head2 != nil {
+		if head1.value &amp;lt; head2.value {
+			newNode.next = head1
+			newNode = head1
+
+			head1 = head1.next
+		} else {
+			newNode.next = head2
+			newNode = head2
+
+			head2 = head2.next
+		}
+	}
+	//
+	if head1 != nil {
+		newNode.next = head1
+	}
+	if head2 != nil {
+		newNode.next = head2
+	}
+	return newLink
+}
+
+type Link struct {
+	head *node
+}
+
+type node struct {
+	value int
+	next  *node
+}
+
+func NewLink() *Link {
+	return &amp;amp;Link{
+		head: &amp;amp;node{},
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;</description>
+    </item>
+    <item>
+      <title>Slice_切片交集</title>
+      <link>http://localhost:1313/posts/algorithm/slice_%E5%88%87%E7%89%87%E4%BA%A4%E9%9B%86/</link>
+      <pubDate>Thu, 25 Sep 2025 09:15:37 +0800</pubDate>
+      <guid>http://localhost:1313/posts/algorithm/slice_%E5%88%87%E7%89%87%E4%BA%A4%E9%9B%86/</guid>
+      <description>&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;package main
+
+import &amp;#34;fmt&amp;#34;
+
+func main() {
+	//4.1 实现一个函数，可以计算返回多个切片元素交集，如入参[1,2,3],[2,3,4] 返回 [2,3]
+
+	arrays := make([][]int, 0)
+	arrays = append(arrays, []int{1, 2, 3})
+	arrays = append(arrays, []int{2, 3, 4})
+	arrays = append(arrays, []int{3, 4})
+	res := calMerge(arrays...)
+	fmt.Println(res)
+}
+
+func calMerge(arrays ...[]int) []int {
+	//
+	check := make(map[int]int)
+
+	for i := 0; i &amp;lt; len(arrays); i++ {
+		for j := 0; j &amp;lt; len(arrays[i]); j++ {
+			check[arrays[i][j]] += 1
+		}
+	}
+
+	newArray := make([]int, 0)
+
+	for k, val := range check {
+		if val &amp;gt;= len(arrays) {
+			newArray = append(newArray, k)
+		}
+	}
+
+	return newArray
+}
+&lt;/code&gt;&lt;/pre&gt;</description>
+    </item>
+    <item>
+      <title>Str_滑动窗口</title>
+      <link>http://localhost:1313/posts/algorithm/str_%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/</link>
+      <pubDate>Thu, 25 Sep 2025 09:13:33 +0800</pubDate>
+      <guid>http://localhost:1313/posts/algorithm/str_%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/</guid>
+      <description>&lt;p&gt;给定一个字符串 s ，请你找出其中不含有重复字符的 最长子串 的长度&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;package main
+
+import (
+	&amp;#34;fmt&amp;#34;
+)
+func main() {
+	//给定一个字符串 s ，请你找出其中不含有重复字符的 最长子串 的长度。
+	//输入: s = &amp;#34;abcabcbb&amp;#34;
+	//输出: 3
+	//解释: 因为无重复字符的最长子串是 &amp;#34;abc&amp;#34;，所以其长度为 3。
+	s := &amp;#34;abcabcbb&amp;#34;
+	//s := &amp;#34;abcbcbb&amp;#34;
+	res := getSubStr(s)
+
+	fmt.Println(res)
+}
+
+func getSubStr(s string) int {
+	res, left := 0, 0
+	check := make(map[byte]int)
+	n := len(s)
+	for right := 0; right &amp;lt; n; right++ {
+		if index, ok := check[s[right]]; ok &amp;amp;&amp;amp; index &amp;gt;= left {
+			left = index + 1
+		}
+		check[s[right]] = right
+		res = Max(res, right-left+1)
+	}
+	return res
+}
+
+func Max(a, b int) int {
+	if a &amp;gt; b {
+		return a
+	}
+	return b
+}
+&lt;/code&gt;&lt;/pre&gt;</description>
+    </item>
+    <item>
+      <title>GMP</title>
+      <link>http://localhost:1313/posts/go/gmp/</link>
+      <pubDate>Sat, 20 Sep 2025 09:44:15 +0800</pubDate>
+      <guid>http://localhost:1313/posts/go/gmp/</guid>
+      <description>&lt;h3 id=&#34;什么是gmp&#34;&gt;什么是GMP&lt;/h3&gt;
+&lt;h4 id=&#34;概念&#34;&gt;概念&lt;/h4&gt;
+&lt;p&gt;GMP是go的协程调度模型，go代码的程序有运行时runtime进行调度，go可以通过运行时进行内存的分配，通过channel进行协程间通信，通过go关键字创建协程。
+而GMP正是协程调度的核心。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;G代表go的goroutine,协程是用户态的轻量级线程，创建销毁的成本非常小，只需要大约2kb，而线程则需要2m,所以go的协程非常适合处理IO密集型任务。&lt;/li&gt;
+&lt;li&gt;M代表系统级线程，go的协程并不真正执行代码，它需要将协程调度到和内核绑定的系统级线程上进行实际的运行。&lt;/li&gt;
+&lt;li&gt;P代表逻辑处理单元，包含了待运行的协程和一些上下文。p又可以分为本地队列和全局队列。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;调度过程&#34;&gt;调度过程&lt;/h4&gt;
+&lt;p&gt;&lt;img alt=&#34;deepseek_mermaid_20250924_bc3c19.png&#34; loading=&#34;lazy&#34; src=&#34;../../../static/images/deepseek_mermaid_20250924_bc3c19.png&#34;&gt;
+go的程序通过runtime创建协程&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;将协程放到本地队列p&lt;/li&gt;
+&lt;li&gt;p和m绑定&lt;/li&gt;
+&lt;li&gt;m在操作系统上执行&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;核心调度时机&#34;&gt;核心调度时机&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;用户态态阻塞，比如channel、mutex，这个时候p会和m脱离，p会放入到待运行队列，或者重新绑定其他m&lt;/li&gt;
+&lt;li&gt;内核态阻塞，比如发生了系统调用，io操作等，m会被标记成阻塞状态，go会重新创建后者唤醒一个m，保证并发度&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;其他核心概念&#34;&gt;其他核心概念&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;ruetime.GOMAXPROCS()&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;优化手段&#34;&gt;优化手段&lt;/h4&gt;</description>
+    </item>
     <item>
       <title>如何保证数据录入不混乱</title>
       <link>http://localhost:1313/posts/scenario/%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E5%BD%95%E5%85%A5%E4%B8%8D%E6%B7%B7%E4%B9%B1/</link>
@@ -120,7 +325,7 @@
 &lt;li&gt;高性能、互斥，redis高性能，处理模型单线程天然支持互斥&lt;/li&gt;
 &lt;li&gt;原子性操作（主要是redis），高并发情况下，需要保证加锁、删除、自动续期的并发安全，所以需要原子性保证&lt;/li&gt;
 &lt;li&gt;安全释放锁、锁的删除，在并发情况下，可能出现A执行任务过长，锁已经自动过期了，B拿到锁在执行了，A执行完毕，释放锁，如果不进行锁的Val判断，会导致锁的异常释放。&lt;/li&gt;
-&lt;li&gt;自动过期/自动续期&lt;/li&gt;
+&lt;li&gt;自动过期/自动续期,使用set nx px 设置过期时间，使用看门狗机制实现自动续期，在释放锁的时候，使用context,cancel协程。&lt;/li&gt;
 &lt;li&gt;可重入&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h3 id=&#34;基于redis的实现&#34;&gt;基于redis的实现&lt;/h3&gt;

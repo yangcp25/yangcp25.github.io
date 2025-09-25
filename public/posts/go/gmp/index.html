@@ -5,15 +5,37 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
-<title>如何保证数据录入不混乱 | yangcp</title>
+<title>GMP | yangcp</title>
 <meta name="keywords" content="">
-<meta name="description" content="如何保证数据录入不混乱
-数据并发
-可以采用go的sync.mutex/数据库的锁/分布式锁来实现并发访问控制，在单机服务下，可以采用go的互斥锁保护临界资源。在分布式场景下，并发量不高的情况下，采用
-数据库的行锁，行锁从逻辑上可以分为悲观锁和乐观锁，悲观锁通过直接for update 语句加互斥锁，在本次事务未提交之前，其他事务都不能读写当前的临界资源。乐观锁可以使用版本号，
-先查询版本号，在写入数据的时候再次验证版本号，如果相同再更新。">
+<meta name="description" content="什么是GMP
+概念
+GMP是go的协程调度模型，go代码的程序有运行时runtime进行调度，go可以通过运行时进行内存的分配，通过channel进行协程间通信，通过go关键字创建协程。
+而GMP正是协程调度的核心。
+
+G代表go的goroutine,协程是用户态的轻量级线程，创建销毁的成本非常小，只需要大约2kb，而线程则需要2m,所以go的协程非常适合处理IO密集型任务。
+M代表系统级线程，go的协程并不真正执行代码，它需要将协程调度到和内核绑定的系统级线程上进行实际的运行。
+P代表逻辑处理单元，包含了待运行的协程和一些上下文。p又可以分为本地队列和全局队列。
+
+调度过程
+
+go的程序通过runtime创建协程
+
+将协程放到本地队列p
+p和m绑定
+m在操作系统上执行
+
+核心调度时机
+
+用户态态阻塞，比如channel、mutex，这个时候p会和m脱离，p会放入到待运行队列，或者重新绑定其他m
+内核态阻塞，比如发生了系统调用，io操作等，m会被标记成阻塞状态，go会重新创建后者唤醒一个m，保证并发度
+
+其他核心概念
+
+ruetime.GOMAXPROCS()
+
+优化手段">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/posts/scenario/%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E5%BD%95%E5%85%A5%E4%B8%8D%E6%B7%B7%E4%B9%B1/">
+<link rel="canonical" href="http://localhost:1313/posts/go/gmp/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
@@ -22,7 +44,7 @@
 <link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/scenario/%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E5%BD%95%E5%85%A5%E4%B8%8D%E6%B7%B7%E4%B9%B1/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/go/gmp/">
 <noscript>
     <style>
         #theme-toggle,
@@ -131,9 +153,9 @@
   <header class="post-header">
     <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
-      如何保证数据录入不混乱
+      GMP
     </h1>
-    <div class="post-meta"><span title='2025-09-18 09:34:21 +0800 CST'>September 18, 2025</span>&nbsp;·&nbsp;1 min
+    <div class="post-meta"><span title='2025-09-20 09:44:15 +0800 CST'>September 20, 2025</span>&nbsp;·&nbsp;1 min
 
 </div>
   </header> <div class="toc">
@@ -144,10 +166,18 @@
 
         <div class="inner"><ul>
                 <li>
-                    <a href="#%e5%a6%82%e4%bd%95%e4%bf%9d%e8%af%81%e6%95%b0%e6%8d%ae%e5%bd%95%e5%85%a5%e4%b8%8d%e6%b7%b7%e4%b9%b1" aria-label="如何保证数据录入不混乱">如何保证数据录入不混乱</a><ul>
+                    <a href="#%e4%bb%80%e4%b9%88%e6%98%afgmp" aria-label="什么是GMP">什么是GMP</a><ul>
                         
                 <li>
-                    <a href="#%e6%95%b0%e6%8d%ae%e5%b9%b6%e5%8f%91" aria-label="数据并发">数据并发</a>
+                    <a href="#%e6%a6%82%e5%bf%b5" aria-label="概念">概念</a></li>
+                <li>
+                    <a href="#%e8%b0%83%e5%ba%a6%e8%bf%87%e7%a8%8b" aria-label="调度过程">调度过程</a></li>
+                <li>
+                    <a href="#%e6%a0%b8%e5%bf%83%e8%b0%83%e5%ba%a6%e6%97%b6%e6%9c%ba" aria-label="核心调度时机">核心调度时机</a></li>
+                <li>
+                    <a href="#%e5%85%b6%e4%bb%96%e6%a0%b8%e5%bf%83%e6%a6%82%e5%bf%b5" aria-label="其他核心概念">其他核心概念</a></li>
+                <li>
+                    <a href="#%e4%bc%98%e5%8c%96%e6%89%8b%e6%ae%b5" aria-label="优化手段">优化手段</a>
                 </li>
             </ul>
             </li>
@@ -156,11 +186,33 @@
     </details>
 </div>
 
-  <div class="post-content"><h3 id="如何保证数据录入不混乱">如何保证数据录入不混乱<a hidden class="anchor" aria-hidden="true" href="#如何保证数据录入不混乱">#</a></h3>
-<h4 id="数据并发">数据并发<a hidden class="anchor" aria-hidden="true" href="#数据并发">#</a></h4>
-<p>可以采用go的sync.mutex/数据库的锁/分布式锁来实现并发访问控制，在单机服务下，可以采用go的互斥锁保护临界资源。在分布式场景下，并发量不高的情况下，采用
-数据库的行锁，行锁从逻辑上可以分为悲观锁和乐观锁，悲观锁通过直接for update 语句加互斥锁，在本次事务未提交之前，其他事务都不能读写当前的临界资源。乐观锁可以使用版本号，
-先查询版本号，在写入数据的时候再次验证版本号，如果相同再更新。</p>
+  <div class="post-content"><h3 id="什么是gmp">什么是GMP<a hidden class="anchor" aria-hidden="true" href="#什么是gmp">#</a></h3>
+<h4 id="概念">概念<a hidden class="anchor" aria-hidden="true" href="#概念">#</a></h4>
+<p>GMP是go的协程调度模型，go代码的程序有运行时runtime进行调度，go可以通过运行时进行内存的分配，通过channel进行协程间通信，通过go关键字创建协程。
+而GMP正是协程调度的核心。</p>
+<ol>
+<li>G代表go的goroutine,协程是用户态的轻量级线程，创建销毁的成本非常小，只需要大约2kb，而线程则需要2m,所以go的协程非常适合处理IO密集型任务。</li>
+<li>M代表系统级线程，go的协程并不真正执行代码，它需要将协程调度到和内核绑定的系统级线程上进行实际的运行。</li>
+<li>P代表逻辑处理单元，包含了待运行的协程和一些上下文。p又可以分为本地队列和全局队列。</li>
+</ol>
+<h4 id="调度过程">调度过程<a hidden class="anchor" aria-hidden="true" href="#调度过程">#</a></h4>
+<p><img alt="deepseek_mermaid_20250924_bc3c19.png" loading="lazy" src="../../../static/images/deepseek_mermaid_20250924_bc3c19.png">
+go的程序通过runtime创建协程</p>
+<ol>
+<li>将协程放到本地队列p</li>
+<li>p和m绑定</li>
+<li>m在操作系统上执行</li>
+</ol>
+<h4 id="核心调度时机">核心调度时机<a hidden class="anchor" aria-hidden="true" href="#核心调度时机">#</a></h4>
+<ol>
+<li>用户态态阻塞，比如channel、mutex，这个时候p会和m脱离，p会放入到待运行队列，或者重新绑定其他m</li>
+<li>内核态阻塞，比如发生了系统调用，io操作等，m会被标记成阻塞状态，go会重新创建后者唤醒一个m，保证并发度</li>
+</ol>
+<h4 id="其他核心概念">其他核心概念<a hidden class="anchor" aria-hidden="true" href="#其他核心概念">#</a></h4>
+<ol>
+<li>ruetime.GOMAXPROCS()</li>
+</ol>
+<h4 id="优化手段">优化手段<a hidden class="anchor" aria-hidden="true" href="#优化手段">#</a></h4>
 
 
   </div>
@@ -169,15 +221,15 @@
     <ul class="post-tags">
     </ul>
 <nav class="paginav">
-  <a class="prev" href="http://localhost:1313/posts/go/gmp/">
+  <a class="prev" href="http://localhost:1313/posts/algorithm/str_%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/">
     <span class="title">« Prev</span>
     <br>
-    <span>GMP</span>
+    <span>Str_滑动窗口</span>
   </a>
-  <a class="next" href="http://localhost:1313/posts/database/%E4%B8%80%E6%AC%A1mysql%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B/">
+  <a class="next" href="http://localhost:1313/posts/scenario/%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E5%BD%95%E5%85%A5%E4%B8%8D%E6%B7%B7%E4%B9%B1/">
     <span class="title">Next »</span>
     <br>
-    <span>一次mysql的执行过程</span>
+    <span>如何保证数据录入不混乱</span>
   </a>
 </nav>
 
