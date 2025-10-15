@@ -128,6 +128,19 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">零拷贝
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>零拷贝技术 通过sendfile 等函数减少用户态和内核态的切换，减少拷贝次数，加快文件传输速度，但只适用于原样传输的场景，比如静态文件服务器，消息队列等，比如mysql 也是磁盘加载数据，但是需要对取出来的数据做各种处理就不适合这种场景。
+</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-09-10 20:40:50 +0800 CST'>September 10, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 零拷贝" href="http://localhost:1313/posts/cs/%E9%9B%B6%E6%8B%B7%E8%B4%9D/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Str_百度真题原地置换大小写
     </h2>
   </header>
@@ -258,22 +271,6 @@ go为什么采用三色标记法 go采用tcmalloc所以对内存碎片优化的�
   </div>
   <footer class="entry-footer"><span title='2025-08-01 09:10:00 +0800 CST'>August 1, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to Gc" href="http://localhost:1313/posts/go/gc/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Map
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>go的哈希实现 通用哈希实现 哈希表是一个高效的数据结构，通过对key经过哈希函数计算的值和存储数据的数组的长度，两者求余得到在数组插入的位置。高效的查找效率 时间复杂度为O(1)。
-哈希函数 任意长度的输入有固定输出 同一输入会产生同一个输出 输入的细小改变会造成输入的完全不一样 速度快 单项不可逆 go的哈希底层实现 通过底层结构体hmap来实例化map对象，hmap 包含指向[]bucket数组的指针。bucket结构里面会存储真实的数据 以key1key2 val1value2 的形式进行排列，方便内存对齐。头部有top哈希方便bucket内部进行数据定位，底部有指向溢出bucket的指针。 当发生哈希冲突，冲突的数据会存放到溢出bucket链表。
-插入过程 首先用哈希函数对key计算，得到64位数据（64位机器上）。低B位决定数据落入哪个桶。B是log2count，也就是以2为底bucket元素的长度的对数。 高8位决定落入bucket具体的位置。如果发送哈希冲突，就把数据存入溢出桶。
-遍历过程、查找过程 遍历：从0-bucket长度随机一个数字选择bucket进行遍历。所以go的map是无序。如果bucket遍历完，溢出桶不为空，继续遍历溢出桶。 查找：哈希函数对key计算，低8位找到具体的桶。高8位拿来和bucket的top哈希进行比较，如果一致，再比较具体的key,如果相同就返回， 否则再看溢出桶是否为空，不会空对链表进行遍历。如果都没有就返回查找失败。 go的扩容过程 当哈希函数产生过多的哈希碰撞时，就会导致查询效率低下，为了减少哈希碰撞，需要对底层数组的容量扩容或者对数据进行从新排列。 当满足一下任意条件会触发扩容
-当碰撞因子&gt;6.5, 碰撞因子=count(实际元素个数)/2的B次方（bucket数组总的元素长度） 当溢出桶过多时，当B &lt; 15 , 当溢出桶的个数&gt;B次方，触发扩容。当B&gt;15时，overflow超过2的15次方。 为什么是线程不安全的 sync.map使用 sync.map如何实现的 注意事项</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-29 09:23:59 +0800 CST'>July 29, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Map" href="http://localhost:1313/posts/go/map/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

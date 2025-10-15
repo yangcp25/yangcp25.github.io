@@ -128,26 +128,38 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Link_合并升序链表
+    <h2 class="entry-hint-parent">如何判断网络状况
     </h2>
   </header>
   <div class="entry-content">
-    <p>package main import &#34;fmt&#34; func main() { //两个升序链表合并一个新的升序链表 link1 := NewLink() link1.head.next = &amp;node{ value: 1, next: &amp;node{next: &amp;node{ value: 4, }, value: 3}, } link2 := NewLink() link2.head.next = &amp;node{ value: 2, next: &amp;node{next: &amp;node{ value: 6, }, value: 5}, } newLink := mergerSortLink(link1, link2) fmt.Println(newLink) head := newLink.head.next for head != nil { fmt.Println(head.value) head = head.next } } func mergerSortLink(link1, link2 *Link) *Link { // 插入 newNode := &amp;node{} newLink := &amp;Link{ head: newNode, } head1 := link1.head.next head2 := link2.head.next for head1 != nil &amp;&amp; head2 != nil { if head1.value &lt; head2.value { newNode.next = head1 newNode = head1 head1 = head1.next } else { newNode.next = head2 newNode = head2 head2 = head2.next } } // if head1 != nil { newNode.next = head1 } if head2 != nil { newNode.next = head2 } return newLink } type Link struct { head *node } type node struct { value int next *node } func NewLink() *Link { return &amp;Link{ head: &amp;node{}, } } </p>
+    <p></p>
   </div>
-  <footer class="entry-footer"><span title='2025-09-25 09:16:35 +0800 CST'>September 25, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Link_合并升序链表" href="http://localhost:1313/posts/algorithm/link_%E5%90%88%E5%B9%B6%E5%8D%87%E5%BA%8F%E9%93%BE%E8%A1%A8/"></a>
+  <footer class="entry-footer"><span title='2025-10-15 09:26:26 +0800 CST'>October 15, 2025</span>&nbsp;·&nbsp;0 min</footer>
+  <a class="entry-link" aria-label="post link to 如何判断网络状况" href="http://localhost:1313/posts/scenario/%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E7%BD%91%E7%BB%9C%E7%8A%B6%E5%86%B5/"></a>
 </article>
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Slice_切片交集
+    <h2 class="entry-hint-parent">Sql调优
     </h2>
   </header>
   <div class="entry-content">
-    <p>package main import &#34;fmt&#34; func main() { //4.1 实现一个函数，可以计算返回多个切片元素交集，如入参[1,2,3],[2,3,4] 返回 [2,3] arrays := make([][]int, 0) arrays = append(arrays, []int{1, 2, 3}) arrays = append(arrays, []int{2, 3, 4}) arrays = append(arrays, []int{3, 4}) res := calMerge(arrays...) fmt.Println(res) } func calMerge(arrays ...[]int) []int { // check := make(map[int]int) for i := 0; i &lt; len(arrays); i&#43;&#43; { for j := 0; j &lt; len(arrays[i]); j&#43;&#43; { check[arrays[i][j]] &#43;= 1 } } newArray := make([]int, 0) for k, val := range check { if val &gt;= len(arrays) { newArray = append(newArray, k) } } return newArray } </p>
+    <p></p>
   </div>
-  <footer class="entry-footer"><span title='2025-09-25 09:15:37 +0800 CST'>September 25, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Slice_切片交集" href="http://localhost:1313/posts/algorithm/slice_%E5%88%87%E7%89%87%E4%BA%A4%E9%9B%86/"></a>
+  <footer class="entry-footer"><span title='2025-10-15 09:13:45 +0800 CST'>October 15, 2025</span>&nbsp;·&nbsp;0 min</footer>
+  <a class="entry-link" aria-label="post link to Sql调优" href="http://localhost:1313/posts/scenario/sql%E8%B0%83%E4%BC%98/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Link_合并升序链表
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>package main import &#34;fmt&#34; func main() { //两个升序链表合并一个新的升序链表 link1 := NewLink() link1.head.next = &amp;node{ value: 1, next: &amp;node{next: &amp;node{ value: 4, }, value: 3}, } link2 := NewLink() link2.head.next = &amp;node{ value: 2, next: &amp;node{next: &amp;node{ value: 6, }, value: 5}, } newLink := mergerSortLink(link1, link2) fmt.Println(newLink) head := newLink.head.next for head != nil { fmt.Println(head.value) head = head.next } } func mergerSortLink(link1, link2 *Link) *Link { // 插入 newNode := &amp;node{} newLink := &amp;Link{ head: newNode, } head1 := link1.head.next head2 := link2.head.next for head1 != nil &amp;&amp; head2 != nil { if head1.value &lt; head2.value { newNode.next = head1 newNode = head1 head1 = head1.next } else { newNode.next = head2 newNode = head2 head2 = head2.next } } // if head1 != nil { newNode.next = head1 } if head2 != nil { newNode.next = head2 } return newLink } type Link struct { head *node } type node struct { value int next *node } func NewLink() *Link { return &amp;Link{ head: &amp;node{}, } } ``` </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-09-25 09:16:35 +0800 CST'>September 25, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Link_合并升序链表" href="http://localhost:1313/posts/algorithm/link_%E5%90%88%E5%B9%B6%E5%8D%87%E5%BA%8F%E9%93%BE%E8%A1%A8/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -157,7 +169,7 @@
   </header>
   <div class="entry-content">
     <p>给定一个字符串 s ，请你找出其中不含有重复字符的 最长子串 的长度
-package main import ( &#34;fmt&#34; ) func main() { //给定一个字符串 s ，请你找出其中不含有重复字符的 最长子串 的长度。 //输入: s = &#34;abcabcbb&#34; //输出: 3 //解释: 因为无重复字符的最长子串是 &#34;abc&#34;，所以其长度为 3。 s := &#34;abcabcbb&#34; //s := &#34;abcbcbb&#34; res := getSubStr(s) fmt.Println(res) } func getSubStr(s string) int { res, left := 0, 0 check := make(map[byte]int) n := len(s) for right := 0; right &lt; n; right&#43;&#43; { if index, ok := check[s[right]]; ok &amp;&amp; index &gt;= left { left = index &#43; 1 } check[s[right]] = right res = Max(res, right-left&#43;1) } return res } func Max(a, b int) int { if a &gt; b { return a } return b } </p>
+package main import ( &#34;fmt&#34; ) func main() { //给定一个字符串 s ，请你找出其中不含有重复字符的 最长子串 的长度。 //输入: s = &#34;abcabcbb&#34; //输出: 3 //解释: 因为无重复字符的最长子串是 &#34;abc&#34;，所以其长度为 3。 s := &#34;abcabcbb&#34; //s := &#34;abcbcbb&#34; res := getSubStr(s) fmt.Println(res) } func getSubStr(s string) int { res, left := 0, 0 check := make(map[byte]int) n := len(s) for right := 0; right &lt; n; right&#43;&#43; { if index, ok := check[s[right]]; ok &amp;&amp; index &gt;= left { left = index &#43; 1 } check[s[right]] = right res = Max(res, right-left&#43;1) } return res } func Max(a, b int) int { if a &gt; b { return a } return b } ``` </p>
   </div>
   <footer class="entry-footer"><span title='2025-09-25 09:13:33 +0800 CST'>September 25, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to Str_滑动窗口" href="http://localhost:1313/posts/algorithm/str_%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/"></a>
@@ -224,7 +236,7 @@ CREATE TABLE students ( id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), age
     <p> package main import &#34;fmt&#34; func main() { //4.1 实现一个函数，可以计算返回多个切片元素交集，如入参[1,2,3],[2,3,4] 返回 [2,3] arrays := make([][]int, 0) arrays = append(arrays, []int{1, 2, 3}) arrays = append(arrays, []int{2, 3, 4}) arrays = append(arrays, []int{3, 4}) res := calMerge(arrays...) fmt.Println(res) } func calMerge(arrays ...[]int) []int { // 数组先去重，就不实现了 check := make(map[int]int) for i := 0; i &lt; len(arrays); i&#43;&#43; { for j := 0; j &lt; len(arrays[i]); j&#43;&#43; { check[arrays[i][j]] &#43;= 1 } } newArray := make([]int, 0) for k, val := range check { if val &gt;= len(arrays) { newArray = append(newArray, k) } } return newArray } </p>
   </div>
   <footer class="entry-footer"><span title='2025-09-12 09:41:25 +0800 CST'>September 12, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to 数组交集" href="http://localhost:1313/posts/interview_code/%E6%95%B0%E7%BB%84%E4%BA%A4%E9%9B%86/"></a>
+  <a class="entry-link" aria-label="post link to 数组交集" href="http://localhost:1313/posts/algorithm/slice_%E6%95%B0%E7%BB%84%E4%BA%A4%E9%9B%86/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -240,19 +252,6 @@ package cache import ( &#34;context&#34; &#34;github.com/redis/go-redis/v9&#34; 
   </div>
   <footer class="entry-footer"><span title='2025-09-11 09:23:32 +0800 CST'>September 11, 2025</span>&nbsp;·&nbsp;7 min</footer>
   <a class="entry-link" aria-label="post link to 分布式锁的实现" href="http://localhost:1313/posts/scenario/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E7%9A%84%E5%AE%9E%E7%8E%B0/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">零拷贝
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>零拷贝技术 通过sendfile 等函数减少用户态和内核态的切换，减少拷贝次数，加快文件传输速度，但只适用于原样传输的场景，比如静态文件服务器，消息队列等，比如mysql 也是磁盘加载数据，但是需要对取出来的数据做各种处理就不适合这种场景。
-</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-09-10 20:40:50 +0800 CST'>September 10, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to 零拷贝" href="http://localhost:1313/posts/cs/%E9%9B%B6%E6%8B%B7%E8%B4%9D/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

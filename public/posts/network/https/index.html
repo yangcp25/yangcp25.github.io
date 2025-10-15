@@ -72,7 +72,22 @@ CA（Certificate Authority）是证书颁发机构，它负责签发证书，并
 客户端发起连接请求，服务器会返回证书，客户端会验证证书的合法性，并获取证书的公钥。
 浏览器会在发版的时候将各大CA机构的公钥预制在浏览器中，使用CA的公钥对服务器的证书进行解密，拿到解密的hash值。同时
 使用同样的摘要算法对原始内容进行加密，用得到的摘要和解密的摘要对比，如果相等，说明证书是CA颁发的，也就证明
-了证书的合法性和完整性。">
+了证书的合法性和完整性。
+更加深入的了解https
+http是超文本传输协议，它会有以下几个问题：
+
+窃听风险，由于TCP传输过程中会经过路由器、主机等多个设备，存在被截获数据的风险，泄漏密码等机密信息
+篡改风险，被截获的数据可能被恶意篡改，在交易等重要系统会产生非常大的破坏性
+身份伪造，无法知晓我们访问的服务端是否是真实的
+
+https通过以下几个方式解决上述问题
+
+机密性，通过对称加密算法保证
+完整性，通过摘要算法保证（md5、sha256）
+身份认证，通过CA(证书颁发机构)
+
+为什么https采用了对策加密&#43;非对称加密&#43;CA?
+只用对称加密不好解决密钥传输保存的问题，非对称加密由于加解密比较消耗资源，不适合对大量数据进行加解密。">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/posts/network/https/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
@@ -230,7 +245,15 @@ CA（Certificate Authority）是证书颁发机构，它负责签发证书，并
                 <li>
                     <a href="#%e8%af%81%e4%b9%a6%e7%94%9f%e6%88%90" aria-label="证书生成">证书生成</a></li>
                 <li>
-                    <a href="#%e8%af%81%e4%b9%a6%e9%aa%8c%e8%af%81%e8%bf%87%e7%a8%8b" aria-label="证书验证过程">证书验证过程</a>
+                    <a href="#%e8%af%81%e4%b9%a6%e9%aa%8c%e8%af%81%e8%bf%87%e7%a8%8b" aria-label="证书验证过程">证书验证过程</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e6%9b%b4%e5%8a%a0%e6%b7%b1%e5%85%a5%e7%9a%84%e4%ba%86%e8%a7%a3https" aria-label="更加深入的了解https">更加深入的了解https</a><ul>
+                        
+                <li>
+                    <a href="#%e4%b8%ba%e4%bb%80%e4%b9%88https%e9%87%87%e7%94%a8%e4%ba%86%e5%af%b9%e7%ad%96%e5%8a%a0%e5%af%86%e9%9d%9e%e5%af%b9%e7%a7%b0%e5%8a%a0%e5%af%86ca" aria-label="为什么https采用了对策加密&#43;非对称加密&#43;CA?">为什么https采用了对策加密+非对称加密+CA?</a></li>
+                <li>
+                    <a href="#tls%e7%9a%84%e8%af%b7%e6%b1%82%e5%bb%ba%e7%ab%8b%e5%85%b7%e4%bd%93%e7%9a%84%e6%b5%81%e7%a8%8b%e5%92%8c%e4%bb%a3%e7%a0%81%e7%a4%ba%e4%be%8b" aria-label="tls的请求建立具体的流程和代码示例">tls的请求建立具体的流程和代码示例</a>
                 </li>
             </ul>
             </li>
@@ -309,6 +332,22 @@ CA（Certificate Authority）是证书颁发机构，它负责签发证书，并
 浏览器会在发版的时候将各大CA机构的公钥预制在浏览器中，使用CA的公钥对服务器的证书进行解密，拿到解密的hash值。同时
 使用同样的摘要算法对原始内容进行加密，用得到的摘要和解密的摘要对比，如果相等，说明证书是CA颁发的，也就证明
 了证书的合法性和完整性。</p>
+<h4 id="更加深入的了解https">更加深入的了解https<a hidden class="anchor" aria-hidden="true" href="#更加深入的了解https">#</a></h4>
+<p>http是超文本传输协议，它会有以下几个问题：</p>
+<ol>
+<li>窃听风险，由于TCP传输过程中会经过路由器、主机等多个设备，存在被截获数据的风险，泄漏密码等机密信息</li>
+<li>篡改风险，被截获的数据可能被恶意篡改，在交易等重要系统会产生非常大的破坏性</li>
+<li>身份伪造，无法知晓我们访问的服务端是否是真实的</li>
+</ol>
+<p>https通过以下几个方式解决上述问题</p>
+<ol>
+<li>机密性，通过对称加密算法保证</li>
+<li>完整性，通过摘要算法保证（md5、sha256）</li>
+<li>身份认证，通过CA(证书颁发机构)</li>
+</ol>
+<h5 id="为什么https采用了对策加密非对称加密ca">为什么https采用了对策加密+非对称加密+CA?<a hidden class="anchor" aria-hidden="true" href="#为什么https采用了对策加密非对称加密ca">#</a></h5>
+<p>只用对称加密不好解决密钥传输保存的问题，非对称加密由于加解密比较消耗资源，不适合对大量数据进行加解密。</p>
+<h5 id="tls的请求建立具体的流程和代码示例">tls的请求建立具体的流程和代码示例<a hidden class="anchor" aria-hidden="true" href="#tls的请求建立具体的流程和代码示例">#</a></h5>
 
 
   </div>
