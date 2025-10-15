@@ -6,8 +6,424 @@
     <description>Recent content in Posts on yangcp</description>
     <generator>Hugo -- 0.147.4</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 15 Oct 2025 09:26:26 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 15 Oct 2025 21:52:36 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>打卡计划表</title>
+      <link>http://localhost:1313/posts/algorithm/%E6%89%93%E5%8D%A1%E8%AE%A1%E5%88%92%E8%A1%A8/</link>
+      <pubDate>Wed, 15 Oct 2025 21:52:36 +0800</pubDate>
+      <guid>http://localhost:1313/posts/algorithm/%E6%89%93%E5%8D%A1%E8%AE%A1%E5%88%92%E8%A1%A8/</guid>
+      <description>&lt;h3 id=&#34;开启打卡计划&#34;&gt;开启打卡计划&lt;/h3&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;日期&lt;/th&gt;
+          &lt;th&gt;题目&lt;/th&gt;
+          &lt;th&gt;模板&lt;/th&gt;
+          &lt;th&gt;二刷结果&lt;/th&gt;
+          &lt;th&gt;迁移练习&lt;/th&gt;
+          &lt;th&gt;备注&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;10/16&lt;/td&gt;
+          &lt;td&gt;15. 三数之和&lt;/td&gt;
+          &lt;td&gt;双指针&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
+          &lt;td&gt;三数差值最接近&lt;/td&gt;
+          &lt;td&gt;完整复盘，写模板笔记&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;10/17&lt;/td&gt;
+          &lt;td&gt;11. 盛最多水的容器&lt;/td&gt;
+          &lt;td&gt;双指针&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
+          &lt;td&gt;股票最大利润&lt;/td&gt;
+          &lt;td&gt;计时 25 分钟&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;10/18&lt;/td&gt;
+          &lt;td&gt;3. 无重复字符的最长子串&lt;/td&gt;
+          &lt;td&gt;滑动窗口&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
+          &lt;td&gt;最长允许1重复字符&lt;/td&gt;
+          &lt;td&gt;模拟面试说思路&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;10/19&lt;/td&gt;
+          &lt;td&gt;1. 两数之和&lt;/td&gt;
+          &lt;td&gt;哈希&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
+          &lt;td&gt;三数之和、路径求和&lt;/td&gt;
+          &lt;td&gt;强化迁移能力&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;10/20&lt;/td&gt;
+          &lt;td&gt;20. 有效括号&lt;/td&gt;
+          &lt;td&gt;栈&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
+          &lt;td&gt;HTML标签验证&lt;/td&gt;
+          &lt;td&gt;二刷完成&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;10/21&lt;/td&gt;
+          &lt;td&gt;739. 每日温度&lt;/td&gt;
+          &lt;td&gt;单调栈&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
+          &lt;td&gt;下一个更小元素&lt;/td&gt;
+          &lt;td&gt;二刷 + 迁移&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;10/22&lt;/td&gt;
+          &lt;td&gt;206. 反转链表&lt;/td&gt;
+          &lt;td&gt;链表&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
+          &lt;td&gt;k组反转、回文链表&lt;/td&gt;
+          &lt;td&gt;模板笔记&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;10/23&lt;/td&gt;
+          &lt;td&gt;141. 环形链表&lt;/td&gt;
+          &lt;td&gt;链表&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
+          &lt;td&gt;相交链表检测&lt;/td&gt;
+          &lt;td&gt;二刷完成&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;10/24&lt;/td&gt;
+          &lt;td&gt;53. 最大子序和&lt;/td&gt;
+          &lt;td&gt;动态规划&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
+          &lt;td&gt;股票最大利润&lt;/td&gt;
+          &lt;td&gt;计时练习&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;10/25&lt;/td&gt;
+          &lt;td&gt;198. 打家劫舍&lt;/td&gt;
+          &lt;td&gt;动态规划&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
+          &lt;td&gt;环形打家劫舍&lt;/td&gt;
+          &lt;td&gt;二刷完成&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;10/26&lt;/td&gt;
+          &lt;td&gt;139. 单词拆分&lt;/td&gt;
+          &lt;td&gt;动态规划&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
+          &lt;td&gt;所有拆分方式&lt;/td&gt;
+          &lt;td&gt;写迁移笔记&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;10/27&lt;/td&gt;
+          &lt;td&gt;33. 搜索旋转排序数组&lt;/td&gt;
+          &lt;td&gt;二分&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
+          &lt;td&gt;搜索峰值&lt;/td&gt;
+          &lt;td&gt;计时练习&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;10/28&lt;/td&gt;
+          &lt;td&gt;200. 岛屿数量&lt;/td&gt;
+          &lt;td&gt;DFS/BFS&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
+          &lt;td&gt;封闭区域计数&lt;/td&gt;
+          &lt;td&gt;二刷 + 迁移&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;10/29&lt;/td&gt;
+          &lt;td&gt;104. 二叉树最大深度&lt;/td&gt;
+          &lt;td&gt;树&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
+          &lt;td&gt;判断平衡二叉树&lt;/td&gt;
+          &lt;td&gt;模板笔记&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;10/30&lt;/td&gt;
+          &lt;td&gt;236. 最近公共祖先&lt;/td&gt;
+          &lt;td&gt;树&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
+          &lt;td&gt;N叉树版本&lt;/td&gt;
+          &lt;td&gt;二刷完成&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</description>
+    </item>
+    <item>
+      <title>刷题方法</title>
+      <link>http://localhost:1313/posts/algorithm/%E5%88%B7%E9%A2%98%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Wed, 15 Oct 2025 21:31:14 +0800</pubDate>
+      <guid>http://localhost:1313/posts/algorithm/%E5%88%B7%E9%A2%98%E6%96%B9%E6%B3%95/</guid>
+      <description>&lt;h3 id=&#34;个人感悟和前言&#34;&gt;个人感悟和前言&lt;/h3&gt;
+&lt;p&gt;刷了很多题（其实也不是很多，但却是每天坚持半小时坚持了一年多了），
+但是老是面试的时候做不出来，或者要花很长时间才能做出来。我都产生自我怀疑了，我觉得是时候换个方式了。
+我问了gpt,它给了我很多建议，接下来我会按照下面的方式重新规划我的学习方法&lt;/p&gt;
+&lt;p&gt;以下大多数参考了gpt&lt;/p&gt;
+&lt;h3 id=&#34;具体的做法&#34;&gt;具体的做法&lt;/h3&gt;
+&lt;h4 id=&#34;核心目标&#34;&gt;核心目标&lt;/h4&gt;
+&lt;h5 id=&#34;一核心目标&#34;&gt;一、核心目标&lt;/h5&gt;
+&lt;ol&gt;
+&lt;li&gt;用最少的题，建立最大迁移力。&lt;/li&gt;
+&lt;li&gt;熟练识别模板，能举一反三。&lt;/li&gt;
+&lt;li&gt;面试时 3 分钟内能讲清思路。&lt;/li&gt;
+&lt;li&gt;重点在模式识别 + 模板迁移，不追数量。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h5 id=&#34;二15-道最值得复盘的模板题&#34;&gt;二、15 道最值得复盘的模板题&lt;/h5&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;类别&lt;/th&gt;
+          &lt;th&gt;LeetCode题目&lt;/th&gt;
+          &lt;th&gt;核心模板&lt;/th&gt;
+          &lt;th&gt;可迁移方向&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;双指针&lt;/td&gt;
+          &lt;td&gt;15. 三数之和&lt;/td&gt;
+          &lt;td&gt;排序 + 去重 + 左右夹逼&lt;/td&gt;
+          &lt;td&gt;k数之和 / 差值最接近 / 删除一个字符变回文&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;双指针&lt;/td&gt;
+          &lt;td&gt;11. 盛最多水的容器&lt;/td&gt;
+          &lt;td&gt;左右夹逼取最大面积&lt;/td&gt;
+          &lt;td&gt;股票买卖、最优区间类问题&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;滑动窗口&lt;/td&gt;
+          &lt;td&gt;3. 无重复字符的最长子串&lt;/td&gt;
+          &lt;td&gt;扩展窗口 + 收缩窗口&lt;/td&gt;
+          &lt;td&gt;最小覆盖子串、最长K个不同字符子串&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;哈希&lt;/td&gt;
+          &lt;td&gt;1. 两数之和&lt;/td&gt;
+          &lt;td&gt;哈希反查&lt;/td&gt;
+          &lt;td&gt;三数之和、四数之和、路径求和&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;栈&lt;/td&gt;
+          &lt;td&gt;20. 有效的括号&lt;/td&gt;
+          &lt;td&gt;栈匹配&lt;/td&gt;
+          &lt;td&gt;HTML标签验证、栈逆序&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;单调栈&lt;/td&gt;
+          &lt;td&gt;739. 每日温度&lt;/td&gt;
+          &lt;td&gt;单调递减栈&lt;/td&gt;
+          &lt;td&gt;下一个更大元素、柱状图最大矩形&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;链表&lt;/td&gt;
+          &lt;td&gt;206. 反转链表&lt;/td&gt;
+          &lt;td&gt;指针前后反转&lt;/td&gt;
+          &lt;td&gt;k组反转、回文链表检测&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;链表&lt;/td&gt;
+          &lt;td&gt;141. 环形链表&lt;/td&gt;
+          &lt;td&gt;快慢指针&lt;/td&gt;
+          &lt;td&gt;相交链表检测、寻找环入口&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;动态规划&lt;/td&gt;
+          &lt;td&gt;53. 最大子序和&lt;/td&gt;
+          &lt;td&gt;dp[i] = max(nums[i], dp[i-1]+nums[i])&lt;/td&gt;
+          &lt;td&gt;股票最大利润、子数组和问题&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;动态规划&lt;/td&gt;
+          &lt;td&gt;198. 打家劫舍&lt;/td&gt;
+          &lt;td&gt;dp[i] = max(dp[i-1], dp[i-2]+nums[i])&lt;/td&gt;
+          &lt;td&gt;环形打家劫舍、爬楼梯变体&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;动态规划&lt;/td&gt;
+          &lt;td&gt;139. 单词拆分&lt;/td&gt;
+          &lt;td&gt;dp[i] = dp[j] &amp;amp;&amp;amp; wordDict[j:i]&lt;/td&gt;
+          &lt;td&gt;句子拼接、分割字符串最少次数&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;二分查找&lt;/td&gt;
+          &lt;td&gt;33. 搜索旋转排序数组&lt;/td&gt;
+          &lt;td&gt;二分判定区间有序性&lt;/td&gt;
+          &lt;td&gt;搜索峰值、最小差距值&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;DFS/BFS&lt;/td&gt;
+          &lt;td&gt;200. 岛屿数量&lt;/td&gt;
+          &lt;td&gt;遍历连通块&lt;/td&gt;
+          &lt;td&gt;图遍历、封闭区域数量、朋友圈问题&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;树&lt;/td&gt;
+          &lt;td&gt;104. 二叉树最大深度&lt;/td&gt;
+          &lt;td&gt;递归 DFS&lt;/td&gt;
+          &lt;td&gt;平衡二叉树、路径和&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;树&lt;/td&gt;
+          &lt;td&gt;236. 最近公共祖先&lt;/td&gt;
+          &lt;td&gt;后序递归&lt;/td&gt;
+          &lt;td&gt;目录树路径、最小公共节点类问题&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h5 id=&#34;三偏题迁移示例&#34;&gt;三、偏题迁移示例&lt;/h5&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;原题模板&lt;/th&gt;
+          &lt;th&gt;面试偏题举例&lt;/th&gt;
+          &lt;th&gt;迁移思路&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;无重复字符的最长子串&lt;/td&gt;
+          &lt;td&gt;最多允许一个重复字符的最长子串&lt;/td&gt;
+          &lt;td&gt;滑动窗口 + 计数增加一层判断&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;三数之和&lt;/td&gt;
+          &lt;td&gt;找出所有和为目标值的三元组&lt;/td&gt;
+          &lt;td&gt;排序 + 去重 + 双指针，只改目标值逻辑&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;有效括号&lt;/td&gt;
+          &lt;td&gt;字符串里只有 &lt;code&gt;&amp;lt;&lt;/code&gt; &lt;code&gt;&amp;gt;&lt;/code&gt;，规则不同&lt;/td&gt;
+          &lt;td&gt;替换匹配规则即可，核心仍是栈&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;每日温度&lt;/td&gt;
+          &lt;td&gt;求每个元素右边第一个比它小的元素&lt;/td&gt;
+          &lt;td&gt;单调递增栈，方向反转&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;打家劫舍&lt;/td&gt;
+          &lt;td&gt;环形排列的房屋&lt;/td&gt;
+          &lt;td&gt;拆成两种情况：不偷第一 vs 不偷最后&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;单词拆分&lt;/td&gt;
+          &lt;td&gt;计算所有可行的拆分方式&lt;/td&gt;
+          &lt;td&gt;dp[i] 的基础上计数或回溯&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;二叉树最大深度&lt;/td&gt;
+          &lt;td&gt;判断是否平衡二叉树&lt;/td&gt;
+          &lt;td&gt;在返回深度的同时判断差值&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;最近公共祖先&lt;/td&gt;
+          &lt;td&gt;N 叉树版本&lt;/td&gt;
+          &lt;td&gt;递归逻辑相同，遍历子节点代替左右子树&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h5 id=&#34;四陌生题分析框架面试必备&#34;&gt;四、陌生题分析框架（面试必备）&lt;/h5&gt;
+&lt;ol&gt;
+&lt;li&gt;求最值 → 贪心 / 动态规划
+&lt;ul&gt;
+&lt;li&gt;求存在 → 哈希 / 二分&lt;/li&gt;
+&lt;li&gt;求路径 / 连通 → DFS / BFS&lt;/li&gt;
+&lt;li&gt;求配对 / 区间 → 双指针 / 滑动窗口&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;暴力解 &amp;amp; 复杂度
+&lt;ul&gt;
+&lt;li&gt;先写最直接暴力解，作为 fallback&lt;/li&gt;
+&lt;li&gt;考虑优化方向（排序 / 哈希 / 双指针）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;是否有重复子问题
+&lt;ul&gt;
+&lt;li&gt;有 → 动态规划&lt;/li&gt;
+&lt;li&gt;没有 → 贪心或暴力优化&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;输入结构
+&lt;ul&gt;
+&lt;li&gt;数组 → 排序 / 双指针&lt;/li&gt;
+&lt;li&gt;矩阵 → DFS / BFS&lt;/li&gt;
+&lt;li&gt;树 / 图 → 递归 / 队列&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;写伪代码
+&lt;ul&gt;
+&lt;li&gt;先讲思路，代码只是形式&lt;/li&gt;
+&lt;li&gt;面试官更关注分析能力&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h5 id=&#34;五复盘计划3-周周期&#34;&gt;五、复盘计划（3 周周期）&lt;/h5&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;周数&lt;/th&gt;
+          &lt;th&gt;目标&lt;/th&gt;
+          &lt;th&gt;内容&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;第1周&lt;/td&gt;
+          &lt;td&gt;模板巩固&lt;/td&gt;
+          &lt;td&gt;前8题（数组、链表、哈希、栈）二刷，写模板笔记&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;第2周&lt;/td&gt;
+          &lt;td&gt;动态规划 &amp;amp; 树&lt;/td&gt;
+          &lt;td&gt;后7题二刷，形成 dp / 树模板总结&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;第3周&lt;/td&gt;
+          &lt;td&gt;偏题迁移训练&lt;/td&gt;
+          &lt;td&gt;每天抽一道陌生题，用陌生题分析框架解题，重点练思路，不追完美&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h5 id=&#34;六go-开发者模板代码示例&#34;&gt;六、Go 开发者模板代码示例&lt;/h5&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// 双指针模板&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;twoSum&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;nums&lt;/span&gt; []&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;target&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;) []&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;m&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; make(&lt;span style=&#34;color:#66d9ef&#34;&gt;map&lt;/span&gt;[&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;]&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;i&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;v&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;range&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;nums&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;j&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;ok&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;m&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;target&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;v&lt;/span&gt;]; &lt;span style=&#34;color:#a6e22e&#34;&gt;ok&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; []&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;{&lt;span style=&#34;color:#a6e22e&#34;&gt;j&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;i&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;m&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;v&lt;/span&gt;] = &lt;span style=&#34;color:#a6e22e&#34;&gt;i&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;nil&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// 滑动窗口模板&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;lengthOfLongestSubstring&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;s&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;window&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; make(&lt;span style=&#34;color:#66d9ef&#34;&gt;map&lt;/span&gt;[&lt;span style=&#34;color:#66d9ef&#34;&gt;byte&lt;/span&gt;]&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;left&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;right&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;res&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;right&lt;/span&gt; &amp;lt; len(&lt;span style=&#34;color:#a6e22e&#34;&gt;s&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;c&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;s&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;right&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;right&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;window&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;c&lt;/span&gt;]&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;window&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;c&lt;/span&gt;] &amp;gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#a6e22e&#34;&gt;d&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;s&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;left&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#a6e22e&#34;&gt;left&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#a6e22e&#34;&gt;window&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;d&lt;/span&gt;]&lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;res&lt;/span&gt; &amp;lt; &lt;span style=&#34;color:#a6e22e&#34;&gt;right&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;left&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#a6e22e&#34;&gt;res&lt;/span&gt; = &lt;span style=&#34;color:#a6e22e&#34;&gt;right&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;left&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;res&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h5 id=&#34;七最终目标&#34;&gt;七、最终目标&lt;/h5&gt;
+&lt;ul&gt;
+&lt;li&gt;不靠“记题”，靠“识别结构 + 套模板 + 临场分析”。&lt;/li&gt;
+&lt;li&gt;偏题也能快速迁移思路，不慌张。&lt;/li&gt;
+&lt;li&gt;面试时有底气，3 分钟就能讲清解题思路。&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
     <item>
       <title>如何判断网络状况</title>
       <link>http://localhost:1313/posts/scenario/%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E7%BD%91%E7%BB%9C%E7%8A%B6%E5%86%B5/</link>
@@ -20,7 +436,11 @@
       <link>http://localhost:1313/posts/scenario/sql%E8%B0%83%E4%BC%98/</link>
       <pubDate>Wed, 15 Oct 2025 09:13:45 +0800</pubDate>
       <guid>http://localhost:1313/posts/scenario/sql%E8%B0%83%E4%BC%98/</guid>
-      <description></description>
+      <description>&lt;h3 id=&#34;mysql调优&#34;&gt;mySql调优&lt;/h3&gt;
+&lt;h3 id=&#34;参考资料&#34;&gt;参考资料&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.yuque.com/everglow-8bs2d/ka5fze/inbyrpn5weudx226?singleDoc#&#34;&gt;https://www.yuque.com/everglow-8bs2d/ka5fze/inbyrpn5weudx226?singleDoc#&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
     </item>
     <item>
       <title>Link_合并升序链表</title>
