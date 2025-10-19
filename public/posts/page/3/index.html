@@ -131,6 +131,50 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Mod
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>go mod 加载机制 go root go的安装目录
+go path go的源代码工作目录
+go mod go从1.11开始，加入了 go mod。开启 go mod 之后，不需要讲所有的源代码放到gopath。
+go 的加载机制 go 会把go mod所在的目录当成工作目录，先加载相对路径下的本地包，如果没有会去go mod文件查找，go mod 会尝试从go proxy 拉取代码，go proxy 是Google维护的go的包仓库，即使某些包的源码被删除，也还是可以从包仓库 下载，这保证了包引入的稳定性。如果go proxy没有，那么go会尝试从代码仓库拉取源码，比如github上的源码。go mod 当中 带有 // indirect的就是直接源码下载的。
+还可以使用 go mod edit -replace [old git package]@[version]=[new git package]@[version] 命令将远程代码仓库替换成本地的代码。 使用go private 设置私有化代码仓库的路径，然后配置认证就可以使用内部代码库。
+常用命令 go mod init 初始化模块，生成 go mod go mod tidy 拉取依赖，自动增删依赖，生成go.sum go mod download 将依赖预下载到本地缓存 go mod vendor 将下载的依赖缓存到 ./vendor,用于离线构建 go mod edit </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-27 09:47:18 +0800 CST'>August 27, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Mod" href="http://localhost:1313/posts/go/mod/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">初始化方法比较
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>make和new的初始化比较 make new 返回值 返回实例化对象本身 返回类型并清空返回实例化对象的指针 作用类型、常见用法 slice、map、channel 所有类型 内部作用机制 初始化结构体，并初始化结构体内部的相关字段机构 初始化对象，清空内存，分配内存，置为零值 为什么new slice map 得到是nil 首先 new 严格遵守返回的是初始化对象指针的原则，而new slice、map的时候，返回的就是对象的引用，只是切片和哈希的 零值就是nil,所以如果new切片和map会出现无法使用的情况。
+</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-03 11:01:53 +0800 CST'>August 3, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 初始化方法比较" href="http://localhost:1313/posts/go/%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95%E6%AF%94%E8%BE%83/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">内存泄漏
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>什么是内存泄漏 指内存资源长期得不到释放，导致内存持续增长，最终导致内存溢出
+内存泄漏的常见场景 协程的泄漏 耗时任务或者http请求一直得不到响应，又没有设置超时时间 chan未正确关闭、阻塞。range channel 发送端未关闭导致死循环。 锁未正确释放、导致协程未能释放 资源未关闭，如file、数据库、redis连接、timer定时器、channel cgo 其他的一些 内存泄漏分析工具 pprof分析协程数量，内存占用情况等
+如何针对内存泄漏进行优化 针对协程泄漏 设置超时时间 context.deadline timeout 结合select进行超时控制 正确使用channel 正确使用互斥锁，配对使用 针对channel的泄漏 配对使用 在发送方关闭channel 正确使用缓冲channel和非缓冲channel 养成关闭资源的习惯，使用defer,clear up 等工具 cgo和其他场景记得防止协程泄漏 </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-01 09:10:55 +0800 CST'>August 1, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 内存泄漏" href="http://localhost:1313/posts/go/%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">逃逸分析
     </h2>
   </header>

@@ -86,6 +86,15 @@ DDD是一套架构思想方法论，它为代码层面和架构层面都提供�
                 │         → orderRepo (MySQL)                  │
                 └──────────────────────────────────────────────┘
 
+### kratos 和DDD  架构对照
+
+| Kratos 层级    | DDD 层级               | 作用                                          |
+|--------------|----------------------|---------------------------------------------|
+| **service/** | Interface / Adapter  | gRPC/HTTP Handler，参数验证/响应封装，调用 UseCase      |
+| **biz/**     | Domain + Application | 业务逻辑和领域规则处理，UseCase（业务服务），纯业务计算             |
+| **data/**    | Infrastructure       | 数据库、缓存、第三方 SDK 封装，实现 Repository 接口，提供外部依赖能力 |
+| **pkg/**     | Infrastructure（共享组件） | 可复用 SDK 封装、工具函数、通用库，跨服务共享                   |
+
 ### 参考资料
 
 1. **美团** [领域驱动设计在互联网业务开发中的实践](https://tech.meituan.com/2017/12/22/ddd-in-practice.html)

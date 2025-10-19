@@ -128,6 +128,50 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Mod
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>go mod 加载机制 go root go的安装目录
+go path go的源代码工作目录
+go mod go从1.11开始，加入了 go mod。开启 go mod 之后，不需要讲所有的源代码放到gopath。
+go 的加载机制 go 会把go mod所在的目录当成工作目录，先加载相对路径下的本地包，如果没有会去go mod文件查找，go mod 会尝试从go proxy 拉取代码，go proxy 是Google维护的go的包仓库，即使某些包的源码被删除，也还是可以从包仓库 下载，这保证了包引入的稳定性。如果go proxy没有，那么go会尝试从代码仓库拉取源码，比如github上的源码。go mod 当中 带有 // indirect的就是直接源码下载的。
+还可以使用 go mod edit -replace [old git package]@[version]=[new git package]@[version] 命令将远程代码仓库替换成本地的代码。 使用go private 设置私有化代码仓库的路径，然后配置认证就可以使用内部代码库。
+常用命令 go mod init 初始化模块，生成 go mod go mod tidy 拉取依赖，自动增删依赖，生成go.sum go mod download 将依赖预下载到本地缓存 go mod vendor 将下载的依赖缓存到 ./vendor,用于离线构建 go mod edit </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-27 09:47:18 +0800 CST'>August 27, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Mod" href="http://localhost:1313/posts/go/mod/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">初始化方法比较
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>make和new的初始化比较 make new 返回值 返回实例化对象本身 返回类型并清空返回实例化对象的指针 作用类型、常见用法 slice、map、channel 所有类型 内部作用机制 初始化结构体，并初始化结构体内部的相关字段机构 初始化对象，清空内存，分配内存，置为零值 为什么new slice map 得到是nil 首先 new 严格遵守返回的是初始化对象指针的原则，而new slice、map的时候，返回的就是对象的引用，只是切片和哈希的 零值就是nil,所以如果new切片和map会出现无法使用的情况。
+</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-03 11:01:53 +0800 CST'>August 3, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 初始化方法比较" href="http://localhost:1313/posts/go/%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95%E6%AF%94%E8%BE%83/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">内存泄漏
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>什么是内存泄漏 指内存资源长期得不到释放，导致内存持续增长，最终导致内存溢出
+内存泄漏的常见场景 协程的泄漏 耗时任务或者http请求一直得不到响应，又没有设置超时时间 chan未正确关闭、阻塞。range channel 发送端未关闭导致死循环。 锁未正确释放、导致协程未能释放 资源未关闭，如file、数据库、redis连接、timer定时器、channel cgo 其他的一些 内存泄漏分析工具 pprof分析协程数量，内存占用情况等
+如何针对内存泄漏进行优化 针对协程泄漏 设置超时时间 context.deadline timeout 结合select进行超时控制 正确使用channel 正确使用互斥锁，配对使用 针对channel的泄漏 配对使用 在发送方关闭channel 正确使用缓冲channel和非缓冲channel 养成关闭资源的习惯，使用defer,clear up 等工具 cgo和其他场景记得防止协程泄漏 </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-01 09:10:55 +0800 CST'>August 1, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 内存泄漏" href="http://localhost:1313/posts/go/%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">逃逸分析
     </h2>
   </header>
@@ -262,56 +306,12 @@ package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, }
   <footer class="entry-footer"><span title='2025-07-09 09:20:50 +0800 CST'>July 9, 2025</span>&nbsp;·&nbsp;3 min</footer>
   <a class="entry-link" aria-label="post link to BFS&&DFS" href="http://localhost:1313/posts/datastructalgorithm/bfs_dfs/"></a>
 </article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">https原理
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>定义 http http是超文本传输协议，用于传输网页内容，它基于TCP，所以是可靠性传输。但是它没有解决数据安全性 方面的问题
-http安全方面的问题 http没有对数据进行加密，任何人都可以随意读取这些数据，遭成数据的泄密。 其次没有认证，也就是没有办法知道数据来源的可靠性，攻击者可以中间人攻击来伪造数据 数据完整性，任何人可以读取也可以修改数据 https是什么 https是http的安全版本，https基于ssl，ssl基于tls。http&#43;数据加密&#43;认证&#43;数据完整性就是https。
-https怎么解决的这些问题 数据加密 加密算法 加密算法分为对称加密和非对称加密，还有一些摘要算法 / 哈希算法，一下是一些常见的加密算法
-类型 示例 是否可逆 说明 对称加密 DES / AES / 3DES ✅ 加密解密用同一密钥 非对称加密 RSA / ECC ✅ 公钥加密，私钥解密 摘要算法 MD5 / SHA256 ❌ 不可逆，用于校验完整性 签名算法 DSA / RSA签名 ❌ 用私钥签名，公钥验签 服务器端生成密钥对，将公钥发送给客户端，客户端使用公钥加密对称加密使用的秘钥，发送给服务器端，服务器端使用私钥解密数据， 得到秘钥，后续通过这个秘钥对数据进行加密解密。
-CA CA（Certificate Authority）是证书颁发机构，它负责签发证书，并管理证书的颁发和吊销。
-为什么需要CA 客户端无法知晓拿到的公钥是由目标服务器颁发的，为了验证证书的合法性，防护中间人攻击，需要CA证书颁发机构签发证书。
-证书生成 首先，服务器管理员会向CA提起证书申请，CA会验证域名的所属权，做法通常是在域名解析加一个特定值。 验证通过后，CA会将服务器的公钥用自己的私钥进行签名，生成证书。并颁发给服务器管理员。
-证书验证过程 客户端发起连接请求，服务器会返回证书，客户端会验证证书的合法性，并获取证书的公钥。 浏览器会在发版的时候将各大CA机构的公钥预制在浏览器中，使用CA的公钥对服务器的证书进行解密，拿到解密的hash值。同时 使用同样的摘要算法对原始内容进行加密，用得到的摘要和解密的摘要对比，如果相等，说明证书是CA颁发的，也就证明 了证书的合法性和完整性。
-更加深入的了解https http是超文本传输协议，它会有以下几个问题：
-窃听风险，由于TCP传输过程中会经过路由器、主机等多个设备，存在被截获数据的风险，泄漏密码等机密信息 篡改风险，被截获的数据可能被恶意篡改，在交易等重要系统会产生非常大的破坏性 身份伪造，无法知晓我们访问的服务端是否是真实的 https通过以下几个方式解决上述问题
-机密性，通过对称加密算法保证 完整性，通过摘要算法保证（md5、sha256） 身份认证，通过CA(证书颁发机构) 为什么https采用了对策加密&#43;非对称加密&#43;CA? 只用对称加密不好解决密钥传输保存的问题，非对称加密由于加解密比较消耗资源，不适合对大量数据进行加解密。
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-08 09:35:24 +0800 CST'>July 8, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to https原理" href="http://localhost:1313/posts/network/https/"></a>
-</article>
-
-<article class="post-entry"> 
-<figure class="entry-cover">
-        <img loading="lazy" src="http://localhost:1313/images/img.png" alt="">
-</figure>
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">golang的interface和reflect
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>interface 鸭子类型 如果一个东西，走起来像鸭子，叫起来像鸭子，那么我们认为他就是鸭子。也就是说我们关注对象的行为，而不是对象本身。
-go里面通过接口来达到鸭子类型的效果。
-多态 多态是指同一个操作（函数、方法），在不通的对象的作用下，会有不同的行为。 一般多态有两种实现方式：
-继承和组合，比如java、c&#43;&#43;。 接口的形式 在go里面它没有继承的概念，但是go里面有组合。组合式是一种更灵活的方式。 他可以通过组合和重写来实现继承。在调用结构体的方法的时候，会优先调用最近的结构体的方法。 我们推荐在go里通过接口来实现多态，会更加清晰明了。
-go的interface 定义 go里面的接口是一种复合数据类型。他的底层有2种实现，eface和iface。
-//eface 结构 type eface struct { tab *typtab data unsafe.Pointer } // iface结构 type iface struct { tab *itab data unsafe.Pointer } go里面的所有数据类型都实现了eface,也就是说可以借助interface来表示他的数据类型。 还可以通过interface来定义方法集合 。
-type A interface { method() } 可能你会有一个疑问，那go是怎么确定interface 到底应该是使用eface 还是 iface呢？ go是在编译阶段就会确定好interface 使用的eface 还是 iface。后面不会改变。
-如何使用 什么时候会使用interface 通过接口来实现解耦合，比如依赖注入、适配器模式。 不确定传入参数的类型，需要在运行时来确定。 使用方法 接口列表 type animal interface { move() } type dog struct {} func (d dog) move() { fmt.Println(&#34;dog moving&#34;) } type cat struct {} func (c cat) move() { fmt.Println(&#34;cat moving&#34;) } func main() { var a animal a = dog{} a.move() a = cat{} // a是结构可以同意调用 a.move() // 接口注入 call(a) // 不确定具体的参数 vat func1 = func(param any) {} func1 = func(param any) { fmt.Println(&#34;call any&#34;, param) } } func call(a animal) { fmt.Println(&#34;call animal \n&#34;) a.move() } 需要注意的点和坑 使用接口会让编译器无法确定数据类型，导致无法再编译阶段发现类型错误，引发运行时错误。 使用接口会让程序变得难以阅读和理解。 性能会损失大概一倍 reflect unsafe.pointer go语言unsafe包提供了一些函数，可以获取指针，修改指针，获取指针指向的数据，修改指针指向的数据。 简单来讲，go本身不能操作指针，但是提供了reflect包让我们可以操作指针来获得程序的 性能提升。
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-06 12:44:43 +0800 CST'>July 6, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to golang的interface和reflect" href="http://localhost:1313/posts/go/interfacereflect/"></a>
-</article>
 <footer class="page-footer">
   <nav class="pagination">
     <a class="prev" href="http://localhost:1313/page/2/">
       «&nbsp;Prev&nbsp;
+    </a>
+    <a class="next" href="http://localhost:1313/page/4/">Next&nbsp;&nbsp;»
     </a>
   </nav>
 </footer>

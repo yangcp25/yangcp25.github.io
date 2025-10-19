@@ -128,6 +128,44 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">如何保证数据录入不混乱
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>如何保证数据录入不混乱 数据并发 可以采用go的sync.mutex/数据库的锁/分布式锁来实现并发访问控制，在单机服务下，可以采用go的互斥锁保护临界资源。在分布式场景下，并发量不高的情况下，采用 数据库的行锁，行锁从逻辑上可以分为悲观锁和乐观锁，悲观锁通过直接for update 语句加互斥锁，在本次事务未提交之前，其他事务都不能读写当前的临界资源。乐观锁可以使用版本号， 先查询版本号，在写入数据的时候再次验证版本号，如果相同再更新。
+</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-09-18 09:34:21 +0800 CST'>September 18, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 如何保证数据录入不混乱" href="http://localhost:1313/posts/scenario/%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E5%BD%95%E5%85%A5%E4%B8%8D%E6%B7%B7%E4%B9%B1/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">一次mysql的执行过程
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>一次mysql的执行过程 连接器 客户端需要先和服务器连接，检查帐号密码、权限，建立连接。 分析器 将客户端发送过来的sql语句进行分析，分为词法分析，将关键词提取出来，进行语法分析，检查是否有 语法错误，最后对语句进行语义分析。 优化器 根据用户的sql 执行查询计划，选择成本和时间最小的方案执行。 执行器 向存储引擎发送请求，执行具体的sql执行 </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-09-12 09:47:57 +0800 CST'>September 12, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 一次mysql的执行过程" href="http://localhost:1313/posts/database/%E4%B8%80%E6%AC%A1mysql%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Mysql_分组统计排序
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>记录一些面试遇到的题目
+CREATE TABLE students ( id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), age INT, sex CHAR(1), class VARCHAR(50) ); INSERT INTO students (name, age, sex, class) VALUES (&#39;沉默王二&#39;, 18, &#39;女&#39;, &#39;三年二班&#39;), (&#39;沉默王一&#39;, 20, &#39;男&#39;, &#39;三年二班&#39;), (&#39;沉默王三&#39;, 19, &#39;男&#39;, &#39;三年三班&#39;), (&#39;沉默王四&#39;, 17, &#39;男&#39;, &#39;三年三班&#39;), (&#39;沉默王五&#39;, 20, &#39;女&#39;, &#39;三年四班&#39;), (&#39;沉默王六&#39;, 21, &#39;男&#39;, &#39;三年四班&#39;), (&#39;沉默王七&#39;, 18, &#39;女&#39;, &#39;三年四班&#39;); select * from students s1 join ( select id, row_number() over (partition by class order by age) as rank_num from students ) s2 on s2.id = s1.id where s2.rank_num &lt;= 2 </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-09-12 09:41:41 +0800 CST'>September 12, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Mysql_分组统计排序" href="http://localhost:1313/posts/interview_code/mysql_%E5%88%86%E7%BB%84%E7%BB%9F%E8%AE%A1%E6%8E%92%E5%BA%8F/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">数组交集
     </h2>
   </header>
@@ -135,7 +173,7 @@
     <p> package main import &#34;fmt&#34; func main() { //4.1 实现一个函数，可以计算返回多个切片元素交集，如入参[1,2,3],[2,3,4] 返回 [2,3] arrays := make([][]int, 0) arrays = append(arrays, []int{1, 2, 3}) arrays = append(arrays, []int{2, 3, 4}) arrays = append(arrays, []int{3, 4}) res := calMerge(arrays...) fmt.Println(res) } func calMerge(arrays ...[]int) []int { // 数组先去重，就不实现了 check := make(map[int]int) for i := 0; i &lt; len(arrays); i&#43;&#43; { for j := 0; j &lt; len(arrays[i]); j&#43;&#43; { check[arrays[i][j]] &#43;= 1 } } newArray := make([]int, 0) for k, val := range check { if val &gt;= len(arrays) { newArray = append(newArray, k) } } return newArray } </p>
   </div>
   <footer class="entry-footer"><span title='2025-09-12 09:41:25 +0800 CST'>September 12, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to 数组交集" href="http://localhost:1313/posts/algorithm/slice_%E6%95%B0%E7%BB%84%E4%BA%A4%E9%9B%86/"></a>
+  <a class="entry-link" aria-label="post link to 数组交集" href="http://localhost:1313/posts/datastructalgorithm/slice_%E6%95%B0%E7%BB%84%E4%BA%A4%E9%9B%86/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -175,7 +213,7 @@ package cache import ( &#34;context&#34; &#34;github.com/redis/go-redis/v9&#34; 
     <p>代码实现 package test3 import ( &#34;fmt&#34; &#34;unicode&#34; ) func main() { //输入一个字符串，里面有大写字母、小写字母、数字， //处理结束后，大写字母在前，然后是小写字母，最后是数字， //要求：在原有字符串上做交换实现，不要建新的数据结构。 //mN1oO2pP3 //Nm1oO2pP3 str := []rune(&#34;mN1oO2pP3&#34;) // AbcafafaaFAs exchangePos(str) fmt.Println(string(str)) } func exchangePos(str []rune) { // i 找非大写字母 j 找大写字母 如果 i ！= j 交换 length := len(str) i, j := 0, 0 for i &lt; length &amp;&amp; j &lt; length { if isUper(str[j]) { //&amp;&amp; !isUper(rune(str[i])) if i != j { str[i], str[j] = str[j], str[i] i&#43;&#43; } } if isUper(str[i]) { i&#43;&#43; } j&#43;&#43; } // i 从上一次结束为止开始，找 数字， j 找小写字母 如果 i ！= j 交换 j = i //fmt.Println(string(str), i, j) for i &lt; length &amp;&amp; j &lt; length { if isLower(str[j]) { //&amp;&amp; !isUper(rune(str[i])) if i != j { str[i], str[j] = str[j], str[i] i&#43;&#43; } } if isLower(str[i]) { i&#43;&#43; } j&#43;&#43; } return } func isUper(s rune) bool { return unicode.IsUpper(s) } func isLower(s rune) bool { return unicode.IsLower(s) } 测试用例 package test3 import ( &#34;testing&#34; ) func TestExchangePos(t *testing.T) { cases := []struct { input string expected string }{ // 基础情况 {&#34;&#34;, &#34;&#34;}, {&#34;A&#34;, &#34;A&#34;}, {&#34;a&#34;, &#34;a&#34;}, {&#34;1&#34;, &#34;1&#34;}, // 已经有序 {&#34;ABCabc123&#34;, &#34;ABCabc123&#34;}, // 完全逆序 {&#34;123cbaCBA&#34;, &#34;CBAcba123&#34;}, // 混合 {&#34;aA1&#34;, &#34;Aa1&#34;}, {&#34;1aA&#34;, &#34;Aa1&#34;}, {&#34;Aa1Bb2Cc3&#34;, &#34;ABCabc123&#34;}, // 两类字符 {&#34;abc123&#34;, &#34;abc123&#34;}, {&#34;ABC123&#34;, &#34;ABC123&#34;}, {&#34;ABCabc&#34;, &#34;ABCabc&#34;}, // 全部同类 {&#34;ABCDEF&#34;, &#34;ABCDEF&#34;}, {&#34;abcdef&#34;, &#34;abcdef&#34;}, {&#34;123456&#34;, &#34;123456&#34;}, // 随机混乱 {&#34;Zy9Xx8Ww7&#34;, &#34;ZXWyxw987&#34;}, {&#34;mN1oO2pP3&#34;, &#34;NOPomp213&#34;}, // 边界 {&#34;A1a&#34;, &#34;Aa1&#34;}, {&#34;1A1aA1&#34;, &#34;AAa111&#34;}, {&#34;zZ9zZ9&#34;, &#34;ZZzz99&#34;}, // 重复模式 / 长度较大 {&#34;Aa1Aa1Aa1Aa1&#34;, &#34;AAAAaaaa1111&#34;}, {&#34;987ZYXcba654&#34;, &#34;ZYXcba987654&#34;}, } for _, c := range cases { runes := []rune(c.input) exchangePos(runes) got := string(runes) if got != c.expected { t.Errorf(&#34;exchangePos(%q) = %q; expected %q&#34;, c.input, got, c.expected) } } } </p>
   </div>
   <footer class="entry-footer"><span title='2025-09-06 12:47:17 +0800 CST'>September 6, 2025</span>&nbsp;·&nbsp;2 min</footer>
-  <a class="entry-link" aria-label="post link to Str_百度真题原地置换大小写" href="http://localhost:1313/posts/algorithm/str_%E7%99%BE%E5%BA%A6%E7%9C%9F%E9%A2%98%E5%8E%9F%E5%9C%B0%E7%BD%AE%E6%8D%A2%E5%A4%A7%E5%B0%8F%E5%86%99/"></a>
+  <a class="entry-link" aria-label="post link to Str_百度真题原地置换大小写" href="http://localhost:1313/posts/datastructalgorithm/str_%E7%99%BE%E5%BA%A6%E7%9C%9F%E9%A2%98%E5%8E%9F%E5%9C%B0%E7%BD%AE%E6%8D%A2%E5%A4%A7%E5%B0%8F%E5%86%99/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -187,7 +225,7 @@ package cache import ( &#34;context&#34; &#34;github.com/redis/go-redis/v9&#34; 
     <p>package main import ( &#34;bufio&#34; &#34;fmt&#34; &#34;os&#34; &#34;strconv&#34; &#34;strings&#34; ) // 题目描述 // // 存在一个mxn的二维数组，其成员取值范围为0或1，其中值为1的成员具备扩散性，每经过1S，将上下左右值为0的成员同化为1，二维数组的成员初始值都为0，将第[i,j]和[k,l]两个个位置上元素修改成1后，求矩阵的所有，元素变为1需要多长时间 // // 输入描述 // // 输入数据中的前2个数字表示这是一个mxn的矩阵，m和n不会超过1024大小; // // 中间两个数字表示一个初始扩散点位置为I,j // // 最后2个数字表示另一个扩散点位置为k,l // // 输出描述 // // 输出矩阵的所有元素变为1所需要秒数 // // 用例 func main() { input := bufio.NewScanner(os.Stdin) input.Scan() str := input.Text() strArr := strings.Split(str, &#34;,&#34;) m, n := Atoi(strArr[0]), Atoi(strArr[1]) pos1, pos2, pos3, pos4 := Atoi(strArr[2]), Atoi(strArr[3]), Atoi(strArr[4]), Atoi(strArr[5]) time := getMatrixBroadcastTime(m, n, pos1, pos2, pos3, pos4) fmt.Println(time) } func getMatrixBroadcastTime(m, n, pos1, pos2, pos3, pos4 int) (res int) { path := make([]string, 0) path = append(path, getPos(pos1, pos2)) path = append(path, getPos(pos3, pos4)) check := make(map[string]bool) check[getPos(pos1, pos2)] = true check[getPos(pos3, pos4)] = true count := 2 for len(path) &gt; 0 { length := len(path) for i := 0; i &lt; length; i&#43;&#43; { pos := strings.Split(path[i], &#34;_&#34;) x, y := Atoi(pos[0]), Atoi(pos[1]) // 上 if x-1 &gt;= 0 &amp;&amp; check[getPos(x-1, y)] != true { path = append(path, getPos(x-1, y)) check[getPos(x-1, y)] = true count&#43;&#43; } // 下 if x&#43;1 &lt; m &amp;&amp; check[getPos(x&#43;1, y)] != true { path = append(path, getPos(x&#43;1, y)) check[getPos(x&#43;1, y)] = true count&#43;&#43; } // 左 if y-1 &gt;= 0 &amp;&amp; check[getPos(x, y-1)] != true { path = append(path, getPos(x, y-1)) check[getPos(x, y-1)] = true count&#43;&#43; } // 右 if y&#43;1 &lt; n &amp;&amp; check[getPos(x, y&#43;1)] != true { path = append(path, getPos(x, y&#43;1)) check[getPos(x, y&#43;1)] = true count&#43;&#43; } } res&#43;&#43; if count &gt;= m*n { return } } return } func getPos(x, y int) string { return fmt.Sprintf(&#34;%d_%d&#34;, x, y) } func Atoi(str string) int { res, _ := strconv.Atoi(str) return res } </p>
   </div>
   <footer class="entry-footer"><span title='2025-09-05 09:23:51 +0800 CST'>September 5, 2025</span>&nbsp;·&nbsp;2 min</footer>
-  <a class="entry-link" aria-label="post link to Matrix_多源扩散" href="http://localhost:1313/posts/algorithm/matrix_%E5%A4%9A%E6%BA%90%E6%89%A9%E6%95%A3/"></a>
+  <a class="entry-link" aria-label="post link to Matrix_多源扩散" href="http://localhost:1313/posts/datastructalgorithm/matrix_%E5%A4%9A%E6%BA%90%E6%89%A9%E6%95%A3/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -199,7 +237,7 @@ package cache import ( &#34;context&#34; &#34;github.com/redis/go-redis/v9&#34; 
     <p>package test1 import &#34;sort&#34; //题目 // 题目描述输入两个字符串S和L，都只包含英文小写字母。S长度&lt;=100，L长度&lt;=500,000。 //判定S是否是L的有效子串。判定规则：S中的每个字符在L中都能找到（可以不连续），且S在Ｌ中字符的前后顺序与S中顺序要保持一致。 //（例如，S=”ace”是L=”abcde”的一个子序列且有效字符是a、c、e，而”aec”不是有效子序列，且有效字符只有a、e） //输入输出 //输入输入两个字符串S和L，都只包含英文小写字母。S长度&lt;=100，L长度&lt;=500,000。 //先输入S，再输入L，每个字符串占一行。输出S串最后一个有效字符在L中的位置。 //（首位从0开始计算，无有效字符返回-1） func SubStrLasPos(str string, sub string) int { // aabcdabc 8 // abc findKey := -1 // 循环找到所有的字符在str中的位置 预处理 strPos := make(map[byte][]int) for i := 0; i &lt; len(str); i&#43;&#43; { strPos[str[i]] = append(strPos[str[i]], i) } // limit 限制每个字符的位置 当前值比后一个值的最大位置要小才行 limit := len(str) for i := len(sub) - 1; i &gt;= 0; i-- { if _, ok := strPos[sub[i]]; !ok { return -1 } else { subArr := strPos[sub[i]] //sort.SearchInts() // 如果满足子数组的位置比Limit 小 就ok key := sort.SearchInts(subArr, limit) if key == 0 { return -1 } limit = subArr[key-1] if i == len(sub)-1 { findKey = limit } } // 排序拿到最大的值 //sort.Slice(strPos[sub[i]], func(i, j int) bool { //	return strPos[sub[i]][i] &lt; strPos[sub[i]][j] //}) } return findKey } func search(arr []int, limit int) int { low, high := 0, len(arr)-1 for low &lt;= high { mid := low &#43; (high-low)/2 if arr[mid] == limit { return mid } else if arr[mid] &gt; limit { high = mid - 1 } else { low = mid &#43; 1 } } return -1 } </p>
   </div>
   <footer class="entry-footer"><span title='2025-09-05 09:22:10 +0800 CST'>September 5, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Str_判断字符顺序和存在" href="http://localhost:1313/posts/algorithm/str_%E5%88%A4%E6%96%AD%E5%AD%97%E7%AC%A6%E9%A1%BA%E5%BA%8F%E5%92%8C%E5%AD%98%E5%9C%A8/"></a>
+  <a class="entry-link" aria-label="post link to Str_判断字符顺序和存在" href="http://localhost:1313/posts/datastructalgorithm/str_%E5%88%A4%E6%96%AD%E5%AD%97%E7%AC%A6%E9%A1%BA%E5%BA%8F%E5%92%8C%E5%AD%98%E5%9C%A8/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -212,50 +250,6 @@ package cache import ( &#34;context&#34; &#34;github.com/redis/go-redis/v9&#34; 
   </div>
   <footer class="entry-footer"><span title='2025-08-29 09:43:18 +0800 CST'>August 29, 2025</span>&nbsp;·&nbsp;2 min</footer>
   <a class="entry-link" aria-label="post link to Go实现lru" href="http://localhost:1313/posts/datastructalgorithm/go%E5%AE%9E%E7%8E%B0lru/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Mod
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>go mod 加载机制 go root go的安装目录
-go path go的源代码工作目录
-go mod go从1.11开始，加入了 go mod。开启 go mod 之后，不需要讲所有的源代码放到gopath。
-go 的加载机制 go 会把go mod所在的目录当成工作目录，先加载相对路径下的本地包，如果没有会去go mod文件查找，go mod 会尝试从go proxy 拉取代码，go proxy 是Google维护的go的包仓库，即使某些包的源码被删除，也还是可以从包仓库 下载，这保证了包引入的稳定性。如果go proxy没有，那么go会尝试从代码仓库拉取源码，比如github上的源码。go mod 当中 带有 // indirect的就是直接源码下载的。
-还可以使用 go mod edit -replace [old git package]@[version]=[new git package]@[version] 命令将远程代码仓库替换成本地的代码。 使用go private 设置私有化代码仓库的路径，然后配置认证就可以使用内部代码库。
-常用命令 go mod init 初始化模块，生成 go mod go mod tidy 拉取依赖，自动增删依赖，生成go.sum go mod download 将依赖预下载到本地缓存 go mod vendor 将下载的依赖缓存到 ./vendor,用于离线构建 go mod edit </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-27 09:47:18 +0800 CST'>August 27, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Mod" href="http://localhost:1313/posts/go/mod/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">初始化方法比较
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>make和new的初始化比较 make new 返回值 返回实例化对象本身 返回类型并清空返回实例化对象的指针 作用类型、常见用法 slice、map、channel 所有类型 内部作用机制 初始化结构体，并初始化结构体内部的相关字段机构 初始化对象，清空内存，分配内存，置为零值 为什么new slice map 得到是nil 首先 new 严格遵守返回的是初始化对象指针的原则，而new slice、map的时候，返回的就是对象的引用，只是切片和哈希的 零值就是nil,所以如果new切片和map会出现无法使用的情况。
-</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-03 11:01:53 +0800 CST'>August 3, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to 初始化方法比较" href="http://localhost:1313/posts/go/%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95%E6%AF%94%E8%BE%83/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">内存泄漏
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>什么是内存泄漏 指内存资源长期得不到释放，导致内存持续增长，最终导致内存溢出
-内存泄漏的常见场景 协程的泄漏 耗时任务或者http请求一直得不到响应，又没有设置超时时间 chan未正确关闭、阻塞。range channel 发送端未关闭导致死循环。 锁未正确释放、导致协程未能释放 资源未关闭，如file、数据库、redis连接、timer定时器、channel cgo 其他的一些 内存泄漏分析工具 pprof分析协程数量，内存占用情况等
-如何针对内存泄漏进行优化 针对协程泄漏 设置超时时间 context.deadline timeout 结合select进行超时控制 正确使用channel 正确使用互斥锁，配对使用 针对channel的泄漏 配对使用 在发送方关闭channel 正确使用缓冲channel和非缓冲channel 养成关闭资源的习惯，使用defer,clear up 等工具 cgo和其他场景记得防止协程泄漏 </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-01 09:10:55 +0800 CST'>August 1, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to 内存泄漏" href="http://localhost:1313/posts/go/%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

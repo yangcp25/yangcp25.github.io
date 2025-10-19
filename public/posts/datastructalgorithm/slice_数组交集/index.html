@@ -5,33 +5,47 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
-<title>Mysql_分组统计排序 | yangcp</title>
+<title>数组交集 | yangcp</title>
 <meta name="keywords" content="">
-<meta name="description" content="记录一些面试遇到的题目
-CREATE TABLE students (
-                          id INT AUTO_INCREMENT PRIMARY KEY,
-                          name VARCHAR(50),
-                          age INT,
-                          sex CHAR(1),
-                          class VARCHAR(50)
-);
-INSERT INTO students (name, age, sex, class) VALUES
-                                                 (&#39;沉默王二&#39;, 18, &#39;女&#39;, &#39;三年二班&#39;),
-                                                 (&#39;沉默王一&#39;, 20, &#39;男&#39;, &#39;三年二班&#39;),
-                                                 (&#39;沉默王三&#39;, 19, &#39;男&#39;, &#39;三年三班&#39;),
-                                                 (&#39;沉默王四&#39;, 17, &#39;男&#39;, &#39;三年三班&#39;),
-                                                 (&#39;沉默王五&#39;, 20, &#39;女&#39;, &#39;三年四班&#39;),
-                                                 (&#39;沉默王六&#39;, 21, &#39;男&#39;, &#39;三年四班&#39;),
-                                                 (&#39;沉默王七&#39;, 18, &#39;女&#39;, &#39;三年四班&#39;);
- select * from students s1 join
-                       (
-                           select id, row_number() over (partition by class order by age) as rank_num from students
-                       ) s2 on s2.id = s1.id
-                   
-                   where s2.rank_num &lt;= 2
+<meta name="description" content="
+package main
+
+import &#34;fmt&#34;
+
+func main() {
+	//4.1 实现一个函数，可以计算返回多个切片元素交集，如入参[1,2,3],[2,3,4] 返回 [2,3]
+
+	arrays := make([][]int, 0)
+	arrays = append(arrays, []int{1, 2, 3})
+	arrays = append(arrays, []int{2, 3, 4})
+	arrays = append(arrays, []int{3, 4})
+	res := calMerge(arrays...)
+	fmt.Println(res)
+}
+
+func calMerge(arrays ...[]int) []int {
+	// 数组先去重，就不实现了
+	check := make(map[int]int)
+
+	for i := 0; i &lt; len(arrays); i&#43;&#43; {
+		for j := 0; j &lt; len(arrays[i]); j&#43;&#43; {
+			check[arrays[i][j]] &#43;= 1
+		}
+	}
+
+	newArray := make([]int, 0)
+
+	for k, val := range check {
+		if val &gt;= len(arrays) {
+			newArray = append(newArray, k)
+		}
+	}
+
+	return newArray
+}
 ">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/posts/interview_code/mysql_%E5%88%86%E7%BB%84%E7%BB%9F%E8%AE%A1%E6%8E%92%E5%BA%8F/">
+<link rel="canonical" href="http://localhost:1313/posts/datastructalgorithm/slice_%E6%95%B0%E7%BB%84%E4%BA%A4%E9%9B%86/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
@@ -40,7 +54,7 @@ INSERT INTO students (name, age, sex, class) VALUES
 <link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/interview_code/mysql_%E5%88%86%E7%BB%84%E7%BB%9F%E8%AE%A1%E6%8E%92%E5%BA%8F/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/datastructalgorithm/slice_%E6%95%B0%E7%BB%84%E4%BA%A4%E9%9B%86/">
 <noscript>
     <style>
         #theme-toggle,
@@ -149,35 +163,49 @@ INSERT INTO students (name, age, sex, class) VALUES
   <header class="post-header">
     <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
-      Mysql_分组统计排序
+      数组交集
     </h1>
-    <div class="post-meta"><span title='2025-09-12 09:41:41 +0800 CST'>September 12, 2025</span>&nbsp;·&nbsp;1 min
+    <div class="post-meta"><span title='2025-09-12 09:41:25 +0800 CST'>September 12, 2025</span>&nbsp;·&nbsp;1 min
 
 </div>
   </header> 
 
-  <div class="post-content"><p>记录一些面试遇到的题目</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-mysql" data-lang="mysql"><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#a6e22e">students</span> (
-</span></span><span style="display:flex;"><span>                          id <span style="color:#66d9ef">INT</span> <span style="color:#66d9ef">AUTO_INCREMENT</span> <span style="color:#66d9ef">PRIMARY</span> <span style="color:#66d9ef">KEY</span>,
-</span></span><span style="display:flex;"><span>                          name <span style="color:#66d9ef">VARCHAR</span>(<span style="color:#ae81ff">50</span>),
-</span></span><span style="display:flex;"><span>                          age <span style="color:#66d9ef">INT</span>,
-</span></span><span style="display:flex;"><span>                          sex <span style="color:#66d9ef">CHAR</span>(<span style="color:#ae81ff">1</span>),
-</span></span><span style="display:flex;"><span>                          class <span style="color:#66d9ef">VARCHAR</span>(<span style="color:#ae81ff">50</span>)
-</span></span><span style="display:flex;"><span>);
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> <span style="color:#a6e22e">students</span> (name, age, sex, class) <span style="color:#66d9ef">VALUES</span>
-</span></span><span style="display:flex;"><span>                                                 (<span style="color:#e6db74">&#39;沉默王二&#39;</span>, <span style="color:#ae81ff">18</span>, <span style="color:#e6db74">&#39;女&#39;</span>, <span style="color:#e6db74">&#39;三年二班&#39;</span>),
-</span></span><span style="display:flex;"><span>                                                 (<span style="color:#e6db74">&#39;沉默王一&#39;</span>, <span style="color:#ae81ff">20</span>, <span style="color:#e6db74">&#39;男&#39;</span>, <span style="color:#e6db74">&#39;三年二班&#39;</span>),
-</span></span><span style="display:flex;"><span>                                                 (<span style="color:#e6db74">&#39;沉默王三&#39;</span>, <span style="color:#ae81ff">19</span>, <span style="color:#e6db74">&#39;男&#39;</span>, <span style="color:#e6db74">&#39;三年三班&#39;</span>),
-</span></span><span style="display:flex;"><span>                                                 (<span style="color:#e6db74">&#39;沉默王四&#39;</span>, <span style="color:#ae81ff">17</span>, <span style="color:#e6db74">&#39;男&#39;</span>, <span style="color:#e6db74">&#39;三年三班&#39;</span>),
-</span></span><span style="display:flex;"><span>                                                 (<span style="color:#e6db74">&#39;沉默王五&#39;</span>, <span style="color:#ae81ff">20</span>, <span style="color:#e6db74">&#39;女&#39;</span>, <span style="color:#e6db74">&#39;三年四班&#39;</span>),
-</span></span><span style="display:flex;"><span>                                                 (<span style="color:#e6db74">&#39;沉默王六&#39;</span>, <span style="color:#ae81ff">21</span>, <span style="color:#e6db74">&#39;男&#39;</span>, <span style="color:#e6db74">&#39;三年四班&#39;</span>),
-</span></span><span style="display:flex;"><span>                                                 (<span style="color:#e6db74">&#39;沉默王七&#39;</span>, <span style="color:#ae81ff">18</span>, <span style="color:#e6db74">&#39;女&#39;</span>, <span style="color:#e6db74">&#39;三年四班&#39;</span>);
-</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> students s1 <span style="color:#66d9ef">join</span>
-</span></span><span style="display:flex;"><span>                       (
-</span></span><span style="display:flex;"><span>                           <span style="color:#66d9ef">select</span> id, <span style="color:#a6e22e">row_number</span>() <span style="color:#a6e22e">over</span> (partition <span style="color:#66d9ef">by</span> class <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> age) <span style="color:#66d9ef">as</span> rank_num <span style="color:#66d9ef">from</span> students
-</span></span><span style="display:flex;"><span>                       ) s2 <span style="color:#66d9ef">on</span> s2.id <span style="color:#f92672">=</span> s1.id
-</span></span><span style="display:flex;"><span>                   
-</span></span><span style="display:flex;"><span>                   <span style="color:#66d9ef">where</span> s2.rank_num <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">2</span>
+  <div class="post-content"><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> <span style="color:#e6db74">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//4.1 实现一个函数，可以计算返回多个切片元素交集，如入参[1,2,3],[2,3,4] 返回 [2,3]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">arrays</span> <span style="color:#f92672">:=</span> make([][]<span style="color:#66d9ef">int</span>, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">arrays</span> = append(<span style="color:#a6e22e">arrays</span>, []<span style="color:#66d9ef">int</span>{<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>})
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">arrays</span> = append(<span style="color:#a6e22e">arrays</span>, []<span style="color:#66d9ef">int</span>{<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>})
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">arrays</span> = append(<span style="color:#a6e22e">arrays</span>, []<span style="color:#66d9ef">int</span>{<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>})
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">res</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">calMerge</span>(<span style="color:#a6e22e">arrays</span><span style="color:#f92672">...</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">res</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">calMerge</span>(<span style="color:#a6e22e">arrays</span> <span style="color:#f92672">...</span>[]<span style="color:#66d9ef">int</span>) []<span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 数组先去重，就不实现了</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">check</span> <span style="color:#f92672">:=</span> make(<span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">int</span>]<span style="color:#66d9ef">int</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; len(<span style="color:#a6e22e">arrays</span>); <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">j</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">j</span> &lt; len(<span style="color:#a6e22e">arrays</span>[<span style="color:#a6e22e">i</span>]); <span style="color:#a6e22e">j</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">check</span>[<span style="color:#a6e22e">arrays</span>[<span style="color:#a6e22e">i</span>][<span style="color:#a6e22e">j</span>]] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">newArray</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">int</span>, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">val</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">check</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">val</span> <span style="color:#f92672">&gt;=</span> len(<span style="color:#a6e22e">arrays</span>) {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">newArray</span> = append(<span style="color:#a6e22e">newArray</span>, <span style="color:#a6e22e">k</span>)
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">newArray</span>
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div>
 
   </div>
@@ -186,15 +214,15 @@ INSERT INTO students (name, age, sex, class) VALUES
     <ul class="post-tags">
     </ul>
 <nav class="paginav">
-  <a class="prev" href="http://localhost:1313/posts/database/%E4%B8%80%E6%AC%A1mysql%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B/">
+  <a class="prev" href="http://localhost:1313/posts/interview_code/mysql_%E5%88%86%E7%BB%84%E7%BB%9F%E8%AE%A1%E6%8E%92%E5%BA%8F/">
     <span class="title">« Prev</span>
     <br>
-    <span>一次mysql的执行过程</span>
+    <span>Mysql_分组统计排序</span>
   </a>
-  <a class="next" href="http://localhost:1313/posts/datastructalgorithm/slice_%E6%95%B0%E7%BB%84%E4%BA%A4%E9%9B%86/">
+  <a class="next" href="http://localhost:1313/posts/scenario/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E7%9A%84%E5%AE%9E%E7%8E%B0/">
     <span class="title">Next »</span>
     <br>
-    <span>数组交集</span>
+    <span>分布式锁的实现</span>
   </a>
 </nav>
 
