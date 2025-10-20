@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>面试题模板 | yangcp</title>
+<meta name="keywords" content="">
+<meta name="description" content="SQL 面试题模板（综合）
+模拟数据表
+在大多数面试中，面试官会假设有几个经典的数据表。我们以此为基础：
+
+
+Employees (员工表)
+
+emp_id (INT, Primary Key) - 员工 ID
+emp_name (VARCHAR) - 员工姓名
+salary (DECIMAL) - 薪水
+dept_id (INT, Foreign Key) - 部门 ID
+
+
+
+Departments (部门表)
+
+dept_id (INT, Primary Key) - 部门 ID
+dept_name (VARCHAR) - 部门名称
+
+
+
+
+模块一：基础查询 (SELECT, WHERE, ORDER BY)
+考察点：数据筛选、排序、限制的基本功。
+
+[筛选] 查找 Employees 表中薪水 (salary) 高于 80000 的所有员工信息。
+[多条件] 查找 &lsquo;Sales&rsquo; (销售) 部门中，薪水低于 60000 的员工。
+[模糊查询] 查找所有姓 &lsquo;王&rsquo; 的员工 (使用 LIKE &#39;王%&#39;)。
+[空值处理] 查找所有尚未分配部门（dept_id 为 NULL）的员工。
+[排序与限制] 查找公司薪水最高的 5 名员工的信息 (使用 ORDER BY ... DESC 和 LIMIT ...)。
+
+模块二：聚合与分组 (GROUP BY, HAVING)
+考察点：数据汇总、分组统计的能力。">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/sql/%E9%9D%A2%E8%AF%95%E9%A2%98%E6%A8%A1%E6%9D%BF/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/sql/%E9%9D%A2%E8%AF%95%E9%A2%98%E6%A8%A1%E6%9D%BF/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="yangcp (Alt + H)">yangcp</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tag">
+                    <span>Tag</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/me/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      面试题模板
+    </h1>
+    <div class="post-meta"><span title='2025-10-19 12:21:08 +0800 CST'>October 19, 2025</span>&nbsp;·&nbsp;3 min
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#sql-%e9%9d%a2%e8%af%95%e9%a2%98%e6%a8%a1%e6%9d%bf%e7%bb%bc%e5%90%88" aria-label="SQL 面试题模板（综合）">SQL 面试题模板（综合）</a><ul>
+                        
+                <li>
+                    <a href="#%e6%a8%a1%e6%8b%9f%e6%95%b0%e6%8d%ae%e8%a1%a8" aria-label="模拟数据表">模拟数据表</a></li>
+                <li>
+                    <a href="#%e6%a8%a1%e5%9d%97%e4%b8%80%e5%9f%ba%e7%a1%80%e6%9f%a5%e8%af%a2-select-where-order-by" aria-label="模块一：基础查询 (SELECT, WHERE, ORDER BY)">模块一：基础查询 (SELECT, WHERE, ORDER BY)</a></li>
+                <li>
+                    <a href="#%e6%a8%a1%e5%9d%97%e4%ba%8c%e8%81%9a%e5%90%88%e4%b8%8e%e5%88%86%e7%bb%84-group-by-having" aria-label="模块二：聚合与分组 (GROUP BY, HAVING)">模块二：聚合与分组 (GROUP BY, HAVING)</a></li>
+                <li>
+                    <a href="#%e6%a8%a1%e5%9d%97%e4%b8%89%e8%bf%9e%e6%8e%a5%e6%9f%a5%e8%af%a2-join" aria-label="模块三：连接查询 (JOIN)">模块三：连接查询 (JOIN)</a></li>
+                <li>
+                    <a href="#%e6%a8%a1%e5%9d%97%e5%9b%9b%e5%ad%90%e6%9f%a5%e8%af%a2-subquery" aria-label="模块四：子查询 (Subquery)">模块四：子查询 (Subquery)</a></li>
+                <li>
+                    <a href="#%e6%a8%a1%e5%9d%97%e4%ba%94%e7%aa%97%e5%8f%a3%e5%87%bd%e6%95%b0-window-functions" aria-label="模块五：窗口函数 (Window Functions)">模块五：窗口函数 (Window Functions)</a><ul>
+                        
+                <li>
+                    <a href="#-%e5%b0%8f%e7%bb%93%e7%8e%b0%e4%bb%a3-sql-%e4%b8%89%e5%a4%a7%e9%ab%98%e7%ba%a7%e5%88%86%e6%9e%90%e5%8a%9f%e8%83%bd" aria-label="🧠 小结：现代 SQL 三大「高级分析」功能">🧠 小结：现代 SQL 三大「高级分析」功能</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e6%a8%a1%e5%9d%97%e5%85%ad%e6%95%b0%e6%8d%ae%e6%93%8d%e4%bd%9c%e4%b8%8e%e5%ae%9a%e4%b9%89-dmlddl" aria-label="模块六：数据操作与定义 (DML/DDL)">模块六：数据操作与定义 (DML/DDL)</a></li>
+                <li>
+                    <a href="#%e6%a8%a1%e5%9d%97%e4%b8%83%e4%ba%8b%e5%8a%a1%e4%b8%8e%e6%80%a7%e8%83%bd-transaction--optimization" aria-label="模块七：事务与性能 (Transaction &amp; Optimization)">模块七：事务与性能 (Transaction &amp; Optimization)</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h1 id="sql-面试题模板综合">SQL 面试题模板（综合）<a hidden class="anchor" aria-hidden="true" href="#sql-面试题模板综合">#</a></h1>
+<h2 id="模拟数据表">模拟数据表<a hidden class="anchor" aria-hidden="true" href="#模拟数据表">#</a></h2>
+<p>在大多数面试中，面试官会假设有几个经典的数据表。我们以此为基础：</p>
+<ol>
+<li>
+<p><strong><code>Employees</code> (员工表)</strong></p>
+<ul>
+<li><code>emp_id</code> (INT, Primary Key) - 员工 ID</li>
+<li><code>emp_name</code> (VARCHAR) - 员工姓名</li>
+<li><code>salary</code> (DECIMAL) - 薪水</li>
+<li><code>dept_id</code> (INT, Foreign Key) - 部门 ID</li>
+</ul>
+</li>
+<li>
+<p><strong><code>Departments</code> (部门表)</strong></p>
+<ul>
+<li><code>dept_id</code> (INT, Primary Key) - 部门 ID</li>
+<li><code>dept_name</code> (VARCHAR) - 部门名称</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="模块一基础查询-select-where-order-by">模块一：基础查询 (SELECT, WHERE, ORDER BY)<a hidden class="anchor" aria-hidden="true" href="#模块一基础查询-select-where-order-by">#</a></h2>
+<p>考察点：数据筛选、排序、限制的基本功。</p>
+<ol>
+<li><strong>[筛选]</strong> 查找 <code>Employees</code> 表中薪水 (salary) 高于 80000 的所有员工信息。</li>
+<li><strong>[多条件]</strong> 查找 &lsquo;Sales&rsquo; (销售) 部门中，薪水低于 60000 的员工。</li>
+<li><strong>[模糊查询]</strong> 查找所有姓 &lsquo;王&rsquo; 的员工 (使用 <code>LIKE '王%'</code>)。</li>
+<li><strong>[空值处理]</strong> 查找所有尚未分配部门（<code>dept_id</code> 为 <code>NULL</code>）的员工。</li>
+<li><strong>[排序与限制]</strong> 查找公司薪水最高的 5 名员工的信息 (使用 <code>ORDER BY ... DESC</code> 和 <code>LIMIT ...</code>)。</li>
+</ol>
+<h2 id="模块二聚合与分组-group-by-having">模块二：聚合与分组 (GROUP BY, HAVING)<a hidden class="anchor" aria-hidden="true" href="#模块二聚合与分组-group-by-having">#</a></h2>
+<p>考察点：数据汇总、分组统计的能力。</p>
+<ol>
+<li><strong>[基础聚合]</strong> 计算 <code>Employees</code> 表中的总员工数、平均薪水和最高薪水。</li>
+<li><strong>[分组]</strong> 统计每个部门（<code>dept_id</code>）有多少名员工？</li>
+<li><strong>[HAVING 筛选]</strong> 找出平均薪水超过 70000 的部门。
+<ul>
+<li><strong>[必考概念]</strong> <strong><code>WHERE</code> 和 <code>HAVING</code> 的区别是什么？</strong>
+<ul>
+<li><code>WHERE</code> 在 <code>GROUP BY</code> 之前执行，用于筛选原始行。</li>
+<li><code>HAVING</code> 在 <code>GROUP BY</code> 之后执行，用于筛选聚合后的分组。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>[去重]</strong> <code>COUNT(col)</code> 和 <code>COUNT(DISTINCT col)</code> 有什么区别？</li>
+</ol>
+<h2 id="模块三连接查询-join">模块三：连接查询 (JOIN)<a hidden class="anchor" aria-hidden="true" href="#模块三连接查询-join">#</a></h2>
+<p>考察点：处理多表关系的能力，这是 SQL 的核心。</p>
+<ol>
+<li><strong>[INNER JOIN]</strong> 查找所有员工及其对应的部门名称。</li>
+<li><strong>[LEFT JOIN]</strong> 查找所有部门，以及这些部门下的员工。<strong>要求</strong>：即使某个部门没有员工，也要显示该部门名称。
+<ul>
+<li><strong>[必考概念]</strong> <strong><code>INNER JOIN</code> 和 <code>LEFT JOIN</code> 的区别是什么？</strong>
+<ul>
+<li><code>INNER JOIN</code> (内连接) 只返回两个表中都能匹配上的行。</li>
+<li><code>LEFT JOIN</code> (左连接) 返回左表的所有行，以及右表中能匹配上的行（匹配不上的用 <code>NULL</code> 填充）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>[RIGHT/FULL JOIN]</strong> <code>RIGHT JOIN</code> 和 <code>FULL OUTER JOIN</code> 分别在什么场景下使用？（<code>RIGHT JOIN</code> 几乎等同于反向的 <code>LEFT JOIN</code>，<code>FULL JOIN</code> 返回两个表的所有行，无论是否匹配）。</li>
+<li><strong>[自连接 Self-Join]</strong> (假设 <code>Employees</code> 表中还有一列 <code>manager_id</code> 指向 <code>emp_id</code>) 如何查找每个员工及其直属经理的姓名？</li>
+</ol>
+<h2 id="模块四子查询-subquery">模块四：子查询 (Subquery)<a hidden class="anchor" aria-hidden="true" href="#模块四子查询-subquery">#</a></h2>
+<p>考察点：复杂查询的构建能力，将一个查询的结果作为另一个查询的输入。</p>
+<ol>
+<li><strong>[WHERE 子查询]</strong> 查找薪水高于公司平均薪水的员工。</li>
+<li><strong>[IN / NOT IN]</strong> 查找所有在 &lsquo;Engineering&rsquo; (工程) 部门工作的员工信息（假设你只知道部门名叫 &lsquo;Engineering&rsquo;，不知道 <code>dept_id</code>）。</li>
+<li><strong>[NOT EXISTS]</strong> 查找所有没有员工的部门。</li>
+<li><strong>[相关子查询]</strong> 查找每个部门中薪水最高的员工。
+<ul>
+<li><em>(解法 1: 相关子查询)</em> <code>SELECT * FROM Employees e1 WHERE e1.salary = (SELECT MAX(salary) FROM Employees e2 WHERE e2.dept_id = e1.dept_id)</code></li>
+<li><em>(解法 2: 窗口函数，见模块五)</em></li>
+</ul>
+</li>
+</ol>
+<h2 id="模块五窗口函数-window-functions">模块五：窗口函数 (Window Functions)<a hidden class="anchor" aria-hidden="true" href="#模块五窗口函数-window-functions">#</a></h2>
+<p>考察点：现代 SQL 的高级分析能力，常用于排名和Top-N问题。<strong>（这是拉开差距的关键）</strong></p>
+<ol>
+<li><strong>[排名]</strong> 查找每个部门中薪水最高的 3 名员工。
+<ul>
+<li><strong>[必考概念]</strong> <strong><code>ROW_NUMBER()</code>, <code>RANK()</code>, <code>DENSE_RANK()</code> 的区别是什么？</strong>
+<ul>
+<li><code>ROW_NUMBER()</code>: 1, 2, 3, 4 (不并列)</li>
+<li><code>RANK()</code>: 1, 2, 2, 4 (并列跳号)</li>
+<li><code>DENSE_RANK()</code>: 1, 2, 2, 3 (并列不跳号)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span>    <span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> (
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span>
+</span></span><span style="display:flex;"><span>emp_id,
+</span></span><span style="display:flex;"><span>name,
+</span></span><span style="display:flex;"><span>dept_id,
+</span></span><span style="display:flex;"><span>salary,
+</span></span><span style="display:flex;"><span>ROW_NUMBER() OVER (PARTITION <span style="color:#66d9ef">BY</span> dept_id <span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> salary <span style="color:#66d9ef">DESC</span>) <span style="color:#66d9ef">AS</span> rn
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> employees
+</span></span><span style="display:flex;"><span>) t
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">WHERE</span> rn <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">3</span>;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">#</span> RANK()<span style="color:#960050;background-color:#1e0010">（并列跳号）</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> (
+</span></span><span style="display:flex;"><span>         <span style="color:#66d9ef">SELECT</span>
+</span></span><span style="display:flex;"><span>             emp_id,
+</span></span><span style="display:flex;"><span>             name,
+</span></span><span style="display:flex;"><span>             dept_id,
+</span></span><span style="display:flex;"><span>             salary,
+</span></span><span style="display:flex;"><span>             RANK() OVER (PARTITION <span style="color:#66d9ef">BY</span> dept_id <span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> salary <span style="color:#66d9ef">DESC</span>) <span style="color:#66d9ef">AS</span> rk
+</span></span><span style="display:flex;"><span>         <span style="color:#66d9ef">FROM</span> employees
+</span></span><span style="display:flex;"><span>     ) t
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">WHERE</span> rk <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">3</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">#</span> DENSE_RANK()<span style="color:#960050;background-color:#1e0010">（并列不跳号）</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> (
+</span></span><span style="display:flex;"><span>         <span style="color:#66d9ef">SELECT</span>
+</span></span><span style="display:flex;"><span>             emp_id,
+</span></span><span style="display:flex;"><span>             name,
+</span></span><span style="display:flex;"><span>             dept_id,
+</span></span><span style="display:flex;"><span>             salary,
+</span></span><span style="display:flex;"><span>             DENSE_RANK() OVER (PARTITION <span style="color:#66d9ef">BY</span> dept_id <span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> salary <span style="color:#66d9ef">DESC</span>) <span style="color:#66d9ef">AS</span> drk
+</span></span><span style="display:flex;"><span>         <span style="color:#66d9ef">FROM</span> employees
+</span></span><span style="display:flex;"><span>     ) t
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">WHERE</span> drk <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">3</span>;
+</span></span></code></pre></div><ol start="2">
+<li><strong>[PARTITION BY]</strong> 如何在不使用 <code>GROUP BY</code> 的情况下，计算每个员工的薪水占其所在部门总薪水的百分比？</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span>
+</span></span><span style="display:flex;"><span>  emp_id,
+</span></span><span style="display:flex;"><span>  name,
+</span></span><span style="display:flex;"><span>  dept_id,
+</span></span><span style="display:flex;"><span>  salary,
+</span></span><span style="display:flex;"><span>  ROUND(salary <span style="color:#f92672">/</span> <span style="color:#66d9ef">SUM</span>(salary) OVER (PARTITION <span style="color:#66d9ef">BY</span> dept_id) <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span>, <span style="color:#ae81ff">2</span>) <span style="color:#66d9ef">AS</span> salary_pct
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> employees;
+</span></span></code></pre></div><ol start="3">
+<li><strong>[LEAD / LAG]</strong> (假设有 <code>Orders</code> 订单表) 如何计算每笔订单与该客户上一笔订单之间的时间差？</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span>
+</span></span><span style="display:flex;"><span>  user_id,
+</span></span><span style="display:flex;"><span>  order_id,
+</span></span><span style="display:flex;"><span>  order_time,
+</span></span><span style="display:flex;"><span>  LAG(order_time) OVER (PARTITION <span style="color:#66d9ef">BY</span> user_id <span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> order_time) <span style="color:#66d9ef">AS</span> prev_order_time,
+</span></span><span style="display:flex;"><span>  TIMESTAMPDIFF(HOUR, LAG(order_time) OVER (PARTITION <span style="color:#66d9ef">BY</span> user_id <span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> order_time), order_time) <span style="color:#66d9ef">AS</span> diff_hours
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> orders;
+</span></span></code></pre></div><h3 id="-小结现代-sql-三大高级分析功能">🧠 小结：现代 SQL 三大「高级分析」功能<a hidden class="anchor" aria-hidden="true" href="#-小结现代-sql-三大高级分析功能">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>功能</th>
+          <th>关键函数</th>
+          <th>常见考点</th>
+          <th>示例</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>排名</td>
+          <td>ROW_NUMBER, RANK, DENSE_RANK</td>
+          <td>Top-N、去重排名</td>
+          <td>“每部门前3高薪”</td>
+      </tr>
+      <tr>
+          <td>分组分析</td>
+          <td>PARTITION BY + 聚合</td>
+          <td>百分比、占比</td>
+          <td>“薪水占部门总薪比”</td>
+      </tr>
+      <tr>
+          <td>序列分析</td>
+          <td>LAG, LEAD</td>
+          <td>时间差、涨跌趋势</td>
+          <td>“每次订单间隔”</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="模块六数据操作与定义-dmlddl">模块六：数据操作与定义 (DML/DDL)<a hidden class="anchor" aria-hidden="true" href="#模块六数据操作与定义-dmlddl">#</a></h2>
+<p>考察点：是否具备修改数据和表结构的能力。</p>
+<ol>
+<li><strong>[INSERT]</strong> 如何向 <code>Employees</code> 表中添加一名新员工？</li>
+<li><strong>[UPDATE]</strong> 如何给 &lsquo;Sales&rsquo; 部门的所有员工加薪 10%？</li>
+<li><strong>[DELETE]</strong> 如何删除 <code>dept_id</code> 为 5 的所有员工？</li>
+<li><strong>[必考概念]</strong> <strong><code>DELETE</code>, <code>TRUNCATE</code>, <code>DROP</code> 有什么区别？</strong>
+<ul>
+<li><code>DELETE</code>: DML, 逐行删除, 可回滚, 触发触发器。</li>
+<li><code>TRUNCATE</code>: DDL, 删除所有行（通常是释放数据页）, 不可回滚（或回滚复杂）, 速度快。</li>
+<li><code>DROP</code>: DDL, 直接删除整个表结构和数据。</li>
+</ul>
+</li>
+<li><strong>[ALTER]</strong> 如何向 <code>Employees</code> 表添加一个 <code>hire_date</code> (DATE 类型) 的新列？</li>
+</ol>
+<h2 id="模块七事务与性能-transaction--optimization">模块七：事务与性能 (Transaction &amp; Optimization)<a hidden class="anchor" aria-hidden="true" href="#模块七事务与性能-transaction--optimization">#</a></h2>
+<p>考察点：对数据库原理和性能调优的理解。</p>
+<ol>
+<li><strong>[事务]</strong> 什么是数据库事务？</li>
+<li><strong>[ACID]</strong> 什么是 ACID？（原子性、一致性、隔离性、持久性）</li>
+<li><strong>[索引]</strong> 什么是索引？为什么要使用索引？
+<ul>
+<li><strong>[追问]</strong> 索引的优点和缺点是什么？（优点：查询快；缺点：写操作变慢、占用空间）</li>
+<li><strong>[追问]</strong> 在 <code>Employees</code> 表的 <code>salary</code> 列上创建索引是否合适？（通常不合适，因为 &ldquo;基数&rdquo; (Cardinality) 可能不高，且范围查询多。在 <code>emp_name</code> 或 <code>dept_id</code> 上可能更合适）。</li>
+<li><strong>[追问]</strong> 什么是 &ldquo;覆盖索引&rdquo; (Covering Index)？</li>
+</ul>
+</li>
+<li><strong>[EXPLAIN]</strong> 你如何分析一个慢查询？（使用 <code>EXPLAIN</code> 或 <code>EXPLAIN ANALYZE</code> 查看执行计划，检查是否使用了索引、是否进行了全表扫描等）。</li>
+</ol>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="next" href="http://localhost:1313/posts/datastructalgorithm/%E5%B8%B8%E8%A7%81%E7%AE%97%E6%B3%95%E6%A8%A1%E6%9D%BF/">
+    <span class="title">Next »</span>
+    <br>
+    <span>常见算法模板</span>
+  </a>
+</nav>
+
+  </footer><div id="utterances-comments"></div>
+<script src="https://utteranc.es/client.js"
+        repo="yangcp25/yangcp25.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">yangcp</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

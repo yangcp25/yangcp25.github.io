@@ -128,6 +128,18 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Go实现lru
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>package main import &#34;fmt&#34; // func main() { // //	//LRU //	//实现一个 LRU 缓存，要求支持以下操作： //	//- Get(key int)(int, bool)：如果缓存中存在该 key，返回其对应的值，否则返回 0,false。 //	//- Put(key, value int)：将一个 key-value 对插入缓存。如果缓存已经满了，淘汰最久未使用的元素。 //	// //	//示例： //	//func main() { //	// // 构造 一个 LRU cache //	// cache := Constructor(2) //	// cache.Put(1, 1) //	// cache.Put(2, 2) //	// //	// // 测试缓存获取 //	// fmt.Println(cache.Get(1)) // 输出: 1 true //	// fmt.Println(cache.Get(3)) // 输出: 0 false //	// //	// cache.Put(3, 3) //	// fmt.Println(cache.Get(2)) // 输出: 0 false //	// //	// cache.Put(4, 4) //	// fmt.Println(cache.Get(1)) // 输出: 0 false //	// fmt.Println(cache.Get(3)) // 输出: 3 true //	// fmt.Println(cache.Get(4)) // 输出: 4 true //	//} //	} func main() { // 构造 一个 LRU cache cache := Constructor(2) cache.Put(2, 1) cache.Put(1, 1) cache.Put(2, 3) cache.Put(4, 1) fmt.Println(cache.Get(1)) fmt.Println(cache.Get(2)) } type Node struct { next *Node pre *Node val int key int } type LRUCache struct { capacity int size int cache map[int]*Node head, tail *Node } func Constructor(capacity int) LRUCache { l := LRUCache{ capacity: capacity, cache: make(map[int]*Node, capacity), head: &amp;Node{}, tail: &amp;Node{}, } l.head.next = l.tail l.tail.pre = l.head return l } // 1 2 3 4 func (l *LRUCache) Get(key int) int { // 从map拿数据 if _, ok := l.cache[key]; !ok { return -1 } node := l.cache[key] l.MoveToHead(node) return node.val } func (l *LRUCache) Put(key int, val int) { if _, ok := l.cache[key]; ok { l.cache[key].val = val l.MoveToHead(l.cache[key]) } else { l.size&#43;&#43; node := InitNode(key, val) l.cache[key] = node l.AddToHead(node) if l.size &gt; l.capacity { node := l.RemoveTail() l.size-- delete(l.cache, node.key) } } } func InitNode(key, val int) *Node { return &amp;Node{ key: key, val: val, } } // 添加到头节点 func (l *LRUCache) AddToHead(newNode *Node) *Node { newNode.next = l.head.next newNode.pre = l.head l.head.next.pre = newNode l.head.next = newNode return newNode } func (l *LRUCache) RemoveNode(node *Node) { node.pre.next = node.next node.next.pre = node.pre } func (l *LRUCache) RemoveTail() *Node { node := l.tail.pre //l.tail.pre = node.pre l.RemoveNode(node) return node } func (l *LRUCache) MoveToHead(node *Node) { l.RemoveNode(node) l.AddToHead(node) } </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-29 09:43:18 +0800 CST'>August 29, 2025</span>&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to Go实现lru" href="http://localhost:1313/posts/datastructalgorithm/go%E5%AE%9E%E7%8E%B0lru/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Mod
     </h2>
   </header>
@@ -289,22 +301,6 @@ package main import ( &#34;fmt&#34; &#34;os&#34; &#34;syscall&#34; ) func check(
   </div>
   <footer class="entry-footer"><span title='2025-07-12 14:44:10 +0800 CST'>July 12, 2025</span>&nbsp;·&nbsp;3 min</footer>
   <a class="entry-link" aria-label="post link to Socket" href="http://localhost:1313/posts/network/socket/"></a>
-</article>
-
-<article class="post-entry"> 
-<figure class="entry-cover">
-        <img loading="lazy" src="http://localhost:1313/images/img_2.png" alt="">
-</figure>
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">BFS&amp;&amp;DFS
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>树的遍历 深度优先遍历DFS package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, } root.Left = &amp;TreeNode{Val: 2} root.Right = &amp;TreeNode{Val: 3} root.Right.Left = &amp;TreeNode{Val: 4} root.Left.Left = &amp;TreeNode{Val: 5} list := make([]int, 0) var treeDFS = func(root *TreeNode) {} treeDFS = func(root *TreeNode) { if root == nil { return } list = append(list, root.Val) treeDFS(root.Left) treeDFS(root.Right) } treeDFS(root) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 函数版本
-package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, } root.Left = &amp;TreeNode{Val: 2} root.Right = &amp;TreeNode{Val: 3} root.Right.Left = &amp;TreeNode{Val: 4} root.Left.Left = &amp;TreeNode{Val: 5} list := make([]int, 0) TreeDFS(root, &amp;list) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } func TreeDFS(root *TreeNode, list *[]int) { if root == nil { return } *list = append(*list, root.Val) TreeDFS(root.Left, list) TreeDFS(root.Right, list) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 广度优先遍历BFS list2 := make([]int, 0) queue := make([]*TreeNode, 0) queue = append(queue, root) for len(queue) &gt; 0 { count := len(queue) for i := 0; i &lt; count; i&#43;&#43; { node := queue[0] queue = queue[1:] list2 = append(list2, node.Val) if node.Left != nil { queue = append(queue, node.Left) } if node.Right != nil { queue = append(queue, node.Right) } } } fmt.Println(list2) 根据先序遍历和中序遍历构造二叉树 package main import &#34;fmt&#34; func main() { // 1 // [1 2 5 3 4] 先序 // [2 5 1 3 4] 中序 // 1 [2 5] [2 5] i = 2 [3 4] // [2 5 3 4] [2 5] // [5 3 4] [5] copyTreeRoot := BuildTree([]int{1, 2, 5, 3, 4}, []int{2, 5, 1, 3, 4}) fmt.Println(copyTreeRoot) list3 := make([]int, 0) TreeDFS(copyTreeRoot, &amp;list3) fmt.Println(&#34;list3:&#34;, list3) //SliceTest() } func BuildTree(first []int, mid []int) *TreeNode { if len(first) == 0 { return nil } root := &amp;TreeNode{Val: first[0]} node := first[0] i := 0 for ; i &lt; len(mid); i&#43;&#43; { if mid[i] == node { break } } root.Left = BuildTree(first[1:i&#43;1], mid[:i]) root.Right = BuildTree(first[i&#43;1:], mid[i&#43;1:]) return root } 图的遍历 深度优先遍历DFS &amp;&amp; 广度优先遍历BFS package main import ( &#34;container/list&#34; &#34;fmt&#34; ) func main() { // 0 // 1 -&gt; 4 -&gt; 5 // 0 2 -&gt; 6 -&gt; 7 // 3 -&gt;^ g := make([][]int, 8) //g = append(g, []int{1, 2, 3} g[0] = []int{1, 2, 3} g[1] = []int{4} g[2] = []int{6} g[3] = []int{6} g[4] = []int{5} g[6] = []int{7} g2 := make(map[int][]int) g2[0] = []int{1, 2, 3} g2[1] = []int{4} g2[2] = []int{6} g2[3] = []int{6} g2[4] = []int{5} g2[6] = []int{7} graphDFS(0, g) //graphBFS(g) fmt.Println(&#34;-----&#34;) graphBFSWithQueue(g2) fmt.Println(&#34;-----&#34;) listC := graphBFSWithC(g2) fmt.Println(listC) } func graphDFS(root int, graph [][]int) { fmt.Println(root) if graph[root] == nil { return } //fmt.Println(root) for i := 0; i &lt; len(graph[root]); i&#43;&#43; { graphDFS(graph[root][i], graph) } return } func graphBFSWithQueue(graph map[int][]int) { queue := make([]int, 0) queue = append(queue, 0) fmt.Println(0) visited := make(map[int]bool) for len(queue) &gt; 0 { node := queue[0] queue = queue[1:] g := graph[node] size := len(g) for i := 0; i &lt; size; i&#43;&#43; { if visited[g[i]] { continue } else { fmt.Println(g[i]) queue = append(queue, g[i]) visited[g[i]] = true } } } } func graphBFSWithC(graph map[int][]int) []int { queue := list.New() order := make([]int, 0) visited := make(map[int]bool) queue.PushBack(0) for queue.Len() &gt; 0 { node := queue.Remove(queue.Front()).(int) order = append(order, node) neighbor := graph[node] size := len(neighbor) for i := 0; i &lt; size; i&#43;&#43; { if visited[neighbor[i]] { continue } else { queue.PushBack(neighbor[i]) visited[neighbor[i]] = true } } } return order } 带权图的最短路径算法 dijkstra 参考 可视化网站. 可视化网站. </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-09 09:20:50 +0800 CST'>July 9, 2025</span>&nbsp;·&nbsp;3 min</footer>
-  <a class="entry-link" aria-label="post link to BFS&&DFS" href="http://localhost:1313/posts/datastructalgorithm/bfs_dfs/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

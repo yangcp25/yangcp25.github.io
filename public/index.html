@@ -128,6 +128,23 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">面试题模板
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>SQL 面试题模板（综合） 模拟数据表 在大多数面试中，面试官会假设有几个经典的数据表。我们以此为基础：
+Employees (员工表)
+emp_id (INT, Primary Key) - 员工 ID emp_name (VARCHAR) - 员工姓名 salary (DECIMAL) - 薪水 dept_id (INT, Foreign Key) - 部门 ID Departments (部门表)
+dept_id (INT, Primary Key) - 部门 ID dept_name (VARCHAR) - 部门名称 模块一：基础查询 (SELECT, WHERE, ORDER BY) 考察点：数据筛选、排序、限制的基本功。
+[筛选] 查找 Employees 表中薪水 (salary) 高于 80000 的所有员工信息。 [多条件] 查找 ‘Sales’ (销售) 部门中，薪水低于 60000 的员工。 [模糊查询] 查找所有姓 ‘王’ 的员工 (使用 LIKE &#39;王%&#39;)。 [空值处理] 查找所有尚未分配部门（dept_id 为 NULL）的员工。 [排序与限制] 查找公司薪水最高的 5 名员工的信息 (使用 ORDER BY ... DESC 和 LIMIT ...)。 模块二：聚合与分组 (GROUP BY, HAVING) 考察点：数据汇总、分组统计的能力。
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-10-19 12:21:08 +0800 CST'>October 19, 2025</span>&nbsp;·&nbsp;3 min</footer>
+  <a class="entry-link" aria-label="post link to 面试题模板" href="http://localhost:1313/posts/sql/%E9%9D%A2%E8%AF%95%E9%A2%98%E6%A8%A1%E6%9D%BF/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">常见算法模板
     </h2>
   </header>
@@ -154,14 +171,14 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">常用数据结构和模板算法
+    <h2 class="entry-hint-parent">常用数据结构
     </h2>
   </header>
   <div class="entry-content">
     <p>常用数据结构定义 1. 链表（Linked List） type ListNode struct { Val int Next *ListNode } 2. 双向链表（Doubly Linked List） type DListNode struct { Val int Prev *DListNode Next *DListNode } 3. 栈（Stack） type Stack struct { data []int } 4. 队列（Queue） type Queue struct { data []int } 5. 二叉树（Binary Tree） type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 6. N叉树（N-ary Tree） type NTreeNode struct { Val int Children []*NTreeNode } 7. 图（Graph） type GraphNode struct { Val int Neighbors []*GraphNode } 8. 哈希表（HashMap） m := make(map[string]int) 9. 堆（Heap / Priority Queue） type Item struct { Val int } type IntHeap []Item 10. 矩阵（Matrix） matrix := [][]int{ {1, 2, 3}, {4, 5, 6}, {7, 8, 9}, } 11. Trie（前缀树） type TrieNode struct { Children map[rune]*TrieNode IsEnd bool } type Trie struct { Root *TrieNode } 12. 并查集（Union-Find） type UnionFind struct { Parent []int Rank []int } 13. LRU 缓存（Least Recently Used Cache） type pair struct { key, value int } type LRUCache struct { capacity int cache map[int]*list.Element list *list.List } </p>
   </div>
   <footer class="entry-footer"><span title='2025-10-15 21:52:36 +0800 CST'>October 15, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to 常用数据结构和模板算法" href="http://localhost:1313/posts/datastructalgorithm/%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E6%A8%A1%E7%89%88/"></a>
+  <a class="entry-link" aria-label="post link to 常用数据结构" href="http://localhost:1313/posts/datastructalgorithm/%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -237,20 +254,6 @@ package main import ( &#34;fmt&#34; ) func main() { //给定一个字符串 s �
   </div>
   <footer class="entry-footer"><span title='2025-09-25 09:13:33 +0800 CST'>September 25, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to Str_滑动窗口" href="http://localhost:1313/posts/datastructalgorithm/str_%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">GMP
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>什么是GMP 概念 GMP是go的协程调度模型，go代码的程序有运行时runtime进行调度，go可以通过运行时进行内存的分配，通过channel进行协程间通信，通过go关键字创建协程。 而GMP正是协程调度的核心。
-G代表go的goroutine,协程是用户态的轻量级线程，创建销毁的成本非常小，只需要大约2kb，而线程则需要2m,所以go的协程非常适合处理IO密集型任务。 M代表系统级线程，go的协程并不真正执行代码，它需要将协程调度到和内核绑定的系统级线程上进行实际的运行。 P代表逻辑处理单元，包含了待运行的协程和一些上下文。p又可以分为本地队列和全局队列。 调度过程 go的程序通过runtime创建协程
-将协程放到本地队列p p和m绑定 m在操作系统上执行 核心调度时机 用户态态阻塞，比如channel、mutex，这个时候p会和m脱离，p会放入到待运行队列，或者重新绑定其他m 内核态阻塞，比如发生了系统调用，io操作等，m会被标记成阻塞状态，go会重新创建后者唤醒一个m，保证并发度 其他核心概念 ruetime.GOMAXPROCS() 优化手段</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-09-20 09:44:15 +0800 CST'>September 20, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to GMP" href="http://localhost:1313/posts/go/gmp/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

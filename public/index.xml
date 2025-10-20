@@ -6,8 +6,47 @@
     <description>Recent content on yangcp</description>
     <generator>Hugo -- 0.147.4</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sat, 18 Oct 2025 23:12:48 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 19 Oct 2025 12:21:08 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>面试题模板</title>
+      <link>http://localhost:1313/posts/sql/%E9%9D%A2%E8%AF%95%E9%A2%98%E6%A8%A1%E6%9D%BF/</link>
+      <pubDate>Sun, 19 Oct 2025 12:21:08 +0800</pubDate>
+      <guid>http://localhost:1313/posts/sql/%E9%9D%A2%E8%AF%95%E9%A2%98%E6%A8%A1%E6%9D%BF/</guid>
+      <description>&lt;h1 id=&#34;sql-面试题模板综合&#34;&gt;SQL 面试题模板（综合）&lt;/h1&gt;
+&lt;h2 id=&#34;模拟数据表&#34;&gt;模拟数据表&lt;/h2&gt;
+&lt;p&gt;在大多数面试中，面试官会假设有几个经典的数据表。我们以此为基础：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;code&gt;Employees&lt;/code&gt; (员工表)&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;emp_id&lt;/code&gt; (INT, Primary Key) - 员工 ID&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;emp_name&lt;/code&gt; (VARCHAR) - 员工姓名&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;salary&lt;/code&gt; (DECIMAL) - 薪水&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;dept_id&lt;/code&gt; (INT, Foreign Key) - 部门 ID&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;code&gt;Departments&lt;/code&gt; (部门表)&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;dept_id&lt;/code&gt; (INT, Primary Key) - 部门 ID&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;dept_name&lt;/code&gt; (VARCHAR) - 部门名称&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;模块一基础查询-select-where-order-by&#34;&gt;模块一：基础查询 (SELECT, WHERE, ORDER BY)&lt;/h2&gt;
+&lt;p&gt;考察点：数据筛选、排序、限制的基本功。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;[筛选]&lt;/strong&gt; 查找 &lt;code&gt;Employees&lt;/code&gt; 表中薪水 (salary) 高于 80000 的所有员工信息。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;[多条件]&lt;/strong&gt; 查找 &amp;lsquo;Sales&amp;rsquo; (销售) 部门中，薪水低于 60000 的员工。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;[模糊查询]&lt;/strong&gt; 查找所有姓 &amp;lsquo;王&amp;rsquo; 的员工 (使用 &lt;code&gt;LIKE &#39;王%&#39;&lt;/code&gt;)。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;[空值处理]&lt;/strong&gt; 查找所有尚未分配部门（&lt;code&gt;dept_id&lt;/code&gt; 为 &lt;code&gt;NULL&lt;/code&gt;）的员工。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;[排序与限制]&lt;/strong&gt; 查找公司薪水最高的 5 名员工的信息 (使用 &lt;code&gt;ORDER BY ... DESC&lt;/code&gt; 和 &lt;code&gt;LIMIT ...&lt;/code&gt;)。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;模块二聚合与分组-group-by-having&#34;&gt;模块二：聚合与分组 (GROUP BY, HAVING)&lt;/h2&gt;
+&lt;p&gt;考察点：数据汇总、分组统计的能力。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>常见算法模板</title>
       <link>http://localhost:1313/posts/datastructalgorithm/%E5%B8%B8%E8%A7%81%E7%AE%97%E6%B3%95%E6%A8%A1%E6%9D%BF/</link>
@@ -59,10 +98,10 @@
       <description></description>
     </item>
     <item>
-      <title>常用数据结构和模板算法</title>
-      <link>http://localhost:1313/posts/datastructalgorithm/%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E6%A8%A1%E7%89%88/</link>
+      <title>常用数据结构</title>
+      <link>http://localhost:1313/posts/datastructalgorithm/%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</link>
       <pubDate>Wed, 15 Oct 2025 21:52:36 +0800</pubDate>
-      <guid>http://localhost:1313/posts/datastructalgorithm/%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E6%A8%A1%E7%89%88/</guid>
+      <guid>http://localhost:1313/posts/datastructalgorithm/%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</guid>
       <description>&lt;h1 id=&#34;常用数据结构定义&#34;&gt;常用数据结构定义&lt;/h1&gt;
 &lt;h2 id=&#34;1-链表linked-list&#34;&gt;1. 链表（Linked List）&lt;/h2&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ListNode&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {

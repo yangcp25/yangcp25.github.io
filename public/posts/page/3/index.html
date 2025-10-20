@@ -131,6 +131,18 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Go实现lru
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>package main import &#34;fmt&#34; // func main() { // //	//LRU //	//实现一个 LRU 缓存，要求支持以下操作： //	//- Get(key int)(int, bool)：如果缓存中存在该 key，返回其对应的值，否则返回 0,false。 //	//- Put(key, value int)：将一个 key-value 对插入缓存。如果缓存已经满了，淘汰最久未使用的元素。 //	// //	//示例： //	//func main() { //	// // 构造 一个 LRU cache //	// cache := Constructor(2) //	// cache.Put(1, 1) //	// cache.Put(2, 2) //	// //	// // 测试缓存获取 //	// fmt.Println(cache.Get(1)) // 输出: 1 true //	// fmt.Println(cache.Get(3)) // 输出: 0 false //	// //	// cache.Put(3, 3) //	// fmt.Println(cache.Get(2)) // 输出: 0 false //	// //	// cache.Put(4, 4) //	// fmt.Println(cache.Get(1)) // 输出: 0 false //	// fmt.Println(cache.Get(3)) // 输出: 3 true //	// fmt.Println(cache.Get(4)) // 输出: 4 true //	//} //	} func main() { // 构造 一个 LRU cache cache := Constructor(2) cache.Put(2, 1) cache.Put(1, 1) cache.Put(2, 3) cache.Put(4, 1) fmt.Println(cache.Get(1)) fmt.Println(cache.Get(2)) } type Node struct { next *Node pre *Node val int key int } type LRUCache struct { capacity int size int cache map[int]*Node head, tail *Node } func Constructor(capacity int) LRUCache { l := LRUCache{ capacity: capacity, cache: make(map[int]*Node, capacity), head: &amp;Node{}, tail: &amp;Node{}, } l.head.next = l.tail l.tail.pre = l.head return l } // 1 2 3 4 func (l *LRUCache) Get(key int) int { // 从map拿数据 if _, ok := l.cache[key]; !ok { return -1 } node := l.cache[key] l.MoveToHead(node) return node.val } func (l *LRUCache) Put(key int, val int) { if _, ok := l.cache[key]; ok { l.cache[key].val = val l.MoveToHead(l.cache[key]) } else { l.size&#43;&#43; node := InitNode(key, val) l.cache[key] = node l.AddToHead(node) if l.size &gt; l.capacity { node := l.RemoveTail() l.size-- delete(l.cache, node.key) } } } func InitNode(key, val int) *Node { return &amp;Node{ key: key, val: val, } } // 添加到头节点 func (l *LRUCache) AddToHead(newNode *Node) *Node { newNode.next = l.head.next newNode.pre = l.head l.head.next.pre = newNode l.head.next = newNode return newNode } func (l *LRUCache) RemoveNode(node *Node) { node.pre.next = node.next node.next.pre = node.pre } func (l *LRUCache) RemoveTail() *Node { node := l.tail.pre //l.tail.pre = node.pre l.RemoveNode(node) return node } func (l *LRUCache) MoveToHead(node *Node) { l.RemoveNode(node) l.AddToHead(node) } </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-29 09:43:18 +0800 CST'>August 29, 2025</span>&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to Go实现lru" href="http://localhost:1313/posts/datastructalgorithm/go%E5%AE%9E%E7%8E%B0lru/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Mod
     </h2>
   </header>
@@ -294,22 +306,12 @@ type A interface { method() } 可能你会有一个疑问，那go是怎么确定
   <footer class="entry-footer"><span title='2025-07-06 12:44:43 +0800 CST'>July 6, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to golang的interface和reflect" href="http://localhost:1313/posts/go/interfacereflect/"></a>
 </article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Network 系列
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p></p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-12 00:00:00 +0000 UTC'>July 12, 2025</span>&nbsp;·&nbsp;0 min</footer>
-  <a class="entry-link" aria-label="post link to Network 系列" href="http://localhost:1313/posts/network/"></a>
-</article>
 <footer class="page-footer">
   <nav class="pagination">
     <a class="prev" href="http://localhost:1313/posts/page/2/">
       «&nbsp;Prev&nbsp;
+    </a>
+    <a class="next" href="http://localhost:1313/posts/page/4/">Next&nbsp;&nbsp;»
     </a>
   </nav>
 </footer>
