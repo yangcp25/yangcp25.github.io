@@ -6,8 +6,253 @@
     <description>Recent content on yangcp</description>
     <generator>Hugo -- 0.147.4</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sun, 19 Oct 2025 12:21:08 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 22 Oct 2025 09:59:13 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Init</title>
+      <link>http://localhost:1313/posts/go/init/</link>
+      <pubDate>Wed, 22 Oct 2025 09:59:13 +0800</pubDate>
+      <guid>http://localhost:1313/posts/go/init/</guid>
+      <description>&lt;h2 id=&#34;-一init-是什么&#34;&gt;✅ 一、&lt;code&gt;init()&lt;/code&gt; 是什么&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;init()&lt;/code&gt; 是 Go 的特殊函数，用于在包被加载时自动执行初始化逻辑。
+它不需要显式调用，也不能被其他代码调用。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;-二init-的基本特性&#34;&gt;✅ 二、&lt;code&gt;init()&lt;/code&gt; 的基本特性&lt;/h2&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;特性&lt;/th&gt;
+          &lt;th&gt;说明&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;触发时机&lt;/td&gt;
+          &lt;td&gt;在包被第一次导入时自动执行（只执行一次）&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;调用方式&lt;/td&gt;
+          &lt;td&gt;Go runtime 自动调用，不能手动调用&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;参数&lt;/td&gt;
+          &lt;td&gt;无参数&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;返回值&lt;/td&gt;
+          &lt;td&gt;无返回值&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;作用范围&lt;/td&gt;
+          &lt;td&gt;每个包可以定义多个 &lt;code&gt;init()&lt;/code&gt; 函数&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;执行顺序&lt;/td&gt;
+          &lt;td&gt;按照导入依赖关系和源码出现顺序执行&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;-三最基本的例子&#34;&gt;✅ 三、最基本的例子&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;package&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;fmt&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;init&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;init() called&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;main() called&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;输出：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;init() called
+main() called
+&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
+&lt;p&gt;✅ &lt;code&gt;init()&lt;/code&gt; 总是在 &lt;code&gt;main()&lt;/code&gt; 之前执行。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;-四包初始化顺序重点&#34;&gt;✅ 四、包初始化顺序（重点）&lt;/h2&gt;
+&lt;p&gt;Go 程序启动时会按如下顺序执行：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;导入依赖包&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;初始化依赖包的常量和变量&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;执行依赖包的 &lt;code&gt;init()&lt;/code&gt; 函数&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;执行当前包的常量、变量初始化&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;执行当前包的 &lt;code&gt;init()&lt;/code&gt; 函数&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;执行 &lt;code&gt;main.main()&lt;/code&gt;&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;示例&#34;&gt;示例：&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// file: a.go&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;package&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;a&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;fmt&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;V&lt;/span&gt; = &lt;span style=&#34;color:#a6e22e&#34;&gt;initVar&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;initVar&lt;/span&gt;() &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;a.initVar()&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;42&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;init&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;a.init()&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// file: main.go&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;package&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; (
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;fmt&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;example/a&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;init&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;main.init()&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;main.main()&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;a&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;V&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;输出：&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Defer</title>
+      <link>http://localhost:1313/posts/go/defer/</link>
+      <pubDate>Wed, 22 Oct 2025 09:58:12 +0800</pubDate>
+      <guid>http://localhost:1313/posts/go/defer/</guid>
+      <description>&lt;h2 id=&#34;-一defer-的基本作用&#34;&gt;✅ 一、&lt;code&gt;defer&lt;/code&gt; 的基本作用&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;defer&lt;/code&gt; 用来&lt;strong&gt;延迟执行&lt;/strong&gt;一段函数调用，直到&lt;strong&gt;当前函数返回&lt;/strong&gt;时才执行（无论是正常返回还是遇到 panic）。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h3 id=&#34;示例&#34;&gt;示例：&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;A&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;defer&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;B&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;C&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;输出：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;A
+C
+B
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;👉 &lt;code&gt;defer&lt;/code&gt; 的调用会在函数退出时执行。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;-二多个-defer-的执行顺序后进先出-lifo&#34;&gt;✅ 二、多个 &lt;code&gt;defer&lt;/code&gt; 的执行顺序：&lt;strong&gt;后进先出 (LIFO)&lt;/strong&gt;&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;defer&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;1&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;defer&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;2&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;defer&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;3&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;输出：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;3
+2
+1
+&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
+&lt;p&gt;就像栈一样，最后注册的 &lt;code&gt;defer&lt;/code&gt; 最先执行。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;-三参数求值时机defer-定义时就求值&#34;&gt;✅ 三、参数求值时机：&lt;strong&gt;defer 定义时就求值&lt;/strong&gt;&lt;/h2&gt;
+&lt;p&gt;这是一个非常重要的细节！&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;defer&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;defer:&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt; = &lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;x =&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;输出：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;x = 20
+defer: 10
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;🔹 原因：
+&lt;code&gt;defer&lt;/code&gt; 的参数会在&lt;strong&gt;注册 defer 时&lt;/strong&gt;立刻求值，而不是在执行时求值。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;-四闭包-defer引用外部变量时会实时读取&#34;&gt;✅ 四、闭包 defer：引用外部变量时会实时读取&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;defer&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;defer:&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt; = &lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;x =&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;输出：&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>算法题解题思路</title>
+      <link>http://localhost:1313/posts/datastructalgorithm/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF/</link>
+      <pubDate>Tue, 21 Oct 2025 09:48:33 +0800</pubDate>
+      <guid>http://localhost:1313/posts/datastructalgorithm/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF/</guid>
+      <description>&lt;h2 id=&#34;一常见题型与核心解法对应表&#34;&gt;一、常见题型与核心解法对应表&lt;/h2&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;题型类别&lt;/th&gt;
+          &lt;th&gt;常用解法&lt;/th&gt;
+          &lt;th&gt;关键思维&lt;/th&gt;
+          &lt;th&gt;常见题例&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;数组 / 序列类&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;双指针、滑动窗口、前缀和、单调栈&lt;/td&gt;
+          &lt;td&gt;定长窗口 / 不定长窗口&lt;/td&gt;
+          &lt;td&gt;三数之和、最大子序和、每日温度、接雨水&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;排序 / 查找类&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;快排、归并、二分查找&lt;/td&gt;
+          &lt;td&gt;有序性 + 区间分治&lt;/td&gt;
+          &lt;td&gt;搜索插入位置、旋转数组最小值&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;动态规划（DP）类&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;状态转移 + 子问题划分&lt;/td&gt;
+          &lt;td&gt;“前 i 个…”、“以 i 结尾…”&lt;/td&gt;
+          &lt;td&gt;打家劫舍、最大子序和、单词拆分、爬楼梯&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;字符串类&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;DP、双指针、哈希&lt;/td&gt;
+          &lt;td&gt;子串、回文、匹配&lt;/td&gt;
+          &lt;td&gt;最长回文子串、无重复子串长度&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;哈希 / 集合类&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;map + 滑动窗口&lt;/td&gt;
+          &lt;td&gt;存在性判断&lt;/td&gt;
+          &lt;td&gt;两数之和、最长不重复子串&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;栈 / 队列类&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;单调栈、辅助栈、队列优化&lt;/td&gt;
+          &lt;td&gt;“下一个更大元素”&lt;/td&gt;
+          &lt;td&gt;有效括号、每日温度、接雨水&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;树 / 图类&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;DFS / BFS、递归 / 队列&lt;/td&gt;
+          &lt;td&gt;遍历 + 状态传递&lt;/td&gt;
+          &lt;td&gt;二叉树最大深度、岛屿数量、最短路径&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;贪心类&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;局部最优 → 全局最优&lt;/td&gt;
+          &lt;td&gt;排序 + 选择&lt;/td&gt;
+          &lt;td&gt;区间合并、跳跃游戏、分发糖果&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;数学类&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;模拟、整除、快速幂&lt;/td&gt;
+          &lt;td&gt;数学规律化简&lt;/td&gt;
+          &lt;td&gt;整数反转、Pow(x,n)、罗马数字转整数&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;二陌生题分析框架核心应对模板&#34;&gt;二、陌生题分析框架（核心应对模板）&lt;/h2&gt;
+&lt;h3 id=&#34;-step-1先搞清问题类型&#34;&gt;🧩 Step 1：先搞清问题类型&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;是否要求最值？&lt;/strong&gt;&lt;/p&gt;</description>
+    </item>
     <item>
       <title>面试题模板</title>
       <link>http://localhost:1313/posts/sql/%E9%9D%A2%E8%AF%95%E9%A2%98%E6%A8%A1%E6%9D%BF/</link>
@@ -208,14 +453,14 @@
           &lt;td&gt;10/17&lt;/td&gt;
           &lt;td&gt;11. 盛最多水的容器&lt;/td&gt;
           &lt;td&gt;双指针&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
           &lt;td&gt;股票最大利润&lt;/td&gt;
           &lt;td&gt;计时 25 分钟&lt;/td&gt;
       &lt;/tr&gt;
       &lt;tr&gt;
           &lt;td&gt;10/18&lt;/td&gt;
           &lt;td&gt;3. 无重复字符的最长子串&lt;/td&gt;
-          &lt;td&gt;滑动窗口&lt;/td&gt;
+          &lt;td&gt;滑动窗口   ✅&lt;/td&gt;
           &lt;td&gt;&lt;/td&gt;
           &lt;td&gt;最长允许1重复字符&lt;/td&gt;
           &lt;td&gt;模拟面试说思路&lt;/td&gt;
@@ -224,7 +469,7 @@
           &lt;td&gt;10/19&lt;/td&gt;
           &lt;td&gt;1. 两数之和&lt;/td&gt;
           &lt;td&gt;哈希&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
           &lt;td&gt;三数之和、路径求和&lt;/td&gt;
           &lt;td&gt;强化迁移能力&lt;/td&gt;
       &lt;/tr&gt;
@@ -232,7 +477,7 @@
           &lt;td&gt;10/20&lt;/td&gt;
           &lt;td&gt;20. 有效括号&lt;/td&gt;
           &lt;td&gt;栈&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
           &lt;td&gt;HTML标签验证&lt;/td&gt;
           &lt;td&gt;二刷完成&lt;/td&gt;
       &lt;/tr&gt;
@@ -240,7 +485,7 @@
           &lt;td&gt;10/21&lt;/td&gt;
           &lt;td&gt;739. 每日温度&lt;/td&gt;
           &lt;td&gt;单调栈&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
           &lt;td&gt;下一个更小元素&lt;/td&gt;
           &lt;td&gt;二刷 + 迁移&lt;/td&gt;
       &lt;/tr&gt;
@@ -248,7 +493,7 @@
           &lt;td&gt;10/22&lt;/td&gt;
           &lt;td&gt;206. 反转链表&lt;/td&gt;
           &lt;td&gt;链表&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
           &lt;td&gt;k组反转、回文链表&lt;/td&gt;
           &lt;td&gt;模板笔记&lt;/td&gt;
       &lt;/tr&gt;
@@ -256,7 +501,7 @@
           &lt;td&gt;10/23&lt;/td&gt;
           &lt;td&gt;141. 环形链表&lt;/td&gt;
           &lt;td&gt;链表&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
           &lt;td&gt;相交链表检测&lt;/td&gt;
           &lt;td&gt;二刷完成&lt;/td&gt;
       &lt;/tr&gt;
@@ -264,7 +509,7 @@
           &lt;td&gt;10/24&lt;/td&gt;
           &lt;td&gt;53. 最大子序和&lt;/td&gt;
           &lt;td&gt;动态规划&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
           &lt;td&gt;股票最大利润&lt;/td&gt;
           &lt;td&gt;计时练习&lt;/td&gt;
       &lt;/tr&gt;
@@ -272,7 +517,7 @@
           &lt;td&gt;10/25&lt;/td&gt;
           &lt;td&gt;198. 打家劫舍&lt;/td&gt;
           &lt;td&gt;动态规划&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
           &lt;td&gt;环形打家劫舍&lt;/td&gt;
           &lt;td&gt;二刷完成&lt;/td&gt;
       &lt;/tr&gt;
@@ -280,7 +525,7 @@
           &lt;td&gt;10/26&lt;/td&gt;
           &lt;td&gt;139. 单词拆分&lt;/td&gt;
           &lt;td&gt;动态规划&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
           &lt;td&gt;所有拆分方式&lt;/td&gt;
           &lt;td&gt;写迁移笔记&lt;/td&gt;
       &lt;/tr&gt;
@@ -1443,6 +1688,137 @@ go的程序通过runtime创建协程&lt;/p&gt;
 &lt;li&gt;&lt;code&gt;go mod vendor&lt;/code&gt; 将下载的依赖缓存到 ./vendor,用于离线构建&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;go mod edit &lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;</description>
+    </item>
+    <item>
+      <title>ddd领域驱动设计</title>
+      <link>http://localhost:1313/posts/design_pattern/ddd/</link>
+      <pubDate>Fri, 08 Aug 2025 09:50:22 +0800</pubDate>
+      <guid>http://localhost:1313/posts/design_pattern/ddd/</guid>
+      <description>&lt;h3 id=&#34;什么是ddd&#34;&gt;什么是DDD?&lt;/h3&gt;
+&lt;p&gt;DDD是domain design driver 的简称，根本的目的是为了解决软件的复杂性的一种设计思想。传统的MVC等代码、软件架构是面向程序员工程师的，而
+产品经理更多只是需求产品设计，这导致软件架构和实际的业务脱离，当业务变得复杂，软件复杂性提高之后，后续的维护升级重构会遭遇重重困难。&lt;/p&gt;
+&lt;h3 id=&#34;关键概念&#34;&gt;关键概念&lt;/h3&gt;
+&lt;h4 id=&#34;充血模型and贫血模型&#34;&gt;充血模型and贫血模型&lt;/h4&gt;
+&lt;p&gt;贫血模型是为了引出充血模型这一概念。贫血模型是指我们通常的数据库映射只有属性，而没有表现出具体的业务属性，也就是没有
+引起映射数据变化的方法，就看不出来这个映射具体的业务，DDD的建议是把能引发变化的方法都写到这个变化内，这样别人一看就知道这个
+实体具体包含了哪些业务属性。&lt;/p&gt;
+&lt;h4 id=&#34;聚合根&#34;&gt;聚合根&lt;/h4&gt;
+&lt;h4 id=&#34;防腐层&#34;&gt;防腐层&lt;/h4&gt;
+&lt;h3 id=&#34;我的理解&#34;&gt;我的理解&lt;/h3&gt;
+&lt;p&gt;整个DDD架构里面遵循了设计原则的最佳实践，比如高内聚低耦合这个大的思想，以及一些设计原则&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;单一职责,一个方法、类、模块只干一件事情&lt;/li&gt;
+&lt;li&gt;开放封闭，对扩展开放，对修改封闭&lt;/li&gt;
+&lt;li&gt;依赖倒置，依赖于接口而不是具体实现。&lt;/li&gt;
+&lt;li&gt;接口隔离，接口小而精，不是胖而杂&lt;/li&gt;
+&lt;li&gt;里氏替换，对继承的补充，一个子类要能够完全替换父类，也就是要遵循父类的约定，这样少破坏原有的约定。&lt;/li&gt;
+&lt;li&gt;迪米洛法则（最少知识原则），不要跨多个对象调用方法，不需要知道跨对象的内部细节，只调用最新的朋友节点&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;战术构件和战略构件&#34;&gt;战术构件和战略构件&lt;/h3&gt;
+&lt;p&gt;DDD是一套架构思想方法论，它为代码层面和架构层面都提供了对应的构件帮我我们设计构架。&lt;/p&gt;
+&lt;h4 id=&#34;战术构件代码层面&#34;&gt;战术构件（代码层面）&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;实体&lt;/li&gt;
+&lt;li&gt;值对象&lt;/li&gt;
+&lt;li&gt;根/聚合根&lt;/li&gt;
+&lt;li&gt;repository&lt;/li&gt;
+&lt;li&gt;domain&lt;/li&gt;
+&lt;li&gt;工厂&lt;/li&gt;
+&lt;li&gt;事件&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;战略构件架构层面&#34;&gt;战略构件（架构层面）&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;界限上下文（模块）&lt;/li&gt;
+&lt;li&gt;通用语言（业务和技术用同一种专业术语沟通，防止鸡同鸭讲）&lt;/li&gt;
+&lt;li&gt;上下文映射（模块之间如何关联）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;实际架构示例&#34;&gt;实际架构示例&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;            ┌──────────────────────────────────────────────┐
+            │                战略构件 (Strategic)           │
+            │----------------------------------------------│
+            │  限界上下文 (Bounded Contexts)                │
+            │    ├── 用户上下文 (User Context)              │
+            │    ├── 订单上下文 (Order Context)             │
+            │    ├── 商品上下文 (Product Context)           │
+            │    └── 支付上下文 (Payment Context)           │
+            │                                              │
+            │  上下文映射 (Context Map)                     │
+            │    ├── 上下游 (Upstream/Downstream)           │
+            │    ├── 防腐层 (ACL)                          │
+            │    ├── 合作伙伴 (Partnership)                 │
+            │    └── 开放主机服务 (OHS)                    │
+            │                                              │
+            │  通用语言 (Ubiquitous Language)               │
+            │    └── &amp;quot;订单&amp;quot;、&amp;quot;支付单&amp;quot;、&amp;quot;退款单&amp;quot;             │
+            └──────────────────────────────────────────────┘
+
+                                │
+                                ▼
+
+            ┌──────────────────────────────────────────────┐
+            │                战术构件 (Tactical)            │
+            │----------------------------------------------│
+            │  接口层 (Interface Layer)                    │
+            │    └── Kratos Handler (HTTP/gRPC 接口)       │
+            │                                              │
+            │  应用层 (Application Layer)                  │
+            │    └── 应用服务 (Application Service)        │
+            │         → OrderUsecase                      │
+            │                                              │
+            │  领域层 (Domain Layer)                       │
+            │    ├── 实体 (Entity) &amp;amp; 聚合根 (AggregateRoot) │
+            │    │      → Order, OrderItem                 │
+            │    ├── 值对象 (Value Object)                 │
+            │    │      → Money, Address                   │
+            │    ├── 领域服务 (Domain Service)             │
+            │    │      → PaymentService                   │
+            │    ├── 工厂 (Factory)                        │
+            │    │      → NewOrder                         │
+            │    ├── 领域事件 (Domain Event)               │
+            │    │      → OrderPaidEvent                   │
+            │    └── 仓储接口 (Repository Interface)        │
+            │                                              │
+            │  基础设施层 (Infrastructure Layer)            │
+            │    └── 仓储实现 (Repository Impl, GORM)      │
+            │         → orderRepo (MySQL)                  │
+            └──────────────────────────────────────────────┘
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;kratos-和ddd--架构对照&#34;&gt;kratos 和DDD  架构对照&lt;/h3&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;Kratos 层级&lt;/th&gt;
+          &lt;th&gt;DDD 层级&lt;/th&gt;
+          &lt;th&gt;作用&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;service/&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;Interface / Adapter&lt;/td&gt;
+          &lt;td&gt;gRPC/HTTP Handler，参数验证/响应封装，调用 UseCase&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;biz/&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;Domain + Application&lt;/td&gt;
+          &lt;td&gt;业务逻辑和领域规则处理，UseCase（业务服务），纯业务计算&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;data/&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;Infrastructure&lt;/td&gt;
+          &lt;td&gt;数据库、缓存、第三方 SDK 封装，实现 Repository 接口，提供外部依赖能力&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;pkg/&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;Infrastructure（共享组件）&lt;/td&gt;
+          &lt;td&gt;可复用 SDK 封装、工具函数、通用库，跨服务共享&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;参考资料&#34;&gt;参考资料&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;美团&lt;/strong&gt; &lt;a href=&#34;https://tech.meituan.com/2017/12/22/ddd-in-practice.html&#34;&gt;领域驱动设计在互联网业务开发中的实践&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
     </item>
     <item>
       <title>初始化方法比较</title>

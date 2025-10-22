@@ -131,6 +131,42 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Str_百度真题原地置换大小写
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>代码实现 package test3 import ( &#34;fmt&#34; &#34;unicode&#34; ) func main() { //输入一个字符串，里面有大写字母、小写字母、数字， //处理结束后，大写字母在前，然后是小写字母，最后是数字， //要求：在原有字符串上做交换实现，不要建新的数据结构。 //mN1oO2pP3 //Nm1oO2pP3 str := []rune(&#34;mN1oO2pP3&#34;) // AbcafafaaFAs exchangePos(str) fmt.Println(string(str)) } func exchangePos(str []rune) { // i 找非大写字母 j 找大写字母 如果 i ！= j 交换 length := len(str) i, j := 0, 0 for i &lt; length &amp;&amp; j &lt; length { if isUper(str[j]) { //&amp;&amp; !isUper(rune(str[i])) if i != j { str[i], str[j] = str[j], str[i] i&#43;&#43; } } if isUper(str[i]) { i&#43;&#43; } j&#43;&#43; } // i 从上一次结束为止开始，找 数字， j 找小写字母 如果 i ！= j 交换 j = i //fmt.Println(string(str), i, j) for i &lt; length &amp;&amp; j &lt; length { if isLower(str[j]) { //&amp;&amp; !isUper(rune(str[i])) if i != j { str[i], str[j] = str[j], str[i] i&#43;&#43; } } if isLower(str[i]) { i&#43;&#43; } j&#43;&#43; } return } func isUper(s rune) bool { return unicode.IsUpper(s) } func isLower(s rune) bool { return unicode.IsLower(s) } 测试用例 package test3 import ( &#34;testing&#34; ) func TestExchangePos(t *testing.T) { cases := []struct { input string expected string }{ // 基础情况 {&#34;&#34;, &#34;&#34;}, {&#34;A&#34;, &#34;A&#34;}, {&#34;a&#34;, &#34;a&#34;}, {&#34;1&#34;, &#34;1&#34;}, // 已经有序 {&#34;ABCabc123&#34;, &#34;ABCabc123&#34;}, // 完全逆序 {&#34;123cbaCBA&#34;, &#34;CBAcba123&#34;}, // 混合 {&#34;aA1&#34;, &#34;Aa1&#34;}, {&#34;1aA&#34;, &#34;Aa1&#34;}, {&#34;Aa1Bb2Cc3&#34;, &#34;ABCabc123&#34;}, // 两类字符 {&#34;abc123&#34;, &#34;abc123&#34;}, {&#34;ABC123&#34;, &#34;ABC123&#34;}, {&#34;ABCabc&#34;, &#34;ABCabc&#34;}, // 全部同类 {&#34;ABCDEF&#34;, &#34;ABCDEF&#34;}, {&#34;abcdef&#34;, &#34;abcdef&#34;}, {&#34;123456&#34;, &#34;123456&#34;}, // 随机混乱 {&#34;Zy9Xx8Ww7&#34;, &#34;ZXWyxw987&#34;}, {&#34;mN1oO2pP3&#34;, &#34;NOPomp213&#34;}, // 边界 {&#34;A1a&#34;, &#34;Aa1&#34;}, {&#34;1A1aA1&#34;, &#34;AAa111&#34;}, {&#34;zZ9zZ9&#34;, &#34;ZZzz99&#34;}, // 重复模式 / 长度较大 {&#34;Aa1Aa1Aa1Aa1&#34;, &#34;AAAAaaaa1111&#34;}, {&#34;987ZYXcba654&#34;, &#34;ZYXcba987654&#34;}, } for _, c := range cases { runes := []rune(c.input) exchangePos(runes) got := string(runes) if got != c.expected { t.Errorf(&#34;exchangePos(%q) = %q; expected %q&#34;, c.input, got, c.expected) } } } </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-09-06 12:47:17 +0800 CST'>September 6, 2025</span>&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to Str_百度真题原地置换大小写" href="http://localhost:1313/posts/datastructalgorithm/str_%E7%99%BE%E5%BA%A6%E7%9C%9F%E9%A2%98%E5%8E%9F%E5%9C%B0%E7%BD%AE%E6%8D%A2%E5%A4%A7%E5%B0%8F%E5%86%99/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Matrix_多源扩散
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>package main import ( &#34;bufio&#34; &#34;fmt&#34; &#34;os&#34; &#34;strconv&#34; &#34;strings&#34; ) // 题目描述 // // 存在一个mxn的二维数组，其成员取值范围为0或1，其中值为1的成员具备扩散性，每经过1S，将上下左右值为0的成员同化为1，二维数组的成员初始值都为0，将第[i,j]和[k,l]两个个位置上元素修改成1后，求矩阵的所有，元素变为1需要多长时间 // // 输入描述 // // 输入数据中的前2个数字表示这是一个mxn的矩阵，m和n不会超过1024大小; // // 中间两个数字表示一个初始扩散点位置为I,j // // 最后2个数字表示另一个扩散点位置为k,l // // 输出描述 // // 输出矩阵的所有元素变为1所需要秒数 // // 用例 func main() { input := bufio.NewScanner(os.Stdin) input.Scan() str := input.Text() strArr := strings.Split(str, &#34;,&#34;) m, n := Atoi(strArr[0]), Atoi(strArr[1]) pos1, pos2, pos3, pos4 := Atoi(strArr[2]), Atoi(strArr[3]), Atoi(strArr[4]), Atoi(strArr[5]) time := getMatrixBroadcastTime(m, n, pos1, pos2, pos3, pos4) fmt.Println(time) } func getMatrixBroadcastTime(m, n, pos1, pos2, pos3, pos4 int) (res int) { path := make([]string, 0) path = append(path, getPos(pos1, pos2)) path = append(path, getPos(pos3, pos4)) check := make(map[string]bool) check[getPos(pos1, pos2)] = true check[getPos(pos3, pos4)] = true count := 2 for len(path) &gt; 0 { length := len(path) for i := 0; i &lt; length; i&#43;&#43; { pos := strings.Split(path[i], &#34;_&#34;) x, y := Atoi(pos[0]), Atoi(pos[1]) // 上 if x-1 &gt;= 0 &amp;&amp; check[getPos(x-1, y)] != true { path = append(path, getPos(x-1, y)) check[getPos(x-1, y)] = true count&#43;&#43; } // 下 if x&#43;1 &lt; m &amp;&amp; check[getPos(x&#43;1, y)] != true { path = append(path, getPos(x&#43;1, y)) check[getPos(x&#43;1, y)] = true count&#43;&#43; } // 左 if y-1 &gt;= 0 &amp;&amp; check[getPos(x, y-1)] != true { path = append(path, getPos(x, y-1)) check[getPos(x, y-1)] = true count&#43;&#43; } // 右 if y&#43;1 &lt; n &amp;&amp; check[getPos(x, y&#43;1)] != true { path = append(path, getPos(x, y&#43;1)) check[getPos(x, y&#43;1)] = true count&#43;&#43; } } res&#43;&#43; if count &gt;= m*n { return } } return } func getPos(x, y int) string { return fmt.Sprintf(&#34;%d_%d&#34;, x, y) } func Atoi(str string) int { res, _ := strconv.Atoi(str) return res } </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-09-05 09:23:51 +0800 CST'>September 5, 2025</span>&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to Matrix_多源扩散" href="http://localhost:1313/posts/datastructalgorithm/matrix_%E5%A4%9A%E6%BA%90%E6%89%A9%E6%95%A3/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Str_判断字符顺序和存在
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>package test1 import &#34;sort&#34; //题目 // 题目描述输入两个字符串S和L，都只包含英文小写字母。S长度&lt;=100，L长度&lt;=500,000。 //判定S是否是L的有效子串。判定规则：S中的每个字符在L中都能找到（可以不连续），且S在Ｌ中字符的前后顺序与S中顺序要保持一致。 //（例如，S=”ace”是L=”abcde”的一个子序列且有效字符是a、c、e，而”aec”不是有效子序列，且有效字符只有a、e） //输入输出 //输入输入两个字符串S和L，都只包含英文小写字母。S长度&lt;=100，L长度&lt;=500,000。 //先输入S，再输入L，每个字符串占一行。输出S串最后一个有效字符在L中的位置。 //（首位从0开始计算，无有效字符返回-1） func SubStrLasPos(str string, sub string) int { // aabcdabc 8 // abc findKey := -1 // 循环找到所有的字符在str中的位置 预处理 strPos := make(map[byte][]int) for i := 0; i &lt; len(str); i&#43;&#43; { strPos[str[i]] = append(strPos[str[i]], i) } // limit 限制每个字符的位置 当前值比后一个值的最大位置要小才行 limit := len(str) for i := len(sub) - 1; i &gt;= 0; i-- { if _, ok := strPos[sub[i]]; !ok { return -1 } else { subArr := strPos[sub[i]] //sort.SearchInts() // 如果满足子数组的位置比Limit 小 就ok key := sort.SearchInts(subArr, limit) if key == 0 { return -1 } limit = subArr[key-1] if i == len(sub)-1 { findKey = limit } } // 排序拿到最大的值 //sort.Slice(strPos[sub[i]], func(i, j int) bool { //	return strPos[sub[i]][i] &lt; strPos[sub[i]][j] //}) } return findKey } func search(arr []int, limit int) int { low, high := 0, len(arr)-1 for low &lt;= high { mid := low &#43; (high-low)/2 if arr[mid] == limit { return mid } else if arr[mid] &gt; limit { high = mid - 1 } else { low = mid &#43; 1 } } return -1 } </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-09-05 09:22:10 +0800 CST'>September 5, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Str_判断字符顺序和存在" href="http://localhost:1313/posts/datastructalgorithm/str_%E5%88%A4%E6%96%AD%E5%AD%97%E7%AC%A6%E9%A1%BA%E5%BA%8F%E5%92%8C%E5%AD%98%E5%9C%A8/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Go实现lru
     </h2>
   </header>
@@ -156,6 +192,22 @@ go 的加载机制 go 会把go mod所在的目录当成工作目录，先加载�
   </div>
   <footer class="entry-footer"><span title='2025-08-27 09:47:18 +0800 CST'>August 27, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to Mod" href="http://localhost:1313/posts/go/mod/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">ddd领域驱动设计
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>什么是DDD? DDD是domain design driver 的简称，根本的目的是为了解决软件的复杂性的一种设计思想。传统的MVC等代码、软件架构是面向程序员工程师的，而 产品经理更多只是需求产品设计，这导致软件架构和实际的业务脱离，当业务变得复杂，软件复杂性提高之后，后续的维护升级重构会遭遇重重困难。
+关键概念 充血模型and贫血模型 贫血模型是为了引出充血模型这一概念。贫血模型是指我们通常的数据库映射只有属性，而没有表现出具体的业务属性，也就是没有 引起映射数据变化的方法，就看不出来这个映射具体的业务，DDD的建议是把能引发变化的方法都写到这个变化内，这样别人一看就知道这个 实体具体包含了哪些业务属性。
+聚合根 防腐层 我的理解 整个DDD架构里面遵循了设计原则的最佳实践，比如高内聚低耦合这个大的思想，以及一些设计原则
+单一职责,一个方法、类、模块只干一件事情 开放封闭，对扩展开放，对修改封闭 依赖倒置，依赖于接口而不是具体实现。 接口隔离，接口小而精，不是胖而杂 里氏替换，对继承的补充，一个子类要能够完全替换父类，也就是要遵循父类的约定，这样少破坏原有的约定。 迪米洛法则（最少知识原则），不要跨多个对象调用方法，不需要知道跨对象的内部细节，只调用最新的朋友节点 战术构件和战略构件 DDD是一套架构思想方法论，它为代码层面和架构层面都提供了对应的构件帮我我们设计构架。
+战术构件（代码层面） 实体 值对象 根/聚合根 repository domain 工厂 事件 战略构件（架构层面） 界限上下文（模块） 通用语言（业务和技术用同一种专业术语沟通，防止鸡同鸭讲） 上下文映射（模块之间如何关联） 实际架构示例 ┌──────────────────────────────────────────────┐ │ 战略构件 (Strategic) │ │----------------------------------------------│ │ 限界上下文 (Bounded Contexts) │ │ ├── 用户上下文 (User Context) │ │ ├── 订单上下文 (Order Context) │ │ ├── 商品上下文 (Product Context) │ │ └── 支付上下文 (Payment Context) │ │ │ │ 上下文映射 (Context Map) │ │ ├── 上下游 (Upstream/Downstream) │ │ ├── 防腐层 (ACL) │ │ ├── 合作伙伴 (Partnership) │ │ └── 开放主机服务 (OHS) │ │ │ │ 通用语言 (Ubiquitous Language) │ │ └── &#34;订单&#34;、&#34;支付单&#34;、&#34;退款单&#34; │ └──────────────────────────────────────────────┘ │ ▼ ┌──────────────────────────────────────────────┐ │ 战术构件 (Tactical) │ │----------------------------------------------│ │ 接口层 (Interface Layer) │ │ └── Kratos Handler (HTTP/gRPC 接口) │ │ │ │ 应用层 (Application Layer) │ │ └── 应用服务 (Application Service) │ │ → OrderUsecase │ │ │ │ 领域层 (Domain Layer) │ │ ├── 实体 (Entity) &amp; 聚合根 (AggregateRoot) │ │ │ → Order, OrderItem │ │ ├── 值对象 (Value Object) │ │ │ → Money, Address │ │ ├── 领域服务 (Domain Service) │ │ │ → PaymentService │ │ ├── 工厂 (Factory) │ │ │ → NewOrder │ │ ├── 领域事件 (Domain Event) │ │ │ → OrderPaidEvent │ │ └── 仓储接口 (Repository Interface) │ │ │ │ 基础设施层 (Infrastructure Layer) │ │ └── 仓储实现 (Repository Impl, GORM) │ │ → orderRepo (MySQL) │ └──────────────────────────────────────────────┘ kratos 和DDD 架构对照 Kratos 层级 DDD 层级 作用 service/ Interface / Adapter gRPC/HTTP Handler，参数验证/响应封装，调用 UseCase biz/ Domain &#43; Application 业务逻辑和领域规则处理，UseCase（业务服务），纯业务计算 data/ Infrastructure 数据库、缓存、第三方 SDK 封装，实现 Repository 接口，提供外部依赖能力 pkg/ Infrastructure（共享组件） 可复用 SDK 封装、工具函数、通用库，跨服务共享 参考资料 美团 领域驱动设计在互联网业务开发中的实践 </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-08 09:50:22 +0800 CST'>August 8, 2025</span>&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to ddd领域驱动设计" href="http://localhost:1313/posts/design_pattern/ddd/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -225,86 +277,6 @@ go为什么采用三色标记法 go采用tcmalloc所以对内存碎片优化的�
   </div>
   <footer class="entry-footer"><span title='2025-08-01 09:10:00 +0800 CST'>August 1, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to Gc" href="http://localhost:1313/posts/go/gc/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Map
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>go的哈希实现 通用哈希实现 哈希表是一个高效的数据结构，通过对key经过哈希函数计算的值和存储数据的数组的长度，两者求余得到在数组插入的位置。高效的查找效率 时间复杂度为O(1)。
-哈希函数 任意长度的输入有固定输出 同一输入会产生同一个输出 输入的细小改变会造成输入的完全不一样 速度快 单项不可逆 go的哈希底层实现 通过底层结构体hmap来实例化map对象，hmap 包含指向[]bucket数组的指针。bucket结构里面会存储真实的数据 以key1key2 val1value2 的形式进行排列，方便内存对齐。头部有top哈希方便bucket内部进行数据定位，底部有指向溢出bucket的指针。 当发生哈希冲突，冲突的数据会存放到溢出bucket链表。
-插入过程 首先用哈希函数对key计算，得到64位数据（64位机器上）。低B位决定数据落入哪个桶。B是log2count，也就是以2为底bucket元素的长度的对数。 高8位决定落入bucket具体的位置。如果发送哈希冲突，就把数据存入溢出桶。
-遍历过程、查找过程 遍历：从0-bucket长度随机一个数字选择bucket进行遍历。所以go的map是无序。如果bucket遍历完，溢出桶不为空，继续遍历溢出桶。 查找：哈希函数对key计算，低8位找到具体的桶。高8位拿来和bucket的top哈希进行比较，如果一致，再比较具体的key,如果相同就返回， 否则再看溢出桶是否为空，不会空对链表进行遍历。如果都没有就返回查找失败。 go的扩容过程 当哈希函数产生过多的哈希碰撞时，就会导致查询效率低下，为了减少哈希碰撞，需要对底层数组的容量扩容或者对数据进行从新排列。 当满足一下任意条件会触发扩容
-当碰撞因子&gt;6.5, 碰撞因子=count(实际元素个数)/2的B次方（bucket数组总的元素长度） 当溢出桶过多时，当B &lt; 15 , 当溢出桶的个数&gt;B次方，触发扩容。当B&gt;15时，overflow超过2的15次方。 为什么是线程不安全的 sync.map使用 sync.map如何实现的 注意事项</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-29 09:23:59 +0800 CST'>July 29, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Map" href="http://localhost:1313/posts/go/map/"></a>
-</article>
-
-<article class="post-entry"> 
-<figure class="entry-cover">
-        <img loading="lazy" src="http://localhost:1313/images/cap.png" alt="">
-</figure>
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CAP
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>定义 CAP理论是指分布式当中一致性、可用性以及分区容错性三者不可兼得。我们需要根据实际应用场景做出相应的取舍， 在现实中，一般来说分布式系统中的网络是不可能完全保证可用的，所以就需要在CA和CP中做出选择。
-c一致性(consistency) 同一份数据同一时间在不同的节点看到的结果应该是一致性的
-a可用性（availability） 当系统当中某些节点故障仍然可以在一定时间内响应用户请求，也就是说系统在任何时间对于非错请求都能在一定时间做出响应，且不返回错误。
-p分区容错性（partition tolerance） 当集群中发生网络分区，因为网络故障导致节点之间不能正常通信，系统仍然正常运行，能够对外提供服务。
-拜占庭将军问题 是指分布式系统中可能有恶意节点对数据一致性造成破坏。如果系统中的节点是f个，为了解决非拜占庭将军问题，至少需要3f&#43;1 个节点。能容忍拜占庭容错的系统一般是高安全性要求的系统，比如区跨链、金融、军事等。
-脑裂 脑裂是指分布式系统中由于网络波动或中断，导致系统被分成多个子系统，子系统在内部选举leader，对外提供服务。这会导致 严重的问题，比如
-数据不一致	两个分区同时写入同一数据（如账户余额），导致冲突且无法自动合并。 资源冲突	两个“领导者”同时操作共享资源（如分配同一IP地址、锁定同一文件）。 状态混乱	客户端可能被不同分区响应矛盾的结果（如A分区说“支付成功”，B分区说“未支付”）。 数据永久丢失	分区恢复后，冲突写入可能导致部分数据被覆盖或丢弃。 为了防止脑裂，一般分布式一致性协议都会采用多数派原则进行避免，比如五个节点的分布式系统中，需要3个节点的确认才能成为leader,否则会 因为无法选主而停止对外提供服务。
-raft协议 raft协议是分布式系统中多个节点对于某个资源的一致性的达成所采用的一种协议，主要有三个部分：
-主从选择 日志复制 安全性和一致性保证 raft协议是强一致的。还有一些其他的一致性组件比如zookeeper。raft协议提供了强一致性的方案。 zookeeper 实践 常见的使用场景 一些常见的开源软件的使用我们会经常遇到这个场景。拿最常见的redis为例，redis的分布式部署方案有三种，主从、哨兵、cluster。
-go 简单的实践 package main import ( &#34;fmt&#34; &#34;io&#34; &#34;log&#34; &#34;net&#34; &#34;os&#34; &#34;time&#34; &#34;github.com/hashicorp/raft&#34; bolt &#34;github.com/hashicorp/raft-boltdb&#34; ) // 简单的 FSM：提交即打印 type FSM struct{} func (f *FSM) Apply(l *raft.Log) interface{} { fmt.Printf(&#34;Apply: %s\n&#34;, string(l.Data)) return nil } func (f *FSM) Snapshot() (raft.FSMSnapshot, error) { return &amp;snapshot{}, nil } func (f *FSM) Restore(io.ReadCloser) error { return nil } type snapshot struct{} func (s *snapshot) Persist(sink raft.SnapshotSink) error { return sink.Close() } func (s *snapshot) Release() {} func main() { // 1) 配置 config := raft.DefaultConfig() config.LocalID = raft.ServerID(os.Args[1]) // 节点 ID 来自第一个参数 // 2) 网络传输：TCP addr, err := net.ResolveTCPAddr(&#34;tcp&#34;, os.Args[2]) if err != nil { log.Fatal(err) } transport, err := raft.NewTCPTransport(os.Args[2], addr, 3, 10*time.Second, os.Stdout) if err != nil { log.Fatal(err) } // 3) 日志与快照存储 store, err := bolt.NewBoltStore(fmt.Sprintf(&#34;raft-%s.db&#34;, os.Args[1])) if err != nil { log.Fatal(err) } snapshotStore := raft.NewInmemSnapshotStore() // 4) 创建 Raft 实例 r, err := raft.NewRaft(config, &amp;FSM{}, store, store, snapshotStore, transport) if err != nil { log.Fatal(err) } // 5) Bootstrap 第一个节点 if os.Args[1] == &#34;node1&#34; { cfg := raft.Configuration{ Servers: []raft.Server{ {ID: &#34;node1&#34;, Address: transport.LocalAddr()}, {ID: &#34;node2&#34;, Address: raft.ServerAddress(&#34;127.0.0.1:12002&#34;)}, {ID: &#34;node3&#34;, Address: raft.ServerAddress(&#34;127.0.0.1:12003&#34;)}, }, } r.BootstrapCluster(cfg) } // 6) 简单命令行提交 if config.LocalID == &#34;node1&#34; { go func() { for { time.Sleep(3 * time.Second) f := r.Apply([]byte(&#34;hello raft&#34;), 5*time.Second) if err := f.Error(); err != nil { log.Println(&#34;apply error:&#34;, err) } } }() } select {} // 阻塞 } `
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-16 09:21:40 +0800 CST'>July 16, 2025</span>&nbsp;·&nbsp;4 min</footer>
-  <a class="entry-link" aria-label="post link to CAP" href="http://localhost:1313/posts/architecture/cap/"></a>
-</article>
-
-<article class="post-entry"> 
-<figure class="entry-cover">
-        <img loading="lazy" src="http://localhost:1313/images/img_2.png" alt="">
-</figure>
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">BFS&amp;&amp;DFS
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>树的遍历 深度优先遍历DFS package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, } root.Left = &amp;TreeNode{Val: 2} root.Right = &amp;TreeNode{Val: 3} root.Right.Left = &amp;TreeNode{Val: 4} root.Left.Left = &amp;TreeNode{Val: 5} list := make([]int, 0) var treeDFS = func(root *TreeNode) {} treeDFS = func(root *TreeNode) { if root == nil { return } list = append(list, root.Val) treeDFS(root.Left) treeDFS(root.Right) } treeDFS(root) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 函数版本
-package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, } root.Left = &amp;TreeNode{Val: 2} root.Right = &amp;TreeNode{Val: 3} root.Right.Left = &amp;TreeNode{Val: 4} root.Left.Left = &amp;TreeNode{Val: 5} list := make([]int, 0) TreeDFS(root, &amp;list) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } func TreeDFS(root *TreeNode, list *[]int) { if root == nil { return } *list = append(*list, root.Val) TreeDFS(root.Left, list) TreeDFS(root.Right, list) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 广度优先遍历BFS list2 := make([]int, 0) queue := make([]*TreeNode, 0) queue = append(queue, root) for len(queue) &gt; 0 { count := len(queue) for i := 0; i &lt; count; i&#43;&#43; { node := queue[0] queue = queue[1:] list2 = append(list2, node.Val) if node.Left != nil { queue = append(queue, node.Left) } if node.Right != nil { queue = append(queue, node.Right) } } } fmt.Println(list2) 根据先序遍历和中序遍历构造二叉树 package main import &#34;fmt&#34; func main() { // 1 // [1 2 5 3 4] 先序 // [2 5 1 3 4] 中序 // 1 [2 5] [2 5] i = 2 [3 4] // [2 5 3 4] [2 5] // [5 3 4] [5] copyTreeRoot := BuildTree([]int{1, 2, 5, 3, 4}, []int{2, 5, 1, 3, 4}) fmt.Println(copyTreeRoot) list3 := make([]int, 0) TreeDFS(copyTreeRoot, &amp;list3) fmt.Println(&#34;list3:&#34;, list3) //SliceTest() } func BuildTree(first []int, mid []int) *TreeNode { if len(first) == 0 { return nil } root := &amp;TreeNode{Val: first[0]} node := first[0] i := 0 for ; i &lt; len(mid); i&#43;&#43; { if mid[i] == node { break } } root.Left = BuildTree(first[1:i&#43;1], mid[:i]) root.Right = BuildTree(first[i&#43;1:], mid[i&#43;1:]) return root } 图的遍历 深度优先遍历DFS &amp;&amp; 广度优先遍历BFS package main import ( &#34;container/list&#34; &#34;fmt&#34; ) func main() { // 0 // 1 -&gt; 4 -&gt; 5 // 0 2 -&gt; 6 -&gt; 7 // 3 -&gt;^ g := make([][]int, 8) //g = append(g, []int{1, 2, 3} g[0] = []int{1, 2, 3} g[1] = []int{4} g[2] = []int{6} g[3] = []int{6} g[4] = []int{5} g[6] = []int{7} g2 := make(map[int][]int) g2[0] = []int{1, 2, 3} g2[1] = []int{4} g2[2] = []int{6} g2[3] = []int{6} g2[4] = []int{5} g2[6] = []int{7} graphDFS(0, g) //graphBFS(g) fmt.Println(&#34;-----&#34;) graphBFSWithQueue(g2) fmt.Println(&#34;-----&#34;) listC := graphBFSWithC(g2) fmt.Println(listC) } func graphDFS(root int, graph [][]int) { fmt.Println(root) if graph[root] == nil { return } //fmt.Println(root) for i := 0; i &lt; len(graph[root]); i&#43;&#43; { graphDFS(graph[root][i], graph) } return } func graphBFSWithQueue(graph map[int][]int) { queue := make([]int, 0) queue = append(queue, 0) fmt.Println(0) visited := make(map[int]bool) for len(queue) &gt; 0 { node := queue[0] queue = queue[1:] g := graph[node] size := len(g) for i := 0; i &lt; size; i&#43;&#43; { if visited[g[i]] { continue } else { fmt.Println(g[i]) queue = append(queue, g[i]) visited[g[i]] = true } } } } func graphBFSWithC(graph map[int][]int) []int { queue := list.New() order := make([]int, 0) visited := make(map[int]bool) queue.PushBack(0) for queue.Len() &gt; 0 { node := queue.Remove(queue.Front()).(int) order = append(order, node) neighbor := graph[node] size := len(neighbor) for i := 0; i &lt; size; i&#43;&#43; { if visited[neighbor[i]] { continue } else { queue.PushBack(neighbor[i]) visited[neighbor[i]] = true } } } return order } 带权图的最短路径算法 dijkstra 参考 可视化网站. 可视化网站. </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-09 09:20:50 +0800 CST'>July 9, 2025</span>&nbsp;·&nbsp;3 min</footer>
-  <a class="entry-link" aria-label="post link to BFS&&DFS" href="http://localhost:1313/posts/datastructalgorithm/bfs_dfs/"></a>
-</article>
-
-<article class="post-entry"> 
-<figure class="entry-cover">
-        <img loading="lazy" src="http://localhost:1313/images/img.png" alt="">
-</figure>
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">golang的interface和reflect
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>interface 鸭子类型 如果一个东西，走起来像鸭子，叫起来像鸭子，那么我们认为他就是鸭子。也就是说我们关注对象的行为，而不是对象本身。
-go里面通过接口来达到鸭子类型的效果。
-多态 多态是指同一个操作（函数、方法），在不通的对象的作用下，会有不同的行为。 一般多态有两种实现方式：
-继承和组合，比如java、c&#43;&#43;。 接口的形式 在go里面它没有继承的概念，但是go里面有组合。组合式是一种更灵活的方式。 他可以通过组合和重写来实现继承。在调用结构体的方法的时候，会优先调用最近的结构体的方法。 我们推荐在go里通过接口来实现多态，会更加清晰明了。
-go的interface 定义 go里面的接口是一种复合数据类型。他的底层有2种实现，eface和iface。
-//eface 结构 type eface struct { tab *typtab data unsafe.Pointer } // iface结构 type iface struct { tab *itab data unsafe.Pointer } go里面的所有数据类型都实现了eface,也就是说可以借助interface来表示他的数据类型。 还可以通过interface来定义方法集合 。
-type A interface { method() } 可能你会有一个疑问，那go是怎么确定interface 到底应该是使用eface 还是 iface呢？ go是在编译阶段就会确定好interface 使用的eface 还是 iface。后面不会改变。
-如何使用 什么时候会使用interface 通过接口来实现解耦合，比如依赖注入、适配器模式。 不确定传入参数的类型，需要在运行时来确定。 使用方法 接口列表 type animal interface { move() } type dog struct {} func (d dog) move() { fmt.Println(&#34;dog moving&#34;) } type cat struct {} func (c cat) move() { fmt.Println(&#34;cat moving&#34;) } func main() { var a animal a = dog{} a.move() a = cat{} // a是结构可以同意调用 a.move() // 接口注入 call(a) // 不确定具体的参数 vat func1 = func(param any) {} func1 = func(param any) { fmt.Println(&#34;call any&#34;, param) } } func call(a animal) { fmt.Println(&#34;call animal \n&#34;) a.move() } 需要注意的点和坑 使用接口会让编译器无法确定数据类型，导致无法再编译阶段发现类型错误，引发运行时错误。 使用接口会让程序变得难以阅读和理解。 性能会损失大概一倍 reflect unsafe.pointer go语言unsafe包提供了一些函数，可以获取指针，修改指针，获取指针指向的数据，修改指针指向的数据。 简单来讲，go本身不能操作指针，但是提供了reflect包让我们可以操作指针来获得程序的 性能提升。
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-06 12:44:43 +0800 CST'>July 6, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to golang的interface和reflect" href="http://localhost:1313/posts/go/interfacereflect/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">
