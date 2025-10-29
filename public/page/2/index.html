@@ -128,6 +128,57 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">常用数据结构
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>常用数据结构定义 1. 链表（Linked List） type ListNode struct { Val int Next *ListNode } 2. 双向链表（Doubly Linked List） type DListNode struct { Val int Prev *DListNode Next *DListNode } 3. 栈（Stack） type Stack struct { data []int } 4. 队列（Queue） type Queue struct { data []int } 5. 二叉树（Binary Tree） type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 6. N叉树（N-ary Tree） type NTreeNode struct { Val int Children []*NTreeNode } 7. 图（Graph） type GraphNode struct { Val int Neighbors []*GraphNode } 8. 哈希表（HashMap） m := make(map[string]int) 9. 堆（Heap / Priority Queue） type Item struct { Val int } type IntHeap []Item 10. 矩阵（Matrix） matrix := [][]int{ {1, 2, 3}, {4, 5, 6}, {7, 8, 9}, } 11. Trie（前缀树） type TrieNode struct { Children map[rune]*TrieNode IsEnd bool } type Trie struct { Root *TrieNode } 12. 并查集（Union-Find） type UnionFind struct { Parent []int Rank []int } 13. LRU 缓存（Least Recently Used Cache） type pair struct { key, value int } type LRUCache struct { capacity int cache map[int]*list.Element list *list.List } 进阶 图 🧠 一、图的基本概念 图由：
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-10-15 21:52:36 +0800 CST'>October 15, 2025</span>&nbsp;·&nbsp;3 min</footer>
+  <a class="entry-link" aria-label="post link to 常用数据结构" href="http://localhost:1313/posts/datastructalgorithm/%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">打卡计划表
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>开启打卡计划 日期 题目 模板 二刷结果 迁移练习 备注 10/16 15. 三数之和 双指针 ✅ 三数差值最接近 完整复盘，写模板笔记 10/17 11. 盛最多水的容器 双指针 ✅ 股票最大利润 计时 25 分钟 10/18 3. 无重复字符的最长子串 滑动窗口 ✅ 最长允许1重复字符 模拟面试说思路 10/19 1. 两数之和 哈希 ✅ 三数之和、路径求和 强化迁移能力 10/20 20. 有效括号 栈 ✅ HTML标签验证 二刷完成 10/21 739. 每日温度 单调栈 ✅ 下一个更小元素 二刷 &#43; 迁移 10/22 206. 反转链表 链表 ✅ k组反转、回文链表 模板笔记 10/23 141. 环形链表 链表 ✅ 相交链表检测 二刷完成 10/24 53. 最大子序和 动态规划 ✅ 股票最大利润 计时练习 10/25 198. 打家劫舍 动态规划 ✅ 环形打家劫舍 二刷完成 10/26 139. 单词拆分 动态规划 ✅ 所有拆分方式 写迁移笔记 10/27 33. 搜索旋转排序数组 二分 搜索峰值 计时练习 10/28 200. 岛屿数量 DFS/BFS 封闭区域计数 二刷 &#43; 迁移 10/29 104. 二叉树最大深度 树 判断平衡二叉树 模板笔记 10/30 236. 最近公共祖先 树 N叉树版本 二刷完成 </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-10-15 21:52:36 +0800 CST'>October 15, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 打卡计划表" href="http://localhost:1313/posts/datastructalgorithm/%E6%89%93%E5%8D%A1%E8%AE%A1%E5%88%92%E8%A1%A8/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">刷题方法
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>个人感悟和前言 刷了很多题（其实也不是很多，但却是每天坚持半小时坚持了一年多了）， 但是老是面试的时候做不出来，或者要花很长时间才能做出来。我都产生自我怀疑了，我觉得是时候换个方式了。 我问了gpt,它给了我很多建议，接下来我会按照下面的方式重新规划我的学习方法
+以下大多数参考了gpt
+具体的做法 核心目标 一、核心目标 用最少的题，建立最大迁移力。 熟练识别模板，能举一反三。 面试时 3 分钟内能讲清思路。 重点在模式识别 &#43; 模板迁移，不追数量。 二、15 道最值得复盘的模板题 类别 LeetCode题目 核心模板 可迁移方向 双指针 15. 三数之和 排序 &#43; 去重 &#43; 左右夹逼 k数之和 / 差值最接近 / 删除一个字符变回文 双指针 11. 盛最多水的容器 左右夹逼取最大面积 股票买卖、最优区间类问题 滑动窗口 3. 无重复字符的最长子串 扩展窗口 &#43; 收缩窗口 最小覆盖子串、最长K个不同字符子串 哈希 1. 两数之和 哈希反查 三数之和、四数之和、路径求和 栈 20. 有效的括号 栈匹配 HTML标签验证、栈逆序 单调栈 739. 每日温度 单调递减栈 下一个更大元素、柱状图最大矩形 链表 206. 反转链表 指针前后反转 k组反转、回文链表检测 链表 141. 环形链表 快慢指针 相交链表检测、寻找环入口 动态规划 53. 最大子序和 dp[i] = max(nums[i], dp[i-1]&#43;nums[i]) 股票最大利润、子数组和问题 动态规划 198. 打家劫舍 dp[i] = max(dp[i-1], dp[i-2]&#43;nums[i]) 环形打家劫舍、爬楼梯变体 动态规划 139. 单词拆分 dp[i] = dp[j] &amp;&amp; wordDict[j:i] 句子拼接、分割字符串最少次数 二分查找 33. 搜索旋转排序数组 二分判定区间有序性 搜索峰值、最小差距值 DFS/BFS 200. 岛屿数量 遍历连通块 图遍历、封闭区域数量、朋友圈问题 树 104. 二叉树最大深度 递归 DFS 平衡二叉树、路径和 树 236. 最近公共祖先 后序递归 目录树路径、最小公共节点类问题 三、偏题迁移示例 原题模板 面试偏题举例 迁移思路 无重复字符的最长子串 最多允许一个重复字符的最长子串 滑动窗口 &#43; 计数增加一层判断 三数之和 找出所有和为目标值的三元组 排序 &#43; 去重 &#43; 双指针，只改目标值逻辑 有效括号 字符串里只有 &lt; &gt;，规则不同 替换匹配规则即可，核心仍是栈 每日温度 求每个元素右边第一个比它小的元素 单调递增栈，方向反转 打家劫舍 环形排列的房屋 拆成两种情况：不偷第一 vs 不偷最后 单词拆分 计算所有可行的拆分方式 dp[i] 的基础上计数或回溯 二叉树最大深度 判断是否平衡二叉树 在返回深度的同时判断差值 最近公共祖先 N 叉树版本 递归逻辑相同，遍历子节点代替左右子树 四、陌生题分析框架（面试必备） 求最值 → 贪心 / 动态规划 求存在 → 哈希 / 二分 求路径 / 连通 → DFS / BFS 求配对 / 区间 → 双指针 / 滑动窗口 暴力解 &amp; 复杂度 先写最直接暴力解，作为 fallback 考虑优化方向（排序 / 哈希 / 双指针） 是否有重复子问题 有 → 动态规划 没有 → 贪心或暴力优化 输入结构 数组 → 排序 / 双指针 矩阵 → DFS / BFS 树 / 图 → 递归 / 队列 写伪代码 先讲思路，代码只是形式 面试官更关注分析能力 五、复盘计划（3 周周期） 周数 目标 内容 第1周 模板巩固 前8题（数组、链表、哈希、栈）二刷，写模板笔记 第2周 动态规划 &amp; 树 后7题二刷，形成 dp / 树模板总结 第3周 偏题迁移训练 每天抽一道陌生题，用陌生题分析框架解题，重点练思路，不追完美 六、Go 开发者模板代码示例 // 双指针模板 func twoSum(nums []int, target int) []int { m := make(map[int]int) for i, v := range nums { if j, ok := m[target-v]; ok { return []int{j, i} } m[v] = i } return nil } // 滑动窗口模板 func lengthOfLongestSubstring(s string) int { window := make(map[byte]int) left, right, res := 0, 0, 0 for right &lt; len(s) { c := s[right] right&#43;&#43; window[c]&#43;&#43; for window[c] &gt; 1 { d := s[left] left&#43;&#43; window[d]-- } if res &lt; right-left { res = right - left } } return res } // map 初始化 m := make(map[int]int) // set 用法 set := map[int]bool{} set[x] = true if set[y] { ... } // priority queue 模板 type Item struct{ value, priority int } type PQ []Item func (pq PQ) Len() int { return len(pq) } func (pq PQ) Less(i, j int) bool { return pq[i].priority &lt; pq[j].priority } func (pq PQ) Swap(i, j int) { pq[i], pq[j] = pq[j], pq[i] } func (pq *PQ) Push(x any) { *pq = append(*pq, x.(Item)) } func (pq *PQ) Pop() any { old := *pq n := len(old) x := old[n-1] *pq = old[:n-1] return x } 七、最终目标 不靠“记题”，靠“识别结构 &#43; 套模板 &#43; 临场分析”。 偏题也能快速迁移思路，不慌张。 面试时有底气，3 分钟就能讲清解题思路。 </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-10-15 21:31:14 +0800 CST'>October 15, 2025</span>&nbsp;·&nbsp;3 min</footer>
+  <a class="entry-link" aria-label="post link to 刷题方法" href="http://localhost:1313/posts/datastructalgorithm/%E5%88%B7%E9%A2%98%E6%96%B9%E6%B3%95/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">如何判断网络状况
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p></p>
+  </div>
+  <footer class="entry-footer"><span title='2025-10-15 09:26:26 +0800 CST'>October 15, 2025</span>&nbsp;·&nbsp;0 min</footer>
+  <a class="entry-link" aria-label="post link to 如何判断网络状况" href="http://localhost:1313/posts/scenario/%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E7%BD%91%E7%BB%9C%E7%8A%B6%E5%86%B5/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Sql调优
     </h2>
   </header>
@@ -200,59 +251,6 @@ G代表go的goroutine,协程是用户态的轻量级线程，创建销毁的成�
   </div>
   <footer class="entry-footer"><span title='2025-09-12 09:47:57 +0800 CST'>September 12, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to 一次mysql的执行过程" href="http://localhost:1313/posts/database/%E4%B8%80%E6%AC%A1mysql%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Mysql_分组统计排序
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>记录一些面试遇到的题目
-CREATE TABLE students ( id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), age INT, sex CHAR(1), class VARCHAR(50) ); INSERT INTO students (name, age, sex, class) VALUES (&#39;沉默王二&#39;, 18, &#39;女&#39;, &#39;三年二班&#39;), (&#39;沉默王一&#39;, 20, &#39;男&#39;, &#39;三年二班&#39;), (&#39;沉默王三&#39;, 19, &#39;男&#39;, &#39;三年三班&#39;), (&#39;沉默王四&#39;, 17, &#39;男&#39;, &#39;三年三班&#39;), (&#39;沉默王五&#39;, 20, &#39;女&#39;, &#39;三年四班&#39;), (&#39;沉默王六&#39;, 21, &#39;男&#39;, &#39;三年四班&#39;), (&#39;沉默王七&#39;, 18, &#39;女&#39;, &#39;三年四班&#39;); select * from students s1 join ( select id, row_number() over (partition by class order by age) as rank_num from students ) s2 on s2.id = s1.id where s2.rank_num &lt;= 2 </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-09-12 09:41:41 +0800 CST'>September 12, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Mysql_分组统计排序" href="http://localhost:1313/posts/interview_code/mysql_%E5%88%86%E7%BB%84%E7%BB%9F%E8%AE%A1%E6%8E%92%E5%BA%8F/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">数组交集
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p> package main import &#34;fmt&#34; func main() { //4.1 实现一个函数，可以计算返回多个切片元素交集，如入参[1,2,3],[2,3,4] 返回 [2,3] arrays := make([][]int, 0) arrays = append(arrays, []int{1, 2, 3}) arrays = append(arrays, []int{2, 3, 4}) arrays = append(arrays, []int{3, 4}) res := calMerge(arrays...) fmt.Println(res) } func calMerge(arrays ...[]int) []int { // 数组先去重，就不实现了 check := make(map[int]int) for i := 0; i &lt; len(arrays); i&#43;&#43; { for j := 0; j &lt; len(arrays[i]); j&#43;&#43; { check[arrays[i][j]] &#43;= 1 } } newArray := make([]int, 0) for k, val := range check { if val &gt;= len(arrays) { newArray = append(newArray, k) } } return newArray } </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-09-12 09:41:25 +0800 CST'>September 12, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to 数组交集" href="http://localhost:1313/posts/datastructalgorithm/slice_%E6%95%B0%E7%BB%84%E4%BA%A4%E9%9B%86/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">分布式锁的实现
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>分布式锁的实现 分布式锁需要满足几个要点
-高性能、互斥，redis高性能，处理模型单线程天然支持互斥 原子性操作（主要是redis），高并发情况下，需要保证加锁、删除、自动续期的并发安全，所以需要原子性保证 安全释放锁、锁的删除，在并发情况下，可能出现A执行任务过长，锁已经自动过期了，B拿到锁在执行了，A执行完毕，释放锁，如果不进行锁的Val判断，会导致锁的异常释放。 自动过期/自动续期,使用set nx px 设置过期时间，使用看门狗机制实现自动续期，在释放锁的时候，使用context,cancel协程。 可重入 基于redis的实现 cache.go
-package cache import ( &#34;context&#34; &#34;github.com/redis/go-redis/v9&#34; &#34;time&#34; ) type Cache interface { // 通用封装 需要解决 //（1）缓存三大问题 a 穿透 b 击穿 c 缓存雪崩 //（2）缓存不一致的问题 //（3）分布式锁 // 设置通用前缀 app_name , 数据类型 data, 模块名字 ， SetPrefix(prefix ...string) Cache Set(ctx context.Context, key, value string, short bool) error Get(ctx context.Context, key string, handler func(context.Context) (string, error)) (string, error) // 增加 删除 修改的时候调用 Flush(ctx context.Context, handler func(context.Context) error) error FlushWithConsistency(ctx context.Context, handler func(context.Context) error) error // 以下是简单封装 SimpleSet(ctx context.Context, key string, data any, expiration time.Duration) (err error) SimpleGet(ctx context.Context, key string) (data string, err error) SimpleIncr(ctx context.Context, key string) (count int64, err error) SimpleDel(ctx context.Context, keys ...string) (deletedCount int64, err error) Pipelined(ctx context.Context, callback func(redis.Pipeliner) error) (cmder []redis.Cmder, err error) // 批量删除 key 比如 app_name:* DeleteKeysByPattern(ctx context.Context, pattern string) (err error) // 集合操作 SAdd(ctx context.Context, key string, members ...string) (err error) SMembers(ctx context.Context, key string) (members []string, err error) // 过期集合 设置获取 AddMemberWithTTL(ctx context.Context, setKey, member string, ttl time.Duration) error GetValidMembers(ctx context.Context, setKey string) ([]string, error) RemoveMember(ctx context.Context, setKey string, members ...string) (int64, error) // 分布式加解锁 DistributedLock(ctx context.Context, key string, ttl time.Duration) error DistributedUnlock(ctx context.Context, key string) error } redis.go
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-09-11 09:23:32 +0800 CST'>September 11, 2025</span>&nbsp;·&nbsp;7 min</footer>
-  <a class="entry-link" aria-label="post link to 分布式锁的实现" href="http://localhost:1313/posts/scenario/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E7%9A%84%E5%AE%9E%E7%8E%B0/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">零拷贝
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>零拷贝技术 通过sendfile 等函数减少用户态和内核态的切换，减少拷贝次数，加快文件传输速度，但只适用于原样传输的场景，比如静态文件服务器，消息队列等，比如mysql 也是磁盘加载数据，但是需要对取出来的数据做各种处理就不适合这种场景。
-</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-09-10 20:40:50 +0800 CST'>September 10, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to 零拷贝" href="http://localhost:1313/posts/cs/%E9%9B%B6%E6%8B%B7%E8%B4%9D/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

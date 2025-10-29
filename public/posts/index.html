@@ -131,6 +131,54 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Go 场景题模版
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Go 场景题训练手册 — 题目版 作者：cp yang 说明：分为 初级 / 中级 / 高级 / 实战 Debug 四个章节。每题为面试常见场景题（用于练习）
+🟢 初级场景题（语言特性与陷阱） 切片在函数参数传递时，什么时候会影响外部数据？请举例并解释。 for range vs for i := 0; i &lt; len(slice); i&#43;&#43;，在修改元素和效率上有什么区别？ map 初始化的正确写法有哪些？哪些写法会导致 panic？ defer 的执行顺序是什么？return 与 defer 的执行顺序如何？ append 扩容时如何影响底层数组？如何避免不必要的复制？ string 与 []byte 转换在高频场景下的性能问题如何优化？ 实现一个线程安全的简单 map（支持 Get/Set/Delete）。 🟡 中级场景题（并发与控制） 如何使用 sync.WaitGroup 控制并发任务？请给出示例，并说明常见错误。 设计一个固定大小的 goroutine 池（worker pool），能提交任务并等待完成。 设计一个生产者-消费者模型，支持多生产者、多消费者，并能优雅退出。 实现两个 goroutine 交替打印 1~100（A 打印 1，B 打印 2，依次交替）。 如何限制并发数量（例如同时最多 10 个任务）？给出实现。 使用 context 实现任务超时与取消，给出示例。 🔴 高级场景题（系统设计与性能） 设计一个本地缓存系统，支持 TTL、并发安全和定期清理。写出核心接口与实现要点。 设计并实现一个 LRU 缓存（map &#43; 双向链表），要求并发安全。 设计一个简易消息队列（支持发布/订阅、可持久化思路说明）。写出关键数据结构与伪码。 如何设计一个高并发的秒杀系统以防止超卖？给出架构思路与关键代码片段（Redis/本地预减库存等）。 设计一个限流组件（令牌桶），实现接口并说明在微服务网关如何使用。 ⚙️ 实战 Debug 场景题（排障与优化） 程序出现大量 goroutine 泄漏（数量不断增长），你如何排查？列出排查步骤与 pprof 使用方法。 出现死锁（程序卡住），如何定位和修复？给出示例代码及修改建议。 程序内存暴涨并触发 GC 压力，如何分析原因并给出优化方案？ 高并发下锁竞争严重（通过 Mutex 看到 QPS 降低），如何诊断并优化？ 使用 pprof 找到热点 CPU 占用点后，你会如何改进代码？给出一个简单示例。 </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-10-22 22:38:03 +0800 CST'>October 22, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Go 场景题模版" href="http://localhost:1313/posts/scenario/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%A8%A1%E7%89%88/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Go 场景题模版 — 答案版
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p> 🟢 初级场景题（语言特性与陷阱） 1. 切片在函数参数传递时，什么时候会影响外部数据？ 思路： 切片是三元组（指针、len、cap）。传参时会拷贝这三项，但底层数组仍然共享。只有当 append 导致扩容（新的底层数组分配）或修改通过索引直接写入时，外部可见。
+直接 s[i] = x 会影响外部； s = append(s, x) 当 cap 不足时会分配新数组，外部不会看到新元素。 示例代码：
+package main import &#34;fmt&#34; func appendMaybe(s []int) []int { s = append(s, 100) // 若 cap 不足，这里会分配新底层数组 return s } func modify(s []int) { if len(s) &gt; 0 { s[0] = 999 // 修改共享底层数组 } } func main() { a := make([]int, 1, 1) a[0] = 1 b := appendMaybe(a) fmt.Println(&#34;a:&#34;, a) // 如果扩容发生，a 不包含 100 fmt.Println(&#34;b:&#34;, b) c := make([]int, 1, 2) c[0] = 1 d := appendMaybe(c) fmt.Println(&#34;c:&#34;, c) // cap 足够，c 会看到 append 的结果 (如果 append reuses) fmt.Println(&#34;d:&#34;, d) modify(a) fmt.Println(&#34;a after modify:&#34;, a) // 被修改 } 2. for range vs for i := 0; i &lt; len(slice); i&#43;&#43; 思路： for range 会在每次迭代时把元素拷贝到新的变量（v），因此直接修改 v 不会影响切片。索引访问 slice[i] 直接访问底层数组可以修改原值。性能上两者差异很小，除非元素为大结构体，range 会拷贝整个结构体。
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-10-22 22:38:00 +0800 CST'>October 22, 2025</span>&nbsp;·&nbsp;9 min</footer>
+  <a class="entry-link" aria-label="post link to Go 场景题模版 — 答案版" href="http://localhost:1313/posts/scenario/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%A8%A1%E7%89%88-%E7%AD%94%E6%A1%88/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">限流熔断降级
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p> 「熔断、限流、降级」 它们都属于服务稳定性设计（Service Resilience）的一部分。
+下面我给你一个“面试官喜欢听”的回答框架，从概念 → 场景 → 实现 → 举例 四步讲清楚， 适合百度这种系统架构导向的岗位 👇
+🧩 一、三者区别和联系（高层答法） 一句话记忆：
+限流：控制请求量，不让系统被压垮。 熔断：发现下游挂了，别再请求它。 降级：资源紧张时，主动牺牲部分功能，保证核心可用。 面试开头可以这样讲：
+“在微服务架构下，我们通常通过限流、熔断、降级三种机制保障系统的稳定性。 三者的核心目标都是防止服务雪崩，只是介入的时机不同：
+限流在请求入口处防止流量打爆； 熔断在调用链中断开异常依赖； 降级则在系统压力大时主动丢弃非核心功能。” ⚙️ 二、限流（Rate Limiting） 📘 概念 限制系统单位时间内可处理的请求数。
+📍常见算法 固定窗口（Fixed Window） 滑动窗口（Sliding Window） 漏桶算法（Leaky Bucket） 令牌桶算法（Token Bucket）✅ 常用 令牌桶算法原理：系统按照固定速率生成令牌，请求只有拿到令牌才能执行，否则拒绝或排队。
+🛠️ 实现方式 单机限流：用 golang.org/x/time/rate（Go官方限流包） 分布式限流：用 Redis 实现（Lua脚本保证原子性） 网关层限流：在 API Gateway（如 Kong、Nginx、Kratos Gateway）配置规则 💬 举例 “比如我在上一个项目中，为防止短信接口被刷，我们在 Nginx 层按 IP &#43; URI 做限流，用令牌桶算法控制速率为 10 req/s，多余的直接返回 429 Too Many Requests。”
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-10-22 17:18:39 +0800 CST'>October 22, 2025</span>&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to 限流熔断降级" href="http://localhost:1313/posts/microservice/%E9%99%90%E6%B5%81%E7%86%94%E6%96%AD%E9%99%8D%E7%BA%A7/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Init
     </h2>
   </header>
@@ -229,48 +277,11 @@ dept_id (INT, Primary Key) - 部门 ID dept_name (VARCHAR) - 部门名称 模块
     </h2>
   </header>
   <div class="entry-content">
-    <p>常用数据结构定义 1. 链表（Linked List） type ListNode struct { Val int Next *ListNode } 2. 双向链表（Doubly Linked List） type DListNode struct { Val int Prev *DListNode Next *DListNode } 3. 栈（Stack） type Stack struct { data []int } 4. 队列（Queue） type Queue struct { data []int } 5. 二叉树（Binary Tree） type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 6. N叉树（N-ary Tree） type NTreeNode struct { Val int Children []*NTreeNode } 7. 图（Graph） type GraphNode struct { Val int Neighbors []*GraphNode } 8. 哈希表（HashMap） m := make(map[string]int) 9. 堆（Heap / Priority Queue） type Item struct { Val int } type IntHeap []Item 10. 矩阵（Matrix） matrix := [][]int{ {1, 2, 3}, {4, 5, 6}, {7, 8, 9}, } 11. Trie（前缀树） type TrieNode struct { Children map[rune]*TrieNode IsEnd bool } type Trie struct { Root *TrieNode } 12. 并查集（Union-Find） type UnionFind struct { Parent []int Rank []int } 13. LRU 缓存（Least Recently Used Cache） type pair struct { key, value int } type LRUCache struct { capacity int cache map[int]*list.Element list *list.List } </p>
+    <p>常用数据结构定义 1. 链表（Linked List） type ListNode struct { Val int Next *ListNode } 2. 双向链表（Doubly Linked List） type DListNode struct { Val int Prev *DListNode Next *DListNode } 3. 栈（Stack） type Stack struct { data []int } 4. 队列（Queue） type Queue struct { data []int } 5. 二叉树（Binary Tree） type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 6. N叉树（N-ary Tree） type NTreeNode struct { Val int Children []*NTreeNode } 7. 图（Graph） type GraphNode struct { Val int Neighbors []*GraphNode } 8. 哈希表（HashMap） m := make(map[string]int) 9. 堆（Heap / Priority Queue） type Item struct { Val int } type IntHeap []Item 10. 矩阵（Matrix） matrix := [][]int{ {1, 2, 3}, {4, 5, 6}, {7, 8, 9}, } 11. Trie（前缀树） type TrieNode struct { Children map[rune]*TrieNode IsEnd bool } type Trie struct { Root *TrieNode } 12. 并查集（Union-Find） type UnionFind struct { Parent []int Rank []int } 13. LRU 缓存（Least Recently Used Cache） type pair struct { key, value int } type LRUCache struct { capacity int cache map[int]*list.Element list *list.List } 进阶 图 🧠 一、图的基本概念 图由：
+...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-10-15 21:52:36 +0800 CST'>October 15, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <footer class="entry-footer"><span title='2025-10-15 21:52:36 +0800 CST'>October 15, 2025</span>&nbsp;·&nbsp;3 min</footer>
   <a class="entry-link" aria-label="post link to 常用数据结构" href="http://localhost:1313/posts/datastructalgorithm/%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">打卡计划表
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>开启打卡计划 日期 题目 模板 二刷结果 迁移练习 备注 10/16 15. 三数之和 双指针 ✅ 三数差值最接近 完整复盘，写模板笔记 10/17 11. 盛最多水的容器 双指针 ✅ 股票最大利润 计时 25 分钟 10/18 3. 无重复字符的最长子串 滑动窗口 ✅ 最长允许1重复字符 模拟面试说思路 10/19 1. 两数之和 哈希 ✅ 三数之和、路径求和 强化迁移能力 10/20 20. 有效括号 栈 ✅ HTML标签验证 二刷完成 10/21 739. 每日温度 单调栈 ✅ 下一个更小元素 二刷 &#43; 迁移 10/22 206. 反转链表 链表 ✅ k组反转、回文链表 模板笔记 10/23 141. 环形链表 链表 ✅ 相交链表检测 二刷完成 10/24 53. 最大子序和 动态规划 ✅ 股票最大利润 计时练习 10/25 198. 打家劫舍 动态规划 ✅ 环形打家劫舍 二刷完成 10/26 139. 单词拆分 动态规划 ✅ 所有拆分方式 写迁移笔记 10/27 33. 搜索旋转排序数组 二分 搜索峰值 计时练习 10/28 200. 岛屿数量 DFS/BFS 封闭区域计数 二刷 &#43; 迁移 10/29 104. 二叉树最大深度 树 判断平衡二叉树 模板笔记 10/30 236. 最近公共祖先 树 N叉树版本 二刷完成 </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-10-15 21:52:36 +0800 CST'>October 15, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to 打卡计划表" href="http://localhost:1313/posts/datastructalgorithm/%E6%89%93%E5%8D%A1%E8%AE%A1%E5%88%92%E8%A1%A8/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">刷题方法
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>个人感悟和前言 刷了很多题（其实也不是很多，但却是每天坚持半小时坚持了一年多了）， 但是老是面试的时候做不出来，或者要花很长时间才能做出来。我都产生自我怀疑了，我觉得是时候换个方式了。 我问了gpt,它给了我很多建议，接下来我会按照下面的方式重新规划我的学习方法
-以下大多数参考了gpt
-具体的做法 核心目标 一、核心目标 用最少的题，建立最大迁移力。 熟练识别模板，能举一反三。 面试时 3 分钟内能讲清思路。 重点在模式识别 &#43; 模板迁移，不追数量。 二、15 道最值得复盘的模板题 类别 LeetCode题目 核心模板 可迁移方向 双指针 15. 三数之和 排序 &#43; 去重 &#43; 左右夹逼 k数之和 / 差值最接近 / 删除一个字符变回文 双指针 11. 盛最多水的容器 左右夹逼取最大面积 股票买卖、最优区间类问题 滑动窗口 3. 无重复字符的最长子串 扩展窗口 &#43; 收缩窗口 最小覆盖子串、最长K个不同字符子串 哈希 1. 两数之和 哈希反查 三数之和、四数之和、路径求和 栈 20. 有效的括号 栈匹配 HTML标签验证、栈逆序 单调栈 739. 每日温度 单调递减栈 下一个更大元素、柱状图最大矩形 链表 206. 反转链表 指针前后反转 k组反转、回文链表检测 链表 141. 环形链表 快慢指针 相交链表检测、寻找环入口 动态规划 53. 最大子序和 dp[i] = max(nums[i], dp[i-1]&#43;nums[i]) 股票最大利润、子数组和问题 动态规划 198. 打家劫舍 dp[i] = max(dp[i-1], dp[i-2]&#43;nums[i]) 环形打家劫舍、爬楼梯变体 动态规划 139. 单词拆分 dp[i] = dp[j] &amp;&amp; wordDict[j:i] 句子拼接、分割字符串最少次数 二分查找 33. 搜索旋转排序数组 二分判定区间有序性 搜索峰值、最小差距值 DFS/BFS 200. 岛屿数量 遍历连通块 图遍历、封闭区域数量、朋友圈问题 树 104. 二叉树最大深度 递归 DFS 平衡二叉树、路径和 树 236. 最近公共祖先 后序递归 目录树路径、最小公共节点类问题 三、偏题迁移示例 原题模板 面试偏题举例 迁移思路 无重复字符的最长子串 最多允许一个重复字符的最长子串 滑动窗口 &#43; 计数增加一层判断 三数之和 找出所有和为目标值的三元组 排序 &#43; 去重 &#43; 双指针，只改目标值逻辑 有效括号 字符串里只有 &lt; &gt;，规则不同 替换匹配规则即可，核心仍是栈 每日温度 求每个元素右边第一个比它小的元素 单调递增栈，方向反转 打家劫舍 环形排列的房屋 拆成两种情况：不偷第一 vs 不偷最后 单词拆分 计算所有可行的拆分方式 dp[i] 的基础上计数或回溯 二叉树最大深度 判断是否平衡二叉树 在返回深度的同时判断差值 最近公共祖先 N 叉树版本 递归逻辑相同，遍历子节点代替左右子树 四、陌生题分析框架（面试必备） 求最值 → 贪心 / 动态规划 求存在 → 哈希 / 二分 求路径 / 连通 → DFS / BFS 求配对 / 区间 → 双指针 / 滑动窗口 暴力解 &amp; 复杂度 先写最直接暴力解，作为 fallback 考虑优化方向（排序 / 哈希 / 双指针） 是否有重复子问题 有 → 动态规划 没有 → 贪心或暴力优化 输入结构 数组 → 排序 / 双指针 矩阵 → DFS / BFS 树 / 图 → 递归 / 队列 写伪代码 先讲思路，代码只是形式 面试官更关注分析能力 五、复盘计划（3 周周期） 周数 目标 内容 第1周 模板巩固 前8题（数组、链表、哈希、栈）二刷，写模板笔记 第2周 动态规划 &amp; 树 后7题二刷，形成 dp / 树模板总结 第3周 偏题迁移训练 每天抽一道陌生题，用陌生题分析框架解题，重点练思路，不追完美 六、Go 开发者模板代码示例 // 双指针模板 func twoSum(nums []int, target int) []int { m := make(map[int]int) for i, v := range nums { if j, ok := m[target-v]; ok { return []int{j, i} } m[v] = i } return nil } // 滑动窗口模板 func lengthOfLongestSubstring(s string) int { window := make(map[byte]int) left, right, res := 0, 0, 0 for right &lt; len(s) { c := s[right] right&#43;&#43; window[c]&#43;&#43; for window[c] &gt; 1 { d := s[left] left&#43;&#43; window[d]-- } if res &lt; right-left { res = right - left } } return res } // map 初始化 m := make(map[int]int) // set 用法 set := map[int]bool{} set[x] = true if set[y] { ... } // priority queue 模板 type Item struct{ value, priority int } type PQ []Item func (pq PQ) Len() int { return len(pq) } func (pq PQ) Less(i, j int) bool { return pq[i].priority &lt; pq[j].priority } func (pq PQ) Swap(i, j int) { pq[i], pq[j] = pq[j], pq[i] } func (pq *PQ) Push(x any) { *pq = append(*pq, x.(Item)) } func (pq *PQ) Pop() any { old := *pq n := len(old) x := old[n-1] *pq = old[:n-1] return x } 七、最终目标 不靠“记题”，靠“识别结构 &#43; 套模板 &#43; 临场分析”。 偏题也能快速迁移思路，不慌张。 面试时有底气，3 分钟就能讲清解题思路。 </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-10-15 21:31:14 +0800 CST'>October 15, 2025</span>&nbsp;·&nbsp;3 min</footer>
-  <a class="entry-link" aria-label="post link to 刷题方法" href="http://localhost:1313/posts/datastructalgorithm/%E5%88%B7%E9%A2%98%E6%96%B9%E6%B3%95/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">如何判断网络状况
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p></p>
-  </div>
-  <footer class="entry-footer"><span title='2025-10-15 09:26:26 +0800 CST'>October 15, 2025</span>&nbsp;·&nbsp;0 min</footer>
-  <a class="entry-link" aria-label="post link to 如何判断网络状况" href="http://localhost:1313/posts/scenario/%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E7%BD%91%E7%BB%9C%E7%8A%B6%E5%86%B5/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

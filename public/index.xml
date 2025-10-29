@@ -6,8 +6,234 @@
     <description>Recent content on yangcp</description>
     <generator>Hugo -- 0.147.4</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 22 Oct 2025 09:59:13 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 26 Oct 2025 19:15:43 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Liunx常用命令</title>
+      <link>http://localhost:1313/posts/cs/liunx%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Sun, 26 Oct 2025 19:15:43 +0800</pubDate>
+      <guid>http://localhost:1313/posts/cs/liunx%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</guid>
+      <description>&lt;p&gt;Linux 中非常常用和基础的命令，按照功能进行了分类：&lt;/p&gt;
+&lt;h3 id=&#34;1-文件和目录管理&#34;&gt;1. 文件和目录管理&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;code&gt;ls&lt;/code&gt;&lt;/strong&gt; (list)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;作用&lt;/strong&gt;：列出目录中的文件和子目录。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;常用选项&lt;/strong&gt;：
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;ls -l&lt;/code&gt;：显示详细信息（权限、所有者、大小、修改日期）。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ls -a&lt;/code&gt;：显示所有文件，包括隐藏文件（以 &lt;code&gt;.&lt;/code&gt; 开头的）。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ls -h&lt;/code&gt;：与 &lt;code&gt;-l&lt;/code&gt; 配合使用，以人类可读的格式显示文件大小（如 1K, 2M, 3G）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;示例&lt;/strong&gt;：&lt;code&gt;ls -lah /home/user&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;code&gt;cd&lt;/code&gt;&lt;/strong&gt; (change directory)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;作用&lt;/strong&gt;：切换当前工作目录。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;常用用法&lt;/strong&gt;：
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;cd /var/log&lt;/code&gt;：切换到 &lt;code&gt;/var/log&lt;/code&gt; 目录。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cd ..&lt;/code&gt;：切换到上一级目录。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cd ~&lt;/code&gt; 或 &lt;code&gt;cd&lt;/code&gt;：切换到当前用户的主目录。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cd -&lt;/code&gt;：切换到上一个工作目录。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;code&gt;pwd&lt;/code&gt;&lt;/strong&gt; (print working directory)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;作用&lt;/strong&gt;：显示当前所在的目录路径。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;code&gt;mkdir&lt;/code&gt;&lt;/strong&gt; (make directory)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;作用&lt;/strong&gt;：创建新目录。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;常用选项&lt;/strong&gt;：
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;mkdir -p /path/to/new/dir&lt;/code&gt;：递归创建目录，如果父目录不存在也会一并创建。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;示例&lt;/strong&gt;：&lt;code&gt;mkdir my_project&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;code&gt;rmdir&lt;/code&gt;&lt;/strong&gt; (remove directory)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;作用&lt;/strong&gt;：删除空目录。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;code&gt;rm&lt;/code&gt;&lt;/strong&gt; (remove)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;作用&lt;/strong&gt;：删除文件或目录。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;常用选项&lt;/strong&gt;：
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;rm file.txt&lt;/code&gt;：删除一个文件。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;rm -r directory_name&lt;/code&gt;：递归删除目录及其所有内容。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;rm -f file.txt&lt;/code&gt;：强制删除，不进行提示。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;rm -rf directory_name&lt;/code&gt;：&lt;strong&gt;（慎用！）&lt;/strong&gt; 强制递归删除目录，不会有任何提示。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;code&gt;cp&lt;/code&gt;&lt;/strong&gt; (copy)&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Go 场景题模版</title>
+      <link>http://localhost:1313/posts/scenario/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%A8%A1%E7%89%88/</link>
+      <pubDate>Wed, 22 Oct 2025 22:38:03 +0800</pubDate>
+      <guid>http://localhost:1313/posts/scenario/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%A8%A1%E7%89%88/</guid>
+      <description>&lt;h1 id=&#34;go-场景题训练手册--题目版&#34;&gt;Go 场景题训练手册 — 题目版&lt;/h1&gt;
+&lt;p&gt;作者：cp yang
+说明：分为 初级 / 中级 / 高级 / 实战 Debug 四个章节。每题为面试常见场景题（用于练习）&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;-初级场景题语言特性与陷阱&#34;&gt;🟢 初级场景题（语言特性与陷阱）&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;切片在函数参数传递时，什么时候会影响外部数据？请举例并解释。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;for range&lt;/code&gt; vs &lt;code&gt;for i := 0; i &amp;lt; len(slice); i++&lt;/code&gt;，在修改元素和效率上有什么区别？&lt;/li&gt;
+&lt;li&gt;map 初始化的正确写法有哪些？哪些写法会导致 panic？&lt;/li&gt;
+&lt;li&gt;defer 的执行顺序是什么？return 与 defer 的执行顺序如何？&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;append&lt;/code&gt; 扩容时如何影响底层数组？如何避免不必要的复制？&lt;/li&gt;
+&lt;li&gt;string 与 []byte 转换在高频场景下的性能问题如何优化？&lt;/li&gt;
+&lt;li&gt;实现一个线程安全的简单 map（支持 Get/Set/Delete）。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;-中级场景题并发与控制&#34;&gt;🟡 中级场景题（并发与控制）&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;如何使用 &lt;code&gt;sync.WaitGroup&lt;/code&gt; 控制并发任务？请给出示例，并说明常见错误。&lt;/li&gt;
+&lt;li&gt;设计一个固定大小的 goroutine 池（worker pool），能提交任务并等待完成。&lt;/li&gt;
+&lt;li&gt;设计一个生产者-消费者模型，支持多生产者、多消费者，并能优雅退出。&lt;/li&gt;
+&lt;li&gt;实现两个 goroutine 交替打印 1~100（A 打印 1，B 打印 2，依次交替）。&lt;/li&gt;
+&lt;li&gt;如何限制并发数量（例如同时最多 10 个任务）？给出实现。&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;context&lt;/code&gt; 实现任务超时与取消，给出示例。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;-高级场景题系统设计与性能&#34;&gt;🔴 高级场景题（系统设计与性能）&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;设计一个本地缓存系统，支持 TTL、并发安全和定期清理。写出核心接口与实现要点。&lt;/li&gt;
+&lt;li&gt;设计并实现一个 LRU 缓存（map + 双向链表），要求并发安全。&lt;/li&gt;
+&lt;li&gt;设计一个简易消息队列（支持发布/订阅、可持久化思路说明）。写出关键数据结构与伪码。&lt;/li&gt;
+&lt;li&gt;如何设计一个高并发的秒杀系统以防止超卖？给出架构思路与关键代码片段（Redis/本地预减库存等）。&lt;/li&gt;
+&lt;li&gt;设计一个限流组件（令牌桶），实现接口并说明在微服务网关如何使用。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;-实战-debug-场景题排障与优化&#34;&gt;⚙️ 实战 Debug 场景题（排障与优化）&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;程序出现大量 goroutine 泄漏（数量不断增长），你如何排查？列出排查步骤与 pprof 使用方法。&lt;/li&gt;
+&lt;li&gt;出现死锁（程序卡住），如何定位和修复？给出示例代码及修改建议。&lt;/li&gt;
+&lt;li&gt;程序内存暴涨并触发 GC 压力，如何分析原因并给出优化方案？&lt;/li&gt;
+&lt;li&gt;高并发下锁竞争严重（通过 Mutex 看到 QPS 降低），如何诊断并优化？&lt;/li&gt;
+&lt;li&gt;使用 pprof 找到热点 CPU 占用点后，你会如何改进代码？给出一个简单示例。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;</description>
+    </item>
+    <item>
+      <title>Go 场景题模版 — 答案版</title>
+      <link>http://localhost:1313/posts/scenario/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%A8%A1%E7%89%88-%E7%AD%94%E6%A1%88/</link>
+      <pubDate>Wed, 22 Oct 2025 22:38:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts/scenario/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%A8%A1%E7%89%88-%E7%AD%94%E6%A1%88/</guid>
+      <description>&lt;hr&gt;
+&lt;h2 id=&#34;-初级场景题语言特性与陷阱&#34;&gt;🟢 初级场景题（语言特性与陷阱）&lt;/h2&gt;
+&lt;h3 id=&#34;1-切片在函数参数传递时什么时候会影响外部数据&#34;&gt;1. 切片在函数参数传递时，什么时候会影响外部数据？&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;思路：&lt;/strong&gt; 切片是三元组（指针、len、cap）。传参时会拷贝这三项，但底层数组仍然共享。只有当 append 导致扩容（新的底层数组分配）或修改通过索引直接写入时，外部可见。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;直接 &lt;code&gt;s[i] = x&lt;/code&gt; 会影响外部；&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;s = append(s, x)&lt;/code&gt; 当 cap 不足时会分配新数组，外部不会看到新元素。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;示例代码：&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;package&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;fmt&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;appendMaybe&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;s&lt;/span&gt; []&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;) []&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;s&lt;/span&gt; = append(&lt;span style=&#34;color:#a6e22e&#34;&gt;s&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;100&lt;/span&gt;) &lt;span style=&#34;color:#75715e&#34;&gt;// 若 cap 不足，这里会分配新底层数组&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;s&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;modify&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;s&lt;/span&gt; []&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; len(&lt;span style=&#34;color:#a6e22e&#34;&gt;s&lt;/span&gt;) &amp;gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;s&lt;/span&gt;[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;] = &lt;span style=&#34;color:#ae81ff&#34;&gt;999&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;// 修改共享底层数组&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;a&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; make([]&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;a&lt;/span&gt;[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;] = &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;b&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;appendMaybe&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;a&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;a:&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;a&lt;/span&gt;) &lt;span style=&#34;color:#75715e&#34;&gt;// 如果扩容发生，a 不包含 100&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;b:&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;b&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;c&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; make([]&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;c&lt;/span&gt;[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;] = &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;d&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;appendMaybe&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;c&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;c:&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;c&lt;/span&gt;) &lt;span style=&#34;color:#75715e&#34;&gt;// cap 足够，c 会看到 append 的结果 (如果 append reuses)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;d:&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;d&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;modify&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;a&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;fmt&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;a after modify:&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;a&lt;/span&gt;) &lt;span style=&#34;color:#75715e&#34;&gt;// 被修改&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h3 id=&#34;2-for-range-vs-for-i--0-i--lenslice-i&#34;&gt;2. &lt;code&gt;for range&lt;/code&gt; vs &lt;code&gt;for i := 0; i &amp;lt; len(slice); i++&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;思路：&lt;/strong&gt; &lt;code&gt;for range&lt;/code&gt; 会在每次迭代时把元素拷贝到新的变量（v），因此直接修改 v 不会影响切片。索引访问 &lt;code&gt;slice[i]&lt;/code&gt; 直接访问底层数组可以修改原值。性能上两者差异很小，除非元素为大结构体，range 会拷贝整个结构体。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>限流熔断降级</title>
+      <link>http://localhost:1313/posts/microservice/%E9%99%90%E6%B5%81%E7%86%94%E6%96%AD%E9%99%8D%E7%BA%A7/</link>
+      <pubDate>Wed, 22 Oct 2025 17:18:39 +0800</pubDate>
+      <guid>http://localhost:1313/posts/microservice/%E9%99%90%E6%B5%81%E7%86%94%E6%96%AD%E9%99%8D%E7%BA%A7/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;「熔断、限流、降级」
+它们都属于&lt;strong&gt;服务稳定性设计&lt;/strong&gt;（Service Resilience）的一部分。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;下面我给你一个“面试官喜欢听”的回答框架，&lt;strong&gt;从概念 → 场景 → 实现 → 举例&lt;/strong&gt; 四步讲清楚，
+适合百度这种系统架构导向的岗位 👇&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;-一三者区别和联系高层答法&#34;&gt;🧩 一、三者区别和联系（高层答法）&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;一句话记忆：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;限流&lt;/strong&gt;：控制请求量，不让系统被压垮。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;熔断&lt;/strong&gt;：发现下游挂了，别再请求它。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;降级&lt;/strong&gt;：资源紧张时，主动牺牲部分功能，保证核心可用。&lt;/li&gt;
+&lt;/ul&gt;&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;面试开头可以这样讲：&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“在微服务架构下，我们通常通过&lt;strong&gt;限流、熔断、降级&lt;/strong&gt;三种机制保障系统的稳定性。
+三者的核心目标都是防止服务雪崩，只是介入的时机不同：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;限流在请求入口处防止流量打爆；&lt;/li&gt;
+&lt;li&gt;熔断在调用链中断开异常依赖；&lt;/li&gt;
+&lt;li&gt;降级则在系统压力大时主动丢弃非核心功能。”&lt;/li&gt;
+&lt;/ul&gt;&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;-二限流rate-limiting&#34;&gt;⚙️ 二、限流（Rate Limiting）&lt;/h2&gt;
+&lt;h3 id=&#34;-概念&#34;&gt;📘 概念&lt;/h3&gt;
+&lt;p&gt;限制系统单位时间内可处理的请求数。&lt;/p&gt;
+&lt;h3 id=&#34;常见算法&#34;&gt;📍常见算法&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;固定窗口&lt;/strong&gt;（Fixed Window）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;滑动窗口&lt;/strong&gt;（Sliding Window）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;漏桶算法（Leaky Bucket）&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;令牌桶算法（Token Bucket）✅ 常用&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;令牌桶算法原理：系统按照固定速率生成令牌，请求只有拿到令牌才能执行，否则拒绝或排队。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h3 id=&#34;-实现方式&#34;&gt;🛠️ 实现方式&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;单机限流&lt;/strong&gt;：用 &lt;code&gt;golang.org/x/time/rate&lt;/code&gt;（Go官方限流包）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;分布式限流&lt;/strong&gt;：用 Redis 实现（Lua脚本保证原子性）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;网关层限流&lt;/strong&gt;：在 API Gateway（如 Kong、Nginx、Kratos Gateway）配置规则&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;-举例&#34;&gt;💬 举例&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“比如我在上一个项目中，为防止短信接口被刷，我们在 Nginx 层按 IP + URI 做限流，用令牌桶算法控制速率为 10 req/s，多余的直接返回 429 Too Many Requests。”&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Init</title>
       <link>http://localhost:1313/posts/go/init/</link>
@@ -421,7 +647,11 @@ defer: 10
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;cache&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;map&lt;/span&gt;[&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;]&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;list&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Element&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;list&lt;/span&gt;     &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;list&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;List&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h1 id=&#34;进阶&#34;&gt;进阶&lt;/h1&gt;
+&lt;h2 id=&#34;图&#34;&gt;图&lt;/h2&gt;
+&lt;h2 id=&#34;-一图的基本概念&#34;&gt;🧠 一、图的基本概念&lt;/h2&gt;
+&lt;p&gt;图由：&lt;/p&gt;</description>
     </item>
     <item>
       <title>打卡计划表</title>

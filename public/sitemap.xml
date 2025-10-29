@@ -2,13 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/posts/go/init/</loc>
-    <lastmod>2025-10-22T09:59:13+08:00</lastmod>
+    <loc>http://localhost:1313/posts/scenario/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%A8%A1%E7%89%88/</loc>
+    <lastmod>2025-10-22T22:38:03+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/</loc>
-    <lastmod>2025-10-22T09:59:13+08:00</lastmod>
+    <lastmod>2025-10-22T22:38:03+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/</loc>
+    <lastmod>2025-10-22T22:38:03+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/scenario/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%A8%A1%E7%89%88-%E7%AD%94%E6%A1%88/</loc>
+    <lastmod>2025-10-22T22:38:00+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/microservice/%E9%99%90%E6%B5%81%E7%86%94%E6%96%AD%E9%99%8D%E7%BA%A7/</loc>
+    <lastmod>2025-10-22T17:18:39+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/go/init/</loc>
     <lastmod>2025-10-22T09:59:13+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/go/defer/</loc>
