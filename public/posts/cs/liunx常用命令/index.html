@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Liunx常用命令 | yangcp</title>
+<meta name="keywords" content="">
+<meta name="description" content="Linux 中非常常用和基础的命令，按照功能进行了分类：
+1. 文件和目录管理
+
+
+ls (list)
+
+作用：列出目录中的文件和子目录。
+常用选项：
+
+ls -l：显示详细信息（权限、所有者、大小、修改日期）。
+ls -a：显示所有文件，包括隐藏文件（以 . 开头的）。
+ls -h：与 -l 配合使用，以人类可读的格式显示文件大小（如 1K, 2M, 3G）。
+
+
+示例：ls -lah /home/user
+
+
+
+cd (change directory)
+
+作用：切换当前工作目录。
+常用用法：
+
+cd /var/log：切换到 /var/log 目录。
+cd ..：切换到上一级目录。
+cd ~ 或 cd：切换到当前用户的主目录。
+cd -：切换到上一个工作目录。
+
+
+
+
+
+pwd (print working directory)
+
+作用：显示当前所在的目录路径。
+
+
+
+mkdir (make directory)
+
+作用：创建新目录。
+常用选项：
+
+mkdir -p /path/to/new/dir：递归创建目录，如果父目录不存在也会一并创建。
+
+
+示例：mkdir my_project
+
+
+
+rmdir (remove directory)
+
+作用：删除空目录。
+
+
+
+rm (remove)
+
+作用：删除文件或目录。
+常用选项：
+
+rm file.txt：删除一个文件。
+rm -r directory_name：递归删除目录及其所有内容。
+rm -f file.txt：强制删除，不进行提示。
+rm -rf directory_name：（慎用！） 强制递归删除目录，不会有任何提示。
+
+
+
+
+
+cp (copy)">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/cs/liunx%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/cs/liunx%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="yangcp (Alt + H)">yangcp</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tag">
+                    <span>Tag</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/me/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Liunx常用命令
+    </h1>
+    <div class="post-meta"><span title='2025-10-26 19:15:43 +0800 CST'>October 26, 2025</span>&nbsp;·&nbsp;3 min
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#1-%e6%96%87%e4%bb%b6%e5%92%8c%e7%9b%ae%e5%bd%95%e7%ae%a1%e7%90%86" aria-label="1. 文件和目录管理">1. 文件和目录管理</a></li>
+                <li>
+                    <a href="#2-%e6%96%87%e6%9c%ac%e6%9f%a5%e7%9c%8b%e5%92%8c%e5%a4%84%e7%90%86" aria-label="2. 文本查看和处理">2. 文本查看和处理</a></li>
+                <li>
+                    <a href="#3-%e7%b3%bb%e7%bb%9f%e4%bf%a1%e6%81%af%e5%92%8c%e7%9b%91%e6%8e%a7" aria-label="3. 系统信息和监控">3. 系统信息和监控</a></li>
+                <li>
+                    <a href="#4-%e6%9d%83%e9%99%90%e7%ae%a1%e7%90%86" aria-label="4. 权限管理">4. 权限管理</a></li>
+                <li>
+                    <a href="#5-%e7%bd%91%e7%bb%9c%e5%91%bd%e4%bb%a4" aria-label="5. 网络命令">5. 网络命令</a></li>
+                <li>
+                    <a href="#6-%e5%8e%8b%e7%bc%a9%e5%92%8c%e5%bd%92%e6%a1%a3" aria-label="6. 压缩和归档">6. 压缩和归档</a></li>
+                <li>
+                    <a href="#7-%e5%85%b6%e4%bb%96%e5%b8%b8%e7%94%a8%e5%91%bd%e4%bb%a4" aria-label="7. 其他常用命令">7. 其他常用命令</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p>Linux 中非常常用和基础的命令，按照功能进行了分类：</p>
+<h3 id="1-文件和目录管理">1. 文件和目录管理<a hidden class="anchor" aria-hidden="true" href="#1-文件和目录管理">#</a></h3>
+<ul>
+<li>
+<p><strong><code>ls</code></strong> (list)</p>
+<ul>
+<li><strong>作用</strong>：列出目录中的文件和子目录。</li>
+<li><strong>常用选项</strong>：
+<ul>
+<li><code>ls -l</code>：显示详细信息（权限、所有者、大小、修改日期）。</li>
+<li><code>ls -a</code>：显示所有文件，包括隐藏文件（以 <code>.</code> 开头的）。</li>
+<li><code>ls -h</code>：与 <code>-l</code> 配合使用，以人类可读的格式显示文件大小（如 1K, 2M, 3G）。</li>
+</ul>
+</li>
+<li><strong>示例</strong>：<code>ls -lah /home/user</code></li>
+</ul>
+</li>
+<li>
+<p><strong><code>cd</code></strong> (change directory)</p>
+<ul>
+<li><strong>作用</strong>：切换当前工作目录。</li>
+<li><strong>常用用法</strong>：
+<ul>
+<li><code>cd /var/log</code>：切换到 <code>/var/log</code> 目录。</li>
+<li><code>cd ..</code>：切换到上一级目录。</li>
+<li><code>cd ~</code> 或 <code>cd</code>：切换到当前用户的主目录。</li>
+<li><code>cd -</code>：切换到上一个工作目录。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>pwd</code></strong> (print working directory)</p>
+<ul>
+<li><strong>作用</strong>：显示当前所在的目录路径。</li>
+</ul>
+</li>
+<li>
+<p><strong><code>mkdir</code></strong> (make directory)</p>
+<ul>
+<li><strong>作用</strong>：创建新目录。</li>
+<li><strong>常用选项</strong>：
+<ul>
+<li><code>mkdir -p /path/to/new/dir</code>：递归创建目录，如果父目录不存在也会一并创建。</li>
+</ul>
+</li>
+<li><strong>示例</strong>：<code>mkdir my_project</code></li>
+</ul>
+</li>
+<li>
+<p><strong><code>rmdir</code></strong> (remove directory)</p>
+<ul>
+<li><strong>作用</strong>：删除空目录。</li>
+</ul>
+</li>
+<li>
+<p><strong><code>rm</code></strong> (remove)</p>
+<ul>
+<li><strong>作用</strong>：删除文件或目录。</li>
+<li><strong>常用选项</strong>：
+<ul>
+<li><code>rm file.txt</code>：删除一个文件。</li>
+<li><code>rm -r directory_name</code>：递归删除目录及其所有内容。</li>
+<li><code>rm -f file.txt</code>：强制删除，不进行提示。</li>
+<li><code>rm -rf directory_name</code>：<strong>（慎用！）</strong> 强制递归删除目录，不会有任何提示。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>cp</code></strong> (copy)</p>
+<ul>
+<li><strong>作用</strong>：复制文件或目录。</li>
+<li><strong>常用用法</strong>：
+<ul>
+<li><code>cp source_file destination_file</code>：复制文件。</li>
+<li><code>cp source_file destination_directory/</code>：将文件复制到目录中。</li>
+<li><code>cp -r source_directory destination_directory/</code>：递归复制整个目录。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>mv</code></strong> (move)</p>
+<ul>
+<li><strong>作用</strong>：移动文件/目录，或者重命名。</li>
+<li><strong>常用用法</strong>：
+<ul>
+<li><code>mv old_name.txt new_name.txt</code>：重命名。</li>
+<li><code>mv file.txt /path/to/destination/</code>：将文件移动到新位置。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>touch</code></strong></p>
+<ul>
+<li><strong>作用</strong>：创建一个空文件，或者更新已有文件的时间戳。</li>
+<li><strong>示例</strong>：<code>touch new_file.log</code></li>
+</ul>
+</li>
+<li>
+<p><strong><code>find</code></strong></p>
+<ul>
+<li><strong>作用</strong>：在指定目录中搜索文件。</li>
+<li><strong>常用用法</strong>：
+<ul>
+<li><code>find /home -name &quot;*.txt&quot;</code>：在 <code>/home</code> 目录及子目录中查找所有 <code>.txt</code> 文件。</li>
+<li><code>find . -type d -name &quot;logs&quot;</code>：在当前目录查找所有名为 &ldquo;logs&rdquo; 的目录。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-文本查看和处理">2. 文本查看和处理<a hidden class="anchor" aria-hidden="true" href="#2-文本查看和处理">#</a></h3>
+<ul>
+<li>
+<p><strong><code>cat</code></strong> (concatenate)</p>
+<ul>
+<li><strong>作用</strong>：查看文件内容、合并文件。</li>
+<li><strong>示例</strong>：<code>cat /etc/passwd</code></li>
+</ul>
+</li>
+<li>
+<p><strong><code>less</code></strong></p>
+<ul>
+<li><strong>作用</strong>：分页查看文件内容（比 <code>more</code> 更强大，支持前后翻页）。</li>
+<li><strong>操作</strong>：按 <code>q</code> 退出，按 <code>/</code> 搜索。</li>
+<li><strong>示例</strong>：<code>less large_file.log</code></li>
+</ul>
+</li>
+<li>
+<p><strong><code>head</code></strong></p>
+<ul>
+<li><strong>作用</strong>：显示文件的开头几行（默认 10 行）。</li>
+<li><strong>示例</strong>：<code>head -n 20 file.txt</code> (显示前 20 行)</li>
+</ul>
+</li>
+<li>
+<p><strong><code>tail</code></strong></p>
+<ul>
+<li><strong>作用</strong>：显示文件的末尾几行（默认 10 行）。</li>
+<li><strong>常用选项</strong>：
+<ul>
+<li><code>tail -n 50 file.txt</code> (显示后 50 行)</li>
+<li><code>tail -f /var/log/syslog</code>：<strong>（非常常用）</strong> 实时跟踪文件的新增内容，常用于看日志。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>grep</code></strong></p>
+<ul>
+<li><strong>作用</strong>：在文件中搜索包含指定字符串的行。</li>
+<li><strong>常用选项</strong>：
+<ul>
+<li><code>grep &quot;error&quot; /var/log/syslog</code>：在文件中搜索 &ldquo;error&rdquo;。</li>
+<li><code>grep -r &quot;my_function&quot; /project/src</code>：在目录中递归搜索。</li>
+<li><code>grep -i &quot;hello&quot;</code>：忽略大小写搜索。</li>
+<li><code>grep -v &quot;debug&quot;</code>：反向搜索，显示不包含 &ldquo;debug&rdquo; 的行。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>wc</code></strong> (word count)</p>
+<ul>
+<li><strong>作用</strong>：统计文件的行数、单词数、字节数。</li>
+<li><strong>常用选项</strong>：
+<ul>
+<li><code>wc -l file.txt</code>：只统计行数。</li>
+<li><code>wc -w file.txt</code>：只统计单词数。</li>
+<li><code>wc -c file.txt</code>：只统计字节数。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>diff</code></strong></p>
+<ul>
+<li><strong>作用</strong>：比较两个文件的差异。</li>
+<li><strong>示例</strong>：<code>diff file1.txt file2.txt</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="3-系统信息和监控">3. 系统信息和监控<a hidden class="anchor" aria-hidden="true" href="#3-系统信息和监控">#</a></h3>
+<ul>
+<li>
+<p><strong><code>df</code></strong> (disk free)</p>
+<ul>
+<li><strong>作用</strong>：查看磁盘空间使用情况。</li>
+<li><strong>常用选项</strong>：<code>df -h</code> (以人类可读的格式显示)。</li>
+</ul>
+</li>
+<li>
+<p><strong><code>du</code></strong> (disk usage)</p>
+<ul>
+<li><strong>作用</strong>：查看文件或目录占用的磁盘空间大小。</li>
+<li><strong>常用选项</strong>：
+<ul>
+<li><code>du -sh /path/to/directory</code>：查看指定目录的总大小 (<code>-s</code> 总结, <code>-h</code> 人类可读)。</li>
+<li><code>du -h --max-depth=1 /home</code>：查看 <code>/home</code> 目录下第一级子目录各自的大小。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>top</code></strong></p>
+<ul>
+<li><strong>作用</strong>：实时动态地显示系统进程和资源占用情况（CPU、内存等）。</li>
+<li><strong>操作</strong>：按 <code>q</code> 退出，按 <code>P</code> 按 CPU 排序，按 <code>M</code> 按内存排序。</li>
+</ul>
+</li>
+<li>
+<p><strong><code>htop</code></strong></p>
+<ul>
+<li><strong>作用</strong>：<code>top</code> 的增强版，界面更友好，支持鼠标操作（可能需要额外安装）。</li>
+</ul>
+</li>
+<li>
+<p><strong><code>free</code></strong></p>
+<ul>
+<li><strong>作用</strong>：查看内存和交换空间（swap）的使用情况。</li>
+<li><strong>常用选项</strong>：<code>free -h</code> (以人类可读的格式显示)。</li>
+</ul>
+</li>
+<li>
+<p><strong><code>ps</code></strong> (process status)</p>
+<ul>
+<li><strong>作用</strong>：查看当前系统的进程状态。</li>
+<li><strong>常用选项</strong>：
+<ul>
+<li><code>ps aux</code>：显示所有用户的所有进程（BSD 风格）。</li>
+<li><code>ps -ef</code>：显示所有进程的完整信息（System V 风格）。</li>
+</ul>
+</li>
+<li><strong>组合使用</strong>：<code>ps aux | grep &quot;nginx&quot;</code> (查找 nginx 相关的进程)。</li>
+</ul>
+</li>
+<li>
+<p><strong><code>kill</code></strong></p>
+<ul>
+<li><strong>作用</strong>：向进程发送信号，通常用于终止进程。</li>
+<li><strong>常用用法</strong>：
+<ul>
+<li><code>kill [PID]</code>：终止指定 PID 的进程 (发送 SIGTERM 信号)。</li>
+<li><code>kill -9 [PID]</code>：<strong>（慎用）</strong> 强制杀死进程 (发送 SIGKILL 信号)。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>uptime</code></strong></p>
+<ul>
+<li><strong>作用</strong>：显示系统已运行时间、登录用户数以及系统平均负载。</li>
+</ul>
+</li>
+<li>
+<p><strong><code>uname</code></strong></p>
+<ul>
+<li><strong>作用</strong>：显示系统内核和操作系统信息。</li>
+<li><strong>常用选项</strong>：<code>uname -a</code> (显示所有信息)。</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-权限管理">4. 权限管理<a hidden class="anchor" aria-hidden="true" href="#4-权限管理">#</a></h3>
+<ul>
+<li>
+<p><strong><code>chmod</code></strong> (change mode)</p>
+<ul>
+<li><strong>作用</strong>：修改文件或目录的权限。</li>
+<li><strong>常用用法</strong>：
+<ul>
+<li><code>chmod 755 script.sh</code> (使用数字设置权限：rwx r-x r-x)。</li>
+<li><code>chmod +x script.sh</code> (给文件添加执行权限)。</li>
+<li><code>chmod -R 644 /path/to/dir</code> (递归修改目录下所有文件的权限)。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>chown</code></strong> (change owner)</p>
+<ul>
+<li><strong>作用</strong>：修改文件或目录的所有者和所属组。</li>
+<li><strong>常用用法</strong>：
+<ul>
+<li><code>chown new_owner file.txt</code>：修改所有者。</li>
+<li><code>chown new_owner:new_group file.txt</code>：同时修改所有者和组。</li>
+<li><code>chown -R user:group /path/to/dir</code>：递归修改。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>sudo</code></strong></p>
+<ul>
+<li><strong>作用</strong>：以超级用户（root）或其他用户的身份执行命令。</li>
+<li><strong>示例</strong>：<code>sudo apt update</code> (在 Ubuntu/Debian 上以 root 权限更新软件包列表)。</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-网络命令">5. 网络命令<a hidden class="anchor" aria-hidden="true" href="#5-网络命令">#</a></h3>
+<ul>
+<li>
+<p><strong><code>ping</code></strong></p>
+<ul>
+<li><strong>作用</strong>：测试与另一台主机之间的网络连接。</li>
+<li><strong>示例</strong>：<code>ping baidu.com</code></li>
+</ul>
+</li>
+<li>
+<p><strong><code>curl</code></strong></p>
+<ul>
+<li><strong>作用</strong>：一个强大的命令行工具，用于传输数据，常用于测试 HTTP 请求。</li>
+<li><strong>示例</strong>：<code>curl https://api.example.com/data</code></li>
+</ul>
+</li>
+<li>
+<p><strong><code>wget</code></strong></p>
+<ul>
+<li><strong>作用</strong>：用于从网络上下载文件。</li>
+<li><strong>示例</strong>：<code>wget https://example.com/large_file.zip</code></li>
+</ul>
+</li>
+<li>
+<p><strong><code>ip</code></strong></p>
+<ul>
+<li><strong>作用</strong>：显示和管理路由、网络设备、策略路由和隧道（正在取代 <code>ifconfig</code>）。</li>
+<li><strong>常用用法</strong>：
+<ul>
+<li><code>ip addr show</code> 或 <code>ip a</code>：查看 IP 地址。</li>
+<li><code>ip route show</code>：查看路由表。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>netstat</code></strong> (或 <code>ss</code>)</p>
+<ul>
+<li><strong>作用</strong>：查看网络连接、路由表、接口统计等。</li>
+<li><strong>常用选项</strong>：<code>netstat -tulnp</code> (显示 TCP/UDP 的监听端口及对应的程序名)。</li>
+<li><strong>现代替代</strong>：<code>ss -tulnp</code> (功能类似 <code>netstat</code>，但更高效)。</li>
+</ul>
+</li>
+</ul>
+<h3 id="6-压缩和归档">6. 压缩和归档<a hidden class="anchor" aria-hidden="true" href="#6-压缩和归档">#</a></h3>
+<ul>
+<li>
+<p><strong><code>tar</code></strong></p>
+<ul>
+<li><strong>作用</strong>：打包和解包 <code>.tar</code> 文件，经常与 <code>gzip</code> 或 <code>bzip2</code> 配合使用。</li>
+<li><strong>常用选项</strong>：
+<ul>
+<li><code>tar -cvf archive.tar /path/to/dir</code>：打包 (<code>-c</code> 创建, <code>-v</code> 显示过程, <code>-f</code> 指定文件名)。</li>
+<li><code>tar -xvf archive.tar</code>：解包。</li>
+<li><code>tar -czvf archive.tar.gz /path/to/dir</code>：打包并用 gzip 压缩 (<code>-z</code>)。</li>
+<li><code>tar -xzvf archive.tar.gz</code>：解压 gzip 压缩包。</li>
+<li><code>tar -cjvf archive.tar.bz2 /path/to/dir</code>：打包并用 bzip2 压缩 (<code>-j</code>)。</li>
+<li><code>tar -xjvf archive.tar.bz2</code>：解压 bzip2 压缩包。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>gzip</code></strong></p>
+<ul>
+<li><strong>作用</strong>：压缩文件（生成 <code>.gz</code> 文件）。</li>
+<li><strong>示例</strong>：<code>gzip file.txt</code> (会生成 <code>file.txt.gz</code> 并删除原文件)。</li>
+<li><strong>解压</strong>：<code>gunzip file.txt.gz</code></li>
+</ul>
+</li>
+<li>
+<p><strong><code>zip</code> / <code>unzip</code></strong></p>
+<ul>
+<li><strong>作用</strong>：用于处理 <code>.zip</code> 格式的压缩文件。</li>
+<li><strong>示例</strong>：
+<ul>
+<li><code>zip -r archive.zip directory/</code></li>
+<li><code>unzip archive.zip</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="7-其他常用命令">7. 其他常用命令<a hidden class="anchor" aria-hidden="true" href="#7-其他常用命令">#</a></h3>
+<ul>
+<li>
+<p><strong><code>man</code></strong> (manual)</p>
+<ul>
+<li><strong>作用</strong>：查看命令的帮助手册。</li>
+<li><strong>示例</strong>：<code>man ls</code> (查看 <code>ls</code> 命令的用法)。</li>
+</ul>
+</li>
+<li>
+<p><strong><code>history</code></strong></p>
+<ul>
+<li><strong>作用</strong>：显示在 shell 中执行过的历史命令。</li>
+</ul>
+</li>
+<li>
+<p><strong><code>echo</code></strong></p>
+<ul>
+<li><strong>作用</strong>：在终端打印输出文本或变量。</li>
+<li><strong>示例</strong>：<code>echo &quot;Hello World&quot;</code></li>
+</ul>
+</li>
+<li>
+<p><strong><code>|</code> (管道符)</strong></p>
+<ul>
+<li><strong>作用</strong>：将一个命令的输出作为另一个命令的输入。</li>
+<li><strong>示例</strong>：<code>ps aux | grep &quot;chrome&quot;</code> (将 <code>ps</code> 的输出交给 <code>grep</code> 来过滤)。</li>
+</ul>
+</li>
+<li>
+<p><strong><code>&gt;</code> 和 <code>&gt;&gt;</code> (重定向)</strong></p>
+<ul>
+<li><strong>作用</strong>：将命令的输出重定向到文件。</li>
+<li><strong><code>&gt;</code></strong>：覆盖写入。<code>ls -l &gt; file_list.txt</code></li>
+<li><strong><code>&gt;&gt;</code></strong>：追加写入。<code>echo &quot;New log entry&quot; &gt;&gt; app.log</code></li>
+</ul>
+</li>
+</ul>
+<p>掌握这些命令是高效使用 Linux 系统的基础。</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="next" href="http://localhost:1313/posts/scenario/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%A8%A1%E7%89%88/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Go 场景题模版</span>
+  </a>
+</nav>
+
+  </footer><div id="utterances-comments"></div>
+<script src="https://utteranc.es/client.js"
+        repo="yangcp25/yangcp25.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">yangcp</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

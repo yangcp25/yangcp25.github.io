@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>限流熔断降级 | yangcp</title>
+<meta name="keywords" content="">
+<meta name="description" content="
+「熔断、限流、降级」
+它们都属于服务稳定性设计（Service Resilience）的一部分。
+下面我给你一个“面试官喜欢听”的回答框架，从概念 → 场景 → 实现 → 举例 四步讲清楚，
+适合百度这种系统架构导向的岗位 👇
+
+🧩 一、三者区别和联系（高层答法）
+
+一句话记忆：
+
+限流：控制请求量，不让系统被压垮。
+熔断：发现下游挂了，别再请求它。
+降级：资源紧张时，主动牺牲部分功能，保证核心可用。
+
+面试开头可以这样讲：
+
+“在微服务架构下，我们通常通过限流、熔断、降级三种机制保障系统的稳定性。
+三者的核心目标都是防止服务雪崩，只是介入的时机不同：
+
+限流在请求入口处防止流量打爆；
+熔断在调用链中断开异常依赖；
+降级则在系统压力大时主动丢弃非核心功能。”
+
+
+⚙️ 二、限流（Rate Limiting）
+📘 概念
+限制系统单位时间内可处理的请求数。
+📍常见算法
+
+固定窗口（Fixed Window）
+滑动窗口（Sliding Window）
+漏桶算法（Leaky Bucket）
+令牌桶算法（Token Bucket）✅ 常用
+
+
+令牌桶算法原理：系统按照固定速率生成令牌，请求只有拿到令牌才能执行，否则拒绝或排队。
+🛠️ 实现方式
+
+单机限流：用 golang.org/x/time/rate（Go官方限流包）
+分布式限流：用 Redis 实现（Lua脚本保证原子性）
+网关层限流：在 API Gateway（如 Kong、Nginx、Kratos Gateway）配置规则
+
+💬 举例
+
+“比如我在上一个项目中，为防止短信接口被刷，我们在 Nginx 层按 IP &#43; URI 做限流，用令牌桶算法控制速率为 10 req/s，多余的直接返回 429 Too Many Requests。”">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/microservice/%E9%99%90%E6%B5%81%E7%86%94%E6%96%AD%E9%99%8D%E7%BA%A7/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/microservice/%E9%99%90%E6%B5%81%E7%86%94%E6%96%AD%E9%99%8D%E7%BA%A7/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="yangcp (Alt + H)">yangcp</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tag">
+                    <span>Tag</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/me/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      限流熔断降级
+    </h1>
+    <div class="post-meta"><span title='2025-10-22 17:18:39 +0800 CST'>October 22, 2025</span>&nbsp;·&nbsp;2 min
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul><ul>
+                <li>
+                    <a href="#-%e4%b8%80%e4%b8%89%e8%80%85%e5%8c%ba%e5%88%ab%e5%92%8c%e8%81%94%e7%b3%bb%e9%ab%98%e5%b1%82%e7%ad%94%e6%b3%95" aria-label="🧩 一、三者区别和联系（高层答法）">🧩 一、三者区别和联系（高层答法）</a></li>
+                <li>
+                    <a href="#-%e4%ba%8c%e9%99%90%e6%b5%81rate-limiting" aria-label="⚙️ 二、限流（Rate Limiting）">⚙️ 二、限流（Rate Limiting）</a><ul>
+                        
+                <li>
+                    <a href="#-%e6%a6%82%e5%bf%b5" aria-label="📘 概念">📘 概念</a></li>
+                <li>
+                    <a href="#%e5%b8%b8%e8%a7%81%e7%ae%97%e6%b3%95" aria-label="📍常见算法">📍常见算法</a></li>
+                <li>
+                    <a href="#-%e5%ae%9e%e7%8e%b0%e6%96%b9%e5%bc%8f" aria-label="🛠️ 实现方式">🛠️ 实现方式</a></li>
+                <li>
+                    <a href="#-%e4%b8%be%e4%be%8b" aria-label="💬 举例">💬 举例</a></li></ul>
+                </li>
+                <li>
+                    <a href="#-%e4%b8%89%e7%86%94%e6%96%adcircuit-breaker" aria-label="⚡ 三、熔断（Circuit Breaker）">⚡ 三、熔断（Circuit Breaker）</a><ul>
+                        
+                <li>
+                    <a href="#-%e6%a6%82%e5%bf%b5-1" aria-label="📘 概念">📘 概念</a></li>
+                <li>
+                    <a href="#%e5%ae%9e%e7%8e%b0%e6%9c%ba%e5%88%b6" aria-label="📍实现机制">📍实现机制</a></li>
+                <li>
+                    <a href="#-%e5%ae%9e%e7%8e%b0%e6%96%b9%e5%bc%8f-1" aria-label="🛠️ 实现方式">🛠️ 实现方式</a></li>
+                <li>
+                    <a href="#-%e4%b8%be%e4%be%8b-1" aria-label="💬 举例">💬 举例</a></li></ul>
+                </li>
+                <li>
+                    <a href="#-%e5%9b%9b%e9%99%8d%e7%ba%a7degrade--fallback" aria-label="🪫 四、降级（Degrade / Fallback）">🪫 四、降级（Degrade / Fallback）</a><ul>
+                        
+                <li>
+                    <a href="#-%e6%a6%82%e5%bf%b5-2" aria-label="📘 概念">📘 概念</a></li>
+                <li>
+                    <a href="#%e5%85%b8%e5%9e%8b%e5%9c%ba%e6%99%af" aria-label="📍典型场景">📍典型场景</a></li>
+                <li>
+                    <a href="#-%e5%ae%9e%e7%8e%b0%e6%96%b9%e5%bc%8f-2" aria-label="🛠️ 实现方式">🛠️ 实现方式</a></li>
+                <li>
+                    <a href="#-%e4%b8%be%e4%be%8b-2" aria-label="💬 举例">💬 举例</a></li></ul>
+                </li>
+                <li>
+                    <a href="#-%e4%ba%94%e4%b8%89%e8%80%85%e5%85%b3%e7%b3%bb%e6%80%bb%e7%bb%93%e9%9d%a2%e8%af%95%e5%8a%a0%e5%88%86%e6%80%bb%e7%bb%93" aria-label="🔄 五、三者关系总结（面试加分总结）">🔄 五、三者关系总结（面试加分总结）</a></li>
+                <li>
+                    <a href="#-%e9%9d%a2%e8%af%95%e5%ae%98%e5%bb%b6%e4%bc%b8%e9%97%ae%e6%b3%95%e6%8f%90%e5%89%8d%e5%87%86%e5%a4%87" aria-label="🧠 面试官延伸问法（提前准备）">🧠 面试官延伸问法（提前准备）</a></li>
+                <li>
+                    <a href="#-%e6%80%bb%e7%bb%93" aria-label="✅ 总结">✅ 总结</a></li></ul>
+                    
+                <li>
+                    <a href="#%e8%bf%9b%e9%98%b6" aria-label="进阶">进阶</a><ul>
+                        
+                <li>
+                    <a href="#-%e9%97%ae%e9%a2%98%e6%a0%b8%e5%bf%83%e5%be%ae%e6%9c%8d%e5%8a%a1%e4%b8%ad%e7%9a%84%e7%86%94%e6%96%ad%e9%99%90%e6%b5%81%e9%99%8d%e7%ba%a7%e6%9c%ba%e5%88%b6" aria-label="🎯 问题核心：「微服务中的熔断、限流、降级机制」">🎯 问题核心：「微服务中的熔断、限流、降级机制」</a></li>
+                <li>
+                    <a href="#%e4%b8%80%e5%85%88%e5%8c%ba%e5%88%86%e6%a6%82%e5%bf%b5%e7%ae%80%e7%9f%ad%e4%bd%86%e6%b8%85%e6%99%b0" aria-label="一、先区分概念（简短但清晰）">一、先区分概念（简短但清晰）</a></li>
+                <li>
+                    <a href="#%e4%ba%8c%e5%8e%9f%e7%90%86%e4%b8%8e%e5%ae%9e%e7%8e%b0%e6%96%b9%e5%bc%8f" aria-label="二、原理与实现方式">二、原理与实现方式</a><ul>
+                        
+                <li>
+                    <a href="#1-%e9%99%90%e6%b5%81" aria-label="1️⃣ 限流">1️⃣ 限流</a></li>
+                <li>
+                    <a href="#2-%e7%86%94%e6%96%ad" aria-label="2️⃣ 熔断">2️⃣ 熔断</a></li>
+                <li>
+                    <a href="#3-%e9%99%8d%e7%ba%a7" aria-label="3️⃣ 降级">3️⃣ 降级</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%b8%89%e7%ad%94%e9%a2%98%e6%a8%a1%e6%9d%bf%e9%9d%a2%e8%af%95%e6%97%b6%e8%bf%99%e6%a0%b7%e8%af%b4" aria-label="三、答题模板（面试时这样说）">三、答题模板（面试时这样说）</a></li>
+                <li>
+                    <a href="#%e5%9b%9b%e8%bf%9b%e9%98%b6%e5%8a%a0%e5%88%86%e7%82%b9" aria-label="四、进阶加分点">四、进阶加分点</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><blockquote>
+<p>「熔断、限流、降级」
+它们都属于<strong>服务稳定性设计</strong>（Service Resilience）的一部分。</p></blockquote>
+<p>下面我给你一个“面试官喜欢听”的回答框架，<strong>从概念 → 场景 → 实现 → 举例</strong> 四步讲清楚，
+适合百度这种系统架构导向的岗位 👇</p>
+<hr>
+<h2 id="-一三者区别和联系高层答法">🧩 一、三者区别和联系（高层答法）<a hidden class="anchor" aria-hidden="true" href="#-一三者区别和联系高层答法">#</a></h2>
+<blockquote>
+<p><strong>一句话记忆：</strong></p>
+<ul>
+<li><strong>限流</strong>：控制请求量，不让系统被压垮。</li>
+<li><strong>熔断</strong>：发现下游挂了，别再请求它。</li>
+<li><strong>降级</strong>：资源紧张时，主动牺牲部分功能，保证核心可用。</li>
+</ul></blockquote>
+<p><strong>面试开头可以这样讲：</strong></p>
+<blockquote>
+<p>“在微服务架构下，我们通常通过<strong>限流、熔断、降级</strong>三种机制保障系统的稳定性。
+三者的核心目标都是防止服务雪崩，只是介入的时机不同：</p>
+<ul>
+<li>限流在请求入口处防止流量打爆；</li>
+<li>熔断在调用链中断开异常依赖；</li>
+<li>降级则在系统压力大时主动丢弃非核心功能。”</li>
+</ul></blockquote>
+<hr>
+<h2 id="-二限流rate-limiting">⚙️ 二、限流（Rate Limiting）<a hidden class="anchor" aria-hidden="true" href="#-二限流rate-limiting">#</a></h2>
+<h3 id="-概念">📘 概念<a hidden class="anchor" aria-hidden="true" href="#-概念">#</a></h3>
+<p>限制系统单位时间内可处理的请求数。</p>
+<h3 id="常见算法">📍常见算法<a hidden class="anchor" aria-hidden="true" href="#常见算法">#</a></h3>
+<ol>
+<li><strong>固定窗口</strong>（Fixed Window）</li>
+<li><strong>滑动窗口</strong>（Sliding Window）</li>
+<li><strong>漏桶算法（Leaky Bucket）</strong></li>
+<li><strong>令牌桶算法（Token Bucket）✅ 常用</strong></li>
+</ol>
+<blockquote>
+<p>令牌桶算法原理：系统按照固定速率生成令牌，请求只有拿到令牌才能执行，否则拒绝或排队。</p></blockquote>
+<h3 id="-实现方式">🛠️ 实现方式<a hidden class="anchor" aria-hidden="true" href="#-实现方式">#</a></h3>
+<ul>
+<li><strong>单机限流</strong>：用 <code>golang.org/x/time/rate</code>（Go官方限流包）</li>
+<li><strong>分布式限流</strong>：用 Redis 实现（Lua脚本保证原子性）</li>
+<li><strong>网关层限流</strong>：在 API Gateway（如 Kong、Nginx、Kratos Gateway）配置规则</li>
+</ul>
+<h3 id="-举例">💬 举例<a hidden class="anchor" aria-hidden="true" href="#-举例">#</a></h3>
+<blockquote>
+<p>“比如我在上一个项目中，为防止短信接口被刷，我们在 Nginx 层按 IP + URI 做限流，用令牌桶算法控制速率为 10 req/s，多余的直接返回 429 Too Many Requests。”</p></blockquote>
+<hr>
+<h2 id="-三熔断circuit-breaker">⚡ 三、熔断（Circuit Breaker）<a hidden class="anchor" aria-hidden="true" href="#-三熔断circuit-breaker">#</a></h2>
+<h3 id="-概念-1">📘 概念<a hidden class="anchor" aria-hidden="true" href="#-概念-1">#</a></h3>
+<p>当调用下游服务持续失败时，<strong>自动中断调用一段时间</strong>，防止整个系统被拖垮。</p>
+<h3 id="实现机制">📍实现机制<a hidden class="anchor" aria-hidden="true" href="#实现机制">#</a></h3>
+<p>通常包含三个状态：</p>
+<ul>
+<li><strong>Closed（闭合）</strong>：正常请求</li>
+<li><strong>Open（打开）</strong>：达到失败阈值后，直接拒绝请求（避免雪崩）</li>
+<li><strong>Half-Open（半开）</strong>：等待一部分请求探测下游是否恢复</li>
+</ul>
+<blockquote>
+<p>熔断器会记录失败次数和超时率，当超过阈值时进入 <code>Open</code> 状态；一段时间后再尝试“探测请求”恢复。</p></blockquote>
+<h3 id="-实现方式-1">🛠️ 实现方式<a hidden class="anchor" aria-hidden="true" href="#-实现方式-1">#</a></h3>
+<ul>
+<li><strong>Go中</strong>可用：<a href="https://github.com/sony/gobreaker">sony/gobreaker</a>、Resilience4j（Java风格）</li>
+<li><strong>Kratos中</strong>：在客户端中间件配置熔断策略</li>
+<li><strong>分布式场景</strong>：Prometheus + Alertmanager 做熔断触发</li>
+</ul>
+<h3 id="-举例-1">💬 举例<a hidden class="anchor" aria-hidden="true" href="#-举例-1">#</a></h3>
+<blockquote>
+<p>“比如调用AI生成服务时，如果QPS激增，下游生成模块响应超时率超过30%，我们触发熔断，暂时返回兜底提示‘系统繁忙’，等过一段时间再半开探测。”</p></blockquote>
+<hr>
+<h2 id="-四降级degrade--fallback">🪫 四、降级（Degrade / Fallback）<a hidden class="anchor" aria-hidden="true" href="#-四降级degrade--fallback">#</a></h2>
+<h3 id="-概念-2">📘 概念<a hidden class="anchor" aria-hidden="true" href="#-概念-2">#</a></h3>
+<p>在系统高负载、下游故障或熔断时，<strong>主动关闭部分非核心功能</strong>，以保障主流程可用。</p>
+<h3 id="典型场景">📍典型场景<a hidden class="anchor" aria-hidden="true" href="#典型场景">#</a></h3>
+<ul>
+<li>推荐系统只返回缓存内容（不实时召回）</li>
+<li>搜索接口只展示主结果，不展示相关推荐</li>
+<li>AIGC接口超时则直接提示“任务排队中”</li>
+</ul>
+<h3 id="-实现方式-2">🛠️ 实现方式<a hidden class="anchor" aria-hidden="true" href="#-实现方式-2">#</a></h3>
+<ol>
+<li><strong>静态降级</strong>：直接返回默认值或缓存结果</li>
+<li><strong>动态降级</strong>：通过配置中心（如 Apollo、Nacos）动态调整策略</li>
+<li><strong>智能降级</strong>：结合熔断 + 流量监控自动触发</li>
+</ol>
+<h3 id="-举例-2">💬 举例<a hidden class="anchor" aria-hidden="true" href="#-举例-2">#</a></h3>
+<blockquote>
+<p>“比如在AIGC任务高峰期，我们检测到生成服务CPU飙升，会主动将生成图片功能降级为文本描述生成，让核心任务不中断。”</p></blockquote>
+<hr>
+<h2 id="-五三者关系总结面试加分总结">🔄 五、三者关系总结（面试加分总结）<a hidden class="anchor" aria-hidden="true" href="#-五三者关系总结面试加分总结">#</a></h2>
+<blockquote>
+<p>“三者常常配合使用：</p>
+<ul>
+<li>限流保护入口；</li>
+<li>熔断隔离故障；</li>
+<li>降级兜底体验。
+&gt;   我们会通过监控（Prometheus + Grafana）动态调整这些策略，实现自动化稳定性控制。”</li>
+</ul></blockquote>
+<hr>
+<h2 id="-面试官延伸问法提前准备">🧠 面试官延伸问法（提前准备）<a hidden class="anchor" aria-hidden="true" href="#-面试官延伸问法提前准备">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th>问题</th>
+          <th>回答方向</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>熔断触发后怎么恢复？</td>
+          <td>有个“半开”状态，通过少量探测请求判断是否恢复</td>
+      </tr>
+      <tr>
+          <td>限流算法中哪个能应对突发流量？</td>
+          <td>令牌桶比漏桶更灵活，能短时突发</td>
+      </tr>
+      <tr>
+          <td>如何分布式限流？</td>
+          <td>Redis + Lua脚本保证原子操作</td>
+      </tr>
+      <tr>
+          <td>降级后如何恢复？</td>
+          <td>可通过配置中心动态开关或根据监控指标恢复</td>
+      </tr>
+      <tr>
+          <td>熔断/限流指标怎么监控？</td>
+          <td>QPS、失败率、P99延迟、error ratio、CPU load</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="-总结">✅ 总结<a hidden class="anchor" aria-hidden="true" href="#-总结">#</a></h2>
+<blockquote>
+<p>“在微服务架构中，我通常会通过限流、熔断和降级三种手段保障系统稳定性：
+限流主要在入口层控制流量，比如用令牌桶算法限制请求速率；
+熔断用于调用下游接口时防止雪崩，比如连续失败率超过30%就暂时中断调用；
+降级则在系统压力大或依赖异常时返回缓存或默认值，保证主流程可用。
+这三者配合监控体系一起使用，可以有效提升系统的韧性和自恢复能力。”</p></blockquote>
+<hr>
+<h1 id="进阶">进阶<a hidden class="anchor" aria-hidden="true" href="#进阶">#</a></h1>
+<hr>
+<h2 id="-问题核心微服务中的熔断限流降级机制">🎯 问题核心：「微服务中的熔断、限流、降级机制」<a hidden class="anchor" aria-hidden="true" href="#-问题核心微服务中的熔断限流降级机制">#</a></h2>
+<p>这是后端中非常高频的中高级面试题，尤其是百度、字节、美团等大厂常问。
+他们主要想考你三点：</p>
+<ol>
+<li>你是否理解三者的区别与联系。</li>
+<li>你是否知道业界常见的实现方式。</li>
+<li>你能否结合实际项目场景举例说明。</li>
+</ol>
+<hr>
+<h2 id="一先区分概念简短但清晰">一、先区分概念（简短但清晰）<a hidden class="anchor" aria-hidden="true" href="#一先区分概念简短但清晰">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th>机制</th>
+          <th>作用</th>
+          <th>触发条件</th>
+          <th>目标</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>限流</strong></td>
+          <td>控制并发量或请求速率</td>
+          <td>QPS 超过阈值</td>
+          <td>防止系统被压垮</td>
+      </tr>
+      <tr>
+          <td><strong>熔断</strong></td>
+          <td>阻止对下游服务的访问</td>
+          <td>下游响应慢/错误率高</td>
+          <td>防止雪崩效应</td>
+      </tr>
+      <tr>
+          <td><strong>降级</strong></td>
+          <td>主动减少功能或返回兜底数据</td>
+          <td>下游异常/高峰压力</td>
+          <td>保证核心功能可用</td>
+      </tr>
+  </tbody>
+</table>
+<p>一句话总结：</p>
+<blockquote>
+<p>限流是“防洪坝”，熔断是“保险丝”，降级是“备用方案”。</p></blockquote>
+<hr>
+<h2 id="二原理与实现方式">二、原理与实现方式<a hidden class="anchor" aria-hidden="true" href="#二原理与实现方式">#</a></h2>
+<h3 id="1-限流">1️⃣ 限流<a hidden class="anchor" aria-hidden="true" href="#1-限流">#</a></h3>
+<ul>
+<li>
+<p><strong>常见算法</strong></p>
+<ul>
+<li><strong>固定窗口</strong>：每秒最多 N 次请求。</li>
+<li><strong>滑动窗口</strong>：更平滑控制。</li>
+<li><strong>令牌桶 / 漏桶算法</strong>：控制速率 + 允许突发。</li>
+</ul>
+</li>
+<li>
+<p><strong>实现</strong></p>
+<ul>
+<li>服务内（如 Go 项目中用 <code>golang.org/x/time/rate</code>）</li>
+<li>或借助中间件（如 Nginx、Envoy、Kong、Sentinel）</li>
+</ul>
+</li>
+<li>
+<p><strong>举例</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">limiter</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rate</span>.<span style="color:#a6e22e">NewLimiter</span>(<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">20</span>) <span style="color:#75715e">// 每秒 10 次，最大突发 20</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">limiter</span>.<span style="color:#a6e22e">Allow</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;rate limit exceeded&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></li>
+</ul>
+<hr>
+<h3 id="2-熔断">2️⃣ 熔断<a hidden class="anchor" aria-hidden="true" href="#2-熔断">#</a></h3>
+<ul>
+<li>
+<p><strong>核心思想</strong>：当依赖服务长时间失败，就“断开电路”，直接返回错误或走降级逻辑。</p>
+</li>
+<li>
+<p><strong>状态机模型</strong>：</p>
+<ul>
+<li><strong>Closed（闭合）</strong>：正常调用；</li>
+<li><strong>Open（断开）</strong>：拒绝请求；</li>
+<li><strong>Half-Open（半开）</strong>：尝试恢复；</li>
+</ul>
+</li>
+<li>
+<p><strong>实现方式</strong></p>
+<ul>
+<li>使用库：<code>afex/hystrix-go</code>、<code>go-resilience</code>、<code>Sentinel Go</code></li>
+<li>在网关层实现（如 Nacos、Envoy 结合熔断策略）</li>
+</ul>
+</li>
+<li>
+<p><strong>示例</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">cb</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">gobreaker</span>.<span style="color:#a6e22e">NewCircuitBreaker</span>(<span style="color:#a6e22e">gobreaker</span>.<span style="color:#a6e22e">Settings</span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Name</span>: <span style="color:#e6db74">&#34;user-service&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Timeout</span>: <span style="color:#ae81ff">5</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Second</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">ReadyToTrip</span>: <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">counts</span> <span style="color:#a6e22e">gobreaker</span>.<span style="color:#a6e22e">Counts</span>) <span style="color:#66d9ef">bool</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">counts</span>.<span style="color:#a6e22e">ConsecutiveFailures</span> &gt; <span style="color:#ae81ff">5</span>
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>})
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">result</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">cb</span>.<span style="color:#a6e22e">Execute</span>(<span style="color:#66d9ef">func</span>() (<span style="color:#66d9ef">interface</span>{}, <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">callUserService</span>()
+</span></span><span style="display:flex;"><span>})
+</span></span></code></pre></div></li>
+</ul>
+<hr>
+<h3 id="3-降级">3️⃣ 降级<a hidden class="anchor" aria-hidden="true" href="#3-降级">#</a></h3>
+<ul>
+<li>
+<p><strong>场景</strong></p>
+<ul>
+<li>依赖超时或熔断时 → 使用缓存 / 兜底逻辑。</li>
+<li>高峰时主动关闭非核心功能。</li>
+</ul>
+</li>
+<li>
+<p><strong>策略</strong></p>
+<ul>
+<li>静态降级（直接返回默认值）</li>
+<li>缓存降级（使用上次成功数据）</li>
+<li>异步降级（写入 MQ 后异步处理）</li>
+</ul>
+</li>
+<li>
+<p><strong>示例</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">user</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">getUserFromRemote</span>()
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 降级方案：返回缓存或默认数据</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">user</span> = <span style="color:#a6e22e">cache</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#e6db74">&#34;user_backup&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></li>
+</ul>
+<hr>
+<h2 id="三答题模板面试时这样说">三、答题模板（面试时这样说）<a hidden class="anchor" aria-hidden="true" href="#三答题模板面试时这样说">#</a></h2>
+<blockquote>
+<p>我们在微服务中一般会通过「限流、熔断、降级」三种手段来保证系统的稳定性。</p>
+<p>限流用于<strong>防止瞬时高并发压垮系统</strong>，我在项目中通常用令牌桶算法（Go 中的 <code>rate.Limiter</code>）来控制接口的 QPS。</p>
+<p>熔断主要是<strong>防止下游雪崩</strong>，当某个依赖服务错误率高或响应慢时，通过像 <code>gobreaker</code> 这样的库自动打开熔断器，直接返回快速失败。</p>
+<p>降级则是<strong>提供兜底方案</strong>，比如下游不可用时，我们会返回缓存数据或提示“系统繁忙”，以保证核心路径可用。</p>
+<p>实际项目中我们也会结合监控（Prometheus + Grafana）和报警来动态调整这些策略。</p></blockquote>
+<hr>
+<h2 id="四进阶加分点">四、进阶加分点<a hidden class="anchor" aria-hidden="true" href="#四进阶加分点">#</a></h2>
+<ul>
+<li>限流在<strong>入口层（网关）<strong>做全局控制，熔断和降级在</strong>服务层</strong>做细粒度控制。</li>
+<li>监控链路：Prometheus → Grafana → Alertmanager。</li>
+<li>熔断与限流策略通常是<strong>动态配置</strong>（通过 Apollo/Nacos 配置中心热更新）。</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/scenario/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%A8%A1%E7%89%88-%E7%AD%94%E6%A1%88/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Go 场景题模版 — 答案版</span>
+  </a>
+  <a class="next" href="http://localhost:1313/posts/go/init/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Init</span>
+  </a>
+</nav>
+
+  </footer><div id="utterances-comments"></div>
+<script src="https://utteranc.es/client.js"
+        repo="yangcp25/yangcp25.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">yangcp</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

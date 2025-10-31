@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Go 场景题模版 | yangcp</title>
+<meta name="keywords" content="">
+<meta name="description" content="Go 场景题训练手册 — 题目版
+作者：cp yang
+说明：分为 初级 / 中级 / 高级 / 实战 Debug 四个章节。每题为面试常见场景题（用于练习）
+
+🟢 初级场景题（语言特性与陷阱）
+
+切片在函数参数传递时，什么时候会影响外部数据？请举例并解释。
+for range vs for i := 0; i &lt; len(slice); i&#43;&#43;，在修改元素和效率上有什么区别？
+map 初始化的正确写法有哪些？哪些写法会导致 panic？
+defer 的执行顺序是什么？return 与 defer 的执行顺序如何？
+append 扩容时如何影响底层数组？如何避免不必要的复制？
+string 与 []byte 转换在高频场景下的性能问题如何优化？
+实现一个线程安全的简单 map（支持 Get/Set/Delete）。
+
+
+🟡 中级场景题（并发与控制）
+
+如何使用 sync.WaitGroup 控制并发任务？请给出示例，并说明常见错误。
+设计一个固定大小的 goroutine 池（worker pool），能提交任务并等待完成。
+设计一个生产者-消费者模型，支持多生产者、多消费者，并能优雅退出。
+实现两个 goroutine 交替打印 1~100（A 打印 1，B 打印 2，依次交替）。
+如何限制并发数量（例如同时最多 10 个任务）？给出实现。
+使用 context 实现任务超时与取消，给出示例。
+
+
+🔴 高级场景题（系统设计与性能）
+
+设计一个本地缓存系统，支持 TTL、并发安全和定期清理。写出核心接口与实现要点。
+设计并实现一个 LRU 缓存（map &#43; 双向链表），要求并发安全。
+设计一个简易消息队列（支持发布/订阅、可持久化思路说明）。写出关键数据结构与伪码。
+如何设计一个高并发的秒杀系统以防止超卖？给出架构思路与关键代码片段（Redis/本地预减库存等）。
+设计一个限流组件（令牌桶），实现接口并说明在微服务网关如何使用。
+
+
+⚙️ 实战 Debug 场景题（排障与优化）
+
+程序出现大量 goroutine 泄漏（数量不断增长），你如何排查？列出排查步骤与 pprof 使用方法。
+出现死锁（程序卡住），如何定位和修复？给出示例代码及修改建议。
+程序内存暴涨并触发 GC 压力，如何分析原因并给出优化方案？
+高并发下锁竞争严重（通过 Mutex 看到 QPS 降低），如何诊断并优化？
+使用 pprof 找到热点 CPU 占用点后，你会如何改进代码？给出一个简单示例。
+
+">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/scenario/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%A8%A1%E7%89%88/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/scenario/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%A8%A1%E7%89%88/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="yangcp (Alt + H)">yangcp</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tag">
+                    <span>Tag</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/me/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Go 场景题模版
+    </h1>
+    <div class="post-meta"><span title='2025-10-22 22:38:03 +0800 CST'>October 22, 2025</span>&nbsp;·&nbsp;1 min
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#go-%e5%9c%ba%e6%99%af%e9%a2%98%e8%ae%ad%e7%bb%83%e6%89%8b%e5%86%8c--%e9%a2%98%e7%9b%ae%e7%89%88" aria-label="Go 场景题训练手册 — 题目版">Go 场景题训练手册 — 题目版</a><ul>
+                        
+                <li>
+                    <a href="#-%e5%88%9d%e7%ba%a7%e5%9c%ba%e6%99%af%e9%a2%98%e8%af%ad%e8%a8%80%e7%89%b9%e6%80%a7%e4%b8%8e%e9%99%b7%e9%98%b1" aria-label="🟢 初级场景题（语言特性与陷阱）">🟢 初级场景题（语言特性与陷阱）</a></li>
+                <li>
+                    <a href="#-%e4%b8%ad%e7%ba%a7%e5%9c%ba%e6%99%af%e9%a2%98%e5%b9%b6%e5%8f%91%e4%b8%8e%e6%8e%a7%e5%88%b6" aria-label="🟡 中级场景题（并发与控制）">🟡 中级场景题（并发与控制）</a></li>
+                <li>
+                    <a href="#-%e9%ab%98%e7%ba%a7%e5%9c%ba%e6%99%af%e9%a2%98%e7%b3%bb%e7%bb%9f%e8%ae%be%e8%ae%a1%e4%b8%8e%e6%80%a7%e8%83%bd" aria-label="🔴 高级场景题（系统设计与性能）">🔴 高级场景题（系统设计与性能）</a></li>
+                <li>
+                    <a href="#-%e5%ae%9e%e6%88%98-debug-%e5%9c%ba%e6%99%af%e9%a2%98%e6%8e%92%e9%9a%9c%e4%b8%8e%e4%bc%98%e5%8c%96" aria-label="⚙️ 实战 Debug 场景题（排障与优化）">⚙️ 实战 Debug 场景题（排障与优化）</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h1 id="go-场景题训练手册--题目版">Go 场景题训练手册 — 题目版<a hidden class="anchor" aria-hidden="true" href="#go-场景题训练手册--题目版">#</a></h1>
+<p>作者：cp yang
+说明：分为 初级 / 中级 / 高级 / 实战 Debug 四个章节。每题为面试常见场景题（用于练习）</p>
+<hr>
+<h2 id="-初级场景题语言特性与陷阱">🟢 初级场景题（语言特性与陷阱）<a hidden class="anchor" aria-hidden="true" href="#-初级场景题语言特性与陷阱">#</a></h2>
+<ol>
+<li>切片在函数参数传递时，什么时候会影响外部数据？请举例并解释。</li>
+<li><code>for range</code> vs <code>for i := 0; i &lt; len(slice); i++</code>，在修改元素和效率上有什么区别？</li>
+<li>map 初始化的正确写法有哪些？哪些写法会导致 panic？</li>
+<li>defer 的执行顺序是什么？return 与 defer 的执行顺序如何？</li>
+<li><code>append</code> 扩容时如何影响底层数组？如何避免不必要的复制？</li>
+<li>string 与 []byte 转换在高频场景下的性能问题如何优化？</li>
+<li>实现一个线程安全的简单 map（支持 Get/Set/Delete）。</li>
+</ol>
+<hr>
+<h2 id="-中级场景题并发与控制">🟡 中级场景题（并发与控制）<a hidden class="anchor" aria-hidden="true" href="#-中级场景题并发与控制">#</a></h2>
+<ol>
+<li>如何使用 <code>sync.WaitGroup</code> 控制并发任务？请给出示例，并说明常见错误。</li>
+<li>设计一个固定大小的 goroutine 池（worker pool），能提交任务并等待完成。</li>
+<li>设计一个生产者-消费者模型，支持多生产者、多消费者，并能优雅退出。</li>
+<li>实现两个 goroutine 交替打印 1~100（A 打印 1，B 打印 2，依次交替）。</li>
+<li>如何限制并发数量（例如同时最多 10 个任务）？给出实现。</li>
+<li>使用 <code>context</code> 实现任务超时与取消，给出示例。</li>
+</ol>
+<hr>
+<h2 id="-高级场景题系统设计与性能">🔴 高级场景题（系统设计与性能）<a hidden class="anchor" aria-hidden="true" href="#-高级场景题系统设计与性能">#</a></h2>
+<ol>
+<li>设计一个本地缓存系统，支持 TTL、并发安全和定期清理。写出核心接口与实现要点。</li>
+<li>设计并实现一个 LRU 缓存（map + 双向链表），要求并发安全。</li>
+<li>设计一个简易消息队列（支持发布/订阅、可持久化思路说明）。写出关键数据结构与伪码。</li>
+<li>如何设计一个高并发的秒杀系统以防止超卖？给出架构思路与关键代码片段（Redis/本地预减库存等）。</li>
+<li>设计一个限流组件（令牌桶），实现接口并说明在微服务网关如何使用。</li>
+</ol>
+<hr>
+<h2 id="-实战-debug-场景题排障与优化">⚙️ 实战 Debug 场景题（排障与优化）<a hidden class="anchor" aria-hidden="true" href="#-实战-debug-场景题排障与优化">#</a></h2>
+<ol>
+<li>程序出现大量 goroutine 泄漏（数量不断增长），你如何排查？列出排查步骤与 pprof 使用方法。</li>
+<li>出现死锁（程序卡住），如何定位和修复？给出示例代码及修改建议。</li>
+<li>程序内存暴涨并触发 GC 压力，如何分析原因并给出优化方案？</li>
+<li>高并发下锁竞争严重（通过 Mutex 看到 QPS 降低），如何诊断并优化？</li>
+<li>使用 pprof 找到热点 CPU 占用点后，你会如何改进代码？给出一个简单示例。</li>
+</ol>
+<hr>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/cs/liunx%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Liunx常用命令</span>
+  </a>
+  <a class="next" href="http://localhost:1313/posts/scenario/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%A8%A1%E7%89%88-%E7%AD%94%E6%A1%88/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Go 场景题模版 — 答案版</span>
+  </a>
+</nav>
+
+  </footer><div id="utterances-comments"></div>
+<script src="https://utteranc.es/client.js"
+        repo="yangcp25/yangcp25.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">yangcp</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
