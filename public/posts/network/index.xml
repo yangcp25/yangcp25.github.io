@@ -6,8 +6,20 @@
     <description>Recent content in Network 系列 on yangcp</description>
     <generator>Hugo -- 0.147.4</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 23 Jul 2025 22:28:18 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 29 Oct 2025 20:34:20 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/network/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Tcp三次握手和四次挥手</title>
+      <link>http://localhost:1313/posts/network/tcp%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/</link>
+      <pubDate>Wed, 29 Oct 2025 20:34:20 +0800</pubDate>
+      <guid>http://localhost:1313/posts/network/tcp%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/</guid>
+      <description>&lt;h3 id=&#34;三次握手&#34;&gt;三次握手&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;客户端发送syn，客户端从close-&amp;gt;syn-send&lt;/li&gt;
+&lt;li&gt;syn服务端收到syn ,同时向客户端发送syn.ack ，自己从listen变成 syn-recd&lt;/li&gt;
+&lt;li&gt;客户端收到syn-ack会在发送一个ack,自己变成established,服务端收到这个ack，自己变成established。&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
     <item>
       <title>Http2_grpc</title>
       <link>http://localhost:1313/posts/network/http2_grpc/</link>

@@ -131,6 +131,72 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">排序算法总结
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>总结——所有常见排序算法的核心思想、时间复杂度、空间复杂度、稳定性、是否原地排序、适用场景和简单例子。 下面是最全面且面试导向的总结版本👇
+🧠 排序算法总览表 算法 思想 时间复杂度 空间复杂度 稳定性 原地排序 适用场景 冒泡排序 (Bubble Sort) 相邻交换，最大（或最小）元素逐步“浮出” O(n²) O(1) ✅ 稳定 ✅ 数据量小、部分有序 选择排序 (Selection Sort) 每次选择最小元素放到前面 O(n²) O(1) ❌ 不稳定 ✅ 数据量小，对交换次数敏感 插入排序 (Insertion Sort) 将未排序元素插入到已排序序列中 O(n²) O(1) ✅ 稳定 ✅ 数据基本有序时高效 希尔排序 (Shell Sort) 插入排序的改进版，分组比较减少交换 O(n¹˙³~n²) O(1) ❌ 不稳定 ✅ 中等规模数据 归并排序 (Merge Sort) 分治 &#43; 合并有序子序列 O(n log n) O(n) ✅ 稳定 ❌ 大数据、外部排序 快速排序 (Quick Sort) 分治 &#43; 基准划分 平均 O(n log n)最坏 O(n²) O(log n) ❌ 不稳定 ✅ 通用最快的内部排序 堆排序 (Heap Sort) 利用堆结构维护最大/最小值 O(n log n) O(1) ❌ 不稳定 ✅ 需要快速找最大/最小的场景 计数排序 (Counting Sort) 统计每个元素出现次数 O(n &#43; k) O(n &#43; k) ✅ 稳定 ❌ 整数、范围较小的场景 桶排序 (Bucket Sort) 按区间划分多个桶再分别排序 O(n &#43; k) O(n &#43; k) ✅ 稳定（视子排序） ❌ 数据均匀分布的浮点数 基数排序 (Radix Sort) 按位（个位→高位）排序 O(d·(n&#43;k)) O(n &#43; k) ✅ 稳定 ❌ 整数、字符串排序 🔍 各算法核心思想讲解与代码示例 1️⃣ 冒泡排序 Bubble Sort 每一轮两两比较，把最大值“冒泡”到最后。
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-05 09:29:18 +0800 CST'>November 5, 2025</span>&nbsp;·&nbsp;5 min</footer>
+  <a class="entry-link" aria-label="post link to 排序算法总结" href="http://localhost:1313/posts/datastructalgorithm/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">内存分配
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>go的内存分配 根据对象大小的不同，go的内存分配有3种类型： Tiny(size &lt; 16B): Objects of size less than 16 bytes are allocated using the mcache’s tiny allocator. This is efficient and multiple tiny allocations are done on a single 16-byte block. Small(size 16B ~ 32KB): Objects of size between 16 bytes and 32 Kilobytes are allocated on the corresponding size class(mspan) on mcache of the P where the G is running. In both tiny and small allocation if the mspan’s list is empty the allocator will obtain a run of pages from the mheap to use for the mspan. If the mheap is empty or has no page runs large enough then it allocates a new group of pages (at least 1MB) from the OS. Large(size &gt; 32KB): Objects of size greater than 32 kilobytes are allocated directly on the corresponding size class of mheap. If the mheap is empty or has no page runs large enough then it allocates a new group of pages (at least 1MB) from the OS. 总结一下Go是如何进行内存分配: mcache中如果有空闲的空间， 那么直接在mcache分配 mcache如果没有，那么尝试去mcentral中获取一个空闲的mspan mcentral中也咩有可用的mspan，那么直接去mheap向操作系统申请可用的mspan
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-10-31 18:10:00 +0800 CST'>October 31, 2025</span>&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to 内存分配" href="http://localhost:1313/posts/go/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">sql高频题
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>分为六个维度：基础聚合 → 子查询 → TopN → 窗口函数 → 业务建模 → 性能优化。
+🎯 高频 SQL 题库（含答案与思路） 一、基础聚合与分组（GROUP BY / HAVING） 🧩 题 1：查询每个部门的平均工资 表结构：
+employee(emp_id, emp_name, dept_id, salary) SQL：
+SELECT dept_id, AVG(salary) AS avg_salary FROM employee GROUP BY dept_id; 📘 考点： 聚合函数 &#43; 分组
+🧩 题 2：查询带学生数超过 10 人的老师 teacher(teacher_id, name) student(student_id, teacher_id) SQL：
+SELECT teacher_id, COUNT(*) AS student_count FROM student GROUP BY teacher_id HAVING COUNT(*) &gt; 10; 📘 考点： HAVING 与 WHERE 的区别（HAVING 针对聚合后过滤）
+二、子查询（Subquery） 🧩 题 3：查询工资高于本部门平均工资的员工 SELECT e.emp_name, e.salary FROM employee e JOIN ( SELECT dept_id, AVG(salary) AS avg_salary FROM employee GROUP BY dept_id ) d ON e.dept_id = d.dept_id WHERE e.salary &gt; d.avg_salary; 📘 考点： 相关子查询 vs 非相关子查询
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-10-27 10:26:15 +0800 CST'>October 27, 2025</span>&nbsp;·&nbsp;3 min</footer>
+  <a class="entry-link" aria-label="post link to sql高频题" href="http://localhost:1313/posts/sql/%E9%AB%98%E9%A2%91%E9%A2%98/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Liunx常用命令
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Linux 中非常常用和基础的命令，按照功能进行了分类：
+1. 文件和目录管理 ls (list)
+作用：列出目录中的文件和子目录。 常用选项： ls -l：显示详细信息（权限、所有者、大小、修改日期）。 ls -a：显示所有文件，包括隐藏文件（以 . 开头的）。 ls -h：与 -l 配合使用，以人类可读的格式显示文件大小（如 1K, 2M, 3G）。 示例：ls -lah /home/user cd (change directory)
+作用：切换当前工作目录。 常用用法： cd /var/log：切换到 /var/log 目录。 cd ..：切换到上一级目录。 cd ~ 或 cd：切换到当前用户的主目录。 cd -：切换到上一个工作目录。 pwd (print working directory)
+作用：显示当前所在的目录路径。 mkdir (make directory)
+作用：创建新目录。 常用选项： mkdir -p /path/to/new/dir：递归创建目录，如果父目录不存在也会一并创建。 示例：mkdir my_project rmdir (remove directory)
+作用：删除空目录。 rm (remove)
+作用：删除文件或目录。 常用选项： rm file.txt：删除一个文件。 rm -r directory_name：递归删除目录及其所有内容。 rm -f file.txt：强制删除，不进行提示。 rm -rf directory_name：（慎用！） 强制递归删除目录，不会有任何提示。 cp (copy)
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-10-26 19:15:43 +0800 CST'>October 26, 2025</span>&nbsp;·&nbsp;3 min</footer>
+  <a class="entry-link" aria-label="post link to Liunx常用命令" href="http://localhost:1313/posts/cs/liunx%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Go 场景题模版
     </h2>
   </header>
@@ -153,7 +219,7 @@
 package main import &#34;fmt&#34; func appendMaybe(s []int) []int { s = append(s, 100) // 若 cap 不足，这里会分配新底层数组 return s } func modify(s []int) { if len(s) &gt; 0 { s[0] = 999 // 修改共享底层数组 } } func main() { a := make([]int, 1, 1) a[0] = 1 b := appendMaybe(a) fmt.Println(&#34;a:&#34;, a) // 如果扩容发生，a 不包含 100 fmt.Println(&#34;b:&#34;, b) c := make([]int, 1, 2) c[0] = 1 d := appendMaybe(c) fmt.Println(&#34;c:&#34;, c) // cap 足够，c 会看到 append 的结果 (如果 append reuses) fmt.Println(&#34;d:&#34;, d) modify(a) fmt.Println(&#34;a after modify:&#34;, a) // 被修改 } 2. for range vs for i := 0; i &lt; len(slice); i&#43;&#43; 思路： for range 会在每次迭代时把元素拷贝到新的变量（v），因此直接修改 v 不会影响切片。索引访问 slice[i] 直接访问底层数组可以修改原值。性能上两者差异很小，除非元素为大结构体，range 会拷贝整个结构体。
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-10-22 22:38:00 +0800 CST'>October 22, 2025</span>&nbsp;·&nbsp;9 min</footer>
+  <footer class="entry-footer"><span title='2025-10-22 22:38:00 +0800 CST'>October 22, 2025</span>&nbsp;·&nbsp;15 min</footer>
   <a class="entry-link" aria-label="post link to Go 场景题模版 — 答案版" href="http://localhost:1313/posts/scenario/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%A8%A1%E7%89%88-%E7%AD%94%E6%A1%88/"></a>
 </article>
 
@@ -226,62 +292,6 @@ x = 20 defer: 10 🔹 原因： defer 的参数会在注册 defer 时立刻求�
   </div>
   <footer class="entry-footer"><span title='2025-10-21 09:48:33 +0800 CST'>October 21, 2025</span>&nbsp;·&nbsp;3 min</footer>
   <a class="entry-link" aria-label="post link to 算法题解题思路" href="http://localhost:1313/posts/datastructalgorithm/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">面试题模板
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>SQL 面试题模板（综合） 模拟数据表 在大多数面试中，面试官会假设有几个经典的数据表。我们以此为基础：
-Employees (员工表)
-emp_id (INT, Primary Key) - 员工 ID emp_name (VARCHAR) - 员工姓名 salary (DECIMAL) - 薪水 dept_id (INT, Foreign Key) - 部门 ID Departments (部门表)
-dept_id (INT, Primary Key) - 部门 ID dept_name (VARCHAR) - 部门名称 模块一：基础查询 (SELECT, WHERE, ORDER BY) 考察点：数据筛选、排序、限制的基本功。
-[筛选] 查找 Employees 表中薪水 (salary) 高于 80000 的所有员工信息。 [多条件] 查找 ‘Sales’ (销售) 部门中，薪水低于 60000 的员工。 [模糊查询] 查找所有姓 ‘王’ 的员工 (使用 LIKE &#39;王%&#39;)。 [空值处理] 查找所有尚未分配部门（dept_id 为 NULL）的员工。 [排序与限制] 查找公司薪水最高的 5 名员工的信息 (使用 ORDER BY ... DESC 和 LIMIT ...)。 模块二：聚合与分组 (GROUP BY, HAVING) 考察点：数据汇总、分组统计的能力。
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-10-19 12:21:08 +0800 CST'>October 19, 2025</span>&nbsp;·&nbsp;3 min</footer>
-  <a class="entry-link" aria-label="post link to 面试题模板" href="http://localhost:1313/posts/sql/%E9%9D%A2%E8%AF%95%E9%A2%98%E6%A8%A1%E6%9D%BF/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">常见算法模板
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p> 常见算法模板 第一部分：核心算法思想 1. 二分查找 (Binary Search) 适用于有序序列的查找。
-// 基础版本：查找特定值 func binarySearch(nums []int, target int) int { left, right := 0, len(nums)-1 for left &lt;= right { mid := left &#43; (right-left)/2 // 防溢出 if nums[mid] == target { return mid } else if nums[mid] &lt; target { left = mid &#43; 1 } else { right = mid - 1 } } return -1 // 未找到 } // 变体：查找左侧边界（第一个 &gt;= target 的位置） func lowerBound(nums []int, target int) int { left, right := 0, len(nums) // 注意 right 的取值 for left &lt; right { mid := left &#43; (right-left)/2 if nums[mid] &gt;= target { right = mid } else { left = mid &#43; 1 } } return left } 2. 双指针 (Two Pointers) 快慢指针 常用于链表（判断环、找中点）或数组（原地修改）。
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-10-18 23:12:48 +0800 CST'>October 18, 2025</span>&nbsp;·&nbsp;8 min</footer>
-  <a class="entry-link" aria-label="post link to 常见算法模板" href="http://localhost:1313/posts/datastructalgorithm/%E5%B8%B8%E8%A7%81%E7%AE%97%E6%B3%95%E6%A8%A1%E6%9D%BF/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">进程间通信
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p></p>
-  </div>
-  <footer class="entry-footer"><span title='2025-10-18 20:26:52 +0800 CST'>October 18, 2025</span>&nbsp;·&nbsp;0 min</footer>
-  <a class="entry-link" aria-label="post link to 进程间通信" href="http://localhost:1313/posts/cs/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">常用数据结构
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>常用数据结构定义 1. 链表（Linked List） type ListNode struct { Val int Next *ListNode } 2. 双向链表（Doubly Linked List） type DListNode struct { Val int Prev *DListNode Next *DListNode } 3. 栈（Stack） type Stack struct { data []int } 4. 队列（Queue） type Queue struct { data []int } 5. 二叉树（Binary Tree） type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 6. N叉树（N-ary Tree） type NTreeNode struct { Val int Children []*NTreeNode } 7. 图（Graph） type GraphNode struct { Val int Neighbors []*GraphNode } 8. 哈希表（HashMap） m := make(map[string]int) 9. 堆（Heap / Priority Queue） type Item struct { Val int } type IntHeap []Item 10. 矩阵（Matrix） matrix := [][]int{ {1, 2, 3}, {4, 5, 6}, {7, 8, 9}, } 11. Trie（前缀树） type TrieNode struct { Children map[rune]*TrieNode IsEnd bool } type Trie struct { Root *TrieNode } 12. 并查集（Union-Find） type UnionFind struct { Parent []int Rank []int } 13. LRU 缓存（Least Recently Used Cache） type pair struct { key, value int } type LRUCache struct { capacity int cache map[int]*list.Element list *list.List } 进阶 图 🧠 一、图的基本概念 图由：
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-10-15 21:52:36 +0800 CST'>October 15, 2025</span>&nbsp;·&nbsp;3 min</footer>
-  <a class="entry-link" aria-label="post link to 常用数据结构" href="http://localhost:1313/posts/datastructalgorithm/%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

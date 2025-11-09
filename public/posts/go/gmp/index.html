@@ -33,7 +33,32 @@ m在操作系统上执行
 
 ruetime.GOMAXPROCS()
 
-优化手段">
+优化手段
+进阶（gpt版本）
+GMP 调度的完整流程、设计思想，以及它如何解决了关键问题（如阻塞、抢占）。
+
+一、 什么是 GMP 模型？（高层概括）
+面试官问“说下GMP”，你可以先给一个高层定义，点出它的核心设计思想：解耦和复用。
+回答范例：
+GMP 是 Go 语言运行时的核心调度模型，它是一个用户态的、M:N 的并发调度器。
+
+M:N 指的是它将 M 个 Goroutine（G）调度到 N 个操作系统线程（M）上执行。
+它的核心设计思想是解耦：
+
+G（Goroutine）： 代表一个并发任务。它非常轻量（初始栈 2KB），由 Go Runtime 管理，切换成本远低于线程。
+M（Machine）： 代表一个操作系统线程。它是真正执行计算的“工人”。
+P（Processor）： 代表一个逻辑处理器，或者说是“CPU 核心”。P 是 G 和 M 之间的“上下文”或“调度器”。M 必须持有 P 才能执行 G。
+
+
+
+GMP 模型的精妙之处在于 P，它作为中间层，实现了 Goroutine 和 OS 线程的解耦。这带来了两大好处：
+
+高效复用（M:N）： M（线程）的数量可以远小于 G（任务）的数量。Go 默认让 P 的数量（GOMAXPROCS）等于 CPU 核心数，使得 M:N 调度能充分利用多核，同时避免了大量线程切换的开销。
+智能调度： 通过 P 的本地队列和 P 之间的工作窃取 (Work Stealing) 机制，实现了高效的负载均衡。
+
+
+二、 GMP 调度的核心流程（面试重点）
+这部分是面试的“深水区”，你需要清晰地描述 G、M、P 是如何协同工作的。">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/posts/go/gmp/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
@@ -155,7 +180,7 @@ ruetime.GOMAXPROCS()
     <h1 class="post-title entry-hint-parent">
       GMP
     </h1>
-    <div class="post-meta"><span title='2025-09-20 09:44:15 +0800 CST'>September 20, 2025</span>&nbsp;·&nbsp;1 min
+    <div class="post-meta"><span title='2025-09-20 09:44:15 +0800 CST'>September 20, 2025</span>&nbsp;·&nbsp;4 min
 
 </div>
   </header> <div class="toc">
@@ -164,7 +189,7 @@ ruetime.GOMAXPROCS()
             <span class="details">Table of Contents</span>
         </summary>
 
-        <div class="inner"><ul>
+        <div class="inner"><ul><ul><ul>
                 <li>
                     <a href="#%e4%bb%80%e4%b9%88%e6%98%afgmp" aria-label="什么是GMP">什么是GMP</a><ul>
                         
@@ -177,7 +202,53 @@ ruetime.GOMAXPROCS()
                 <li>
                     <a href="#%e5%85%b6%e4%bb%96%e6%a0%b8%e5%bf%83%e6%a6%82%e5%bf%b5" aria-label="其他核心概念">其他核心概念</a></li>
                 <li>
-                    <a href="#%e4%bc%98%e5%8c%96%e6%89%8b%e6%ae%b5" aria-label="优化手段">优化手段</a>
+                    <a href="#%e4%bc%98%e5%8c%96%e6%89%8b%e6%ae%b5" aria-label="优化手段">优化手段</a></li></ul>
+                </li></ul>
+                    
+                <li>
+                    <a href="#%e8%bf%9b%e9%98%b6gpt%e7%89%88%e6%9c%ac" aria-label="进阶（gpt版本）">进阶（gpt版本）</a><ul>
+                        
+                <li>
+                    <a href="#%e4%b8%80-%e4%bb%80%e4%b9%88%e6%98%af-gmp-%e6%a8%a1%e5%9e%8b%e9%ab%98%e5%b1%82%e6%a6%82%e6%8b%ac" aria-label="一、 什么是 GMP 模型？（高层概括）">一、 什么是 GMP 模型？（高层概括）</a></li>
+                <li>
+                    <a href="#%e4%ba%8c-gmp-%e8%b0%83%e5%ba%a6%e7%9a%84%e6%a0%b8%e5%bf%83%e6%b5%81%e7%a8%8b%e9%9d%a2%e8%af%95%e9%87%8d%e7%82%b9" aria-label="二、 GMP 调度的核心流程（面试重点）">二、 GMP 调度的核心流程（面试重点）</a><ul>
+                        
+                <li>
+                    <a href="#1-%e6%ad%a3%e5%b8%b8%e6%89%a7%e8%a1%8c%e4%b8%8e%e5%88%9b%e5%bb%ba-happy-path" aria-label="1. 正常执行与创建 (Happy Path)">1. 正常执行与创建 (Happy Path)</a></li>
+                <li>
+                    <a href="#2-%e5%b7%a5%e4%bd%9c%e7%aa%83%e5%8f%96-work-stealing%e8%a7%a3%e5%86%b3p%e9%a5%a5%e9%a5%bf" aria-label="2. 工作窃取 (Work Stealing)（解决P饥饿）">2. 工作窃取 (Work Stealing)（解决P饥饿）</a></li>
+                <li>
+                    <a href="#3-%e9%98%bb%e5%a1%9e%e5%a4%84%e7%90%86-syscallgmp%e6%9c%80%e7%b2%be%e5%a6%99%e7%9a%84%e8%ae%be%e8%ae%a1%e4%b9%8b%e4%b8%80" aria-label="3. 阻塞处理 (Syscall)（GMP最精妙的设计之一）">3. 阻塞处理 (Syscall)（GMP最精妙的设计之一）</a></li>
+                <li>
+                    <a href="#4-%e6%8a%a2%e5%8d%a0%e8%b0%83%e5%ba%a6%e8%a7%a3%e5%86%b3g%e9%a5%a5%e9%a5%bf" aria-label="4. 抢占调度（解决G饥饿）">4. 抢占调度（解决G饥饿）</a></li></ul>
+                </li></ul>
+                </li></ul>
+                    
+                <li>
+                    <a href="#5-%e6%8c%82%e8%b5%b7%e4%b8%8e%e6%81%a2%e5%a4%8d" aria-label="5. 挂起与恢复">5. 挂起与恢复</a><ul>
+                        
+                <li>
+                    <a href="#-%e4%b8%80%e5%89%8d%e6%8f%90ggoroutine%e7%9a%84%e7%94%9f%e5%91%bd%e5%91%a8%e6%9c%9f%e9%98%b6%e6%ae%b5" aria-label="🧩 一、前提：G（goroutine）的生命周期阶段">🧩 一、前提：G（goroutine）的生命周期阶段</a></li>
+                <li>
+                    <a href="#-%e4%ba%8c%e5%bd%93-g-%e8%a2%ab%e6%8c%82%e8%b5%b7%e6%97%b6%e4%bc%9a%e5%8f%91%e7%94%9f%e4%bb%80%e4%b9%88" aria-label="🧠 二、当 G 被挂起时，会发生什么？">🧠 二、当 G 被挂起时，会发生什么？</a></li>
+                <li>
+                    <a href="#-%e4%b8%89%e6%8c%82%e8%b5%b7%e7%9a%84-g-%e8%a2%ab%e6%94%be%e5%88%b0%e5%93%aa%e9%87%8c" aria-label="📦 三、挂起的 G 被放到哪里？">📦 三、挂起的 G 被放到哪里？</a><ul>
+                        
+                <li>
+                    <a href="#-%e5%9c%ba%e6%99%af-1channel-%e9%98%bb%e5%a1%9e" aria-label="✅ 场景 1：Channel 阻塞">✅ 场景 1：Channel 阻塞</a></li>
+                <li>
+                    <a href="#-%e5%9c%ba%e6%99%af-2mutex-%e9%98%bb%e5%a1%9e" aria-label="✅ 场景 2：Mutex 阻塞">✅ 场景 2：Mutex 阻塞</a></li>
+                <li>
+                    <a href="#-%e5%9c%ba%e6%99%af-3cond-%e9%98%bb%e5%a1%9e%e7%b1%bb%e4%bc%bc-waitgroup" aria-label="✅ 场景 3：Cond 阻塞（类似 WaitGroup）">✅ 场景 3：Cond 阻塞（类似 WaitGroup）</a></li>
+                <li>
+                    <a href="#-%e5%9c%ba%e6%99%af-4select-%e9%98%bb%e5%a1%9e%e5%a4%9a%e4%b8%aa-channel-%e9%83%bd%e6%b2%a1%e5%b0%b1%e7%bb%aa" aria-label="✅ 场景 4：select 阻塞（多个 channel 都没就绪）">✅ 场景 4：select 阻塞（多个 channel 都没就绪）</a></li></ul>
+                </li>
+                <li>
+                    <a href="#-%e5%9b%9b%e5%94%a4%e9%86%92%e8%bf%87%e7%a8%8b%e8%a2%ab%e6%8c%82%e8%b5%b7%e7%9a%84-g-%e9%87%8d%e6%96%b0%e8%bf%90%e8%a1%8c" aria-label="⚙️ 四、唤醒过程（被挂起的 G 重新运行）">⚙️ 四、唤醒过程（被挂起的 G 重新运行）</a></li>
+                <li>
+                    <a href="#-%e4%ba%94%e6%80%bb%e7%bb%93%e5%9b%be%e7%a4%ba" aria-label="🔍 五、总结图示">🔍 五、总结图示</a></li>
+                <li>
+                    <a href="#-%e5%85%ad%e6%80%bb%e7%bb%93%e4%b8%80%e5%8f%a5%e8%af%9d" aria-label="✅ 六、总结一句话">✅ 六、总结一句话</a>
                 </li>
             </ul>
             </li>
@@ -213,6 +284,253 @@ go的程序通过runtime创建协程</p>
 <li>ruetime.GOMAXPROCS()</li>
 </ol>
 <h4 id="优化手段">优化手段<a hidden class="anchor" aria-hidden="true" href="#优化手段">#</a></h4>
+<h2 id="进阶gpt版本">进阶（gpt版本）<a hidden class="anchor" aria-hidden="true" href="#进阶gpt版本">#</a></h2>
+<p><strong>GMP 调度的完整流程、设计思想，以及它如何解决了关键问题（如阻塞、抢占）</strong>。</p>
+<hr>
+<h3 id="一-什么是-gmp-模型高层概括">一、 什么是 GMP 模型？（高层概括）<a hidden class="anchor" aria-hidden="true" href="#一-什么是-gmp-模型高层概括">#</a></h3>
+<p>面试官问“说下GMP”，你可以先给一个高层定义，<strong>点出它的核心设计思想：解耦和复用</strong>。</p>
+<p><strong>回答范例：</strong></p>
+<p>GMP 是 Go 语言运行时的核心调度模型，它是一个<strong>用户态的、M:N 的并发调度器</strong>。</p>
+<ul>
+<li><strong>M:N</strong> 指的是它将 <strong>M</strong> 个 Goroutine（G）调度到 <strong>N</strong> 个操作系统线程（M）上执行。</li>
+<li>它的核心设计思想是<strong>解耦</strong>：
+<ol>
+<li><strong>G（Goroutine）：</strong> 代表一个并发<strong>任务</strong>。它非常轻量（初始栈 2KB），由 Go Runtime 管理，切换成本远低于线程。</li>
+<li><strong>M（Machine）：</strong> 代表一个操作系统<strong>线程</strong>。它是真正执行计算的“工人”。</li>
+<li><strong>P（Processor）：</strong> 代表一个逻辑<strong>处理器</strong>，或者说是“CPU 核心”。P 是 G 和 M 之间的“上下文”或“调度器”。M 必须持有 P 才能执行 G。</li>
+</ol>
+</li>
+</ul>
+<p>GMP 模型的精妙之处在于 <strong>P</strong>，它作为中间层，实现了 Goroutine 和 OS 线程的解耦。这带来了两大好处：</p>
+<ol>
+<li><strong>高效复用（M:N）：</strong> M（线程）的数量可以远小于 G（任务）的数量。Go 默认让 P 的数量（<code>GOMAXPROCS</code>）等于 CPU 核心数，使得 M:N 调度能充分利用多核，同时避免了大量线程切换的开销。</li>
+<li><strong>智能调度：</strong> 通过 P 的本地队列和 P 之间的<strong>工作窃取 (Work Stealing)</strong> 机制，实现了高效的负载均衡。</li>
+</ol>
+<hr>
+<h3 id="二-gmp-调度的核心流程面试重点">二、 GMP 调度的核心流程（面试重点）<a hidden class="anchor" aria-hidden="true" href="#二-gmp-调度的核心流程面试重点">#</a></h3>
+<p>这部分是面试的“深水区”，你需要清晰地描述 G、M、P 是如何协同工作的。</p>
+<h4 id="1-正常执行与创建-happy-path">1. 正常执行与创建 (Happy Path)<a hidden class="anchor" aria-hidden="true" href="#1-正常执行与创建-happy-path">#</a></h4>
+<ol>
+<li><strong>启动：</strong> Go Runtime 会创建 <code>GOMAXPROCS</code> 个 P。</li>
+<li><strong>绑定：</strong> 一个 M 必须<strong>获取</strong>一个 P 才能开始执行。</li>
+<li><strong>找任务：</strong> M 会从它绑定的 P 的<strong>本地可运行队列（LRQ, Local Run Queue）</strong> 中弹出一个 G。</li>
+<li><strong>执行：</strong> M 执行这个 G。</li>
+<li><strong><code>go func()</code>：</strong> 当一个 G 执行 <code>go func()</code> 创建新 G 时，这个新 G <strong>优先</strong>被放入<em>当前 P</em> 的 LRQ。如果 LRQ 满了，才会溢出到<strong>全局队列（GRQ, Global Run Queue）</strong>。</li>
+</ol>
+<h4 id="2-工作窃取-work-stealing解决p饥饿">2. 工作窃取 (Work Stealing)（解决P饥饿）<a hidden class="anchor" aria-hidden="true" href="#2-工作窃取-work-stealing解决p饥饿">#</a></h4>
+<p><strong>面试官追问：</strong> “如果一个 P 的本地队列空了，它绑定的 M 会做什么？”</p>
+<p><strong>回答：</strong>
+这会触发<strong>工作窃取（Work Stealing）</strong>：</p>
+<ol>
+<li>当前 M（持有 P1）发现 P1 的 LRQ 为空。</li>
+<li>M 不会休眠，它会代表 P1 去<strong>随机</strong>地“偷”另一个 P（比如 P2）的 LRQ。</li>
+<li>它会尝试从 P2 的 LRQ <strong>队尾</strong>（<em>注意：是队尾，保证公平性</em>）偷走一半的 G 放到 P1 的 LRQ 中。</li>
+<li>如果偷不到（所有 P 都空了），它会尝试从 GRQ 获取任务。</li>
+<li>如果 GRQ 也为空，M 最终会放弃 P，M 自身进入休眠（自旋等待或挂起），P 被标记为空闲。</li>
+</ol>
+<p><strong>设计思想：</strong> 工作窃取是 GMP 实现高吞吐和负载均衡的关键。它让 M 始终保持“忙碌”，避免了 CPU 资源的浪费。</p>
+<h4 id="3-阻塞处理-syscallgmp最精妙的设计之一">3. 阻塞处理 (Syscall)（GMP最精妙的设计之一）<a hidden class="anchor" aria-hidden="true" href="#3-阻塞处理-syscallgmp最精妙的设计之一">#</a></h4>
+<p><strong>面试官高频追问：</strong> “如果一个 G 发生了阻塞的系统调用（比如 CGO 或文件 IO），会发生什么？会阻塞 M 吗？”</p>
+<p><strong>回答：</strong>
+这是 GMP 模型的关键优势。Go 将系统调用分为<strong>阻塞型</strong>和<strong>非阻塞型</strong>（如网络 IO，由 netpoller 内部处理，G 会被挂起，M 不阻塞）。</p>
+<p>对于<strong>阻塞型系统调用 (Blocking Syscall)</strong>：</p>
+<ol>
+<li>G（G1）在 M1 上执行，即将发生阻塞。</li>
+<li>Go Runtime 会检测到这个阻塞。</li>
+<li><strong>关键操作：M1 会与 P 解绑 (M-P detachment)。</strong></li>
+<li>M1 会带着 G1 一起进入阻塞状态（等待 syscall 返回）。</li>
+<li>Runtime 会<strong>立即唤醒或创建一个新的 M（M2）</strong> 来接管这个 P。</li>
+<li>M2 绑定 P，然后继续从 P 的 LRQ 中取出下一个 G（G2）来执行。</li>
+</ol>
+<p><strong>结果：</strong> 只有 M1 和 G1 被阻塞了，而 P（代表的 CPU 核心）<strong>没有被阻塞</strong>，它立刻被 M2 复用去执行其他 G。</p>
+<p><strong>追问：</strong> “当 G1 的 syscall 返回后呢？”</p>
+<ol>
+<li>G1 变为可运行状态。</li>
+<li>M1 会尝试**“手持”**（Hand Off）G1：
+<ul>
+<li>如果能立即找到一个空闲的 P，M1 就绑定 P 并继续执行 G1。</li>
+<li>如果找不到空闲的 P，M1 会将 G1 放入 GRQ，然后 M1 自身进入休眠。</li>
+</ul>
+</li>
+</ol>
+<p><strong>设计思想：</strong> 这种 M-P 解绑机制，保证了 <code>GOMAXPROCS</code> 个 P（即 CPU 核心）始终在满负荷工作，不会因为个别 G 的阻塞而导致整个 M 链条（P）的闲置。</p>
+<h4 id="4-抢占调度解决g饥饿">4. 抢占调度（解决G饥饿）<a hidden class="anchor" aria-hidden="true" href="#4-抢占调度解决g饥饿">#</a></h4>
+<p><strong>面试官追问：</strong> “如果一个 G 恶意执行 <code>for {}</code> 死循环，它会占满 P 吗？其他 G 怎么办？”</p>
+<p><strong>回答：</strong>
+Go 调度器是<strong>抢占式</strong>的。如果一个 G 运行时间过长（目前是 10ms），调度器会强制它让出 CPU。Go 1.14 以后实现了基于信号的异步抢占，解决了早期协作式抢占的痛点。</p>
+<ol>
+<li>
+<p><strong>协作式抢占（旧，但仍在用）：</strong> Go 编译器会在函数调用的入口处插入“栈检查”指令。这个检查不仅看栈是否溢出，也检查全局的“抢占标记”。如果发现自己需要被抢占，G 会主动让出（切换到 G0 调度栈）。</p>
+<ul>
+<li><em>缺点：</em> 如果 G 执行一个没有函数调用的纯计算 <code>for {}</code>，协作式抢占会失效。</li>
+</ul>
+</li>
+<li>
+<p><strong>异步抢占（Go 1.14+，基于信号）：</strong></p>
+<ul>
+<li>Go Runtime 有一个系统监控线程（<code>sysmon</code>）。</li>
+<li><code>sysmon</code> 会监控所有 P 上的 G 是否运行时间过长（&gt;10ms）。</li>
+<li>如果发现 G1 运行超时，<code>sysmon</code> 会向运行 G1 的 M <strong>发送一个 <code>SIGURG</code> 信号</strong>。</li>
+<li>M 接收到信号后，会中断 G1 的执行，将 G1 的状态改为 <code>runnable</code> 并将其<strong>插入 GRQ</strong>（使其排到队尾，防止其立即再次执行）。</li>
+<li>M 随后从 P 的 LRQ 中寻找下一个 G 来执行。</li>
+</ul>
+</li>
+</ol>
+<p><strong>设计思想：</strong> 异步抢占保证了调度器的公平性，防止了恶意或有 Bug 的 G 饿死其他 G。</p>
+<h1 id="5-挂起与恢复">5. 挂起与恢复<a hidden class="anchor" aria-hidden="true" href="#5-挂起与恢复">#</a></h1>
+<blockquote>
+<p>“被挂起的 G 不运行了，那它放到哪里去了？”</p></blockquote>
+<p>正好是 Go 调度器（GMP 模型）里最关键的“<strong>阻塞与等待队列机制</strong>”之一。
+我们来完整拆解。</p>
+<hr>
+<h2 id="-一前提ggoroutine的生命周期阶段">🧩 一、前提：G（goroutine）的生命周期阶段<a hidden class="anchor" aria-hidden="true" href="#-一前提ggoroutine的生命周期阶段">#</a></h2>
+<p>在 Go 的运行时系统中，每个 goroutine（G）有一个状态（<code>gstatus</code>），
+其中几个关键状态如下 👇</p>
+<table>
+  <thead>
+      <tr>
+          <th>状态名</th>
+          <th>含义</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>_Grunnable</code></td>
+          <td>就绪态，可被调度执行</td>
+      </tr>
+      <tr>
+          <td><code>_Grunning</code></td>
+          <td>正在执行</td>
+      </tr>
+      <tr>
+          <td><code>_Gwaiting</code></td>
+          <td><strong>等待中（被挂起）</strong></td>
+      </tr>
+      <tr>
+          <td><code>_Gsyscall</code></td>
+          <td>处于系统调用中（M 阻塞）</td>
+      </tr>
+      <tr>
+          <td><code>_Gdead</code></td>
+          <td>已退出或未初始化</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="-二当-g-被挂起时会发生什么">🧠 二、当 G 被挂起时，会发生什么？<a hidden class="anchor" aria-hidden="true" href="#-二当-g-被挂起时会发生什么">#</a></h2>
+<p>当一个 goroutine 因为 <strong>channel、mutex、select、cond 等原因阻塞</strong> 时：</p>
+<p>1️⃣ runtime 检测到它不能继续执行
+2️⃣ 把 G 的状态从 <code>_Grunning</code> 改为 <code>_Gwaiting</code>
+3️⃣ 将它加入相应的 <strong>等待队列（wait queue）</strong>
+4️⃣ 当前 M 继续执行其他可运行的 G（不 handoff P）</p>
+<hr>
+<h2 id="-三挂起的-g-被放到哪里">📦 三、挂起的 G 被放到哪里？<a hidden class="anchor" aria-hidden="true" href="#-三挂起的-g-被放到哪里">#</a></h2>
+<p>这取决于它<strong>被什么阻塞</strong>。
+我们可以看几个常见场景：</p>
+<hr>
+<h3 id="-场景-1channel-阻塞">✅ 场景 1：Channel 阻塞<a hidden class="anchor" aria-hidden="true" href="#-场景-1channel-阻塞">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">ch</span> <span style="color:#f92672">:=</span> make(<span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">int</span>)
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">ch</span> <span style="color:#75715e">// 无数据可读，被挂起</span>
+</span></span></code></pre></div><p>执行 <code>&lt;-ch</code> 时：</p>
+<ul>
+<li>runtime 发现 channel 没有可读数据；</li>
+<li>当前 G（比如 G1）被放入 <code>ch.recvq</code> 等待队列；</li>
+<li>G1 状态置为 <code>_Gwaiting</code>；</li>
+<li>调度器立即让出 M 执行其他 G。</li>
+</ul>
+<p>📦 <strong>存放位置：<code>chan.recvq</code>（链表或队列结构）</strong></p>
+<p>当另一个 G2 向 channel 发送数据时：</p>
+<ul>
+<li>runtime 会从 <code>recvq</code> 中取出一个等待的 G；</li>
+<li>把它状态改回 <code>_Grunnable</code>；</li>
+<li>放入 P 的本地可运行队列（<code>runq</code>）；</li>
+<li>等待被调度执行。</li>
+</ul>
+<hr>
+<h3 id="-场景-2mutex-阻塞">✅ 场景 2：Mutex 阻塞<a hidden class="anchor" aria-hidden="true" href="#-场景-2mutex-阻塞">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">mu</span> <span style="color:#a6e22e">sync</span>.<span style="color:#a6e22e">Mutex</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mu</span>.<span style="color:#a6e22e">Lock</span>()
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mu</span>.<span style="color:#a6e22e">Lock</span>() <span style="color:#75715e">// 第二次阻塞</span>
+</span></span></code></pre></div><ul>
+<li>第一个 G1 获得锁；</li>
+<li>第二个 G2 调用 <code>Lock()</code> 时发现锁被占用；</li>
+<li>runtime 把 G2 挂入 <code>mutex</code> 的等待队列（<code>sudog</code> 结构）；</li>
+<li>G2 状态 <code>_Gwaiting</code>；</li>
+<li>当前 M 去执行别的 G。</li>
+</ul>
+<p>📦 <strong>存放位置：锁的等待队列（<code>sudog</code>）</strong></p>
+<p>当 G1 调用 <code>Unlock()</code> 时：</p>
+<ul>
+<li>runtime 会唤醒一个等待的 G（从 <code>sudog</code> 拿出）；</li>
+<li>改状态为 <code>_Grunnable</code>；</li>
+<li>放入当前 P 的 run queue。</li>
+</ul>
+<hr>
+<h3 id="-场景-3cond-阻塞类似-waitgroup">✅ 场景 3：Cond 阻塞（类似 WaitGroup）<a hidden class="anchor" aria-hidden="true" href="#-场景-3cond-阻塞类似-waitgroup">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">cond</span>.<span style="color:#a6e22e">L</span>.<span style="color:#a6e22e">Lock</span>()
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">cond</span>.<span style="color:#a6e22e">Wait</span>() <span style="color:#75715e">// 阻塞</span>
+</span></span></code></pre></div><ul>
+<li>runtime 把当前 G 放入 <code>cond</code> 的等待队列；</li>
+<li>改为 <code>_Gwaiting</code>；</li>
+<li>unlock 互斥锁；</li>
+<li>当前 M 继续执行其他 G。</li>
+</ul>
+<p>📦 <strong>存放位置：Cond 的等待队列</strong></p>
+<p>当 <code>Signal()</code> 或 <code>Broadcast()</code> 调用：</p>
+<ul>
+<li>runtime 取出等待的 G；</li>
+<li>改状态 <code>_Grunnable</code>；</li>
+<li>放入 run queue。</li>
+</ul>
+<hr>
+<h3 id="-场景-4select-阻塞多个-channel-都没就绪">✅ 场景 4：select 阻塞（多个 channel 都没就绪）<a hidden class="anchor" aria-hidden="true" href="#-场景-4select-阻塞多个-channel-都没就绪">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">case</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">ch1</span>:
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">case</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">ch2</span>:
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">default</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 不会阻塞</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>如果所有 case 都阻塞：</p>
+<ul>
+<li>runtime 把 G 加入所有相关 channel 的等待队列；</li>
+<li>当任意一个 channel 就绪时，唤醒它；</li>
+<li>其他等待位置的 entry 会被清理。</li>
+</ul>
+<p>📦 <strong>存放位置：多个 channel 的等待队列（sudog 链表）</strong></p>
+<hr>
+<h2 id="-四唤醒过程被挂起的-g-重新运行">⚙️ 四、唤醒过程（被挂起的 G 重新运行）<a hidden class="anchor" aria-hidden="true" href="#-四唤醒过程被挂起的-g-重新运行">#</a></h2>
+<p>当对应事件（如数据到达、锁释放）发生时：</p>
+<p>1️⃣ runtime 把等待队列中的 G 拿出来；
+2️⃣ 改状态 <code>_Grunnable</code>；
+3️⃣ 放入 <strong>P 的本地 run queue</strong> 或全局 run queue；
+4️⃣ 被某个 M 执行。</p>
+<p>🧩 示意：</p>
+<pre tabindex="0"><code>被挂起的 G ——&gt; 等待队列 ——&gt; 事件触发唤醒 ——&gt; run queue ——&gt; M 执行
+</code></pre><hr>
+<h2 id="-五总结图示">🔍 五、总结图示<a hidden class="anchor" aria-hidden="true" href="#-五总结图示">#</a></h2>
+<pre tabindex="0"><code>┌────────────────────────────┐
+│        P (Processor)       │
+│                            │
+│  本地 run queue            │
+│  [G2][G3][G4]              │
+└───────────▲────────────────┘
+            │
+     ┌──────┴──────┐
+     │   阻塞事件   │
+     │ (chan/mutex)│
+     └──────┬──────┘
+            │
+       挂起的 G1
+       状态: _Gwaiting
+       存放于等待队列
+</code></pre><p>唤醒后：</p>
+<pre tabindex="0"><code>wait queue → G1 状态变为 _Grunnable → 放入 P.runq → 等待调度执行
+</code></pre><hr>
+<h2 id="-六总结一句话">✅ 六、总结一句话<a hidden class="anchor" aria-hidden="true" href="#-六总结一句话">#</a></h2>
+<blockquote>
+<p>被挂起的 G 不会运行，它被放入<strong>对应资源的等待队列</strong>（chan、mutex、cond 等）。
+等待资源可用时，runtime 把它唤醒、改为 <code>_Grunnable</code>，放回 <strong>P 的 run queue</strong> 等待执行。
+整个过程 M 与 P 不解绑（不会 handoff），M 会去跑其他 G。</p></blockquote>
 
 
   </div>

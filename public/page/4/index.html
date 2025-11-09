@@ -128,6 +128,83 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Str_判断字符顺序和存在
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>package test1 import &#34;sort&#34; //题目 // 题目描述输入两个字符串S和L，都只包含英文小写字母。S长度&lt;=100，L长度&lt;=500,000。 //判定S是否是L的有效子串。判定规则：S中的每个字符在L中都能找到（可以不连续），且S在Ｌ中字符的前后顺序与S中顺序要保持一致。 //（例如，S=”ace”是L=”abcde”的一个子序列且有效字符是a、c、e，而”aec”不是有效子序列，且有效字符只有a、e） //输入输出 //输入输入两个字符串S和L，都只包含英文小写字母。S长度&lt;=100，L长度&lt;=500,000。 //先输入S，再输入L，每个字符串占一行。输出S串最后一个有效字符在L中的位置。 //（首位从0开始计算，无有效字符返回-1） func SubStrLasPos(str string, sub string) int { // aabcdabc 8 // abc findKey := -1 // 循环找到所有的字符在str中的位置 预处理 strPos := make(map[byte][]int) for i := 0; i &lt; len(str); i&#43;&#43; { strPos[str[i]] = append(strPos[str[i]], i) } // limit 限制每个字符的位置 当前值比后一个值的最大位置要小才行 limit := len(str) for i := len(sub) - 1; i &gt;= 0; i-- { if _, ok := strPos[sub[i]]; !ok { return -1 } else { subArr := strPos[sub[i]] //sort.SearchInts() // 如果满足子数组的位置比Limit 小 就ok key := sort.SearchInts(subArr, limit) if key == 0 { return -1 } limit = subArr[key-1] if i == len(sub)-1 { findKey = limit } } // 排序拿到最大的值 //sort.Slice(strPos[sub[i]], func(i, j int) bool { //	return strPos[sub[i]][i] &lt; strPos[sub[i]][j] //}) } return findKey } func search(arr []int, limit int) int { low, high := 0, len(arr)-1 for low &lt;= high { mid := low &#43; (high-low)/2 if arr[mid] == limit { return mid } else if arr[mid] &gt; limit { high = mid - 1 } else { low = mid &#43; 1 } } return -1 } </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-09-05 09:22:10 +0800 CST'>September 5, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Str_判断字符顺序和存在" href="http://localhost:1313/posts/datastructalgorithm/str_%E5%88%A4%E6%96%AD%E5%AD%97%E7%AC%A6%E9%A1%BA%E5%BA%8F%E5%92%8C%E5%AD%98%E5%9C%A8/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">过期策略与内存淘汰策略
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p> 一、Redis 的键过期机制 Redis 可以对每个 key 设置一个 过期时间（TTL, Time To Live），过期后 key 会被删除。
+1. 过期策略 Redis 对 key 的过期有两种策略：
+(1) 惰性删除（Lazy Expiration） 原理：只有当 key 被访问时，Redis 才检查它是否过期。 优点：避免了不必要的 CPU 消耗。 缺点：过期 key 如果长时间不访问，会占用内存。 (2) 定期删除（Periodic Expiration） 原理：Redis 会周期性（默认每 100ms）随机检查一些带过期时间的 key，并删除过期 key。
+实现：
+每次检查 20 个 key。 如果过期数量 &gt; 25%，继续检查下一批 key。 每次检查耗时不超过 1ms。 优点：可以及时回收内存。
+缺点：不能保证所有过期 key 立即删除，可能延迟。
+Redis 综合使用了惰性删除和定期删除，保证性能和及时性之间的平衡。
+2. TTL 命令 EXPIRE key seconds 设置过期时间。 EXPIREAT key timestamp 按时间戳设置过期时间。 TTL key 查看剩余时间。 PTTL key 查看毫秒级 TTL。 二、Redis 的淘汰策略（内存不足时） 当 Redis 设置了 maxmemory 限制，并且内存达到上限时，需要 淘汰旧数据。
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-09-02 10:17:27 +0800 CST'>September 2, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 过期策略与内存淘汰策略" href="http://localhost:1313/posts/cache/%E8%BF%87%E6%9C%9F%E7%AD%96%E7%95%A5%E4%B8%8E%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Go实现lru
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>package main import &#34;fmt&#34; // func main() { // //	//LRU //	//实现一个 LRU 缓存，要求支持以下操作： //	//- Get(key int)(int, bool)：如果缓存中存在该 key，返回其对应的值，否则返回 0,false。 //	//- Put(key, value int)：将一个 key-value 对插入缓存。如果缓存已经满了，淘汰最久未使用的元素。 //	// //	//示例： //	//func main() { //	// // 构造 一个 LRU cache //	// cache := Constructor(2) //	// cache.Put(1, 1) //	// cache.Put(2, 2) //	// //	// // 测试缓存获取 //	// fmt.Println(cache.Get(1)) // 输出: 1 true //	// fmt.Println(cache.Get(3)) // 输出: 0 false //	// //	// cache.Put(3, 3) //	// fmt.Println(cache.Get(2)) // 输出: 0 false //	// //	// cache.Put(4, 4) //	// fmt.Println(cache.Get(1)) // 输出: 0 false //	// fmt.Println(cache.Get(3)) // 输出: 3 true //	// fmt.Println(cache.Get(4)) // 输出: 4 true //	//} //	} func main() { // 构造 一个 LRU cache cache := Constructor(2) cache.Put(2, 1) cache.Put(1, 1) cache.Put(2, 3) cache.Put(4, 1) fmt.Println(cache.Get(1)) fmt.Println(cache.Get(2)) } type Node struct { next *Node pre *Node val int key int } type LRUCache struct { capacity int size int cache map[int]*Node head, tail *Node } func Constructor(capacity int) LRUCache { l := LRUCache{ capacity: capacity, cache: make(map[int]*Node, capacity), head: &amp;Node{}, tail: &amp;Node{}, } l.head.next = l.tail l.tail.pre = l.head return l } // 1 2 3 4 func (l *LRUCache) Get(key int) int { // 从map拿数据 if _, ok := l.cache[key]; !ok { return -1 } node := l.cache[key] l.MoveToHead(node) return node.val } func (l *LRUCache) Put(key int, val int) { if _, ok := l.cache[key]; ok { l.cache[key].val = val l.MoveToHead(l.cache[key]) } else { l.size&#43;&#43; node := InitNode(key, val) l.cache[key] = node l.AddToHead(node) if l.size &gt; l.capacity { node := l.RemoveTail() l.size-- delete(l.cache, node.key) } } } func InitNode(key, val int) *Node { return &amp;Node{ key: key, val: val, } } // 添加到头节点 func (l *LRUCache) AddToHead(newNode *Node) *Node { newNode.next = l.head.next newNode.pre = l.head l.head.next.pre = newNode l.head.next = newNode return newNode } func (l *LRUCache) RemoveNode(node *Node) { node.pre.next = node.next node.next.pre = node.pre } func (l *LRUCache) RemoveTail() *Node { node := l.tail.pre //l.tail.pre = node.pre l.RemoveNode(node) return node } func (l *LRUCache) MoveToHead(node *Node) { l.RemoveNode(node) l.AddToHead(node) } </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-29 09:43:18 +0800 CST'>August 29, 2025</span>&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to Go实现lru" href="http://localhost:1313/posts/datastructalgorithm/go%E5%AE%9E%E7%8E%B0lru/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Mod
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>go mod 加载机制 go root go的安装目录
+go path go的源代码工作目录
+go mod go从1.11开始，加入了 go mod。开启 go mod 之后，不需要讲所有的源代码放到gopath。
+go 的加载机制 go 会把go mod所在的目录当成工作目录，先加载相对路径下的本地包，如果没有会去go mod文件查找，go mod 会尝试从go proxy 拉取代码，go proxy 是Google维护的go的包仓库，即使某些包的源码被删除，也还是可以从包仓库 下载，这保证了包引入的稳定性。如果go proxy没有，那么go会尝试从代码仓库拉取源码，比如github上的源码。go mod 当中 带有 // indirect的就是直接源码下载的。
+还可以使用 go mod edit -replace [old git package]@[version]=[new git package]@[version] 命令将远程代码仓库替换成本地的代码。 使用go private 设置私有化代码仓库的路径，然后配置认证就可以使用内部代码库。
+常用命令 go mod init 初始化模块，生成 go mod go mod tidy 拉取依赖，自动增删依赖，生成go.sum go mod download 将依赖预下载到本地缓存 go mod vendor 将下载的依赖缓存到 ./vendor,用于离线构建 go mod edit </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-27 09:47:18 +0800 CST'>August 27, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Mod" href="http://localhost:1313/posts/go/mod/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">ddd领域驱动设计
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>什么是DDD? DDD是domain design driver 的简称，根本的目的是为了解决软件的复杂性的一种设计思想。传统的MVC等代码、软件架构是面向程序员工程师的，而 产品经理更多只是需求产品设计，这导致软件架构和实际的业务脱离，当业务变得复杂，软件复杂性提高之后，后续的维护升级重构会遭遇重重困难。
+关键概念 充血模型and贫血模型 贫血模型是为了引出充血模型这一概念。贫血模型是指我们通常的数据库映射只有属性，而没有表现出具体的业务属性，也就是没有 引起映射数据变化的方法，就看不出来这个映射具体的业务，DDD的建议是把能引发变化的方法都写到这个变化内，这样别人一看就知道这个 实体具体包含了哪些业务属性。
+聚合根 防腐层 我的理解 整个DDD架构里面遵循了设计原则的最佳实践，比如高内聚低耦合这个大的思想，以及一些设计原则
+单一职责,一个方法、类、模块只干一件事情 开放封闭，对扩展开放，对修改封闭 依赖倒置，依赖于接口而不是具体实现。 接口隔离，接口小而精，不是胖而杂 里氏替换，对继承的补充，一个子类要能够完全替换父类，也就是要遵循父类的约定，这样少破坏原有的约定。 迪米洛法则（最少知识原则），不要跨多个对象调用方法，不需要知道跨对象的内部细节，只调用最新的朋友节点 战术构件和战略构件 DDD是一套架构思想方法论，它为代码层面和架构层面都提供了对应的构件帮我我们设计构架。
+战术构件（代码层面） 实体 值对象 根/聚合根 repository domain 工厂 事件 战略构件（架构层面） 界限上下文（模块） 通用语言（业务和技术用同一种专业术语沟通，防止鸡同鸭讲） 上下文映射（模块之间如何关联） 实际架构示例 ┌──────────────────────────────────────────────┐ │ 战略构件 (Strategic) │ │----------------------------------------------│ │ 限界上下文 (Bounded Contexts) │ │ ├── 用户上下文 (User Context) │ │ ├── 订单上下文 (Order Context) │ │ ├── 商品上下文 (Product Context) │ │ └── 支付上下文 (Payment Context) │ │ │ │ 上下文映射 (Context Map) │ │ ├── 上下游 (Upstream/Downstream) │ │ ├── 防腐层 (ACL) │ │ ├── 合作伙伴 (Partnership) │ │ └── 开放主机服务 (OHS) │ │ │ │ 通用语言 (Ubiquitous Language) │ │ └── &#34;订单&#34;、&#34;支付单&#34;、&#34;退款单&#34; │ └──────────────────────────────────────────────┘ │ ▼ ┌──────────────────────────────────────────────┐ │ 战术构件 (Tactical) │ │----------------------------------------------│ │ 接口层 (Interface Layer) │ │ └── Kratos Handler (HTTP/gRPC 接口) │ │ │ │ 应用层 (Application Layer) │ │ └── 应用服务 (Application Service) │ │ → OrderUsecase │ │ │ │ 领域层 (Domain Layer) │ │ ├── 实体 (Entity) &amp; 聚合根 (AggregateRoot) │ │ │ → Order, OrderItem │ │ ├── 值对象 (Value Object) │ │ │ → Money, Address │ │ ├── 领域服务 (Domain Service) │ │ │ → PaymentService │ │ ├── 工厂 (Factory) │ │ │ → NewOrder │ │ ├── 领域事件 (Domain Event) │ │ │ → OrderPaidEvent │ │ └── 仓储接口 (Repository Interface) │ │ │ │ 基础设施层 (Infrastructure Layer) │ │ └── 仓储实现 (Repository Impl, GORM) │ │ → orderRepo (MySQL) │ └──────────────────────────────────────────────┘ kratos 和DDD 架构对照 Kratos 层级 DDD 层级 作用 service/ Interface / Adapter gRPC/HTTP Handler，参数验证/响应封装，调用 UseCase biz/ Domain &#43; Application 业务逻辑和领域规则处理，UseCase（业务服务），纯业务计算 data/ Infrastructure 数据库、缓存、第三方 SDK 封装，实现 Repository 接口，提供外部依赖能力 pkg/ Infrastructure（共享组件） 可复用 SDK 封装、工具函数、通用库，跨服务共享 参考资料 美团 领域驱动设计在互联网业务开发中的实践 </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-08 09:50:22 +0800 CST'>August 8, 2025</span>&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to ddd领域驱动设计" href="http://localhost:1313/posts/design_pattern/ddd/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">初始化方法比较
     </h2>
   </header>
@@ -209,108 +286,6 @@ go为什么采用三色标记法 go采用tcmalloc所以对内存碎片优化的�
   </div>
   <footer class="entry-footer"><span title='2025-07-29 09:23:59 +0800 CST'>July 29, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to Map" href="http://localhost:1313/posts/go/map/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Http2_grpc
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>http2 http1的弊端 数据以文本传输，十分低效 header头数据很多 每个tcp链接只能发送一次链接 只能单向传递数据，由浏览器发起 加载无法定义顺序 http2 http2针对这些缺点进行了优化
-对数据进行二进制分帧，基于流传输提高了传输效率，还可以进行流量控制，提升安全性和可靠性 对头数据进行了压缩，采用hpack算法对数据进行压缩，提升了传输效率 采用多路复用，每个tcp连接可以发起任意多的传输请求，减少了tcp的三次握手等频繁建立请求 可以实现服务端推送，从单向传输改为双向传输 可以根据页面不同资源的重要程度设置优先级进行加载 通过以上五个方面http2对h1进行了升级，提高了传输效率，增加更多实现的功能，提升了客户端用户体验。 如何使用 反向代理软件如nginx/apache等设置http2选项 如nginx,首先必须支持ssl/tsl证书，再加上listen 443 ssl http2
-go的net组件自动支持http2,无需手动升级 grpc rpc rpc是远程过程调用，是一种在不同进程或组件上让函数调用如同本地调用一样的技术。有多种实现，比如json-rpc,xrpc(基于xml),gprc google推出，基于protobuf,通过IDL(接口定义)定义同义的方法和参数，使用代码生成工具生成不同语言的代码。
-grpc也是基于http2,所以他可以利用http2的各种特性，他有google推出，采用protobuf传输。
-他有以下特点：
-基于IDL生成，接口及定义，可以生成多语言，被客户端和服务端共用。 数据传输效率高，基于http2,拥有双向传输、tcp多路复用、二进制数据帧传输、流量控制等特性 常见于微服务当中，可以方便的定义中间件，进行限流、降级等特性 浏览器一次完整的请求过程 服务器会启动进程监听某个端口，当端口监听到请求，进行处理 通过DNS解析域名拿到目标IP,依次通过浏览器、本地缓存查询，没有就往根dns服务器查询。 如果是http协议需要先通过ssl建立安全通道。 建立TCP连接，通过五元组：协议 ip 端口 目标IP 目标端口 进行三次握手，握手完成后开始发送数据 数据进行封装,数据从应用层（报文）-&gt;传输层（报文&#43;端口号）-&gt;网络IP层（数据段&#43;IP）-&gt;数据链路层(数据包&#43;mac主机物理地址-&gt;数据帧)-&gt;物理层(二进制流)这个层次依次进行传输 通过网络层找到目的主机，通过端口号找到主机监听目的端口的程序。应用程序处理请求。 服务器处理响应，完成后，返回给客户端 断开连接、4次挥手，最后一次等待服务器发送完毕数据 参考资料 https://blog.csdn.net/u012914309/article/details/127507726?spm=1001.2014.3001.5501 </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-23 22:28:18 +0800 CST'>July 23, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Http2_grpc" href="http://localhost:1313/posts/network/http2_grpc/"></a>
-</article>
-
-<article class="post-entry"> 
-<figure class="entry-cover">
-        <img loading="lazy" src="http://localhost:1313/images/cap.png" alt="">
-</figure>
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CAP
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>定义 CAP理论是指分布式当中一致性、可用性以及分区容错性三者不可兼得。我们需要根据实际应用场景做出相应的取舍， 在现实中，一般来说分布式系统中的网络是不可能完全保证可用的，所以就需要在CA和CP中做出选择。
-c一致性(consistency) 同一份数据同一时间在不同的节点看到的结果应该是一致性的
-a可用性（availability） 当系统当中某些节点故障仍然可以在一定时间内响应用户请求，也就是说系统在任何时间对于非错请求都能在一定时间做出响应，且不返回错误。
-p分区容错性（partition tolerance） 当集群中发生网络分区，因为网络故障导致节点之间不能正常通信，系统仍然正常运行，能够对外提供服务。
-拜占庭将军问题 是指分布式系统中可能有恶意节点对数据一致性造成破坏。如果系统中的节点是f个，为了解决非拜占庭将军问题，至少需要3f&#43;1 个节点。能容忍拜占庭容错的系统一般是高安全性要求的系统，比如区跨链、金融、军事等。
-脑裂 脑裂是指分布式系统中由于网络波动或中断，导致系统被分成多个子系统，子系统在内部选举leader，对外提供服务。这会导致 严重的问题，比如
-数据不一致	两个分区同时写入同一数据（如账户余额），导致冲突且无法自动合并。 资源冲突	两个“领导者”同时操作共享资源（如分配同一IP地址、锁定同一文件）。 状态混乱	客户端可能被不同分区响应矛盾的结果（如A分区说“支付成功”，B分区说“未支付”）。 数据永久丢失	分区恢复后，冲突写入可能导致部分数据被覆盖或丢弃。 为了防止脑裂，一般分布式一致性协议都会采用多数派原则进行避免，比如五个节点的分布式系统中，需要3个节点的确认才能成为leader,否则会 因为无法选主而停止对外提供服务。
-raft协议 raft协议是分布式系统中多个节点对于某个资源的一致性的达成所采用的一种协议，主要有三个部分：
-主从选择 日志复制 安全性和一致性保证 raft协议是强一致的。还有一些其他的一致性组件比如zookeeper。raft协议提供了强一致性的方案。 zookeeper 实践 常见的使用场景 一些常见的开源软件的使用我们会经常遇到这个场景。拿最常见的redis为例，redis的分布式部署方案有三种，主从、哨兵、cluster。
-go 简单的实践 package main import ( &#34;fmt&#34; &#34;io&#34; &#34;log&#34; &#34;net&#34; &#34;os&#34; &#34;time&#34; &#34;github.com/hashicorp/raft&#34; bolt &#34;github.com/hashicorp/raft-boltdb&#34; ) // 简单的 FSM：提交即打印 type FSM struct{} func (f *FSM) Apply(l *raft.Log) interface{} { fmt.Printf(&#34;Apply: %s\n&#34;, string(l.Data)) return nil } func (f *FSM) Snapshot() (raft.FSMSnapshot, error) { return &amp;snapshot{}, nil } func (f *FSM) Restore(io.ReadCloser) error { return nil } type snapshot struct{} func (s *snapshot) Persist(sink raft.SnapshotSink) error { return sink.Close() } func (s *snapshot) Release() {} func main() { // 1) 配置 config := raft.DefaultConfig() config.LocalID = raft.ServerID(os.Args[1]) // 节点 ID 来自第一个参数 // 2) 网络传输：TCP addr, err := net.ResolveTCPAddr(&#34;tcp&#34;, os.Args[2]) if err != nil { log.Fatal(err) } transport, err := raft.NewTCPTransport(os.Args[2], addr, 3, 10*time.Second, os.Stdout) if err != nil { log.Fatal(err) } // 3) 日志与快照存储 store, err := bolt.NewBoltStore(fmt.Sprintf(&#34;raft-%s.db&#34;, os.Args[1])) if err != nil { log.Fatal(err) } snapshotStore := raft.NewInmemSnapshotStore() // 4) 创建 Raft 实例 r, err := raft.NewRaft(config, &amp;FSM{}, store, store, snapshotStore, transport) if err != nil { log.Fatal(err) } // 5) Bootstrap 第一个节点 if os.Args[1] == &#34;node1&#34; { cfg := raft.Configuration{ Servers: []raft.Server{ {ID: &#34;node1&#34;, Address: transport.LocalAddr()}, {ID: &#34;node2&#34;, Address: raft.ServerAddress(&#34;127.0.0.1:12002&#34;)}, {ID: &#34;node3&#34;, Address: raft.ServerAddress(&#34;127.0.0.1:12003&#34;)}, }, } r.BootstrapCluster(cfg) } // 6) 简单命令行提交 if config.LocalID == &#34;node1&#34; { go func() { for { time.Sleep(3 * time.Second) f := r.Apply([]byte(&#34;hello raft&#34;), 5*time.Second) if err := f.Error(); err != nil { log.Println(&#34;apply error:&#34;, err) } } }() } select {} // 阻塞 } `
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-16 09:21:40 +0800 CST'>July 16, 2025</span>&nbsp;·&nbsp;4 min</footer>
-  <a class="entry-link" aria-label="post link to CAP" href="http://localhost:1313/posts/architecture/cap/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Socket
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Socket IO模型 常见的IO模型有四种：多进程、多线程、IO复用、协程
-多进程：最原始的一种模式，好处是开发难度小，同一个进程共享内容，缺点是创建和销毁的成本很高。常见的比如php的php-fpm 多线程：相比于多进程开销更小，但是遇到C10K问题还是会出现瓶颈，线程的内存占用通常以M为单位。提高了效率，但是遇到高并发，资源占用还是比较大。常见的比如java的多线程 IO模型: 基于事件的IO处理机制，是单线程模型，通过监听文件句柄socket,注册事件， 当有IO事件发生时，会触发回调函数。由于在单线程模型，开销更小，适合处理高并发。常见的如nodejs、redis。 协程: 协程是态线程，协程的切换开销小，通常以kb为单位，通常一个协程只占用4KB，适合处理高并发。常见的如go语言。 Socket定义 socket是应用层和传输层的一组API接口，用于实现网络通信。 linux当中一切皆文件，操作系统为了统一处理IO模型，将socket也视作文件句柄。
-特性 普通文件 Socket（网络文件） 底层对象 struct inode &#43; struct file struct socket &#43; struct file 操作集 read/write 操作读写磁盘数据 recv/send（也支持 read/write，最终映射到网络收发） 偏移量（offset） 有，指示文件读写位置 无意义，总是以流／报文方式收发 阻塞／非阻塞 可设置阻塞或非阻塞 同样支持阻塞模式和非阻塞模式 I/O 多路复用 支持 select/poll/epoll 完全支持 通过监听文件句柄，结合select/pull/epoll, 可以实现网络编程。
-websocket websocket是一种基于http的协议，用于浏览器和服务器之间进行长连接实时通信。一般会通过对http请求升级upgrade，将http协议升级为websocket协议。
-如何使用 tcp连接需要指定五元组：ip、端口、协议、源ip、源端口，同样的socket也需要指定这些参数。 server端的建立过程：
-socket() bind() listen() accept() close client端的建立过程：
-socket() connect() accept() close() 代码示例 原始方案，使用net包:
-sever端
-package main import ( &#34;fmt&#34; &#34;os&#34; &#34;syscall&#34; ) func check(err error) { if err != nil { fmt.Fprintln(os.Stderr, &#34;错误：&#34;, err) os.Exit(1) } } func main() { // 1. 创建 socket fd, err := syscall.Socket(syscall.AF_INET, syscall.SOCK_STREAM, syscall.IPPROTO_TCP) check(err) defer syscall.Close(fd) // 2. 绑定到本地地址 0.0.0.0:8888 sa := &amp;syscall.SockaddrInet4{Port: 8888} // IP 全 0 表示 INADDR_ANY check(syscall.Bind(fd, sa)) // 3. 开始监听（backlog 128） check(syscall.Listen(fd, 128)) fmt.Println(&#34;raw socket 服务器已启动，端口 8888&#34;) // 4. 接受连接 nfd, rsa, err := syscall.Accept(fd) check(err) fmt.Printf(&#34;接收到客户端：%v\n&#34;, rsa) defer syscall.Close(nfd) // 5. 全双工：一个 goroutine 从 stdin 发出去，一个 goroutine 从 socket 读进来 go func() { buf := make([]byte, 1024) for { // 从标准输入读 n, err := syscall.Read(syscall.Stdin, buf) if err != nil { fmt.Fprintln(os.Stderr, &#34;stdin 读取错误：&#34;, err) return } if n &gt; 0 { _, err = syscall.Write(nfd, buf[:n]) if err != nil { fmt.Fprintln(os.Stderr, &#34;向客户端写入错误：&#34;, err) return } } } }() // 主 goroutine 负责从 socket 读并写到 stdout buf := make([]byte, 1024) for { n, err := syscall.Read(nfd, buf) if err != nil { fmt.Fprintln(os.Stderr, &#34;从客户端读取错误：&#34;, err) return } if n &gt; 0 { // 打印到标准输出 _, err = syscall.Write(syscall.Stdout, buf[:n]) if err != nil { fmt.Fprintln(os.Stderr, &#34;写到 stdout 错误：&#34;, err) return } } } } client端
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-12 14:44:10 +0800 CST'>July 12, 2025</span>&nbsp;·&nbsp;3 min</footer>
-  <a class="entry-link" aria-label="post link to Socket" href="http://localhost:1313/posts/network/socket/"></a>
-</article>
-
-<article class="post-entry"> 
-<figure class="entry-cover">
-        <img loading="lazy" src="http://localhost:1313/images/img_2.png" alt="">
-</figure>
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">BFS&amp;&amp;DFS
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>树的遍历 深度优先遍历DFS package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, } root.Left = &amp;TreeNode{Val: 2} root.Right = &amp;TreeNode{Val: 3} root.Right.Left = &amp;TreeNode{Val: 4} root.Left.Left = &amp;TreeNode{Val: 5} list := make([]int, 0) var treeDFS = func(root *TreeNode) {} treeDFS = func(root *TreeNode) { if root == nil { return } list = append(list, root.Val) treeDFS(root.Left) treeDFS(root.Right) } treeDFS(root) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 函数版本
-package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, } root.Left = &amp;TreeNode{Val: 2} root.Right = &amp;TreeNode{Val: 3} root.Right.Left = &amp;TreeNode{Val: 4} root.Left.Left = &amp;TreeNode{Val: 5} list := make([]int, 0) TreeDFS(root, &amp;list) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } func TreeDFS(root *TreeNode, list *[]int) { if root == nil { return } *list = append(*list, root.Val) TreeDFS(root.Left, list) TreeDFS(root.Right, list) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 广度优先遍历BFS list2 := make([]int, 0) queue := make([]*TreeNode, 0) queue = append(queue, root) for len(queue) &gt; 0 { count := len(queue) for i := 0; i &lt; count; i&#43;&#43; { node := queue[0] queue = queue[1:] list2 = append(list2, node.Val) if node.Left != nil { queue = append(queue, node.Left) } if node.Right != nil { queue = append(queue, node.Right) } } } fmt.Println(list2) 根据先序遍历和中序遍历构造二叉树 package main import &#34;fmt&#34; func main() { // 1 // [1 2 5 3 4] 先序 // [2 5 1 3 4] 中序 // 1 [2 5] [2 5] i = 2 [3 4] // [2 5 3 4] [2 5] // [5 3 4] [5] copyTreeRoot := BuildTree([]int{1, 2, 5, 3, 4}, []int{2, 5, 1, 3, 4}) fmt.Println(copyTreeRoot) list3 := make([]int, 0) TreeDFS(copyTreeRoot, &amp;list3) fmt.Println(&#34;list3:&#34;, list3) //SliceTest() } func BuildTree(first []int, mid []int) *TreeNode { if len(first) == 0 { return nil } root := &amp;TreeNode{Val: first[0]} node := first[0] i := 0 for ; i &lt; len(mid); i&#43;&#43; { if mid[i] == node { break } } root.Left = BuildTree(first[1:i&#43;1], mid[:i]) root.Right = BuildTree(first[i&#43;1:], mid[i&#43;1:]) return root } 图的遍历 深度优先遍历DFS &amp;&amp; 广度优先遍历BFS package main import ( &#34;container/list&#34; &#34;fmt&#34; ) func main() { // 0 // 1 -&gt; 4 -&gt; 5 // 0 2 -&gt; 6 -&gt; 7 // 3 -&gt;^ g := make([][]int, 8) //g = append(g, []int{1, 2, 3} g[0] = []int{1, 2, 3} g[1] = []int{4} g[2] = []int{6} g[3] = []int{6} g[4] = []int{5} g[6] = []int{7} g2 := make(map[int][]int) g2[0] = []int{1, 2, 3} g2[1] = []int{4} g2[2] = []int{6} g2[3] = []int{6} g2[4] = []int{5} g2[6] = []int{7} graphDFS(0, g) //graphBFS(g) fmt.Println(&#34;-----&#34;) graphBFSWithQueue(g2) fmt.Println(&#34;-----&#34;) listC := graphBFSWithC(g2) fmt.Println(listC) } func graphDFS(root int, graph [][]int) { fmt.Println(root) if graph[root] == nil { return } //fmt.Println(root) for i := 0; i &lt; len(graph[root]); i&#43;&#43; { graphDFS(graph[root][i], graph) } return } func graphBFSWithQueue(graph map[int][]int) { queue := make([]int, 0) queue = append(queue, 0) fmt.Println(0) visited := make(map[int]bool) for len(queue) &gt; 0 { node := queue[0] queue = queue[1:] g := graph[node] size := len(g) for i := 0; i &lt; size; i&#43;&#43; { if visited[g[i]] { continue } else { fmt.Println(g[i]) queue = append(queue, g[i]) visited[g[i]] = true } } } } func graphBFSWithC(graph map[int][]int) []int { queue := list.New() order := make([]int, 0) visited := make(map[int]bool) queue.PushBack(0) for queue.Len() &gt; 0 { node := queue.Remove(queue.Front()).(int) order = append(order, node) neighbor := graph[node] size := len(neighbor) for i := 0; i &lt; size; i&#43;&#43; { if visited[neighbor[i]] { continue } else { queue.PushBack(neighbor[i]) visited[neighbor[i]] = true } } } return order } 带权图的最短路径算法 dijkstra 参考 可视化网站. 可视化网站. </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-09 09:20:50 +0800 CST'>July 9, 2025</span>&nbsp;·&nbsp;3 min</footer>
-  <a class="entry-link" aria-label="post link to BFS&&DFS" href="http://localhost:1313/posts/datastructalgorithm/bfs_dfs/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">https原理
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>定义 http http是超文本传输协议，用于传输网页内容，它基于TCP，所以是可靠性传输。但是它没有解决数据安全性 方面的问题
-http安全方面的问题 http没有对数据进行加密，任何人都可以随意读取这些数据，遭成数据的泄密。 其次没有认证，也就是没有办法知道数据来源的可靠性，攻击者可以中间人攻击来伪造数据 数据完整性，任何人可以读取也可以修改数据 https是什么 https是http的安全版本，https基于ssl，ssl基于tls。http&#43;数据加密&#43;认证&#43;数据完整性就是https。
-https怎么解决的这些问题 数据加密 加密算法 加密算法分为对称加密和非对称加密，还有一些摘要算法 / 哈希算法，一下是一些常见的加密算法
-类型 示例 是否可逆 说明 对称加密 DES / AES / 3DES ✅ 加密解密用同一密钥 非对称加密 RSA / ECC ✅ 公钥加密，私钥解密 摘要算法 MD5 / SHA256 ❌ 不可逆，用于校验完整性 签名算法 DSA / RSA签名 ❌ 用私钥签名，公钥验签 服务器端生成密钥对，将公钥发送给客户端，客户端使用公钥加密对称加密使用的秘钥，发送给服务器端，服务器端使用私钥解密数据， 得到秘钥，后续通过这个秘钥对数据进行加密解密。
-CA CA（Certificate Authority）是证书颁发机构，它负责签发证书，并管理证书的颁发和吊销。
-为什么需要CA 客户端无法知晓拿到的公钥是由目标服务器颁发的，为了验证证书的合法性，防护中间人攻击，需要CA证书颁发机构签发证书。
-证书生成 首先，服务器管理员会向CA提起证书申请，CA会验证域名的所属权，做法通常是在域名解析加一个特定值。 验证通过后，CA会将服务器的公钥用自己的私钥进行签名，生成证书。并颁发给服务器管理员。
-证书验证过程 客户端发起连接请求，服务器会返回证书，客户端会验证证书的合法性，并获取证书的公钥。 浏览器会在发版的时候将各大CA机构的公钥预制在浏览器中，使用CA的公钥对服务器的证书进行解密，拿到解密的hash值。同时 使用同样的摘要算法对原始内容进行加密，用得到的摘要和解密的摘要对比，如果相等，说明证书是CA颁发的，也就证明 了证书的合法性和完整性。
-更加深入的了解https http是超文本传输协议，它会有以下几个问题：
-窃听风险，由于TCP传输过程中会经过路由器、主机等多个设备，存在被截获数据的风险，泄漏密码等机密信息 篡改风险，被截获的数据可能被恶意篡改，在交易等重要系统会产生非常大的破坏性 身份伪造，无法知晓我们访问的服务端是否是真实的 https通过以下几个方式解决上述问题
-机密性，通过对称加密算法保证 完整性，通过摘要算法保证（md5、sha256） 身份认证，通过CA(证书颁发机构) 为什么https采用了对策加密&#43;非对称加密&#43;CA? 只用对称加密不好解决密钥传输保存的问题，非对称加密由于加解密比较消耗资源，不适合对大量数据进行加解密。
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-08 09:35:24 +0800 CST'>July 8, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to https原理" href="http://localhost:1313/posts/network/https/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

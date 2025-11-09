@@ -6,8 +6,194 @@
     <description>Recent content on yangcp</description>
     <generator>Hugo -- 0.147.4</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sun, 26 Oct 2025 19:15:43 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 05 Nov 2025 09:29:18 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>排序算法总结</title>
+      <link>http://localhost:1313/posts/datastructalgorithm/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/</link>
+      <pubDate>Wed, 05 Nov 2025 09:29:18 +0800</pubDate>
+      <guid>http://localhost:1313/posts/datastructalgorithm/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/</guid>
+      <description>&lt;p&gt;总结——&lt;strong&gt;所有常见排序算法的核心思想、时间复杂度、空间复杂度、稳定性、是否原地排序、适用场景和简单例子&lt;/strong&gt;。
+下面是&lt;strong&gt;最全面且面试导向&lt;/strong&gt;的总结版本👇&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;-排序算法总览表&#34;&gt;🧠 排序算法总览表&lt;/h2&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;算法&lt;/th&gt;
+          &lt;th&gt;思想&lt;/th&gt;
+          &lt;th&gt;时间复杂度&lt;/th&gt;
+          &lt;th&gt;空间复杂度&lt;/th&gt;
+          &lt;th&gt;稳定性&lt;/th&gt;
+          &lt;th&gt;原地排序&lt;/th&gt;
+          &lt;th&gt;适用场景&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;冒泡排序 (Bubble Sort)&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;相邻交换，最大（或最小）元素逐步“浮出”&lt;/td&gt;
+          &lt;td&gt;O(n²)&lt;/td&gt;
+          &lt;td&gt;O(1)&lt;/td&gt;
+          &lt;td&gt;✅ 稳定&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
+          &lt;td&gt;数据量小、部分有序&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;选择排序 (Selection Sort)&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;每次选择最小元素放到前面&lt;/td&gt;
+          &lt;td&gt;O(n²)&lt;/td&gt;
+          &lt;td&gt;O(1)&lt;/td&gt;
+          &lt;td&gt;❌ 不稳定&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
+          &lt;td&gt;数据量小，对交换次数敏感&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;插入排序 (Insertion Sort)&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;将未排序元素插入到已排序序列中&lt;/td&gt;
+          &lt;td&gt;O(n²)&lt;/td&gt;
+          &lt;td&gt;O(1)&lt;/td&gt;
+          &lt;td&gt;✅ 稳定&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
+          &lt;td&gt;数据基本有序时高效&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;希尔排序 (Shell Sort)&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;插入排序的改进版，分组比较减少交换&lt;/td&gt;
+          &lt;td&gt;O(n¹˙³~n²)&lt;/td&gt;
+          &lt;td&gt;O(1)&lt;/td&gt;
+          &lt;td&gt;❌ 不稳定&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
+          &lt;td&gt;中等规模数据&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;归并排序 (Merge Sort)&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;分治 + 合并有序子序列&lt;/td&gt;
+          &lt;td&gt;O(n log n)&lt;/td&gt;
+          &lt;td&gt;O(n)&lt;/td&gt;
+          &lt;td&gt;✅ 稳定&lt;/td&gt;
+          &lt;td&gt;❌&lt;/td&gt;
+          &lt;td&gt;大数据、外部排序&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;快速排序 (Quick Sort)&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;分治 + 基准划分&lt;/td&gt;
+          &lt;td&gt;平均 O(n log n)&lt;!-- raw HTML omitted --&gt;最坏 O(n²)&lt;/td&gt;
+          &lt;td&gt;O(log n)&lt;/td&gt;
+          &lt;td&gt;❌ 不稳定&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
+          &lt;td&gt;通用最快的内部排序&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;堆排序 (Heap Sort)&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;利用堆结构维护最大/最小值&lt;/td&gt;
+          &lt;td&gt;O(n log n)&lt;/td&gt;
+          &lt;td&gt;O(1)&lt;/td&gt;
+          &lt;td&gt;❌ 不稳定&lt;/td&gt;
+          &lt;td&gt;✅&lt;/td&gt;
+          &lt;td&gt;需要快速找最大/最小的场景&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;计数排序 (Counting Sort)&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;统计每个元素出现次数&lt;/td&gt;
+          &lt;td&gt;O(n + k)&lt;/td&gt;
+          &lt;td&gt;O(n + k)&lt;/td&gt;
+          &lt;td&gt;✅ 稳定&lt;/td&gt;
+          &lt;td&gt;❌&lt;/td&gt;
+          &lt;td&gt;整数、范围较小的场景&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;桶排序 (Bucket Sort)&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;按区间划分多个桶再分别排序&lt;/td&gt;
+          &lt;td&gt;O(n + k)&lt;/td&gt;
+          &lt;td&gt;O(n + k)&lt;/td&gt;
+          &lt;td&gt;✅ 稳定（视子排序）&lt;/td&gt;
+          &lt;td&gt;❌&lt;/td&gt;
+          &lt;td&gt;数据均匀分布的浮点数&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;基数排序 (Radix Sort)&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;按位（个位→高位）排序&lt;/td&gt;
+          &lt;td&gt;O(d·(n+k))&lt;/td&gt;
+          &lt;td&gt;O(n + k)&lt;/td&gt;
+          &lt;td&gt;✅ 稳定&lt;/td&gt;
+          &lt;td&gt;❌&lt;/td&gt;
+          &lt;td&gt;整数、字符串排序&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;-各算法核心思想讲解与代码示例&#34;&gt;🔍 各算法核心思想讲解与代码示例&lt;/h2&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;1-冒泡排序-bubble-sort&#34;&gt;1️⃣ 冒泡排序 Bubble Sort&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;每一轮两两比较，把最大值“冒泡”到最后。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>内存分配</title>
+      <link>http://localhost:1313/posts/go/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/</link>
+      <pubDate>Fri, 31 Oct 2025 18:10:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts/go/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/</guid>
+      <description>&lt;h2 id=&#34;go的内存分配&#34;&gt;go的内存分配&lt;/h2&gt;
+&lt;p&gt;根据对象大小的不同，go的内存分配有3种类型：
+Tiny(size &amp;lt; 16B): Objects of size less than 16 bytes are allocated using the mcache’s tiny allocator. This is efficient and multiple tiny allocations are done on a single 16-byte block.
+Small(size 16B ~ 32KB): Objects of size between 16 bytes and 32 Kilobytes are allocated on the corresponding size class(mspan) on mcache of the P where the G is running. In both tiny and small allocation if the mspan’s list is empty the allocator will obtain a run of pages from the mheap to use for the mspan. If the mheap is empty or has no page runs large enough then it allocates a new group of pages (at least 1MB) from the OS.
+Large(size &amp;gt; 32KB): Objects of size greater than 32 kilobytes are allocated directly on the corresponding size class of mheap. If the mheap is empty or has no page runs large enough then it allocates a new group of pages (at least 1MB) from the OS.
+总结一下Go是如何进行内存分配: mcache中如果有空闲的空间， 那么直接在mcache分配 mcache如果没有，那么尝试去mcentral中获取一个空闲的mspan mcentral中也咩有可用的mspan，那么直接去mheap向操作系统申请可用的mspan&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Tcp三次握手和四次挥手</title>
+      <link>http://localhost:1313/posts/network/tcp%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/</link>
+      <pubDate>Wed, 29 Oct 2025 20:34:20 +0800</pubDate>
+      <guid>http://localhost:1313/posts/network/tcp%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/</guid>
+      <description>&lt;h3 id=&#34;三次握手&#34;&gt;三次握手&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;客户端发送syn，客户端从close-&amp;gt;syn-send&lt;/li&gt;
+&lt;li&gt;syn服务端收到syn ,同时向客户端发送syn.ack ，自己从listen变成 syn-recd&lt;/li&gt;
+&lt;li&gt;客户端收到syn-ack会在发送一个ack,自己变成established,服务端收到这个ack，自己变成established。&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    <item>
+      <title>sql高频题</title>
+      <link>http://localhost:1313/posts/sql/%E9%AB%98%E9%A2%91%E9%A2%98/</link>
+      <pubDate>Mon, 27 Oct 2025 10:26:15 +0800</pubDate>
+      <guid>http://localhost:1313/posts/sql/%E9%AB%98%E9%A2%91%E9%A2%98/</guid>
+      <description>&lt;p&gt;分为六个维度：&lt;strong&gt;基础聚合 → 子查询 → TopN → 窗口函数 → 业务建模 → 性能优化&lt;/strong&gt;。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id=&#34;-高频-sql-题库含答案与思路&#34;&gt;🎯 高频 SQL 题库（含答案与思路）&lt;/h1&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;一基础聚合与分组group-by--having&#34;&gt;一、基础聚合与分组（GROUP BY / HAVING）&lt;/h2&gt;
+&lt;h3 id=&#34;-题-1查询每个部门的平均工资&#34;&gt;🧩 题 1：查询每个部门的平均工资&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;表结构：&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;employee(emp_id, emp_name, dept_id, salary)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;SQL：&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; dept_id, &lt;span style=&#34;color:#66d9ef&#34;&gt;AVG&lt;/span&gt;(salary) &lt;span style=&#34;color:#66d9ef&#34;&gt;AS&lt;/span&gt; avg_salary
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;FROM&lt;/span&gt; employee
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;GROUP&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;BY&lt;/span&gt; dept_id;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;📘 &lt;strong&gt;考点：&lt;/strong&gt; 聚合函数 + 分组&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;-题-2查询带学生数超过-10-人的老师&#34;&gt;🧩 题 2：查询带学生数超过 10 人的老师&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;teacher(teacher_id, name)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;student(student_id, teacher_id)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;SQL：&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; teacher_id, &lt;span style=&#34;color:#66d9ef&#34;&gt;COUNT&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;AS&lt;/span&gt; student_count
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;FROM&lt;/span&gt; student
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;GROUP&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;BY&lt;/span&gt; teacher_id
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;HAVING&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;COUNT&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;📘 &lt;strong&gt;考点：&lt;/strong&gt; &lt;code&gt;HAVING&lt;/code&gt; 与 &lt;code&gt;WHERE&lt;/code&gt; 的区别（&lt;code&gt;HAVING&lt;/code&gt; 针对聚合后过滤）&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;二子查询subquery&#34;&gt;二、子查询（Subquery）&lt;/h2&gt;
+&lt;h3 id=&#34;-题-3查询工资高于本部门平均工资的员工&#34;&gt;🧩 题 3：查询工资高于本部门平均工资的员工&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; e.emp_name, e.salary
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;FROM&lt;/span&gt; employee e
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;JOIN&lt;/span&gt; (
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; dept_id, &lt;span style=&#34;color:#66d9ef&#34;&gt;AVG&lt;/span&gt;(salary) &lt;span style=&#34;color:#66d9ef&#34;&gt;AS&lt;/span&gt; avg_salary
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;FROM&lt;/span&gt; employee
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;GROUP&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;BY&lt;/span&gt; dept_id
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;) d &lt;span style=&#34;color:#66d9ef&#34;&gt;ON&lt;/span&gt; e.dept_id &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; d.dept_id
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;WHERE&lt;/span&gt; e.salary &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; d.avg_salary;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;📘 &lt;strong&gt;考点：&lt;/strong&gt; 相关子查询 vs 非相关子查询&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Liunx常用命令</title>
       <link>http://localhost:1313/posts/cs/liunx%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</link>
@@ -1275,7 +1461,32 @@ go的程序通过runtime创建协程&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;ruetime.GOMAXPROCS()&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h4 id=&#34;优化手段&#34;&gt;优化手段&lt;/h4&gt;</description>
+&lt;h4 id=&#34;优化手段&#34;&gt;优化手段&lt;/h4&gt;
+&lt;h2 id=&#34;进阶gpt版本&#34;&gt;进阶（gpt版本）&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;GMP 调度的完整流程、设计思想，以及它如何解决了关键问题（如阻塞、抢占）&lt;/strong&gt;。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;一-什么是-gmp-模型高层概括&#34;&gt;一、 什么是 GMP 模型？（高层概括）&lt;/h3&gt;
+&lt;p&gt;面试官问“说下GMP”，你可以先给一个高层定义，&lt;strong&gt;点出它的核心设计思想：解耦和复用&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;回答范例：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;GMP 是 Go 语言运行时的核心调度模型，它是一个&lt;strong&gt;用户态的、M:N 的并发调度器&lt;/strong&gt;。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;M:N&lt;/strong&gt; 指的是它将 &lt;strong&gt;M&lt;/strong&gt; 个 Goroutine（G）调度到 &lt;strong&gt;N&lt;/strong&gt; 个操作系统线程（M）上执行。&lt;/li&gt;
+&lt;li&gt;它的核心设计思想是&lt;strong&gt;解耦&lt;/strong&gt;：
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;G（Goroutine）：&lt;/strong&gt; 代表一个并发&lt;strong&gt;任务&lt;/strong&gt;。它非常轻量（初始栈 2KB），由 Go Runtime 管理，切换成本远低于线程。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;M（Machine）：&lt;/strong&gt; 代表一个操作系统&lt;strong&gt;线程&lt;/strong&gt;。它是真正执行计算的“工人”。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;P（Processor）：&lt;/strong&gt; 代表一个逻辑&lt;strong&gt;处理器&lt;/strong&gt;，或者说是“CPU 核心”。P 是 G 和 M 之间的“上下文”或“调度器”。M 必须持有 P 才能执行 G。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;GMP 模型的精妙之处在于 &lt;strong&gt;P&lt;/strong&gt;，它作为中间层，实现了 Goroutine 和 OS 线程的解耦。这带来了两大好处：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;高效复用（M:N）：&lt;/strong&gt; M（线程）的数量可以远小于 G（任务）的数量。Go 默认让 P 的数量（&lt;code&gt;GOMAXPROCS&lt;/code&gt;）等于 CPU 核心数，使得 M:N 调度能充分利用多核，同时避免了大量线程切换的开销。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;智能调度：&lt;/strong&gt; 通过 P 的本地队列和 P 之间的&lt;strong&gt;工作窃取 (Work Stealing)&lt;/strong&gt; 机制，实现了高效的负载均衡。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;二-gmp-调度的核心流程面试重点&#34;&gt;二、 GMP 调度的核心流程（面试重点）&lt;/h3&gt;
+&lt;p&gt;这部分是面试的“深水区”，你需要清晰地描述 G、M、P 是如何协同工作的。&lt;/p&gt;</description>
     </item>
     <item>
       <title>如何保证数据录入不混乱</title>
@@ -1753,6 +1964,56 @@ go的程序通过runtime创建协程&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
+    <item>
+      <title>过期策略与内存淘汰策略</title>
+      <link>http://localhost:1313/posts/cache/%E8%BF%87%E6%9C%9F%E7%AD%96%E7%95%A5%E4%B8%8E%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/</link>
+      <pubDate>Tue, 02 Sep 2025 10:17:27 +0800</pubDate>
+      <guid>http://localhost:1313/posts/cache/%E8%BF%87%E6%9C%9F%E7%AD%96%E7%95%A5%E4%B8%8E%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/</guid>
+      <description>&lt;hr&gt;
+&lt;h2 id=&#34;一redis-的键过期机制&#34;&gt;一、Redis 的键过期机制&lt;/h2&gt;
+&lt;p&gt;Redis 可以对每个 key 设置一个 &lt;strong&gt;过期时间（TTL, Time To Live）&lt;/strong&gt;，过期后 key 会被删除。&lt;/p&gt;
+&lt;h3 id=&#34;1-过期策略&#34;&gt;1. 过期策略&lt;/h3&gt;
+&lt;p&gt;Redis 对 key 的过期有两种策略：&lt;/p&gt;
+&lt;h4 id=&#34;1-惰性删除lazy-expiration&#34;&gt;(1) 惰性删除（Lazy Expiration）&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;原理&lt;/strong&gt;：只有当 key 被访问时，Redis 才检查它是否过期。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;优点&lt;/strong&gt;：避免了不必要的 CPU 消耗。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;缺点&lt;/strong&gt;：过期 key 如果长时间不访问，会占用内存。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;2-定期删除periodic-expiration&#34;&gt;(2) 定期删除（Periodic Expiration）&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;原理&lt;/strong&gt;：Redis 会周期性（默认每 100ms）随机检查一些带过期时间的 key，并删除过期 key。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;实现&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;每次检查 20 个 key。&lt;/li&gt;
+&lt;li&gt;如果过期数量 &amp;gt; 25%，继续检查下一批 key。&lt;/li&gt;
+&lt;li&gt;每次检查耗时不超过 1ms。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;优点&lt;/strong&gt;：可以及时回收内存。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;缺点&lt;/strong&gt;：不能保证所有过期 key 立即删除，可能延迟。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Redis 综合使用了惰性删除和定期删除，保证性能和及时性之间的平衡。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;2-ttl-命令&#34;&gt;2. TTL 命令&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;EXPIRE key seconds&lt;/code&gt; 设置过期时间。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;EXPIREAT key timestamp&lt;/code&gt; 按时间戳设置过期时间。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;TTL key&lt;/code&gt; 查看剩余时间。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;PTTL key&lt;/code&gt; 查看毫秒级 TTL。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;二redis-的淘汰策略内存不足时&#34;&gt;二、Redis 的淘汰策略（内存不足时）&lt;/h2&gt;
+&lt;p&gt;当 Redis 设置了 &lt;strong&gt;maxmemory&lt;/strong&gt; 限制，并且内存达到上限时，需要 &lt;strong&gt;淘汰旧数据&lt;/strong&gt;。&lt;/p&gt;</description>
     </item>
     <item>
       <title>Go实现lru</title>
