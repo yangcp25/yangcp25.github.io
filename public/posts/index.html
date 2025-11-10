@@ -131,6 +131,19 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">高级算法模板
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p> ✅ 总目录（你只要按这个顺序掌握） 类别 内容 定位 一、前缀和 &amp; 差分 区间加减 → O(1) 求和 高频基础 二、字符串 KMP、Trie 面试常客 三、BFS / DFS 多源 BFS，分层 BFS 图模板 四、拓扑排序 DAG 处理 调度/依赖 五、树与图 树直径、并查集、Dijkstra 中高级 六、回溯 子集 / N 皇后 / 剪枝 模板化即可 七、状态压缩 DP 子集 DP / bitmask 稍难但高频 八、数学 快速幂 / gcd / 组合数 必备基础 一、前缀和 &amp; 差分 ✅ 前缀和（快速求区间和） sum[i] = nums[0] &#43; ... &#43; nums[i] 区间 [l, r] 的和 = sum[r] - sum[l-1] func prefixSum(nums []int) []int { n := len(nums) pre := make([]int, n&#43;1) for i := 1; i &lt;= n; i&#43;&#43; { pre[i] = pre[i-1] &#43; nums[i-1] } return pre } ✅ 差分（区间加值） diff[i] = nums[i] - nums[i-1] 区间加 k：diff[l] &#43;= k, diff[r&#43;1] -= k func diffBuild(nums []int) []int { n := len(nums) diff := make([]int, n) diff[0] = nums[0] for i := 1; i &lt; n; i&#43;&#43; { diff[i] = nums[i] - nums[i-1] } return diff } func diffApply(diff []int) []int { for i := 1; i &lt; len(diff); i&#43;&#43; { diff[i] &#43;= diff[i-1] } return diff } 二、字符串 ✅ KMP（快速匹配） 核心：求 next 数组（最长前后缀相等长度）
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-10 21:55:50 +0800 CST'>November 10, 2025</span>&nbsp;·&nbsp;4 min</footer>
+  <a class="entry-link" aria-label="post link to 高级算法模板" href="http://localhost:1313/posts/datastructalgorithm/%E9%AB%98%E7%BA%A7%E7%AE%97%E6%B3%95%E6%A8%A1%E6%9D%BF/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">延时队列
     </h2>
   </header>
@@ -276,27 +289,6 @@ init() called main() called ✅ init() 总是在 main() 之前执行。
   </div>
   <footer class="entry-footer"><span title='2025-10-22 09:59:13 +0800 CST'>October 22, 2025</span>&nbsp;·&nbsp;2 min</footer>
   <a class="entry-link" aria-label="post link to Init" href="http://localhost:1313/posts/go/init/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Defer
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>✅ 一、defer 的基本作用 defer 用来延迟执行一段函数调用，直到当前函数返回时才执行（无论是正常返回还是遇到 panic）。
-示例： func main() { fmt.Println(&#34;A&#34;) defer fmt.Println(&#34;B&#34;) fmt.Println(&#34;C&#34;) } 输出：
-A C B 👉 defer 的调用会在函数退出时执行。
-✅ 二、多个 defer 的执行顺序：后进先出 (LIFO) func main() { defer fmt.Println(&#34;1&#34;) defer fmt.Println(&#34;2&#34;) defer fmt.Println(&#34;3&#34;) } 输出：
-3 2 1 就像栈一样，最后注册的 defer 最先执行。
-✅ 三、参数求值时机：defer 定义时就求值 这是一个非常重要的细节！
-func main() { x := 10 defer fmt.Println(&#34;defer:&#34;, x) x = 20 fmt.Println(&#34;x =&#34;, x) } 输出：
-x = 20 defer: 10 🔹 原因： defer 的参数会在注册 defer 时立刻求值，而不是在执行时求值。
-✅ 四、闭包 defer：引用外部变量时会实时读取 func main() { x := 10 defer func() { fmt.Println(&#34;defer:&#34;, x) }() x = 20 fmt.Println(&#34;x =&#34;, x) } 输出：
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-10-22 09:58:12 +0800 CST'>October 22, 2025</span>&nbsp;·&nbsp;2 min</footer>
-  <a class="entry-link" aria-label="post link to Defer" href="http://localhost:1313/posts/go/defer/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

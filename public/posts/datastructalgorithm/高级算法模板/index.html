@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>高级算法模板 | yangcp</title>
+<meta name="keywords" content="">
+<meta name="description" content="
+✅ 总目录（你只要按这个顺序掌握）
+
+  
+      
+          类别
+          内容
+          定位
+      
+  
+  
+      
+          一、前缀和 &amp; 差分
+          区间加减 → O(1) 求和
+          高频基础
+      
+      
+          二、字符串
+          KMP、Trie
+          面试常客
+      
+      
+          三、BFS / DFS
+          多源 BFS，分层 BFS
+          图模板
+      
+      
+          四、拓扑排序
+          DAG 处理
+          调度/依赖
+      
+      
+          五、树与图
+          树直径、并查集、Dijkstra
+          中高级
+      
+      
+          六、回溯
+          子集 / N 皇后 / 剪枝
+          模板化即可
+      
+      
+          七、状态压缩 DP
+          子集 DP / bitmask
+          稍难但高频
+      
+      
+          八、数学
+          快速幂 / gcd / 组合数
+          必备基础
+      
+  
+
+
+一、前缀和 &amp; 差分
+✅ 前缀和（快速求区间和）
+sum[i] = nums[0] &#43; ... &#43; nums[i]
+区间 [l, r] 的和 = sum[r] - sum[l-1]
+func prefixSum(nums []int) []int {
+    n := len(nums)
+    pre := make([]int, n&#43;1)
+    for i := 1; i &lt;= n; i&#43;&#43; {
+        pre[i] = pre[i-1] &#43; nums[i-1]
+    }
+    return pre
+}
+
+✅ 差分（区间加值）
+diff[i] = nums[i] - nums[i-1]
+区间加 k：diff[l] &#43;= k, diff[r&#43;1] -= k
+func diffBuild(nums []int) []int {
+    n := len(nums)
+    diff := make([]int, n)
+    diff[0] = nums[0]
+    for i := 1; i &lt; n; i&#43;&#43; {
+        diff[i] = nums[i] - nums[i-1]
+    }
+    return diff
+}
+func diffApply(diff []int) []int {
+    for i := 1; i &lt; len(diff); i&#43;&#43; {
+        diff[i] &#43;= diff[i-1]
+    }
+    return diff
+}
+
+二、字符串
+✅ KMP（快速匹配）
+核心：求 next 数组（最长前后缀相等长度）">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/datastructalgorithm/%E9%AB%98%E7%BA%A7%E7%AE%97%E6%B3%95%E6%A8%A1%E6%9D%BF/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/datastructalgorithm/%E9%AB%98%E7%BA%A7%E7%AE%97%E6%B3%95%E6%A8%A1%E6%9D%BF/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="yangcp (Alt + H)">yangcp</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tag">
+                    <span>Tag</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/me/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      高级算法模板
+    </h1>
+    <div class="post-meta"><span title='2025-11-10 21:55:50 +0800 CST'>November 10, 2025</span>&nbsp;·&nbsp;4 min
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#-%e6%80%bb%e7%9b%ae%e5%bd%95%e4%bd%a0%e5%8f%aa%e8%a6%81%e6%8c%89%e8%bf%99%e4%b8%aa%e9%a1%ba%e5%ba%8f%e6%8e%8c%e6%8f%a1" aria-label="✅ 总目录（你只要按这个顺序掌握）">✅ 总目录（你只要按这个顺序掌握）</a><ul>
+                        
+                <li>
+                    <a href="#%e4%b8%80%e5%89%8d%e7%bc%80%e5%92%8c--%e5%b7%ae%e5%88%86" aria-label="一、前缀和 &amp; 差分">一、前缀和 &amp; 差分</a><ul>
+                        
+                <li>
+                    <a href="#-%e5%89%8d%e7%bc%80%e5%92%8c%e5%bf%ab%e9%80%9f%e6%b1%82%e5%8c%ba%e9%97%b4%e5%92%8c" aria-label="✅ 前缀和（快速求区间和）">✅ 前缀和（快速求区间和）</a></li>
+                <li>
+                    <a href="#-%e5%b7%ae%e5%88%86%e5%8c%ba%e9%97%b4%e5%8a%a0%e5%80%bc" aria-label="✅ 差分（区间加值）">✅ 差分（区间加值）</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%ba%8c%e5%ad%97%e7%ac%a6%e4%b8%b2" aria-label="二、字符串">二、字符串</a><ul>
+                        
+                <li>
+                    <a href="#-kmp%e5%bf%ab%e9%80%9f%e5%8c%b9%e9%85%8d" aria-label="✅ KMP（快速匹配）">✅ KMP（快速匹配）</a></li>
+                <li>
+                    <a href="#-trie-%e5%ad%97%e5%85%b8%e6%a0%91" aria-label="✅ Trie 字典树">✅ Trie 字典树</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%b8%89bfs--dfs" aria-label="三、BFS / DFS">三、BFS / DFS</a><ul>
+                        
+                <li>
+                    <a href="#-bfs%e6%97%a0%e6%9d%83%e5%9b%be%e6%9c%80%e7%9f%ad%e8%b7%af" aria-label="✅ BFS（无权图最短路）">✅ BFS（无权图最短路）</a></li>
+                <li>
+                    <a href="#-dfs%e6%90%9c%e7%b4%a2--%e8%bf%9e%e9%80%9a%e5%9d%97" aria-label="✅ DFS（搜索 / 连通块）">✅ DFS（搜索 / 连通块）</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%9b%9b%e6%8b%93%e6%89%91%e6%8e%92%e5%ba%8fdag" aria-label="四、拓扑排序（DAG）">四、拓扑排序（DAG）</a></li>
+                <li>
+                    <a href="#%e4%ba%94%e6%a0%91--%e5%9b%be" aria-label="五、树 &amp; 图">五、树 &amp; 图</a><ul>
+                        
+                <li>
+                    <a href="#-%e6%a0%91%e7%9a%84%e7%9b%b4%e5%be%84%e4%b8%a4%e6%ac%a1-bfs" aria-label="✅ 树的直径（两次 BFS）">✅ 树的直径（两次 BFS）</a></li>
+                <li>
+                    <a href="#-%e5%b9%b6%e6%9f%a5%e9%9b%86" aria-label="✅ 并查集">✅ 并查集</a></li>
+                <li>
+                    <a href="#-dijkstra%e5%b8%a6%e6%9d%83%e6%9c%80%e7%9f%ad%e8%b7%af" aria-label="✅ Dijkstra（带权最短路）">✅ Dijkstra（带权最短路）</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%85%ad%e5%9b%9e%e6%ba%af%e6%a8%a1%e6%9d%bf%e9%80%9a%e6%9d%80%e5%ad%90%e9%9b%86--%e6%8e%92%e5%88%97--n-%e7%9a%87%e5%90%8e" aria-label="六、回溯模板（通杀子集 / 排列 / N 皇后）">六、回溯模板（通杀子集 / 排列 / N 皇后）</a></li>
+                <li>
+                    <a href="#%e4%b8%83%e7%8a%b6%e6%80%81%e5%8e%8b%e7%bc%a9-dp%e7%bb%8f%e5%85%b8%e6%a8%a1%e6%9d%bf" aria-label="七、状态压缩 DP（经典模板）">七、状态压缩 DP（经典模板）</a></li>
+                <li>
+                    <a href="#%e5%85%ab%e6%95%b0%e5%ad%a6" aria-label="八、数学">八、数学</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><hr>
+<h1 id="-总目录你只要按这个顺序掌握">✅ 总目录（你只要按这个顺序掌握）<a hidden class="anchor" aria-hidden="true" href="#-总目录你只要按这个顺序掌握">#</a></h1>
+<table>
+  <thead>
+      <tr>
+          <th>类别</th>
+          <th>内容</th>
+          <th>定位</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>一、前缀和 &amp; 差分</strong></td>
+          <td>区间加减 → O(1) 求和</td>
+          <td>高频基础</td>
+      </tr>
+      <tr>
+          <td><strong>二、字符串</strong></td>
+          <td>KMP、Trie</td>
+          <td>面试常客</td>
+      </tr>
+      <tr>
+          <td><strong>三、BFS / DFS</strong></td>
+          <td>多源 BFS，分层 BFS</td>
+          <td>图模板</td>
+      </tr>
+      <tr>
+          <td><strong>四、拓扑排序</strong></td>
+          <td>DAG 处理</td>
+          <td>调度/依赖</td>
+      </tr>
+      <tr>
+          <td><strong>五、树与图</strong></td>
+          <td>树直径、并查集、Dijkstra</td>
+          <td>中高级</td>
+      </tr>
+      <tr>
+          <td><strong>六、回溯</strong></td>
+          <td>子集 / N 皇后 / 剪枝</td>
+          <td>模板化即可</td>
+      </tr>
+      <tr>
+          <td><strong>七、状态压缩 DP</strong></td>
+          <td>子集 DP / bitmask</td>
+          <td>稍难但高频</td>
+      </tr>
+      <tr>
+          <td><strong>八、数学</strong></td>
+          <td>快速幂 / gcd / 组合数</td>
+          <td>必备基础</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="一前缀和--差分">一、前缀和 &amp; 差分<a hidden class="anchor" aria-hidden="true" href="#一前缀和--差分">#</a></h2>
+<h3 id="-前缀和快速求区间和">✅ 前缀和（快速求区间和）<a hidden class="anchor" aria-hidden="true" href="#-前缀和快速求区间和">#</a></h3>
+<pre tabindex="0"><code>sum[i] = nums[0] + ... + nums[i]
+区间 [l, r] 的和 = sum[r] - sum[l-1]
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">prefixSum</span>(<span style="color:#a6e22e">nums</span> []<span style="color:#66d9ef">int</span>) []<span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">n</span> <span style="color:#f92672">:=</span> len(<span style="color:#a6e22e">nums</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">pre</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">n</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;=</span> <span style="color:#a6e22e">n</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">pre</span>[<span style="color:#a6e22e">i</span>] = <span style="color:#a6e22e">pre</span>[<span style="color:#a6e22e">i</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">i</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">pre</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><hr>
+<h3 id="-差分区间加值">✅ 差分（区间加值）<a hidden class="anchor" aria-hidden="true" href="#-差分区间加值">#</a></h3>
+<pre tabindex="0"><code>diff[i] = nums[i] - nums[i-1]
+区间加 k：diff[l] += k, diff[r+1] -= k
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">diffBuild</span>(<span style="color:#a6e22e">nums</span> []<span style="color:#66d9ef">int</span>) []<span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">n</span> <span style="color:#f92672">:=</span> len(<span style="color:#a6e22e">nums</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">diff</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">n</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">diff</span>[<span style="color:#ae81ff">0</span>] = <span style="color:#a6e22e">nums</span>[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#a6e22e">n</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">diff</span>[<span style="color:#a6e22e">i</span>] = <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">i</span>] <span style="color:#f92672">-</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">i</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">diff</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">diffApply</span>(<span style="color:#a6e22e">diff</span> []<span style="color:#66d9ef">int</span>) []<span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">i</span> &lt; len(<span style="color:#a6e22e">diff</span>); <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">diff</span>[<span style="color:#a6e22e">i</span>] <span style="color:#f92672">+=</span> <span style="color:#a6e22e">diff</span>[<span style="color:#a6e22e">i</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">diff</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><hr>
+<h2 id="二字符串">二、字符串<a hidden class="anchor" aria-hidden="true" href="#二字符串">#</a></h2>
+<h3 id="-kmp快速匹配">✅ KMP（快速匹配）<a hidden class="anchor" aria-hidden="true" href="#-kmp快速匹配">#</a></h3>
+<p><strong>核心：求 next 数组（最长前后缀相等长度）</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">buildNext</span>(<span style="color:#a6e22e">p</span> <span style="color:#66d9ef">string</span>) []<span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">n</span> <span style="color:#f92672">:=</span> len(<span style="color:#a6e22e">p</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">next</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">n</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">j</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#a6e22e">n</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">j</span> &gt; <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">p</span>[<span style="color:#a6e22e">i</span>] <span style="color:#f92672">!=</span> <span style="color:#a6e22e">p</span>[<span style="color:#a6e22e">j</span>] {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">j</span> = <span style="color:#a6e22e">next</span>[<span style="color:#a6e22e">j</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">p</span>[<span style="color:#a6e22e">i</span>] <span style="color:#f92672">==</span> <span style="color:#a6e22e">p</span>[<span style="color:#a6e22e">j</span>] {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">j</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">next</span>[<span style="color:#a6e22e">i</span>] = <span style="color:#a6e22e">j</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">next</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><hr>
+<h3 id="-trie-字典树">✅ Trie 字典树<a hidden class="anchor" aria-hidden="true" href="#-trie-字典树">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Trie</span> <span style="color:#66d9ef">struct</span>{ <span style="color:#a6e22e">next</span> [<span style="color:#ae81ff">26</span>]<span style="color:#f92672">*</span><span style="color:#a6e22e">Trie</span>; <span style="color:#a6e22e">end</span> <span style="color:#66d9ef">bool</span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">t</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Trie</span>) <span style="color:#a6e22e">Insert</span>(<span style="color:#a6e22e">s</span> <span style="color:#66d9ef">string</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">cur</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">t</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">c</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">s</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">idx</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">cur</span>.<span style="color:#a6e22e">next</span>[<span style="color:#a6e22e">idx</span>] <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> { <span style="color:#a6e22e">cur</span>.<span style="color:#a6e22e">next</span>[<span style="color:#a6e22e">idx</span>] = <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">Trie</span>{} }
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">cur</span> = <span style="color:#a6e22e">cur</span>.<span style="color:#a6e22e">next</span>[<span style="color:#a6e22e">idx</span>]
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">cur</span>.<span style="color:#a6e22e">end</span> = <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><hr>
+<h2 id="三bfs--dfs">三、BFS / DFS<a hidden class="anchor" aria-hidden="true" href="#三bfs--dfs">#</a></h2>
+<h3 id="-bfs无权图最短路">✅ BFS（无权图最短路）<a hidden class="anchor" aria-hidden="true" href="#-bfs无权图最短路">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">bfs</span>(<span style="color:#a6e22e">start</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">g</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">int</span>][]<span style="color:#66d9ef">int</span>) []<span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">dist</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">int</span>]<span style="color:#66d9ef">int</span>{<span style="color:#a6e22e">start</span>: <span style="color:#ae81ff">0</span>}
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">q</span> <span style="color:#f92672">:=</span> []<span style="color:#66d9ef">int</span>{<span style="color:#a6e22e">start</span>}
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> len(<span style="color:#a6e22e">q</span>) &gt; <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">x</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">q</span>[<span style="color:#ae81ff">0</span>]; <span style="color:#a6e22e">q</span> = <span style="color:#a6e22e">q</span>[<span style="color:#ae81ff">1</span>:]
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">y</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">g</span>[<span style="color:#a6e22e">x</span>] {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">seen</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">dist</span>[<span style="color:#a6e22e">y</span>]; !<span style="color:#a6e22e">seen</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">dist</span>[<span style="color:#a6e22e">y</span>] = <span style="color:#a6e22e">dist</span>[<span style="color:#a6e22e">x</span>] <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">q</span> = append(<span style="color:#a6e22e">q</span>, <span style="color:#a6e22e">y</span>)
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">dist</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><hr>
+<h3 id="-dfs搜索--连通块">✅ DFS（搜索 / 连通块）<a hidden class="anchor" aria-hidden="true" href="#-dfs搜索--连通块">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">dfs</span>(<span style="color:#a6e22e">x</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">g</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">int</span>][]<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">vis</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">int</span>]<span style="color:#66d9ef">bool</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">vis</span>[<span style="color:#a6e22e">x</span>] = <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">y</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">g</span>[<span style="color:#a6e22e">x</span>] {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">vis</span>[<span style="color:#a6e22e">y</span>] { <span style="color:#a6e22e">dfs</span>(<span style="color:#a6e22e">y</span>, <span style="color:#a6e22e">g</span>, <span style="color:#a6e22e">vis</span>) }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><hr>
+<h2 id="四拓扑排序dag">四、拓扑排序（DAG）<a hidden class="anchor" aria-hidden="true" href="#四拓扑排序dag">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">topoSort</span>(<span style="color:#a6e22e">g</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">int</span>][]<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">indeg</span> []<span style="color:#66d9ef">int</span>) []<span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">q</span> <span style="color:#f92672">:=</span> []<span style="color:#66d9ef">int</span>{}
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">d</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">indeg</span> { <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">d</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> { <span style="color:#a6e22e">q</span> = append(<span style="color:#a6e22e">q</span>, <span style="color:#a6e22e">i</span>) } }
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">order</span> <span style="color:#f92672">:=</span> []<span style="color:#66d9ef">int</span>{}
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> len(<span style="color:#a6e22e">q</span>) &gt; <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">x</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">q</span>[<span style="color:#ae81ff">0</span>]; <span style="color:#a6e22e">q</span> = <span style="color:#a6e22e">q</span>[<span style="color:#ae81ff">1</span>:]
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">order</span> = append(<span style="color:#a6e22e">order</span>, <span style="color:#a6e22e">x</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">y</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">g</span>[<span style="color:#a6e22e">x</span>] {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">indeg</span>[<span style="color:#a6e22e">y</span>]<span style="color:#f92672">--</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">indeg</span>[<span style="color:#a6e22e">y</span>] <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> { <span style="color:#a6e22e">q</span> = append(<span style="color:#a6e22e">q</span>, <span style="color:#a6e22e">y</span>) }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">order</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><hr>
+<h2 id="五树--图">五、树 &amp; 图<a hidden class="anchor" aria-hidden="true" href="#五树--图">#</a></h2>
+<h3 id="-树的直径两次-bfs">✅ 树的直径（两次 BFS）<a hidden class="anchor" aria-hidden="true" href="#-树的直径两次-bfs">#</a></h3>
+<pre tabindex="0"><code>任取 A → 找到最远点 B
+从 B 再 BFS → 得到最远点距离，即为直径
+</code></pre><hr>
+<h3 id="-并查集">✅ 并查集<a hidden class="anchor" aria-hidden="true" href="#-并查集">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">DSU</span> <span style="color:#66d9ef">struct</span>{ <span style="color:#a6e22e">fa</span> []<span style="color:#66d9ef">int</span> }
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewDSU</span>(<span style="color:#a6e22e">n</span> <span style="color:#66d9ef">int</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">DSU</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fa</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">n</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">fa</span> { <span style="color:#a6e22e">fa</span>[<span style="color:#a6e22e">i</span>] = <span style="color:#a6e22e">i</span> }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">DSU</span>{<span style="color:#a6e22e">fa</span>}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">d</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">DSU</span>) <span style="color:#a6e22e">Find</span>(<span style="color:#a6e22e">x</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">fa</span>[<span style="color:#a6e22e">x</span>] <span style="color:#f92672">!=</span> <span style="color:#a6e22e">x</span> { <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">fa</span>[<span style="color:#a6e22e">x</span>] = <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">Find</span>(<span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">fa</span>[<span style="color:#a6e22e">x</span>]) }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">fa</span>[<span style="color:#a6e22e">x</span>]
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">d</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">DSU</span>) <span style="color:#a6e22e">Union</span>(<span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span> <span style="color:#66d9ef">int</span>) { <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">fa</span>[<span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">Find</span>(<span style="color:#a6e22e">a</span>)] = <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">Find</span>(<span style="color:#a6e22e">b</span>) }
+</span></span></code></pre></div><hr>
+<h3 id="-dijkstra带权最短路">✅ Dijkstra（带权最短路）<a hidden class="anchor" aria-hidden="true" href="#-dijkstra带权最短路">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Pair</span> <span style="color:#66d9ef">struct</span>{ <span style="color:#a6e22e">d</span>, <span style="color:#a6e22e">x</span> <span style="color:#66d9ef">int</span> }
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">dijkstra</span>(<span style="color:#a6e22e">n</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">g</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">int</span>][]<span style="color:#a6e22e">Pair</span>, <span style="color:#a6e22e">src</span> <span style="color:#66d9ef">int</span>) []<span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">inf</span> = <span style="color:#ae81ff">1e18</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">dist</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">n</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">dist</span> { <span style="color:#a6e22e">dist</span>[<span style="color:#a6e22e">i</span>] = <span style="color:#a6e22e">inf</span> }
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">dist</span>[<span style="color:#a6e22e">src</span>] = <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">h</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">MinHeap</span>{}; <span style="color:#a6e22e">heap</span>.<span style="color:#a6e22e">Push</span>(<span style="color:#a6e22e">h</span>, <span style="color:#a6e22e">Pair</span>{<span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">src</span>})
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">h</span>.<span style="color:#a6e22e">Len</span>() &gt; <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">p</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">heap</span>.<span style="color:#a6e22e">Pop</span>(<span style="color:#a6e22e">h</span>).(<span style="color:#a6e22e">Pair</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">d</span> &gt; <span style="color:#a6e22e">dist</span>[<span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">x</span>] { <span style="color:#66d9ef">continue</span> }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">e</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">g</span>[<span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">x</span>] {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">dist</span>[<span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">x</span>] &gt; <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">d</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">d</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">dist</span>[<span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">x</span>] = <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">d</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">d</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">heap</span>.<span style="color:#a6e22e">Push</span>(<span style="color:#a6e22e">h</span>, <span style="color:#a6e22e">Pair</span>{<span style="color:#a6e22e">dist</span>[<span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">x</span>], <span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">x</span>})
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">dist</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><hr>
+<h2 id="六回溯模板通杀子集--排列--n-皇后">六、回溯模板（通杀子集 / 排列 / N 皇后）<a hidden class="anchor" aria-hidden="true" href="#六回溯模板通杀子集--排列--n-皇后">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">res</span> [][]<span style="color:#66d9ef">int</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">path</span> []<span style="color:#66d9ef">int</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">backtrack</span>(<span style="color:#a6e22e">nums</span> []<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">start</span> <span style="color:#66d9ef">int</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">res</span> = append(<span style="color:#a6e22e">res</span>, append([]int(<span style="color:#66d9ef">nil</span>), <span style="color:#a6e22e">path</span><span style="color:#f92672">...</span>))
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">start</span>; <span style="color:#a6e22e">i</span> &lt; len(<span style="color:#a6e22e">nums</span>); <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">path</span> = append(<span style="color:#a6e22e">path</span>, <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">i</span>])
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">backtrack</span>(<span style="color:#a6e22e">nums</span>, <span style="color:#a6e22e">i</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">path</span> = <span style="color:#a6e22e">path</span>[:len(<span style="color:#a6e22e">path</span>)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><hr>
+<h2 id="七状态压缩-dp经典模板">七、状态压缩 DP（经典模板）<a hidden class="anchor" aria-hidden="true" href="#七状态压缩-dp经典模板">#</a></h2>
+<pre tabindex="0"><code>dp[mask]：表示子集 mask 的最优值
+for each sub = mask 的子集:
+    dp[mask] = min(dp[mask], dp[sub] + dp[mask-sub])
+</code></pre><hr>
+<h2 id="八数学">八、数学<a hidden class="anchor" aria-hidden="true" href="#八数学">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">gcd</span>(<span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> { <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">b</span><span style="color:#f92672">==</span><span style="color:#ae81ff">0</span> { <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">a</span> }; <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">gcd</span>(<span style="color:#a6e22e">b</span>, <span style="color:#a6e22e">a</span><span style="color:#f92672">%</span><span style="color:#a6e22e">b</span>) }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">fastPow</span>(<span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span>, <span style="color:#a6e22e">mod</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">res</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">b</span> &gt; <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">b</span><span style="color:#f92672">&amp;</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> { <span style="color:#a6e22e">res</span> = <span style="color:#a6e22e">res</span><span style="color:#f92672">*</span><span style="color:#a6e22e">a</span> <span style="color:#f92672">%</span> <span style="color:#a6e22e">mod</span> }
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">a</span> = <span style="color:#a6e22e">a</span><span style="color:#f92672">*</span><span style="color:#a6e22e">a</span> <span style="color:#f92672">%</span> <span style="color:#a6e22e">mod</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">b</span> <span style="color:#f92672">&gt;&gt;=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">res</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><hr>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="next" href="http://localhost:1313/posts/scenario/%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97/">
+    <span class="title">Next »</span>
+    <br>
+    <span>延时队列</span>
+  </a>
+</nav>
+
+  </footer><div id="utterances-comments"></div>
+<script src="https://utteranc.es/client.js"
+        repo="yangcp25/yangcp25.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">yangcp</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
