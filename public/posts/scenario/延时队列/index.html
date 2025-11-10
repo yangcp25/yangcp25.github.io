@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>延时队列 | yangcp</title>
+<meta name="keywords" content="">
+<meta name="description" content="使用 Redis Sorted Set (ZSet) 实现延时队列（Delay Queue）是一种高效且常用的方法，因为它利用了 ZSet 的核心特性：元素有序。
+以下是基于 Redis ZSet 设计延时队列的详细步骤、关键操作和代码逻辑。
+
+基于 Redis ZSet 的延时队列设计
+1. 核心数据结构
+
+  
+      
+          组件
+          Redis 数据结构
+          存储内容
+          ZSet Score (分数)
+          ZSet Member (成员)
+          作用
+      
+  
+  
+      
+          延迟队列
+          Sorted Set (ZSet)
+          待执行任务
+          任务执行时间戳 (毫秒或秒)
+          任务的唯一 ID (例如：order:123, task:456)
+          核心结构，按执行时间排序
+      
+      
+          任务详情
+          Hash 或 String
+          任务的具体内容
+          N/A
+          任务 ID
+          存储任务执行所需的所有数据
+      
+  
+
+2. 三个核心操作
+一个完整的延时队列系统由三个主要角色构成：生产者（Producer）、消费者/扫描器（Consumer/Scanner） 和 任务处理器（Executor）。
+2.1 生产者：投递任务（将任务放入队列）
+生产者负责将一个任务及其计划执行时间写入 Redis。
+操作步骤：
+
+确定执行时间： 计算任务应被执行的精确时间戳 T。
+存储任务详情： 将任务的全部信息（如订单号、用户ID等）存储到 Redis 的 Hash 或 String 结构中，以任务 ID 为 Key。
+加入 ZSet： 将任务的 ID 作为 Member，将时间戳 T 作为 Score，存入延迟队列 ZSet 中。
+
+Redis 命令示例：">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/scenario/%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/scenario/%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="yangcp (Alt + H)">yangcp</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tag">
+                    <span>Tag</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/me/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      延时队列
+    </h1>
+    <div class="post-meta"><span title='2025-11-10 14:37:09 +0800 CST'>November 10, 2025</span>&nbsp;·&nbsp;2 min
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e5%9f%ba%e4%ba%8e-redis-zset-%e7%9a%84%e5%bb%b6%e6%97%b6%e9%98%9f%e5%88%97%e8%ae%be%e8%ae%a1" aria-label="基于 Redis ZSet 的延时队列设计">基于 Redis ZSet 的延时队列设计</a><ul>
+                        
+                <li>
+                    <a href="#1-%e6%a0%b8%e5%bf%83%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84" aria-label="1. 核心数据结构">1. 核心数据结构</a></li>
+                <li>
+                    <a href="#2-%e4%b8%89%e4%b8%aa%e6%a0%b8%e5%bf%83%e6%93%8d%e4%bd%9c" aria-label="2. 三个核心操作">2. 三个核心操作</a><ul>
+                        
+                <li>
+                    <a href="#21-%e7%94%9f%e4%ba%a7%e8%80%85%e6%8a%95%e9%80%92%e4%bb%bb%e5%8a%a1%e5%b0%86%e4%bb%bb%e5%8a%a1%e6%94%be%e5%85%a5%e9%98%9f%e5%88%97" aria-label="2.1 生产者：投递任务（将任务放入队列）">2.1 生产者：投递任务（将任务放入队列）</a></li>
+                <li>
+                    <a href="#22-%e6%b6%88%e8%b4%b9%e8%80%85%e6%89%ab%e6%8f%8f%e5%99%a8%e8%bd%ae%e8%af%a2%e5%92%8c%e6%8f%90%e5%8f%96%e4%bb%bb%e5%8a%a1%e5%ae%9a%e6%97%b6%e6%8b%89%e5%8f%96" aria-label="2.2 消费者/扫描器：轮询和提取任务（定时拉取）">2.2 消费者/扫描器：轮询和提取任务（定时拉取）</a></li>
+                <li>
+                    <a href="#23-%e4%bb%bb%e5%8a%a1%e5%a4%84%e7%90%86%e5%99%a8%e6%89%a7%e8%a1%8c%e4%bb%bb%e5%8a%a1" aria-label="2.3 任务处理器：执行任务">2.3 任务处理器：执行任务</a></li></ul>
+                </li>
+                <li>
+                    <a href="#3-%e5%88%86%e5%b8%83%e5%bc%8f%e7%8e%af%e5%a2%83%e4%b8%8b%e7%9a%84%e5%85%b3%e9%94%ae%e8%ae%be%e8%ae%a1%e7%82%b9" aria-label="3. 分布式环境下的关键设计点">3. 分布式环境下的关键设计点</a><ul>
+                        
+                <li>
+                    <a href="#a-%e6%89%ab%e6%8f%8f%e5%99%a8%e7%9a%84%e9%ab%98%e5%8f%af%e7%94%a8%e5%92%8c%e5%8e%bb%e9%87%8d" aria-label="A. 扫描器的高可用和去重">A. 扫描器的高可用和去重</a></li>
+                <li>
+                    <a href="#b-%e4%bb%bb%e5%8a%a1%e6%89%a7%e8%a1%8c%e7%9a%84%e5%b9%82%e7%ad%89%e6%80%a7" aria-label="B. 任务执行的幂等性">B. 任务执行的幂等性</a></li>
+                <li>
+                    <a href="#c-redis-%e7%9a%84%e6%8c%81%e4%b9%85%e5%8c%96%e5%92%8c%e9%ab%98%e5%8f%af%e7%94%a8" aria-label="C. Redis 的持久化和高可用">C. Redis 的持久化和高可用</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p>使用 <strong>Redis Sorted Set (ZSet)</strong> 实现延时队列（Delay Queue）是一种高效且常用的方法，因为它利用了 ZSet 的核心特性：<strong>元素有序</strong>。</p>
+<p>以下是基于 Redis ZSet 设计延时队列的详细步骤、关键操作和代码逻辑。</p>
+<hr>
+<h2 id="基于-redis-zset-的延时队列设计">基于 Redis ZSet 的延时队列设计<a hidden class="anchor" aria-hidden="true" href="#基于-redis-zset-的延时队列设计">#</a></h2>
+<h3 id="1-核心数据结构">1. 核心数据结构<a hidden class="anchor" aria-hidden="true" href="#1-核心数据结构">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">组件</th>
+          <th style="text-align: left">Redis 数据结构</th>
+          <th style="text-align: left">存储内容</th>
+          <th style="text-align: left">ZSet Score (分数)</th>
+          <th style="text-align: left">ZSet Member (成员)</th>
+          <th style="text-align: left">作用</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>延迟队列</strong></td>
+          <td style="text-align: left">Sorted Set (ZSet)</td>
+          <td style="text-align: left">待执行任务</td>
+          <td style="text-align: left"><strong>任务执行时间戳</strong> (毫秒或秒)</td>
+          <td style="text-align: left"><strong>任务的唯一 ID</strong> (例如：<code>order:123</code>, <code>task:456</code>)</td>
+          <td style="text-align: left">核心结构，按执行时间排序</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>任务详情</strong></td>
+          <td style="text-align: left">Hash 或 String</td>
+          <td style="text-align: left">任务的具体内容</td>
+          <td style="text-align: left">N/A</td>
+          <td style="text-align: left">任务 ID</td>
+          <td style="text-align: left">存储任务执行所需的所有数据</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="2-三个核心操作">2. 三个核心操作<a hidden class="anchor" aria-hidden="true" href="#2-三个核心操作">#</a></h3>
+<p>一个完整的延时队列系统由三个主要角色构成：<strong>生产者（Producer）</strong>、<strong>消费者/扫描器（Consumer/Scanner）</strong> 和 <strong>任务处理器（Executor）</strong>。</p>
+<h4 id="21-生产者投递任务将任务放入队列">2.1 生产者：投递任务（将任务放入队列）<a hidden class="anchor" aria-hidden="true" href="#21-生产者投递任务将任务放入队列">#</a></h4>
+<p>生产者负责将一个任务及其计划执行时间写入 Redis。</p>
+<p><strong>操作步骤：</strong></p>
+<ol>
+<li><strong>确定执行时间：</strong> 计算任务应被执行的精确时间戳 <code>T</code>。</li>
+<li><strong>存储任务详情：</strong> 将任务的全部信息（如订单号、用户ID等）存储到 Redis 的 Hash 或 String 结构中，以任务 ID 为 Key。</li>
+<li><strong>加入 ZSet：</strong> 将任务的 ID 作为 Member，将时间戳 <code>T</code> 作为 Score，存入延迟队列 ZSet 中。</li>
+</ol>
+<p><strong>Redis 命令示例：</strong></p>
+<pre tabindex="0"><code># 假设延迟 30 分钟，当前时间为 1678886400 (秒级时间戳)
+# 计划执行时间 T = 1678886400 + 1800 = 1678888200
+
+# 1. 存储任务详情（使用 Hash 结构）
+HSET task_detail:order:123 &#34;order_id&#34; &#34;123&#34; &#34;user_id&#34; &#34;A&#34; &#34;action&#34; &#34;cancel&#34;
+
+# 2. 加入延迟队列 ZSet
+ZADD delay_queue 1678888200 order:123
+</code></pre><h4 id="22-消费者扫描器轮询和提取任务定时拉取">2.2 消费者/扫描器：轮询和提取任务（定时拉取）<a hidden class="anchor" aria-hidden="true" href="#22-消费者扫描器轮询和提取任务定时拉取">#</a></h4>
+<p>消费者/扫描器是一个后台常驻进程，它定时（例如每秒）查询 ZSet 中哪些任务已到期。</p>
+<p><strong>关键在于原子性地取出任务。</strong></p>
+<p><strong>操作步骤：</strong></p>
+<ol>
+<li>
+<p><strong>查询到期任务：</strong> 使用 <code>ZRANGEBYSCORE</code> 命令，查询 Score (时间戳) 小于或等于<strong>当前时间戳 <code>Now</code></strong> 的所有任务 ID。因为 ZSet 是有序的，这些就是最早到期的任务。</p>
+</li>
+<li>
+<p><strong>原子性移除：</strong> 使用 <code>ZREM</code> 命令，从 ZSet 中移除上一步查询到的所有任务 ID。</p>
+<ul>
+<li><strong>注意：</strong> 在分布式环境中，为了确保只有一个 Worker 拿到并处理任务，通常需要使用 Lua 脚本将 <strong>查询</strong> 和 <strong>移除</strong> 这两步合并成一个原子操作。</li>
+</ul>
+</li>
+</ol>
+<p><strong>Redis 命令示例（使用 Lua 脚本实现原子性 Pop）：</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-lua" data-lang="lua"><span style="display:flex;"><span><span style="color:#75715e">-- Lua 脚本：</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">local</span> key <span style="color:#f92672">=</span> KEYS[<span style="color:#ae81ff">1</span>] <span style="color:#75715e">-- delay_queue 的 Key</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">local</span> now_timestamp <span style="color:#f92672">=</span> ARGV[<span style="color:#ae81ff">1</span>] <span style="color:#75715e">-- 当前时间戳</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- 1. 查询所有 Score 小于等于当前时间戳的 Member（最多查询 N 个，这里假设 100 个）</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">local</span> expired_members <span style="color:#f92672">=</span> redis.call(<span style="color:#e6db74">&#39;ZRANGEBYSCORE&#39;</span>, key, <span style="color:#e6db74">&#39;-inf&#39;</span>, now_timestamp, <span style="color:#e6db74">&#39;LIMIT&#39;</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">100</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#f92672">#</span>expired_members <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">-- 2. 移除这些 Member</span>
+</span></span><span style="display:flex;"><span>    redis.call(<span style="color:#e6db74">&#39;ZREM&#39;</span>, key, unpack(expired_members))
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> expired_members
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> {}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span></code></pre></div><p>这个 Lua 脚本保证了任务的<strong>原子性获取</strong>：查询到到期任务后，立即将其移除，避免了多个扫描器进程同时拿到同一个任务。</p>
+<h4 id="23-任务处理器执行任务">2.3 任务处理器：执行任务<a hidden class="anchor" aria-hidden="true" href="#23-任务处理器执行任务">#</a></h4>
+<p>拿到任务 ID 后，任务处理器执行实际的业务逻辑。</p>
+<p><strong>操作步骤：</strong></p>
+<ol>
+<li><strong>获取任务详情：</strong> 根据任务 ID，从存储任务详情的 Hash 或 String 中取出任务的全部内容。</li>
+<li><strong>执行业务：</strong> 执行取消订单、发放奖励等业务逻辑。</li>
+<li><strong>清理详情：</strong> 业务逻辑执行成功后，删除任务详情 Key。</li>
+</ol>
+<p><strong>Redis 命令示例：</strong></p>
+<pre tabindex="0"><code># 假设拿到任务 ID: order:123
+
+# 1. 获取任务详情
+HGETALL task_detail:order:123
+
+# 2. 执行业务逻辑...
+
+# 3. 清理详情
+DEL task_detail:order:123
+</code></pre><hr>
+<h3 id="3-分布式环境下的关键设计点">3. 分布式环境下的关键设计点<a hidden class="anchor" aria-hidden="true" href="#3-分布式环境下的关键设计点">#</a></h3>
+<p>在实际的生产环境中，系统通常是分布式的，需要解决以下问题：</p>
+<h4 id="a-扫描器的高可用和去重">A. 扫描器的高可用和去重<a hidden class="anchor" aria-hidden="true" href="#a-扫描器的高可用和去重">#</a></h4>
+<ul>
+<li><strong>问题：</strong> 多个服务器都在运行扫描器进程，如何确保只有一个进程在工作，或者如何避免任务被重复处理？</li>
+<li><strong>解决方案：</strong>
+<ul>
+<li><strong>分布式锁（推荐）：</strong> 在多个扫描器进程启动时，竞争一个<strong>分布式锁</strong>（如 Redisson 提供的 Reentrant Lock）。只有获得锁的进程才执行 <code>ZRANGEBYSCORE</code> 和 <code>ZREM</code> 操作。</li>
+<li><strong>原子性消费（Lua 脚本）：</strong> 使用上面提到的 <strong>Lua 脚本</strong>，将“查询”和“移除”原子化。只要脚本执行成功，任务就会立即被移除，其他扫描器就不会再拿到。这是更轻量级和高效的解决方案。</li>
+</ul>
+</li>
+</ul>
+<h4 id="b-任务执行的幂等性">B. 任务执行的幂等性<a hidden class="anchor" aria-hidden="true" href="#b-任务执行的幂等性">#</a></h4>
+<ul>
+<li><strong>问题：</strong> 尽管使用了原子性移除，但由于网络波动，任务执行结果可能未及时反馈，导致任务被再次取出并执行。</li>
+<li><strong>解决方案：</strong> 任务处理器必须实现<strong>幂等性</strong>。例如，在取消订单时，首先检查订单状态是否已经是“已取消”。如果是，则直接退出，不重复执行取消操作。</li>
+</ul>
+<h4 id="c-redis-的持久化和高可用">C. Redis 的持久化和高可用<a hidden class="anchor" aria-hidden="true" href="#c-redis-的持久化和高可用">#</a></h4>
+<ul>
+<li><strong>问题：</strong> Redis 宕机或重启会导致内存中的 ZSet 数据丢失。</li>
+<li><strong>解决方案：</strong>
+<ul>
+<li><strong>持久化：</strong> 开启 Redis 的 <strong>AOF (Append-Only File)</strong> 持久化，确保数据在重启后能恢复。</li>
+<li><strong>高可用：</strong> 使用 <strong>Redis Sentinel（哨兵）</strong> 或 <strong>Redis Cluster（集群）</strong> 模式，确保即使主节点宕机，备用节点也能迅速接管，保障服务的连续性。</li>
+</ul>
+</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="next" href="http://localhost:1313/posts/datastructalgorithm/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/">
+    <span class="title">Next »</span>
+    <br>
+    <span>排序算法总结</span>
+  </a>
+</nav>
+
+  </footer><div id="utterances-comments"></div>
+<script src="https://utteranc.es/client.js"
+        repo="yangcp25/yangcp25.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">yangcp</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

@@ -128,6 +128,24 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">延时队列
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>使用 Redis Sorted Set (ZSet) 实现延时队列（Delay Queue）是一种高效且常用的方法，因为它利用了 ZSet 的核心特性：元素有序。
+以下是基于 Redis ZSet 设计延时队列的详细步骤、关键操作和代码逻辑。
+基于 Redis ZSet 的延时队列设计 1. 核心数据结构 组件 Redis 数据结构 存储内容 ZSet Score (分数) ZSet Member (成员) 作用 延迟队列 Sorted Set (ZSet) 待执行任务 任务执行时间戳 (毫秒或秒) 任务的唯一 ID (例如：order:123, task:456) 核心结构，按执行时间排序 任务详情 Hash 或 String 任务的具体内容 N/A 任务 ID 存储任务执行所需的所有数据 2. 三个核心操作 一个完整的延时队列系统由三个主要角色构成：生产者（Producer）、消费者/扫描器（Consumer/Scanner） 和 任务处理器（Executor）。
+2.1 生产者：投递任务（将任务放入队列） 生产者负责将一个任务及其计划执行时间写入 Redis。
+操作步骤：
+确定执行时间： 计算任务应被执行的精确时间戳 T。 存储任务详情： 将任务的全部信息（如订单号、用户ID等）存储到 Redis 的 Hash 或 String 结构中，以任务 ID 为 Key。 加入 ZSet： 将任务的 ID 作为 Member，将时间戳 T 作为 Score，存入延迟队列 ZSet 中。 Redis 命令示例：
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-10 14:37:09 +0800 CST'>November 10, 2025</span>&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to 延时队列" href="http://localhost:1313/posts/scenario/%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">排序算法总结
     </h2>
   </header>
@@ -267,27 +285,6 @@ init() called main() called ✅ init() 总是在 main() 之前执行。
   </div>
   <footer class="entry-footer"><span title='2025-10-22 09:59:13 +0800 CST'>October 22, 2025</span>&nbsp;·&nbsp;2 min</footer>
   <a class="entry-link" aria-label="post link to Init" href="http://localhost:1313/posts/go/init/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Defer
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>✅ 一、defer 的基本作用 defer 用来延迟执行一段函数调用，直到当前函数返回时才执行（无论是正常返回还是遇到 panic）。
-示例： func main() { fmt.Println(&#34;A&#34;) defer fmt.Println(&#34;B&#34;) fmt.Println(&#34;C&#34;) } 输出：
-A C B 👉 defer 的调用会在函数退出时执行。
-✅ 二、多个 defer 的执行顺序：后进先出 (LIFO) func main() { defer fmt.Println(&#34;1&#34;) defer fmt.Println(&#34;2&#34;) defer fmt.Println(&#34;3&#34;) } 输出：
-3 2 1 就像栈一样，最后注册的 defer 最先执行。
-✅ 三、参数求值时机：defer 定义时就求值 这是一个非常重要的细节！
-func main() { x := 10 defer fmt.Println(&#34;defer:&#34;, x) x = 20 fmt.Println(&#34;x =&#34;, x) } 输出：
-x = 20 defer: 10 🔹 原因： defer 的参数会在注册 defer 时立刻求值，而不是在执行时求值。
-✅ 四、闭包 defer：引用外部变量时会实时读取 func main() { x := 10 defer func() { fmt.Println(&#34;defer:&#34;, x) }() x = 20 fmt.Println(&#34;x =&#34;, x) } 输出：
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-10-22 09:58:12 +0800 CST'>October 22, 2025</span>&nbsp;·&nbsp;2 min</footer>
-  <a class="entry-link" aria-label="post link to Defer" href="http://localhost:1313/posts/go/defer/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

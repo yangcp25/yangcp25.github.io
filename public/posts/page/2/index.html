@@ -131,6 +131,19 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">算法题解题思路
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>一、常见题型与核心解法对应表 题型类别 常用解法 关键思维 常见题例 数组 / 序列类 双指针、滑动窗口、前缀和、单调栈 定长窗口 / 不定长窗口 三数之和、最大子序和、每日温度、接雨水 排序 / 查找类 快排、归并、二分查找 有序性 &#43; 区间分治 搜索插入位置、旋转数组最小值 动态规划（DP）类 状态转移 &#43; 子问题划分 “前 i 个…”、“以 i 结尾…” 打家劫舍、最大子序和、单词拆分、爬楼梯 字符串类 DP、双指针、哈希 子串、回文、匹配 最长回文子串、无重复子串长度 哈希 / 集合类 map &#43; 滑动窗口 存在性判断 两数之和、最长不重复子串 栈 / 队列类 单调栈、辅助栈、队列优化 “下一个更大元素” 有效括号、每日温度、接雨水 树 / 图类 DFS / BFS、递归 / 队列 遍历 &#43; 状态传递 二叉树最大深度、岛屿数量、最短路径 贪心类 局部最优 → 全局最优 排序 &#43; 选择 区间合并、跳跃游戏、分发糖果 数学类 模拟、整除、快速幂 数学规律化简 整数反转、Pow(x,n)、罗马数字转整数 二、陌生题分析框架（核心应对模板） 🧩 Step 1：先搞清问题类型 是否要求最值？
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-10-21 09:48:33 +0800 CST'>October 21, 2025</span>&nbsp;·&nbsp;3 min</footer>
+  <a class="entry-link" aria-label="post link to 算法题解题思路" href="http://localhost:1313/posts/datastructalgorithm/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">面试题模板
     </h2>
   </header>
@@ -245,19 +258,6 @@ dept_id (INT, Primary Key) - 部门 ID dept_name (VARCHAR) - 部门名称 模块
   </div>
   <footer class="entry-footer"><span title='2025-09-25 09:16:35 +0800 CST'>September 25, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to Link_合并升序链表" href="http://localhost:1313/posts/datastructalgorithm/link_%E5%90%88%E5%B9%B6%E5%8D%87%E5%BA%8F%E9%93%BE%E8%A1%A8/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Str_滑动窗口
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>给定一个字符串 s ，请你找出其中不含有重复字符的 最长子串 的长度
-package main import ( &#34;fmt&#34; ) func main() { //给定一个字符串 s ，请你找出其中不含有重复字符的 最长子串 的长度。 //输入: s = &#34;abcabcbb&#34; //输出: 3 //解释: 因为无重复字符的最长子串是 &#34;abc&#34;，所以其长度为 3。 s := &#34;abcabcbb&#34; //s := &#34;abcbcbb&#34; res := getSubStr(s) fmt.Println(res) } func getSubStr(s string) int { res, left := 0, 0 check := make(map[byte]int) n := len(s) for right := 0; right &lt; n; right&#43;&#43; { if index, ok := check[s[right]]; ok &amp;&amp; index &gt;= left { left = index &#43; 1 } check[s[right]] = right res = Max(res, right-left&#43;1) } return res } func Max(a, b int) int { if a &gt; b { return a } return b } ``` </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-09-25 09:13:33 +0800 CST'>September 25, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Str_滑动窗口" href="http://localhost:1313/posts/datastructalgorithm/str_%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

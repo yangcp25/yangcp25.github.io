@@ -131,6 +131,24 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">延时队列
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>使用 Redis Sorted Set (ZSet) 实现延时队列（Delay Queue）是一种高效且常用的方法，因为它利用了 ZSet 的核心特性：元素有序。
+以下是基于 Redis ZSet 设计延时队列的详细步骤、关键操作和代码逻辑。
+基于 Redis ZSet 的延时队列设计 1. 核心数据结构 组件 Redis 数据结构 存储内容 ZSet Score (分数) ZSet Member (成员) 作用 延迟队列 Sorted Set (ZSet) 待执行任务 任务执行时间戳 (毫秒或秒) 任务的唯一 ID (例如：order:123, task:456) 核心结构，按执行时间排序 任务详情 Hash 或 String 任务的具体内容 N/A 任务 ID 存储任务执行所需的所有数据 2. 三个核心操作 一个完整的延时队列系统由三个主要角色构成：生产者（Producer）、消费者/扫描器（Consumer/Scanner） 和 任务处理器（Executor）。
+2.1 生产者：投递任务（将任务放入队列） 生产者负责将一个任务及其计划执行时间写入 Redis。
+操作步骤：
+确定执行时间： 计算任务应被执行的精确时间戳 T。 存储任务详情： 将任务的全部信息（如订单号、用户ID等）存储到 Redis 的 Hash 或 String 结构中，以任务 ID 为 Key。 加入 ZSet： 将任务的 ID 作为 Member，将时间戳 T 作为 Score，存入延迟队列 ZSet 中。 Redis 命令示例：
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-10 14:37:09 +0800 CST'>November 10, 2025</span>&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to 延时队列" href="http://localhost:1313/posts/scenario/%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">排序算法总结
     </h2>
   </header>
@@ -279,19 +297,6 @@ x = 20 defer: 10 🔹 原因： defer 的参数会在注册 defer 时立刻求�
   </div>
   <footer class="entry-footer"><span title='2025-10-22 09:58:12 +0800 CST'>October 22, 2025</span>&nbsp;·&nbsp;2 min</footer>
   <a class="entry-link" aria-label="post link to Defer" href="http://localhost:1313/posts/go/defer/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">算法题解题思路
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>一、常见题型与核心解法对应表 题型类别 常用解法 关键思维 常见题例 数组 / 序列类 双指针、滑动窗口、前缀和、单调栈 定长窗口 / 不定长窗口 三数之和、最大子序和、每日温度、接雨水 排序 / 查找类 快排、归并、二分查找 有序性 &#43; 区间分治 搜索插入位置、旋转数组最小值 动态规划（DP）类 状态转移 &#43; 子问题划分 “前 i 个…”、“以 i 结尾…” 打家劫舍、最大子序和、单词拆分、爬楼梯 字符串类 DP、双指针、哈希 子串、回文、匹配 最长回文子串、无重复子串长度 哈希 / 集合类 map &#43; 滑动窗口 存在性判断 两数之和、最长不重复子串 栈 / 队列类 单调栈、辅助栈、队列优化 “下一个更大元素” 有效括号、每日温度、接雨水 树 / 图类 DFS / BFS、递归 / 队列 遍历 &#43; 状态传递 二叉树最大深度、岛屿数量、最短路径 贪心类 局部最优 → 全局最优 排序 &#43; 选择 区间合并、跳跃游戏、分发糖果 数学类 模拟、整除、快速幂 数学规律化简 整数反转、Pow(x,n)、罗马数字转整数 二、陌生题分析框架（核心应对模板） 🧩 Step 1：先搞清问题类型 是否要求最值？
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-10-21 09:48:33 +0800 CST'>October 21, 2025</span>&nbsp;·&nbsp;3 min</footer>
-  <a class="entry-link" aria-label="post link to 算法题解题思路" href="http://localhost:1313/posts/datastructalgorithm/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

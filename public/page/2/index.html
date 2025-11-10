@@ -128,6 +128,27 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Defer
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>✅ 一、defer 的基本作用 defer 用来延迟执行一段函数调用，直到当前函数返回时才执行（无论是正常返回还是遇到 panic）。
+示例： func main() { fmt.Println(&#34;A&#34;) defer fmt.Println(&#34;B&#34;) fmt.Println(&#34;C&#34;) } 输出：
+A C B 👉 defer 的调用会在函数退出时执行。
+✅ 二、多个 defer 的执行顺序：后进先出 (LIFO) func main() { defer fmt.Println(&#34;1&#34;) defer fmt.Println(&#34;2&#34;) defer fmt.Println(&#34;3&#34;) } 输出：
+3 2 1 就像栈一样，最后注册的 defer 最先执行。
+✅ 三、参数求值时机：defer 定义时就求值 这是一个非常重要的细节！
+func main() { x := 10 defer fmt.Println(&#34;defer:&#34;, x) x = 20 fmt.Println(&#34;x =&#34;, x) } 输出：
+x = 20 defer: 10 🔹 原因： defer 的参数会在注册 defer 时立刻求值，而不是在执行时求值。
+✅ 四、闭包 defer：引用外部变量时会实时读取 func main() { x := 10 defer func() { fmt.Println(&#34;defer:&#34;, x) }() x = 20 fmt.Println(&#34;x =&#34;, x) } 输出：
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-10-22 09:58:12 +0800 CST'>October 22, 2025</span>&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to Defer" href="http://localhost:1313/posts/go/defer/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">算法题解题思路
     </h2>
   </header>
@@ -243,18 +264,6 @@ dept_id (INT, Primary Key) - 部门 ID dept_name (VARCHAR) - 部门名称 模块
   </div>
   <footer class="entry-footer"><span title='2025-10-15 09:13:45 +0800 CST'>October 15, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to Sql调优" href="http://localhost:1313/posts/scenario/sql%E8%B0%83%E4%BC%98/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Link_合并升序链表
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>package main import &#34;fmt&#34; func main() { //两个升序链表合并一个新的升序链表 link1 := NewLink() link1.head.next = &amp;node{ value: 1, next: &amp;node{next: &amp;node{ value: 4, }, value: 3}, } link2 := NewLink() link2.head.next = &amp;node{ value: 2, next: &amp;node{next: &amp;node{ value: 6, }, value: 5}, } newLink := mergerSortLink(link1, link2) fmt.Println(newLink) head := newLink.head.next for head != nil { fmt.Println(head.value) head = head.next } } func mergerSortLink(link1, link2 *Link) *Link { // 插入 newNode := &amp;node{} newLink := &amp;Link{ head: newNode, } head1 := link1.head.next head2 := link2.head.next for head1 != nil &amp;&amp; head2 != nil { if head1.value &lt; head2.value { newNode.next = head1 newNode = head1 head1 = head1.next } else { newNode.next = head2 newNode = head2 head2 = head2.next } } // if head1 != nil { newNode.next = head1 } if head2 != nil { newNode.next = head2 } return newLink } type Link struct { head *node } type node struct { value int next *node } func NewLink() *Link { return &amp;Link{ head: &amp;node{}, } } ``` </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-09-25 09:16:35 +0800 CST'>September 25, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Link_合并升序链表" href="http://localhost:1313/posts/datastructalgorithm/link_%E5%90%88%E5%B9%B6%E5%8D%87%E5%BA%8F%E9%93%BE%E8%A1%A8/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

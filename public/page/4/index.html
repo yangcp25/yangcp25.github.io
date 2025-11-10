@@ -128,6 +128,18 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Matrix_多源扩散
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>package main import ( &#34;bufio&#34; &#34;fmt&#34; &#34;os&#34; &#34;strconv&#34; &#34;strings&#34; ) // 题目描述 // // 存在一个mxn的二维数组，其成员取值范围为0或1，其中值为1的成员具备扩散性，每经过1S，将上下左右值为0的成员同化为1，二维数组的成员初始值都为0，将第[i,j]和[k,l]两个个位置上元素修改成1后，求矩阵的所有，元素变为1需要多长时间 // // 输入描述 // // 输入数据中的前2个数字表示这是一个mxn的矩阵，m和n不会超过1024大小; // // 中间两个数字表示一个初始扩散点位置为I,j // // 最后2个数字表示另一个扩散点位置为k,l // // 输出描述 // // 输出矩阵的所有元素变为1所需要秒数 // // 用例 func main() { input := bufio.NewScanner(os.Stdin) input.Scan() str := input.Text() strArr := strings.Split(str, &#34;,&#34;) m, n := Atoi(strArr[0]), Atoi(strArr[1]) pos1, pos2, pos3, pos4 := Atoi(strArr[2]), Atoi(strArr[3]), Atoi(strArr[4]), Atoi(strArr[5]) time := getMatrixBroadcastTime(m, n, pos1, pos2, pos3, pos4) fmt.Println(time) } func getMatrixBroadcastTime(m, n, pos1, pos2, pos3, pos4 int) (res int) { path := make([]string, 0) path = append(path, getPos(pos1, pos2)) path = append(path, getPos(pos3, pos4)) check := make(map[string]bool) check[getPos(pos1, pos2)] = true check[getPos(pos3, pos4)] = true count := 2 for len(path) &gt; 0 { length := len(path) for i := 0; i &lt; length; i&#43;&#43; { pos := strings.Split(path[i], &#34;_&#34;) x, y := Atoi(pos[0]), Atoi(pos[1]) // 上 if x-1 &gt;= 0 &amp;&amp; check[getPos(x-1, y)] != true { path = append(path, getPos(x-1, y)) check[getPos(x-1, y)] = true count&#43;&#43; } // 下 if x&#43;1 &lt; m &amp;&amp; check[getPos(x&#43;1, y)] != true { path = append(path, getPos(x&#43;1, y)) check[getPos(x&#43;1, y)] = true count&#43;&#43; } // 左 if y-1 &gt;= 0 &amp;&amp; check[getPos(x, y-1)] != true { path = append(path, getPos(x, y-1)) check[getPos(x, y-1)] = true count&#43;&#43; } // 右 if y&#43;1 &lt; n &amp;&amp; check[getPos(x, y&#43;1)] != true { path = append(path, getPos(x, y&#43;1)) check[getPos(x, y&#43;1)] = true count&#43;&#43; } } res&#43;&#43; if count &gt;= m*n { return } } return } func getPos(x, y int) string { return fmt.Sprintf(&#34;%d_%d&#34;, x, y) } func Atoi(str string) int { res, _ := strconv.Atoi(str) return res } </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-09-05 09:23:51 +0800 CST'>September 5, 2025</span>&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to Matrix_多源扩散" href="http://localhost:1313/posts/datastructalgorithm/matrix_%E5%A4%9A%E6%BA%90%E6%89%A9%E6%95%A3/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Str_判断字符顺序和存在
     </h2>
   </header>
@@ -270,22 +282,6 @@ go为什么采用三色标记法 go采用tcmalloc所以对内存碎片优化的�
   </div>
   <footer class="entry-footer"><span title='2025-08-01 09:10:00 +0800 CST'>August 1, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to Gc" href="http://localhost:1313/posts/go/gc/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Map
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>go的哈希实现 通用哈希实现 哈希表是一个高效的数据结构，通过对key经过哈希函数计算的值和存储数据的数组的长度，两者求余得到在数组插入的位置。高效的查找效率 时间复杂度为O(1)。
-哈希函数 任意长度的输入有固定输出 同一输入会产生同一个输出 输入的细小改变会造成输入的完全不一样 速度快 单项不可逆 go的哈希底层实现 通过底层结构体hmap来实例化map对象，hmap 包含指向[]bucket数组的指针。bucket结构里面会存储真实的数据 以key1key2 val1value2 的形式进行排列，方便内存对齐。头部有top哈希方便bucket内部进行数据定位，底部有指向溢出bucket的指针。 当发生哈希冲突，冲突的数据会存放到溢出bucket链表。
-插入过程 首先用哈希函数对key计算，得到64位数据（64位机器上）。低B位决定数据落入哪个桶。B是log2count，也就是以2为底bucket元素的长度的对数。 高8位决定落入bucket具体的位置。如果发送哈希冲突，就把数据存入溢出桶。
-遍历过程、查找过程 遍历：从0-bucket长度随机一个数字选择bucket进行遍历。所以go的map是无序。如果bucket遍历完，溢出桶不为空，继续遍历溢出桶。 查找：哈希函数对key计算，低8位找到具体的桶。高8位拿来和bucket的top哈希进行比较，如果一致，再比较具体的key,如果相同就返回， 否则再看溢出桶是否为空，不会空对链表进行遍历。如果都没有就返回查找失败。 go的扩容过程 当哈希函数产生过多的哈希碰撞时，就会导致查询效率低下，为了减少哈希碰撞，需要对底层数组的容量扩容或者对数据进行从新排列。 当满足一下任意条件会触发扩容
-当碰撞因子&gt;6.5, 碰撞因子=count(实际元素个数)/2的B次方（bucket数组总的元素长度） 当溢出桶过多时，当B &lt; 15 , 当溢出桶的个数&gt;B次方，触发扩容。当B&gt;15时，overflow超过2的15次方。 为什么是线程不安全的 sync.map使用 sync.map如何实现的 注意事项</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-29 09:23:59 +0800 CST'>July 29, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Map" href="http://localhost:1313/posts/go/map/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

@@ -6,8 +6,60 @@
     <description>Recent content on yangcp</description>
     <generator>Hugo -- 0.147.4</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 05 Nov 2025 09:29:18 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 10 Nov 2025 14:37:09 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>延时队列</title>
+      <link>http://localhost:1313/posts/scenario/%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97/</link>
+      <pubDate>Mon, 10 Nov 2025 14:37:09 +0800</pubDate>
+      <guid>http://localhost:1313/posts/scenario/%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97/</guid>
+      <description>&lt;p&gt;使用 &lt;strong&gt;Redis Sorted Set (ZSet)&lt;/strong&gt; 实现延时队列（Delay Queue）是一种高效且常用的方法，因为它利用了 ZSet 的核心特性：&lt;strong&gt;元素有序&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;以下是基于 Redis ZSet 设计延时队列的详细步骤、关键操作和代码逻辑。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;基于-redis-zset-的延时队列设计&#34;&gt;基于 Redis ZSet 的延时队列设计&lt;/h2&gt;
+&lt;h3 id=&#34;1-核心数据结构&#34;&gt;1. 核心数据结构&lt;/h3&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;组件&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;Redis 数据结构&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;存储内容&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;ZSet Score (分数)&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;ZSet Member (成员)&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;作用&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;延迟队列&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;Sorted Set (ZSet)&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;待执行任务&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;任务执行时间戳&lt;/strong&gt; (毫秒或秒)&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;任务的唯一 ID&lt;/strong&gt; (例如：&lt;code&gt;order:123&lt;/code&gt;, &lt;code&gt;task:456&lt;/code&gt;)&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;核心结构，按执行时间排序&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;任务详情&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;Hash 或 String&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;任务的具体内容&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;N/A&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;任务 ID&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;存储任务执行所需的所有数据&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;2-三个核心操作&#34;&gt;2. 三个核心操作&lt;/h3&gt;
+&lt;p&gt;一个完整的延时队列系统由三个主要角色构成：&lt;strong&gt;生产者（Producer）&lt;/strong&gt;、&lt;strong&gt;消费者/扫描器（Consumer/Scanner）&lt;/strong&gt; 和 &lt;strong&gt;任务处理器（Executor）&lt;/strong&gt;。&lt;/p&gt;
+&lt;h4 id=&#34;21-生产者投递任务将任务放入队列&#34;&gt;2.1 生产者：投递任务（将任务放入队列）&lt;/h4&gt;
+&lt;p&gt;生产者负责将一个任务及其计划执行时间写入 Redis。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;操作步骤：&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;确定执行时间：&lt;/strong&gt; 计算任务应被执行的精确时间戳 &lt;code&gt;T&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;存储任务详情：&lt;/strong&gt; 将任务的全部信息（如订单号、用户ID等）存储到 Redis 的 Hash 或 String 结构中，以任务 ID 为 Key。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;加入 ZSet：&lt;/strong&gt; 将任务的 ID 作为 Member，将时间戳 &lt;code&gt;T&lt;/code&gt; 作为 Score，存入延迟队列 ZSet 中。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;Redis 命令示例：&lt;/strong&gt;&lt;/p&gt;</description>
+    </item>
     <item>
       <title>排序算法总结</title>
       <link>http://localhost:1313/posts/datastructalgorithm/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/</link>
