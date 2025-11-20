@@ -113,8 +113,14 @@
     <loc>http://localhost:1313/posts/datastructalgorithm/go%E5%AE%9E%E7%8E%B0lru/</loc>
     <lastmod>2025-08-29T09:43:18+08:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/posts/datastructalgorithm/go%E5%AE%9E%E7%8E%B0%E9%99%90%E6%B5%81%E5%99%A8/</loc>
+    <lastmod>2025-08-29T09:43:09+08:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/posts/go/mod/</loc>
     <lastmod>2025-08-27T09:47:18+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/go/channel/</loc>
+    <lastmod>2025-08-16T09:49:21+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/design_pattern/ddd/</loc>
     <lastmod>2025-08-08T09:50:22+08:00</lastmod>

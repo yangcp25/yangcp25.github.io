@@ -244,10 +244,24 @@
 "tags":null,
 "categories":null
 },{
+"title":"Go实现限流器",
+"permalink": "http://localhost:1313/posts/datastructalgorithm/go%E5%AE%9E%E7%8E%B0%E9%99%90%E6%B5%81%E5%99%A8/",
+"summary": "常见的限流方法 令牌桶,允许突发流量，控制平均速率,golang.org/x/time/rate.Limiter,最常用和推荐，性能极高。 漏桶,平滑输出流量，强制固定速率,Channel + time.Ticker,适合需要固定速率处理任务的场景。 滑动窗口,避免固定窗口的边界效应,Redis ZSET + LUA 脚本,精度高，适合分布式限流。 固定窗口,实现简单，开销小,In-memory Map + Mutex,适合对限流精度要求不高的场景。 常见实现 令牌桶 思路： 用 goroutine 持续按速率向 channel 放 token，业务处理前尝试取 token，取不到则拒绝或等待。 示例：\npackage main import ( \u0026#34;fmt\u0026#34; \u0026#34;time\u0026#34; ) type TokenBucket struct { tokens chan struct{} } func NewTokenBucket(rate int, capacity int) *TokenBucket { tb := \u0026amp;TokenBucket{tokens: make(chan struct{}, capacity)} ticker := time.NewTicker(time.Second / time.Duration(rate)) // 初始时先装满 for i := 0; i \u0026lt; capacity; i++ { tb.tokens \u0026lt;- struct{}{} } go func() { for range ticker.C { select { case tb.tokens \u0026lt;- struct{}{}: default: } } }() return tb } func (tb *TokenBucket) Allow() bool { select { case \u0026lt;-tb.tokens: return true default: return false } } func main() { tb := NewTokenBucket(5, 10) // 每秒 5 个，桶容量 10 for i := 0; i \u0026lt; 20; i++ { if tb.Allow() { fmt.Println(\u0026#34;allowed\u0026#34;, i) } else { fmt.Println(\u0026#34;rejected\u0026#34;, i) } time.Sleep(100 * time.Millisecond) } } ",
+"content": "常见的限流方法 令牌桶,允许突发流量，控制平均速率,golang.org/x/time/rate.Limiter,最常用和推荐，性能极高。 漏桶,平滑输出流量，强制固定速率,Channel + time.Ticker,适合需要固定速率处理任务的场景。 滑动窗口,避免固定窗口的边界效应,Redis ZSET + LUA 脚本,精度高，适合分布式限流。 固定窗口,实现简单，开销小,In-memory Map + Mutex,适合对限流精度要求不高的场景。 常见实现 令牌桶 思路： 用 goroutine 持续按速率向 channel 放 token，业务处理前尝试取 token，取不到则拒绝或等待。 示例：\npackage main import ( \u0026#34;fmt\u0026#34; \u0026#34;time\u0026#34; ) type TokenBucket struct { tokens chan struct{} } func NewTokenBucket(rate int, capacity int) *TokenBucket { tb := \u0026amp;TokenBucket{tokens: make(chan struct{}, capacity)} ticker := time.NewTicker(time.Second / time.Duration(rate)) // 初始时先装满 for i := 0; i \u0026lt; capacity; i++ { tb.tokens \u0026lt;- struct{}{} } go func() { for range ticker.C { select { case tb.tokens \u0026lt;- struct{}{}: default: } } }() return tb } func (tb *TokenBucket) Allow() bool { select { case \u0026lt;-tb.tokens: return true default: return false } } func main() { tb := NewTokenBucket(5, 10) // 每秒 5 个，桶容量 10 for i := 0; i \u0026lt; 20; i++ { if tb.Allow() { fmt.Println(\u0026#34;allowed\u0026#34;, i) } else { fmt.Println(\u0026#34;rejected\u0026#34;, i) } time.Sleep(100 * time.Millisecond) } } ",
+"tags":null,
+"categories":null
+},{
 "title":"Mod",
 "permalink": "http://localhost:1313/posts/go/mod/",
 "summary": "go mod 加载机制 go root go的安装目录\ngo path go的源代码工作目录\ngo mod go从1.11开始，加入了 go mod。开启 go mod 之后，不需要讲所有的源代码放到gopath。\ngo 的加载机制 go 会把go mod所在的目录当成工作目录，先加载相对路径下的本地包，如果没有会去go mod文件查找，go mod 会尝试从go proxy 拉取代码，go proxy 是Google维护的go的包仓库，即使某些包的源码被删除，也还是可以从包仓库 下载，这保证了包引入的稳定性。如果go proxy没有，那么go会尝试从代码仓库拉取源码，比如github上的源码。go mod 当中 带有 // indirect的就是直接源码下载的。\n还可以使用 go mod edit -replace [old git package]@[version]=[new git package]@[version] 命令将远程代码仓库替换成本地的代码。 使用go private 设置私有化代码仓库的路径，然后配置认证就可以使用内部代码库。\n常用命令 go mod init 初始化模块，生成 go mod go mod tidy 拉取依赖，自动增删依赖，生成go.sum go mod download 将依赖预下载到本地缓存 go mod vendor 将下载的依赖缓存到 ./vendor,用于离线构建 go mod edit ",
 "content": "go mod 加载机制 go root go的安装目录\ngo path go的源代码工作目录\ngo mod go从1.11开始，加入了 go mod。开启 go mod 之后，不需要讲所有的源代码放到gopath。\ngo 的加载机制 go 会把go mod所在的目录当成工作目录，先加载相对路径下的本地包，如果没有会去go mod文件查找，go mod 会尝试从go proxy 拉取代码，go proxy 是Google维护的go的包仓库，即使某些包的源码被删除，也还是可以从包仓库 下载，这保证了包引入的稳定性。如果go proxy没有，那么go会尝试从代码仓库拉取源码，比如github上的源码。go mod 当中 带有 // indirect的就是直接源码下载的。\n还可以使用 go mod edit -replace [old git package]@[version]=[new git package]@[version] 命令将远程代码仓库替换成本地的代码。 使用go private 设置私有化代码仓库的路径，然后配置认证就可以使用内部代码库。\n常用命令 go mod init 初始化模块，生成 go mod go mod tidy 拉取依赖，自动增删依赖，生成go.sum go mod download 将依赖预下载到本地缓存 go mod vendor 将下载的依赖缓存到 ./vendor,用于离线构建 go mod edit ",
+"tags":null,
+"categories":null
+},{
+"title":"Channel",
+"permalink": "http://localhost:1313/posts/go/channel/",
+"summary": "csp并发模型 go在协程见通信使用channel进行通信。go的协程间通信的哲学是使用消息（channel）通信，而不是共享内存。为什么呢？ 使用消息通信的好处是\n没有共享状态，避免锁和竞争问题。 通信即同步，即通信双方都必须要在通道上同步，才能完成信息交换 channel channel是一个并发安全的，FIFO的用于不同goroutine间传递数据的管道。\n底层原理 底层是一个chan结构体，里面有一个环形队列和首尾指针，以及待发送队列和待接受队列。\n使用方法和使用场景 使用场景 协程间的数据传递和交换 协程间的同步与协调 控制并发数/实现信号量 超时处理与非阻塞操作 协程的取消与退出通知 实现发布订阅的简单消息队列、简单协程池 实现限流算法（令牌桶） 需要注意的点",
+"content": "csp并发模型 go在协程见通信使用channel进行通信。go的协程间通信的哲学是使用消息（channel）通信，而不是共享内存。为什么呢？ 使用消息通信的好处是\n没有共享状态，避免锁和竞争问题。 通信即同步，即通信双方都必须要在通道上同步，才能完成信息交换 channel channel是一个并发安全的，FIFO的用于不同goroutine间传递数据的管道。\n底层原理 底层是一个chan结构体，里面有一个环形队列和首尾指针，以及待发送队列和待接受队列。\n使用方法和使用场景 使用场景 协程间的数据传递和交换 协程间的同步与协调 控制并发数/实现信号量 超时处理与非阻塞操作 协程的取消与退出通知 实现发布订阅的简单消息队列、简单协程池 实现限流算法（令牌桶） 需要注意的点 ",
 "tags":null,
 "categories":null
 },{

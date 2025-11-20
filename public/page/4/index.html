@@ -196,6 +196,19 @@ Redis 综合使用了惰性删除和定期删除，保证性能和及时性之�
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Go实现限流器
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>常见的限流方法 令牌桶,允许突发流量，控制平均速率,golang.org/x/time/rate.Limiter,最常用和推荐，性能极高。 漏桶,平滑输出流量，强制固定速率,Channel &#43; time.Ticker,适合需要固定速率处理任务的场景。 滑动窗口,避免固定窗口的边界效应,Redis ZSET &#43; LUA 脚本,精度高，适合分布式限流。 固定窗口,实现简单，开销小,In-memory Map &#43; Mutex,适合对限流精度要求不高的场景。 常见实现 令牌桶 思路： 用 goroutine 持续按速率向 channel 放 token，业务处理前尝试取 token，取不到则拒绝或等待。 示例：
+package main import ( &#34;fmt&#34; &#34;time&#34; ) type TokenBucket struct { tokens chan struct{} } func NewTokenBucket(rate int, capacity int) *TokenBucket { tb := &amp;TokenBucket{tokens: make(chan struct{}, capacity)} ticker := time.NewTicker(time.Second / time.Duration(rate)) // 初始时先装满 for i := 0; i &lt; capacity; i&#43;&#43; { tb.tokens &lt;- struct{}{} } go func() { for range ticker.C { select { case tb.tokens &lt;- struct{}{}: default: } } }() return tb } func (tb *TokenBucket) Allow() bool { select { case &lt;-tb.tokens: return true default: return false } } func main() { tb := NewTokenBucket(5, 10) // 每秒 5 个，桶容量 10 for i := 0; i &lt; 20; i&#43;&#43; { if tb.Allow() { fmt.Println(&#34;allowed&#34;, i) } else { fmt.Println(&#34;rejected&#34;, i) } time.Sleep(100 * time.Millisecond) } } </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-29 09:43:09 +0800 CST'>August 29, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Go实现限流器" href="http://localhost:1313/posts/datastructalgorithm/go%E5%AE%9E%E7%8E%B0%E9%99%90%E6%B5%81%E5%99%A8/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Mod
     </h2>
   </header>
@@ -209,6 +222,21 @@ go 的加载机制 go 会把go mod所在的目录当成工作目录，先加载�
   </div>
   <footer class="entry-footer"><span title='2025-08-27 09:47:18 +0800 CST'>August 27, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to Mod" href="http://localhost:1313/posts/go/mod/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Channel
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>csp并发模型 go在协程见通信使用channel进行通信。go的协程间通信的哲学是使用消息（channel）通信，而不是共享内存。为什么呢？ 使用消息通信的好处是
+没有共享状态，避免锁和竞争问题。 通信即同步，即通信双方都必须要在通道上同步，才能完成信息交换 channel channel是一个并发安全的，FIFO的用于不同goroutine间传递数据的管道。
+底层原理 底层是一个chan结构体，里面有一个环形队列和首尾指针，以及待发送队列和待接受队列。
+使用方法和使用场景 使用场景 协程间的数据传递和交换 协程间的同步与协调 控制并发数/实现信号量 超时处理与非阻塞操作 协程的取消与退出通知 实现发布订阅的简单消息队列、简单协程池 实现限流算法（令牌桶） 需要注意的点</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-16 09:49:21 +0800 CST'>August 16, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Channel" href="http://localhost:1313/posts/go/channel/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -238,35 +266,6 @@ go 的加载机制 go 会把go mod所在的目录当成工作目录，先加载�
   </div>
   <footer class="entry-footer"><span title='2025-08-03 11:01:53 +0800 CST'>August 3, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to 初始化方法比较" href="http://localhost:1313/posts/go/%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95%E6%AF%94%E8%BE%83/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">内存泄漏
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>什么是内存泄漏 指内存资源长期得不到释放，导致内存持续增长，最终导致内存溢出
-内存泄漏的常见场景 协程的泄漏 耗时任务或者http请求一直得不到响应，又没有设置超时时间 chan未正确关闭、阻塞。range channel 发送端未关闭导致死循环。 锁未正确释放、导致协程未能释放 资源未关闭，如file、数据库、redis连接、timer定时器、channel cgo 其他的一些 内存泄漏分析工具 pprof分析协程数量，内存占用情况等
-如何针对内存泄漏进行优化 针对协程泄漏 设置超时时间 context.deadline timeout 结合select进行超时控制 正确使用channel 正确使用互斥锁，配对使用 针对channel的泄漏 配对使用 在发送方关闭channel 正确使用缓冲channel和非缓冲channel 养成关闭资源的习惯，使用defer,clear up 等工具 cgo和其他场景记得防止协程泄漏 </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-01 09:10:55 +0800 CST'>August 1, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to 内存泄漏" href="http://localhost:1313/posts/go/%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">逃逸分析
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>什么是逃逸分析 计算机科学中对指针作用范围进行分析就叫做逃逸分析。分析变量是分配到堆上还是栈上。 分配到堆上和栈上的对比
-栈 堆 分配方式 随着函数创建自动分配 程序员手动分配 资源消耗 很小 ，大小固定 比较大，大小不固定，需要寻找到合适的大小。容易产生内存碎片 回收方式 随着函数的结束进行销毁 需要手动回收,或者根据gc算法进行回收 所以说编译器会尽可能的将变量分配到栈上， go会在静态编译阶段就确定变量到底应该分配到堆上还是栈上。 当一个变量在函数之外的地方还会被使用就会发生逃逸。
-以下几个场景会发生逃逸 返回一个变量的指针 返回一个闭包函数，闭包函数捕获了调用函数的变量 往channel发送了变量的指针 巨大的变量，编译器为了防止栈内存不够，会将其分配到堆上 引用类型的使用，比如传递slice、map、chan、interface等 如何对go的程序进行逃逸分析 使用源码go build –gcflags ‘-m -l’分析，看变量是否发生了逃逸 还可以结合pprof对堆内存的分配进行查看，结合热点路径使用go gc flag 进行分析
-如何使用 逃逸分析需要注意的点 在不影响代码结构合理性的情况下，进行减少使用指针（变量的内存占用不大的情况下）。 不要过度设计，持续重构。也就是先实现业务，再去结合工具来进行调整 </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-01 09:10:17 +0800 CST'>August 1, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to 逃逸分析" href="http://localhost:1313/posts/go/%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">
