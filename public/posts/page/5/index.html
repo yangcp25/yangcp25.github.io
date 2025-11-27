@@ -131,6 +131,20 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">内存泄漏
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>什么是内存泄漏 指内存资源长期得不到释放，导致内存持续增长，最终导致内存溢出
+内存泄漏的常见场景 协程的泄漏 耗时任务或者http请求一直得不到响应，又没有设置超时时间 chan未正确关闭、阻塞。range channel 发送端未关闭导致死循环。 锁未正确释放、导致协程未能释放 资源未关闭，如file、数据库、redis连接、timer定时器、channel cgo 其他的一些 内存泄漏分析工具 pprof分析协程数量，内存占用情况等
+如何针对内存泄漏进行优化 针对协程泄漏 设置超时时间 context.deadline timeout 结合select进行超时控制 正确使用channel 正确使用互斥锁，配对使用 针对channel的泄漏 配对使用 在发送方关闭channel 正确使用缓冲channel和非缓冲channel 养成关闭资源的习惯，使用defer,clear up 等工具 cgo和其他场景记得防止协程泄漏 </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-01 09:10:55 +0800 CST'>August 1, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 内存泄漏" href="http://localhost:1313/posts/go/%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">逃逸分析
     </h2>
   </header>

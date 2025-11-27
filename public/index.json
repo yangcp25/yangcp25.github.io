@@ -1,4 +1,11 @@
 [{
+"title":"算法模板思路总结",
+"permalink": "http://localhost:1313/posts/go/%E7%AE%97%E6%B3%95%E6%A8%A1%E6%9D%BF%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93/",
+"summary": " 序号 问题 对应模板 关键字提示 ① 是否是“求区间”？ 前缀和 / 差分 区间和、子数组和、多次加法、update 区间 ② 是否在求最短步数？ BFS 最少多少步、最短时间、同时扩散、找最短路径（无权图） ③ 是否有权重？ Dijkstra 每条边有代价、最小代价、带权最短路径 ④ 是否要所有结果？ 回溯 所有排列、所有组合、所有子集、选择/不选择 ⑤ 是否判断能否满足条件？ 二分 + check 最小值使条件成立、最大值使条件成立、单调性 ⑥ 图结构但不是最短路 DFS 岛屿数量、连通块、树路径和 ⑦ 是否是连通性判断？ 并查集 判断是否联通、合并集合、找代表元素 ⑧ 是否需要维护递增/递减？ 单调栈 下一个更大元素、每日温度、接雨水 ⑨ 是否是一维 DP？ DP 最大子序和、打家劫舍、背包 ⑩ 是否是字符串匹配？ KMP / Trie 多次查找字符串、大文本匹配模式串、多词查找 ",
+"content": " 序号 问题 对应模板 关键字提示 ① 是否是“求区间”？ 前缀和 / 差分 区间和、子数组和、多次加法、update 区间 ② 是否在求最短步数？ BFS 最少多少步、最短时间、同时扩散、找最短路径（无权图） ③ 是否有权重？ Dijkstra 每条边有代价、最小代价、带权最短路径 ④ 是否要所有结果？ 回溯 所有排列、所有组合、所有子集、选择/不选择 ⑤ 是否判断能否满足条件？ 二分 + check 最小值使条件成立、最大值使条件成立、单调性 ⑥ 图结构但不是最短路 DFS 岛屿数量、连通块、树路径和 ⑦ 是否是连通性判断？ 并查集 判断是否联通、合并集合、找代表元素 ⑧ 是否需要维护递增/递减？ 单调栈 下一个更大元素、每日温度、接雨水 ⑨ 是否是一维 DP？ DP 最大子序和、打家劫舍、背包 ⑩ 是否是字符串匹配？ KMP / Trie 多次查找字符串、大文本匹配模式串、多词查找 ",
+"tags":null,
+"categories":null
+},{
 "title":"高级算法模板",
 "permalink": "http://localhost:1313/posts/datastructalgorithm/%E9%AB%98%E7%BA%A7%E7%AE%97%E6%B3%95%E6%A8%A1%E6%9D%BF/",
 "summary": " ✅ 总目录（你只要按这个顺序掌握） 类别 内容 定位 一、前缀和 \u0026amp; 差分 区间加减 → O(1) 求和 高频基础 二、字符串 KMP、Trie 面试常客 三、BFS / DFS 多源 BFS，分层 BFS 图模板 四、拓扑排序 DAG 处理 调度/依赖 五、树与图 树直径、并查集、Dijkstra 中高级 六、回溯 子集 / N 皇后 / 剪枝 模板化即可 七、状态压缩 DP 子集 DP / bitmask 稍难但高频 八、数学 快速幂 / gcd / 组合数 必备基础 一、前缀和 \u0026amp; 差分 ✅ 前缀和（快速求区间和） sum[i] = nums[0] + ... + nums[i] 区间 [l, r] 的和 = sum[r] - sum[l-1] func prefixSum(nums []int) []int { n := len(nums) pre := make([]int, n+1) for i := 1; i \u0026lt;= n; i++ { pre[i] = pre[i-1] + nums[i-1] } return pre } ✅ 差分（区间加值） diff[i] = nums[i] - nums[i-1] 区间加 k：diff[l] += k, diff[r+1] -= k func diffBuild(nums []int) []int { n := len(nums) diff := make([]int, n) diff[0] = nums[0] for i := 1; i \u0026lt; n; i++ { diff[i] = nums[i] - nums[i-1] } return diff } func diffApply(diff []int) []int { for i := 1; i \u0026lt; len(diff); i++ { diff[i] += diff[i-1] } return diff } 二、字符串 ✅ KMP（快速匹配） 核心：求 next 数组（最长前后缀相等长度）\n",

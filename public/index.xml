@@ -6,8 +6,86 @@
     <description>Recent content on yangcp</description>
     <generator>Hugo -- 0.147.4</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Mon, 10 Nov 2025 21:55:50 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 27 Nov 2025 23:49:37 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>算法模板思路总结</title>
+      <link>http://localhost:1313/posts/go/%E7%AE%97%E6%B3%95%E6%A8%A1%E6%9D%BF%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93/</link>
+      <pubDate>Thu, 27 Nov 2025 23:49:37 +0800</pubDate>
+      <guid>http://localhost:1313/posts/go/%E7%AE%97%E6%B3%95%E6%A8%A1%E6%9D%BF%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93/</guid>
+      <description>&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;序号&lt;/th&gt;
+          &lt;th&gt;问题&lt;/th&gt;
+          &lt;th&gt;对应模板&lt;/th&gt;
+          &lt;th&gt;关键字提示&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;①&lt;/td&gt;
+          &lt;td&gt;是否是“求区间”？&lt;/td&gt;
+          &lt;td&gt;前缀和 / 差分&lt;/td&gt;
+          &lt;td&gt;区间和、子数组和、多次加法、update 区间&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;②&lt;/td&gt;
+          &lt;td&gt;是否在求最短步数？&lt;/td&gt;
+          &lt;td&gt;BFS&lt;/td&gt;
+          &lt;td&gt;最少多少步、最短时间、同时扩散、找最短路径（无权图）&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;③&lt;/td&gt;
+          &lt;td&gt;是否有权重？&lt;/td&gt;
+          &lt;td&gt;Dijkstra&lt;/td&gt;
+          &lt;td&gt;每条边有代价、最小代价、带权最短路径&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;④&lt;/td&gt;
+          &lt;td&gt;是否要所有结果？&lt;/td&gt;
+          &lt;td&gt;回溯&lt;/td&gt;
+          &lt;td&gt;所有排列、所有组合、所有子集、选择/不选择&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;⑤&lt;/td&gt;
+          &lt;td&gt;是否判断能否满足条件？&lt;/td&gt;
+          &lt;td&gt;二分 + check&lt;/td&gt;
+          &lt;td&gt;最小值使条件成立、最大值使条件成立、单调性&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;⑥&lt;/td&gt;
+          &lt;td&gt;图结构但不是最短路&lt;/td&gt;
+          &lt;td&gt;DFS&lt;/td&gt;
+          &lt;td&gt;岛屿数量、连通块、树路径和&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;⑦&lt;/td&gt;
+          &lt;td&gt;是否是连通性判断？&lt;/td&gt;
+          &lt;td&gt;并查集&lt;/td&gt;
+          &lt;td&gt;判断是否联通、合并集合、找代表元素&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;⑧&lt;/td&gt;
+          &lt;td&gt;是否需要维护递增/递减？&lt;/td&gt;
+          &lt;td&gt;单调栈&lt;/td&gt;
+          &lt;td&gt;下一个更大元素、每日温度、接雨水&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;⑨&lt;/td&gt;
+          &lt;td&gt;是否是一维 DP？&lt;/td&gt;
+          &lt;td&gt;DP&lt;/td&gt;
+          &lt;td&gt;最大子序和、打家劫舍、背包&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;⑩&lt;/td&gt;
+          &lt;td&gt;是否是字符串匹配？&lt;/td&gt;
+          &lt;td&gt;KMP / Trie&lt;/td&gt;
+          &lt;td&gt;多次查找字符串、大文本匹配模式串、多词查找&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</description>
+    </item>
     <item>
       <title>高级算法模板</title>
       <link>http://localhost:1313/posts/datastructalgorithm/%E9%AB%98%E7%BA%A7%E7%AE%97%E6%B3%95%E6%A8%A1%E6%9D%BF/</link>

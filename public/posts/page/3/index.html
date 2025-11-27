@@ -131,6 +131,18 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Sql调优
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>mySql调优 参考资料 https://www.yuque.com/everglow-8bs2d/ka5fze/inbyrpn5weudx226?singleDoc# </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-10-15 09:13:45 +0800 CST'>October 15, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Sql调优" href="http://localhost:1313/posts/scenario/sql%E8%B0%83%E4%BC%98/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Link_合并升序链表
     </h2>
   </header>
@@ -250,18 +262,6 @@ package cache import ( &#34;context&#34; &#34;github.com/redis/go-redis/v9&#34; 
   </div>
   <footer class="entry-footer"><span title='2025-09-10 20:40:50 +0800 CST'>September 10, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to 零拷贝" href="http://localhost:1313/posts/cs/%E9%9B%B6%E6%8B%B7%E8%B4%9D/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Str_百度真题原地置换大小写
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>代码实现 package test3 import ( &#34;fmt&#34; &#34;unicode&#34; ) func main() { //输入一个字符串，里面有大写字母、小写字母、数字， //处理结束后，大写字母在前，然后是小写字母，最后是数字， //要求：在原有字符串上做交换实现，不要建新的数据结构。 //mN1oO2pP3 //Nm1oO2pP3 str := []rune(&#34;mN1oO2pP3&#34;) // AbcafafaaFAs exchangePos(str) fmt.Println(string(str)) } func exchangePos(str []rune) { // i 找非大写字母 j 找大写字母 如果 i ！= j 交换 length := len(str) i, j := 0, 0 for i &lt; length &amp;&amp; j &lt; length { if isUper(str[j]) { //&amp;&amp; !isUper(rune(str[i])) if i != j { str[i], str[j] = str[j], str[i] i&#43;&#43; } } if isUper(str[i]) { i&#43;&#43; } j&#43;&#43; } // i 从上一次结束为止开始，找 数字， j 找小写字母 如果 i ！= j 交换 j = i //fmt.Println(string(str), i, j) for i &lt; length &amp;&amp; j &lt; length { if isLower(str[j]) { //&amp;&amp; !isUper(rune(str[i])) if i != j { str[i], str[j] = str[j], str[i] i&#43;&#43; } } if isLower(str[i]) { i&#43;&#43; } j&#43;&#43; } return } func isUper(s rune) bool { return unicode.IsUpper(s) } func isLower(s rune) bool { return unicode.IsLower(s) } 测试用例 package test3 import ( &#34;testing&#34; ) func TestExchangePos(t *testing.T) { cases := []struct { input string expected string }{ // 基础情况 {&#34;&#34;, &#34;&#34;}, {&#34;A&#34;, &#34;A&#34;}, {&#34;a&#34;, &#34;a&#34;}, {&#34;1&#34;, &#34;1&#34;}, // 已经有序 {&#34;ABCabc123&#34;, &#34;ABCabc123&#34;}, // 完全逆序 {&#34;123cbaCBA&#34;, &#34;CBAcba123&#34;}, // 混合 {&#34;aA1&#34;, &#34;Aa1&#34;}, {&#34;1aA&#34;, &#34;Aa1&#34;}, {&#34;Aa1Bb2Cc3&#34;, &#34;ABCabc123&#34;}, // 两类字符 {&#34;abc123&#34;, &#34;abc123&#34;}, {&#34;ABC123&#34;, &#34;ABC123&#34;}, {&#34;ABCabc&#34;, &#34;ABCabc&#34;}, // 全部同类 {&#34;ABCDEF&#34;, &#34;ABCDEF&#34;}, {&#34;abcdef&#34;, &#34;abcdef&#34;}, {&#34;123456&#34;, &#34;123456&#34;}, // 随机混乱 {&#34;Zy9Xx8Ww7&#34;, &#34;ZXWyxw987&#34;}, {&#34;mN1oO2pP3&#34;, &#34;NOPomp213&#34;}, // 边界 {&#34;A1a&#34;, &#34;Aa1&#34;}, {&#34;1A1aA1&#34;, &#34;AAa111&#34;}, {&#34;zZ9zZ9&#34;, &#34;ZZzz99&#34;}, // 重复模式 / 长度较大 {&#34;Aa1Aa1Aa1Aa1&#34;, &#34;AAAAaaaa1111&#34;}, {&#34;987ZYXcba654&#34;, &#34;ZYXcba987654&#34;}, } for _, c := range cases { runes := []rune(c.input) exchangePos(runes) got := string(runes) if got != c.expected { t.Errorf(&#34;exchangePos(%q) = %q; expected %q&#34;, c.input, got, c.expected) } } } </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-09-06 12:47:17 +0800 CST'>September 6, 2025</span>&nbsp;·&nbsp;2 min</footer>
-  <a class="entry-link" aria-label="post link to Str_百度真题原地置换大小写" href="http://localhost:1313/posts/datastructalgorithm/str_%E7%99%BE%E5%BA%A6%E7%9C%9F%E9%A2%98%E5%8E%9F%E5%9C%B0%E7%BD%AE%E6%8D%A2%E5%A4%A7%E5%B0%8F%E5%86%99/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

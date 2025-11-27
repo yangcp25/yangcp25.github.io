@@ -131,6 +131,18 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">算法模板思路总结
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p> 序号 问题 对应模板 关键字提示 ① 是否是“求区间”？ 前缀和 / 差分 区间和、子数组和、多次加法、update 区间 ② 是否在求最短步数？ BFS 最少多少步、最短时间、同时扩散、找最短路径（无权图） ③ 是否有权重？ Dijkstra 每条边有代价、最小代价、带权最短路径 ④ 是否要所有结果？ 回溯 所有排列、所有组合、所有子集、选择/不选择 ⑤ 是否判断能否满足条件？ 二分 &#43; check 最小值使条件成立、最大值使条件成立、单调性 ⑥ 图结构但不是最短路 DFS 岛屿数量、连通块、树路径和 ⑦ 是否是连通性判断？ 并查集 判断是否联通、合并集合、找代表元素 ⑧ 是否需要维护递增/递减？ 单调栈 下一个更大元素、每日温度、接雨水 ⑨ 是否是一维 DP？ DP 最大子序和、打家劫舍、背包 ⑩ 是否是字符串匹配？ KMP / Trie 多次查找字符串、大文本匹配模式串、多词查找 </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-27 23:49:37 +0800 CST'>November 27, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 算法模板思路总结" href="http://localhost:1313/posts/go/%E7%AE%97%E6%B3%95%E6%A8%A1%E6%9D%BF%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">高级算法模板
     </h2>
   </header>
@@ -272,23 +284,6 @@ package main import &#34;fmt&#34; func appendMaybe(s []int) []int { s = append(s
   </div>
   <footer class="entry-footer"><span title='2025-10-22 17:18:39 +0800 CST'>October 22, 2025</span>&nbsp;·&nbsp;2 min</footer>
   <a class="entry-link" aria-label="post link to 限流熔断降级" href="http://localhost:1313/posts/microservice/%E9%99%90%E6%B5%81%E7%86%94%E6%96%AD%E9%99%8D%E7%BA%A7/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Init
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>✅ 一、init() 是什么 init() 是 Go 的特殊函数，用于在包被加载时自动执行初始化逻辑。 它不需要显式调用，也不能被其他代码调用。
-✅ 二、init() 的基本特性 特性 说明 触发时机 在包被第一次导入时自动执行（只执行一次） 调用方式 Go runtime 自动调用，不能手动调用 参数 无参数 返回值 无返回值 作用范围 每个包可以定义多个 init() 函数 执行顺序 按照导入依赖关系和源码出现顺序执行 ✅ 三、最基本的例子 package main import &#34;fmt&#34; func init() { fmt.Println(&#34;init() called&#34;) } func main() { fmt.Println(&#34;main() called&#34;) } 输出：
-init() called main() called ✅ init() 总是在 main() 之前执行。
-✅ 四、包初始化顺序（重点） Go 程序启动时会按如下顺序执行：
-导入依赖包 初始化依赖包的常量和变量 执行依赖包的 init() 函数 执行当前包的常量、变量初始化 执行当前包的 init() 函数 执行 main.main() 示例： // file: a.go package a import &#34;fmt&#34; var V = initVar() func initVar() int { fmt.Println(&#34;a.initVar()&#34;) return 42 } func init() { fmt.Println(&#34;a.init()&#34;) } // file: main.go package main import ( &#34;fmt&#34; &#34;example/a&#34; ) func init() { fmt.Println(&#34;main.init()&#34;) } func main() { fmt.Println(&#34;main.main()&#34;, a.V) } 输出：
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-10-22 09:59:13 +0800 CST'>October 22, 2025</span>&nbsp;·&nbsp;2 min</footer>
-  <a class="entry-link" aria-label="post link to Init" href="http://localhost:1313/posts/go/init/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">
