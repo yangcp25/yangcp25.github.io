@@ -128,6 +128,18 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Dp
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>dp 通用解题方法 1. dp[?] 表示什么？ 2. dp[?] 从哪几个 dp[?] 来？ 3. dp 最小值怎么开始？ 4. dp 是正着算还是倒着算？ </p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-22 20:05:32 +0800 CST'>January 22, 2026</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Dp" href="http://localhost:1313/posts/datastructalgorithm/dp/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">算法模板思路总结
     </h2>
   </header>
@@ -259,21 +271,6 @@ SELECT teacher_id, COUNT(*) AS student_count FROM student GROUP BY teacher_id HA
   <footer class="entry-footer"><span title='2025-10-22 22:38:03 +0800 CST'>October 22, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to Go 场景题模版" href="http://localhost:1313/posts/scenario/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%A8%A1%E7%89%88/"></a>
 </article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Go 场景题模版 — 答案版
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p> 🟢 初级场景题（语言特性与陷阱） 1. 切片在函数参数传递时，什么时候会影响外部数据？ 思路： 切片是三元组（指针、len、cap）。传参时会拷贝这三项，但底层数组仍然共享。只有当 append 导致扩容（新的底层数组分配）或修改通过索引直接写入时，外部可见。
-直接 s[i] = x 会影响外部； s = append(s, x) 当 cap 不足时会分配新数组，外部不会看到新元素。 示例代码：
-package main import &#34;fmt&#34; func appendMaybe(s []int) []int { s = append(s, 100) // 若 cap 不足，这里会分配新底层数组 return s } func modify(s []int) { if len(s) &gt; 0 { s[0] = 999 // 修改共享底层数组 } } func main() { a := make([]int, 1, 1) a[0] = 1 b := appendMaybe(a) fmt.Println(&#34;a:&#34;, a) // 如果扩容发生，a 不包含 100 fmt.Println(&#34;b:&#34;, b) c := make([]int, 1, 2) c[0] = 1 d := appendMaybe(c) fmt.Println(&#34;c:&#34;, c) // cap 足够，c 会看到 append 的结果 (如果 append reuses) fmt.Println(&#34;d:&#34;, d) modify(a) fmt.Println(&#34;a after modify:&#34;, a) // 被修改 } 2. for range vs for i := 0; i &lt; len(slice); i&#43;&#43; 思路： for range 会在每次迭代时把元素拷贝到新的变量（v），因此直接修改 v 不会影响切片。索引访问 slice[i] 直接访问底层数组可以修改原值。性能上两者差异很小，除非元素为大结构体，range 会拷贝整个结构体。
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-10-22 22:38:00 +0800 CST'>October 22, 2025</span>&nbsp;·&nbsp;15 min</footer>
-  <a class="entry-link" aria-label="post link to Go 场景题模版 — 答案版" href="http://localhost:1313/posts/scenario/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%A8%A1%E7%89%88-%E7%AD%94%E6%A1%88/"></a>
-</article>
 <footer class="page-footer">
   <nav class="pagination">
     <a class="next" href="http://localhost:1313/page/2/">Next&nbsp;&nbsp;»
@@ -283,7 +280,7 @@ package main import &#34;fmt&#34; func appendMaybe(s []int) []int { s = append(s
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">yangcp</a></span> · 
+        <span>&copy; 2026 <a href="http://localhost:1313/">yangcp</a></span> · 
 
     <span>
         Powered by

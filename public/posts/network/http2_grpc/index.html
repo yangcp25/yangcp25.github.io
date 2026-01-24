@@ -35,27 +35,40 @@ rpc
 rpc是远程过程调用，是一种在不同进程或组件上让函数调用如同本地调用一样的技术。有多种实现，比如json-rpc,xrpc(基于xml),gprc
 google推出，基于protobuf,通过IDL(接口定义)定义同义的方法和参数，使用代码生成工具生成不同语言的代码。
 grpc也是基于http2,所以他可以利用http2的各种特性，他有google推出，采用protobuf传输。
+Protobuf 是一种跨语言的、结构化数据的二进制序列化协议
 他有以下特点：
 
 基于IDL生成，接口及定义，可以生成多语言，被客户端和服务端共用。
 数据传输效率高，基于http2,拥有双向传输、tcp多路复用、二进制数据帧传输、流量控制等特性
 常见于微服务当中，可以方便的定义中间件，进行限流、降级等特性
 
-浏览器一次完整的请求过程
+完整 RPC 框架至少要干这些事：
 
-服务器会启动进程监听某个端口，当端口监听到请求，进行处理
-通过DNS解析域名拿到目标IP,依次通过浏览器、本地缓存查询，没有就往根dns服务器查询。
-如果是http协议需要先通过ssl建立安全通道。
-建立TCP连接，通过五元组：协议 ip 端口 目标IP 目标端口 进行三次握手，握手完成后开始发送数据
-数据进行封装,数据从应用层（报文）-&gt;传输层（报文&#43;端口号）-&gt;网络IP层（数据段&#43;IP）-&gt;数据链路层(数据包&#43;mac主机物理地址-&gt;数据帧)-&gt;物理层(二进制流)这个层次依次进行传输
-通过网络层找到目的主机，通过端口号找到主机监听目的端口的程序。应用程序处理请求。
-服务器处理响应，完成后，返回给客户端
-断开连接、4次挥手，最后一次等待服务器发送完毕数据
+方法发现
+我要调的是哪个服务？哪个方法？
+参数序列化 / 反序列化
+网络传输
+错误模型
+超时、重试、返回码
+连接管理
+长连接？池化？
+并发模型
+流式调用（可选）
 
-参考资料
+HTTP和 gRPC 的区别在于：
 
-https://blog.csdn.net/u012914309/article/details/127507726?spm=1001.2014.3001.5501
-">
+HTTP &#43; JSON 的本质是：
+“约定好的接口 &#43; 字符串传输”
+gRPC 的本质是：
+“强约束的接口 &#43; 代码级调用”
+
+总结
+RPC是一种编程模型、抽象思想，RPC框架是这种编程模型、抽象思想的一种实现。grpc是rpc的一种go语言版本的实现。
+grpc框架提供了服务发现与注册、网络传输、编解码数据、错误机制（超时、重试、错误码定义等）、连接管理、并发模型等功能，让不同服务之间的调用就像调用
+一个包的函数里面调用一样。
+protobuf负责数据的编码与解码。通过编写proto文件IDL强约束接口，定义方法和字段，并通过工具可以生成不同语言的代码，protobuf支持多种语言的生成。
+通过小数据用小字段，大数据用大字段，对数据进行编号，采用Varint对大部分字段进行编码，传输过程根据编号进行二进制传输，减少了数据传输的大小。传输格式为
+Key(field_number &#43; wire_type) &#43; Value， key的低3位表示 value的编码格式。 value 采用 0 &#43; 7的格式，最高位表示后续是否还有数据。">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/posts/network/http2_grpc/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
@@ -207,7 +220,9 @@ https://blog.csdn.net/u012914309/article/details/127507726?spm=1001.2014.3001.55
                     <a href="#grpc" aria-label="grpc">grpc</a><ul>
                         
                 <li>
-                    <a href="#rpc" aria-label="rpc">rpc</a></li></ul>
+                    <a href="#rpc" aria-label="rpc">rpc</a></li>
+                <li>
+                    <a href="#%e6%80%bb%e7%bb%93" aria-label="总结">总结</a></li></ul>
                 </li>
                 <li>
                     <a href="#%e6%b5%8f%e8%a7%88%e5%99%a8%e4%b8%80%e6%ac%a1%e5%ae%8c%e6%95%b4%e7%9a%84%e8%af%b7%e6%b1%82%e8%bf%87%e7%a8%8b" aria-label="浏览器一次完整的请求过程">浏览器一次完整的请求过程</a></li>
@@ -247,12 +262,41 @@ https://blog.csdn.net/u012914309/article/details/127507726?spm=1001.2014.3001.55
 <p>rpc是远程过程调用，是一种在不同进程或组件上让函数调用如同本地调用一样的技术。有多种实现，比如json-rpc,xrpc(基于xml),gprc
 google推出，基于protobuf,通过IDL(接口定义)定义同义的方法和参数，使用代码生成工具生成不同语言的代码。</p>
 <p>grpc也是基于http2,所以他可以利用http2的各种特性，他有google推出，采用protobuf传输。</p>
+<p>Protobuf 是一种跨语言的、结构化数据的二进制序列化协议</p>
 <p>他有以下特点：</p>
 <ul>
 <li>基于IDL生成，接口及定义，可以生成多语言，被客户端和服务端共用。</li>
 <li>数据传输效率高，基于http2,拥有双向传输、tcp多路复用、二进制数据帧传输、流量控制等特性</li>
 <li>常见于微服务当中，可以方便的定义中间件，进行限流、降级等特性</li>
 </ul>
+<p>完整 RPC 框架至少要干这些事：</p>
+<ul>
+<li>方法发现</li>
+<li>我要调的是哪个服务？哪个方法？</li>
+<li>参数序列化 / 反序列化</li>
+<li>网络传输</li>
+<li>错误模型</li>
+<li>超时、重试、返回码</li>
+<li>连接管理</li>
+<li>长连接？池化？</li>
+<li>并发模型</li>
+<li>流式调用（可选）</li>
+</ul>
+<p>HTTP和 gRPC 的区别在于：</p>
+<ul>
+<li>HTTP + JSON 的本质是：
+“约定好的接口 + 字符串传输”
+gRPC 的本质是：</li>
+<li>“强约束的接口 + 代码级调用”</li>
+</ul>
+<h4 id="总结">总结<a hidden class="anchor" aria-hidden="true" href="#总结">#</a></h4>
+<p>RPC是一种编程模型、抽象思想，RPC框架是这种编程模型、抽象思想的一种实现。grpc是rpc的一种go语言版本的实现。
+grpc框架提供了服务发现与注册、网络传输、编解码数据、错误机制（超时、重试、错误码定义等）、连接管理、并发模型等功能，让不同服务之间的调用就像调用
+一个包的函数里面调用一样。</p>
+<p>protobuf负责数据的编码与解码。通过编写proto文件IDL强约束接口，定义方法和字段，并通过工具可以生成不同语言的代码，protobuf支持多种语言的生成。
+通过小数据用小字段，大数据用大字段，对数据进行编号，采用Varint对大部分字段进行编码，传输过程根据编号进行二进制传输，减少了数据传输的大小。传输格式为
+Key(field_number + wire_type) + Value， key的低3位表示 value的编码格式。 value 采用 0 + 7的格式，最高位表示后续是否还有数据。</p>
+<p>grpc通过http2传输，所以具有http2的有点：高效的可靠性传输二进制传输、流量控制、拥塞控制；压缩头部；双向传输；多路复用；自定义加载顺序等特性。</p>
 <h3 id="浏览器一次完整的请求过程">浏览器一次完整的请求过程<a hidden class="anchor" aria-hidden="true" href="#浏览器一次完整的请求过程">#</a></h3>
 <ul>
 <li>服务器会启动进程监听某个端口，当端口监听到请求，进行处理</li>
@@ -281,10 +325,10 @@ google推出，基于protobuf,通过IDL(接口定义)定义同义的方法和参
     <br>
     <span>Map</span>
   </a>
-  <a class="next" href="http://localhost:1313/posts/architecture/cap/">
+  <a class="next" href="http://localhost:1313/posts/architecture/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">
     <span class="title">Next »</span>
     <br>
-    <span>CAP</span>
+    <span>分布式锁</span>
   </a>
 </nav>
 
@@ -301,7 +345,7 @@ google推出，基于protobuf,通过IDL(接口定义)定义同义的方法和参
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">yangcp</a></span> · 
+        <span>&copy; 2026 <a href="http://localhost:1313/">yangcp</a></span> · 
 
     <span>
         Powered by

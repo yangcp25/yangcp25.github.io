@@ -128,6 +128,22 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">ddd领域驱动设计
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>什么是DDD? DDD是domain design driver 的简称，根本的目的是为了解决软件的复杂性的一种设计思想。传统的MVC等代码、软件架构是面向程序员工程师的，而 产品经理更多只是需求产品设计，这导致软件架构和实际的业务脱离，当业务变得复杂，软件复杂性提高之后，后续的维护升级重构会遭遇重重困难。
+关键概念 充血模型and贫血模型 贫血模型是为了引出充血模型这一概念。贫血模型是指我们通常的数据库映射只有属性，而没有表现出具体的业务属性，也就是没有 引起映射数据变化的方法，就看不出来这个映射具体的业务，DDD的建议是把能引发变化的方法都写到这个变化内，这样别人一看就知道这个 实体具体包含了哪些业务属性。
+聚合根 防腐层 我的理解 整个DDD架构里面遵循了设计原则的最佳实践，比如高内聚低耦合这个大的思想，以及一些设计原则
+单一职责,一个方法、类、模块只干一件事情 开放封闭，对扩展开放，对修改封闭 依赖倒置，依赖于接口而不是具体实现。 接口隔离，接口小而精，不是胖而杂 里氏替换，对继承的补充，一个子类要能够完全替换父类，也就是要遵循父类的约定，这样少破坏原有的约定。 迪米洛法则（最少知识原则），不要跨多个对象调用方法，不需要知道跨对象的内部细节，只调用最新的朋友节点 战术构件和战略构件 DDD是一套架构思想方法论，它为代码层面和架构层面都提供了对应的构件帮我我们设计构架。
+战术构件（代码层面） 实体 值对象 根/聚合根 repository domain 工厂 事件 战略构件（架构层面） 界限上下文（模块） 通用语言（业务和技术用同一种专业术语沟通，防止鸡同鸭讲） 上下文映射（模块之间如何关联） 实际架构示例 ┌──────────────────────────────────────────────┐ │ 战略构件 (Strategic) │ │----------------------------------------------│ │ 限界上下文 (Bounded Contexts) │ │ ├── 用户上下文 (User Context) │ │ ├── 订单上下文 (Order Context) │ │ ├── 商品上下文 (Product Context) │ │ └── 支付上下文 (Payment Context) │ │ │ │ 上下文映射 (Context Map) │ │ ├── 上下游 (Upstream/Downstream) │ │ ├── 防腐层 (ACL) │ │ ├── 合作伙伴 (Partnership) │ │ └── 开放主机服务 (OHS) │ │ │ │ 通用语言 (Ubiquitous Language) │ │ └── &#34;订单&#34;、&#34;支付单&#34;、&#34;退款单&#34; │ └──────────────────────────────────────────────┘ │ ▼ ┌──────────────────────────────────────────────┐ │ 战术构件 (Tactical) │ │----------------------------------------------│ │ 接口层 (Interface Layer) │ │ └── Kratos Handler (HTTP/gRPC 接口) │ │ │ │ 应用层 (Application Layer) │ │ └── 应用服务 (Application Service) │ │ → OrderUsecase │ │ │ │ 领域层 (Domain Layer) │ │ ├── 实体 (Entity) &amp; 聚合根 (AggregateRoot) │ │ │ → Order, OrderItem │ │ ├── 值对象 (Value Object) │ │ │ → Money, Address │ │ ├── 领域服务 (Domain Service) │ │ │ → PaymentService │ │ ├── 工厂 (Factory) │ │ │ → NewOrder │ │ ├── 领域事件 (Domain Event) │ │ │ → OrderPaidEvent │ │ └── 仓储接口 (Repository Interface) │ │ │ │ 基础设施层 (Infrastructure Layer) │ │ └── 仓储实现 (Repository Impl, GORM) │ │ → orderRepo (MySQL) │ └──────────────────────────────────────────────┘ kratos 和DDD 架构对照 Kratos 层级 DDD 层级 作用 service/ Interface / Adapter gRPC/HTTP Handler，参数验证/响应封装，调用 UseCase biz/ Domain &#43; Application 业务逻辑和领域规则处理，UseCase（业务服务），纯业务计算 data/ Infrastructure 数据库、缓存、第三方 SDK 封装，实现 Repository 接口，提供外部依赖能力 pkg/ Infrastructure（共享组件） 可复用 SDK 封装、工具函数、通用库，跨服务共享 参考资料 美团 领域驱动设计在互联网业务开发中的实践 </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-08 09:50:22 +0800 CST'>August 8, 2025</span>&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to ddd领域驱动设计" href="http://localhost:1313/posts/design_pattern/ddd/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">初始化方法比较
     </h2>
   </header>
@@ -221,11 +237,29 @@ go为什么采用三色标记法 go采用tcmalloc所以对内存碎片优化的�
 对数据进行二进制分帧，基于流传输提高了传输效率，还可以进行流量控制，提升安全性和可靠性 对头数据进行了压缩，采用hpack算法对数据进行压缩，提升了传输效率 采用多路复用，每个tcp连接可以发起任意多的传输请求，减少了tcp的三次握手等频繁建立请求 可以实现服务端推送，从单向传输改为双向传输 可以根据页面不同资源的重要程度设置优先级进行加载 通过以上五个方面http2对h1进行了升级，提高了传输效率，增加更多实现的功能，提升了客户端用户体验。 如何使用 反向代理软件如nginx/apache等设置http2选项 如nginx,首先必须支持ssl/tsl证书，再加上listen 443 ssl http2
 go的net组件自动支持http2,无需手动升级 grpc rpc rpc是远程过程调用，是一种在不同进程或组件上让函数调用如同本地调用一样的技术。有多种实现，比如json-rpc,xrpc(基于xml),gprc google推出，基于protobuf,通过IDL(接口定义)定义同义的方法和参数，使用代码生成工具生成不同语言的代码。
 grpc也是基于http2,所以他可以利用http2的各种特性，他有google推出，采用protobuf传输。
+Protobuf 是一种跨语言的、结构化数据的二进制序列化协议
 他有以下特点：
-基于IDL生成，接口及定义，可以生成多语言，被客户端和服务端共用。 数据传输效率高，基于http2,拥有双向传输、tcp多路复用、二进制数据帧传输、流量控制等特性 常见于微服务当中，可以方便的定义中间件，进行限流、降级等特性 浏览器一次完整的请求过程 服务器会启动进程监听某个端口，当端口监听到请求，进行处理 通过DNS解析域名拿到目标IP,依次通过浏览器、本地缓存查询，没有就往根dns服务器查询。 如果是http协议需要先通过ssl建立安全通道。 建立TCP连接，通过五元组：协议 ip 端口 目标IP 目标端口 进行三次握手，握手完成后开始发送数据 数据进行封装,数据从应用层（报文）-&gt;传输层（报文&#43;端口号）-&gt;网络IP层（数据段&#43;IP）-&gt;数据链路层(数据包&#43;mac主机物理地址-&gt;数据帧)-&gt;物理层(二进制流)这个层次依次进行传输 通过网络层找到目的主机，通过端口号找到主机监听目的端口的程序。应用程序处理请求。 服务器处理响应，完成后，返回给客户端 断开连接、4次挥手，最后一次等待服务器发送完毕数据 参考资料 https://blog.csdn.net/u012914309/article/details/127507726?spm=1001.2014.3001.5501 </p>
+基于IDL生成，接口及定义，可以生成多语言，被客户端和服务端共用。 数据传输效率高，基于http2,拥有双向传输、tcp多路复用、二进制数据帧传输、流量控制等特性 常见于微服务当中，可以方便的定义中间件，进行限流、降级等特性 完整 RPC 框架至少要干这些事：
+方法发现 我要调的是哪个服务？哪个方法？ 参数序列化 / 反序列化 网络传输 错误模型 超时、重试、返回码 连接管理 长连接？池化？ 并发模型 流式调用（可选） HTTP和 gRPC 的区别在于：
+HTTP &#43; JSON 的本质是： “约定好的接口 &#43; 字符串传输” gRPC 的本质是： “强约束的接口 &#43; 代码级调用” 总结 RPC是一种编程模型、抽象思想，RPC框架是这种编程模型、抽象思想的一种实现。grpc是rpc的一种go语言版本的实现。 grpc框架提供了服务发现与注册、网络传输、编解码数据、错误机制（超时、重试、错误码定义等）、连接管理、并发模型等功能，让不同服务之间的调用就像调用 一个包的函数里面调用一样。
+protobuf负责数据的编码与解码。通过编写proto文件IDL强约束接口，定义方法和字段，并通过工具可以生成不同语言的代码，protobuf支持多种语言的生成。 通过小数据用小字段，大数据用大字段，对数据进行编号，采用Varint对大部分字段进行编码，传输过程根据编号进行二进制传输，减少了数据传输的大小。传输格式为 Key(field_number &#43; wire_type) &#43; Value， key的低3位表示 value的编码格式。 value 采用 0 &#43; 7的格式，最高位表示后续是否还有数据。
+...</p>
   </div>
   <footer class="entry-footer"><span title='2025-07-23 22:28:18 +0800 CST'>July 23, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to Http2_grpc" href="http://localhost:1313/posts/network/http2_grpc/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">分布式锁
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>分布式锁 定义 分布式锁是用于并发控制的手段，他需要满足以下几点：
+高性能、互斥。redis单线程，结合基于事件回调的IO模型，在处理并发时具有高性能。内置nx命令，只有当key不存在是才返回成功。满足互斥性。 避免死锁。如果持锁的线程挂掉，从而无法正常释放锁，就会造成死锁。可以给锁设置过期时间，比如nx命令传入ttl。 正确释放锁。因为设置了过期时间，所以会导致2个问题 如果a执行时间过长，ttl自动释放，这时b正常拿锁，之后a执行完成，如果直接释放锁，就把b的锁释放掉了。解决办法是在加锁的时候 生成唯一ID,在解锁的时候进行判断，相同才删除。也就是说只有持锁的才能删除。 删除操作是2个命令，第一个是get,第二个是删除，注意需要保证原子性，因为get的时候并发，a get到锁之后ttl过期，b拿锁，a再释放，就出问题了。需要用lua脚本保证原子性。 续期机制。如果持锁的线程执行时间过长超过了ttl设置的时间，就需要能够自动续期。我们可以采用看门狗机制，启动一个线程，轮训key的剩余过期时间， 比如到了3/2的过期时间，自动续期。 可重入，可重入是指同一个进程或者线程多次加锁要能获锁成功。这种可以为同一线程生成req_id，并且进行计数，当计算为0时对锁进行释放 分布式下部署下的分布式锁。上面五点基本可以保证单机状态下分布式锁的可靠性。但是单机系统的可用性比较低。如果采用分布式锁需要注意几个问题。 redis的哨兵Sentinel 和 cluster 模式下，不适合做分布式锁。 哨兵模式可能主从延迟、主备切换，比如主节点写入后还没来得及同步就挂掉，从节点成为主节点，锁丢失。 分布式下不允许多key操作，需要视同tag标签将锁落入同一个slot。其次也会发生哨兵模式的主从延迟、主备切换问题 高可以架构可以用redLock或者zookeeper、etcd实现 redLock就是采用多个独立的redis,采用多数派写入保证数据的一致性。 zookeeper可以在某个目录下建立节点，节点最新获取成功，并删除节点。否则循环或者守护进程监听最近的节点，当发生变化，在判断自己是不是最小的 节点 使用 使用场景 使用方法 注意事项 参考资料 美团技术团队. 分布式锁. google. 最后修订于2016年09月29日. 访问于2025年7月20日. 掘金. 分布式锁 </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-07-18 09:29:04 +0800 CST'>July 18, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 分布式锁" href="http://localhost:1313/posts/architecture/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -273,45 +307,6 @@ package main import ( &#34;fmt&#34; &#34;os&#34; &#34;syscall&#34; ) func check(
   <footer class="entry-footer"><span title='2025-07-12 14:44:10 +0800 CST'>July 12, 2025</span>&nbsp;·&nbsp;3 min</footer>
   <a class="entry-link" aria-label="post link to Socket" href="http://localhost:1313/posts/network/socket/"></a>
 </article>
-
-<article class="post-entry"> 
-<figure class="entry-cover">
-        <img loading="lazy" src="http://localhost:1313/images/img_2.png" alt="">
-</figure>
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">BFS&amp;&amp;DFS
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>树的遍历 深度优先遍历DFS package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, } root.Left = &amp;TreeNode{Val: 2} root.Right = &amp;TreeNode{Val: 3} root.Right.Left = &amp;TreeNode{Val: 4} root.Left.Left = &amp;TreeNode{Val: 5} list := make([]int, 0) var treeDFS = func(root *TreeNode) {} treeDFS = func(root *TreeNode) { if root == nil { return } list = append(list, root.Val) treeDFS(root.Left) treeDFS(root.Right) } treeDFS(root) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 函数版本
-package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, } root.Left = &amp;TreeNode{Val: 2} root.Right = &amp;TreeNode{Val: 3} root.Right.Left = &amp;TreeNode{Val: 4} root.Left.Left = &amp;TreeNode{Val: 5} list := make([]int, 0) TreeDFS(root, &amp;list) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } func TreeDFS(root *TreeNode, list *[]int) { if root == nil { return } *list = append(*list, root.Val) TreeDFS(root.Left, list) TreeDFS(root.Right, list) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 广度优先遍历BFS list2 := make([]int, 0) queue := make([]*TreeNode, 0) queue = append(queue, root) for len(queue) &gt; 0 { count := len(queue) for i := 0; i &lt; count; i&#43;&#43; { node := queue[0] queue = queue[1:] list2 = append(list2, node.Val) if node.Left != nil { queue = append(queue, node.Left) } if node.Right != nil { queue = append(queue, node.Right) } } } fmt.Println(list2) 根据先序遍历和中序遍历构造二叉树 package main import &#34;fmt&#34; func main() { // 1 // [1 2 5 3 4] 先序 // [2 5 1 3 4] 中序 // 1 [2 5] [2 5] i = 2 [3 4] // [2 5 3 4] [2 5] // [5 3 4] [5] copyTreeRoot := BuildTree([]int{1, 2, 5, 3, 4}, []int{2, 5, 1, 3, 4}) fmt.Println(copyTreeRoot) list3 := make([]int, 0) TreeDFS(copyTreeRoot, &amp;list3) fmt.Println(&#34;list3:&#34;, list3) //SliceTest() } func BuildTree(first []int, mid []int) *TreeNode { if len(first) == 0 { return nil } root := &amp;TreeNode{Val: first[0]} node := first[0] i := 0 for ; i &lt; len(mid); i&#43;&#43; { if mid[i] == node { break } } root.Left = BuildTree(first[1:i&#43;1], mid[:i]) root.Right = BuildTree(first[i&#43;1:], mid[i&#43;1:]) return root } 图的遍历 深度优先遍历DFS &amp;&amp; 广度优先遍历BFS package main import ( &#34;container/list&#34; &#34;fmt&#34; ) func main() { // 0 // 1 -&gt; 4 -&gt; 5 // 0 2 -&gt; 6 -&gt; 7 // 3 -&gt;^ g := make([][]int, 8) //g = append(g, []int{1, 2, 3} g[0] = []int{1, 2, 3} g[1] = []int{4} g[2] = []int{6} g[3] = []int{6} g[4] = []int{5} g[6] = []int{7} g2 := make(map[int][]int) g2[0] = []int{1, 2, 3} g2[1] = []int{4} g2[2] = []int{6} g2[3] = []int{6} g2[4] = []int{5} g2[6] = []int{7} graphDFS(0, g) //graphBFS(g) fmt.Println(&#34;-----&#34;) graphBFSWithQueue(g2) fmt.Println(&#34;-----&#34;) listC := graphBFSWithC(g2) fmt.Println(listC) } func graphDFS(root int, graph [][]int) { fmt.Println(root) if graph[root] == nil { return } //fmt.Println(root) for i := 0; i &lt; len(graph[root]); i&#43;&#43; { graphDFS(graph[root][i], graph) } return } func graphBFSWithQueue(graph map[int][]int) { queue := make([]int, 0) queue = append(queue, 0) fmt.Println(0) visited := make(map[int]bool) for len(queue) &gt; 0 { node := queue[0] queue = queue[1:] g := graph[node] size := len(g) for i := 0; i &lt; size; i&#43;&#43; { if visited[g[i]] { continue } else { fmt.Println(g[i]) queue = append(queue, g[i]) visited[g[i]] = true } } } } func graphBFSWithC(graph map[int][]int) []int { queue := list.New() order := make([]int, 0) visited := make(map[int]bool) queue.PushBack(0) for queue.Len() &gt; 0 { node := queue.Remove(queue.Front()).(int) order = append(order, node) neighbor := graph[node] size := len(neighbor) for i := 0; i &lt; size; i&#43;&#43; { if visited[neighbor[i]] { continue } else { queue.PushBack(neighbor[i]) visited[neighbor[i]] = true } } } return order } 带权图的最短路径算法 dijkstra 参考 可视化网站. 可视化网站. </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-09 09:20:50 +0800 CST'>July 9, 2025</span>&nbsp;·&nbsp;3 min</footer>
-  <a class="entry-link" aria-label="post link to BFS&&DFS" href="http://localhost:1313/posts/datastructalgorithm/bfs_dfs/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">https原理
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>定义 http http是超文本传输协议，用于传输网页内容，它基于TCP，所以是可靠性传输。但是它没有解决数据安全性 方面的问题
-http安全方面的问题 http没有对数据进行加密，任何人都可以随意读取这些数据，遭成数据的泄密。 其次没有认证，也就是没有办法知道数据来源的可靠性，攻击者可以中间人攻击来伪造数据 数据完整性，任何人可以读取也可以修改数据 https是什么 https是http的安全版本，https基于ssl，ssl基于tls。http&#43;数据加密&#43;认证&#43;数据完整性就是https。
-https怎么解决的这些问题 数据加密 加密算法 加密算法分为对称加密和非对称加密，还有一些摘要算法 / 哈希算法，一下是一些常见的加密算法
-类型 示例 是否可逆 说明 对称加密 DES / AES / 3DES ✅ 加密解密用同一密钥 非对称加密 RSA / ECC ✅ 公钥加密，私钥解密 摘要算法 MD5 / SHA256 ❌ 不可逆，用于校验完整性 签名算法 DSA / RSA签名 ❌ 用私钥签名，公钥验签 服务器端生成密钥对，将公钥发送给客户端，客户端使用公钥加密对称加密使用的秘钥，发送给服务器端，服务器端使用私钥解密数据， 得到秘钥，后续通过这个秘钥对数据进行加密解密。
-CA CA（Certificate Authority）是证书颁发机构，它负责签发证书，并管理证书的颁发和吊销。
-为什么需要CA 客户端无法知晓拿到的公钥是由目标服务器颁发的，为了验证证书的合法性，防护中间人攻击，需要CA证书颁发机构签发证书。
-证书生成 首先，服务器管理员会向CA提起证书申请，CA会验证域名的所属权，做法通常是在域名解析加一个特定值。 验证通过后，CA会将服务器的公钥用自己的私钥进行签名，生成证书。并颁发给服务器管理员。
-证书验证过程 客户端发起连接请求，服务器会返回证书，客户端会验证证书的合法性，并获取证书的公钥。 浏览器会在发版的时候将各大CA机构的公钥预制在浏览器中，使用CA的公钥对服务器的证书进行解密，拿到解密的hash值。同时 使用同样的摘要算法对原始内容进行加密，用得到的摘要和解密的摘要对比，如果相等，说明证书是CA颁发的，也就证明 了证书的合法性和完整性。
-更加深入的了解https http是超文本传输协议，它会有以下几个问题：
-窃听风险，由于TCP传输过程中会经过路由器、主机等多个设备，存在被截获数据的风险，泄漏密码等机密信息 篡改风险，被截获的数据可能被恶意篡改，在交易等重要系统会产生非常大的破坏性 身份伪造，无法知晓我们访问的服务端是否是真实的 https通过以下几个方式解决上述问题
-机密性，通过对称加密算法保证 完整性，通过摘要算法保证（md5、sha256） 身份认证，通过CA(证书颁发机构) 为什么https采用了对策加密&#43;非对称加密&#43;CA? 只用对称加密不好解决密钥传输保存的问题，非对称加密由于加解密比较消耗资源，不适合对大量数据进行加解密。
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-08 09:35:24 +0800 CST'>July 8, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to https原理" href="http://localhost:1313/posts/network/https/"></a>
-</article>
 <footer class="page-footer">
   <nav class="pagination">
     <a class="prev" href="http://localhost:1313/page/4/">
@@ -324,7 +319,7 @@ CA CA（Certificate Authority）是证书颁发机构，它负责签发证书，
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">yangcp</a></span> · 
+        <span>&copy; 2026 <a href="http://localhost:1313/">yangcp</a></span> · 
 
     <span>
         Powered by

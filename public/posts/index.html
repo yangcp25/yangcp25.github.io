@@ -131,6 +131,18 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Dp
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>dp 通用解题方法 1. dp[?] 表示什么？ 2. dp[?] 从哪几个 dp[?] 来？ 3. dp 最小值怎么开始？ 4. dp 是正着算还是倒着算？ </p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-22 20:05:32 +0800 CST'>January 22, 2026</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Dp" href="http://localhost:1313/posts/datastructalgorithm/dp/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">算法模板思路总结
     </h2>
   </header>
@@ -265,26 +277,6 @@ package main import &#34;fmt&#34; func appendMaybe(s []int) []int { s = append(s
   <footer class="entry-footer"><span title='2025-10-22 22:38:00 +0800 CST'>October 22, 2025</span>&nbsp;·&nbsp;15 min</footer>
   <a class="entry-link" aria-label="post link to Go 场景题模版 — 答案版" href="http://localhost:1313/posts/scenario/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%A8%A1%E7%89%88-%E7%AD%94%E6%A1%88/"></a>
 </article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">限流熔断降级
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p> 「熔断、限流、降级」 它们都属于服务稳定性设计（Service Resilience）的一部分。
-下面我给你一个“面试官喜欢听”的回答框架，从概念 → 场景 → 实现 → 举例 四步讲清楚， 适合百度这种系统架构导向的岗位 👇
-🧩 一、三者区别和联系（高层答法） 一句话记忆：
-限流：控制请求量，不让系统被压垮。 熔断：发现下游挂了，别再请求它。 降级：资源紧张时，主动牺牲部分功能，保证核心可用。 面试开头可以这样讲：
-“在微服务架构下，我们通常通过限流、熔断、降级三种机制保障系统的稳定性。 三者的核心目标都是防止服务雪崩，只是介入的时机不同：
-限流在请求入口处防止流量打爆； 熔断在调用链中断开异常依赖； 降级则在系统压力大时主动丢弃非核心功能。” ⚙️ 二、限流（Rate Limiting） 📘 概念 限制系统单位时间内可处理的请求数。
-📍常见算法 固定窗口（Fixed Window） 滑动窗口（Sliding Window） 漏桶算法（Leaky Bucket） 令牌桶算法（Token Bucket）✅ 常用 令牌桶算法原理：系统按照固定速率生成令牌，请求只有拿到令牌才能执行，否则拒绝或排队。
-🛠️ 实现方式 单机限流：用 golang.org/x/time/rate（Go官方限流包） 分布式限流：用 Redis 实现（Lua脚本保证原子性） 网关层限流：在 API Gateway（如 Kong、Nginx、Kratos Gateway）配置规则 💬 举例 “比如我在上一个项目中，为防止短信接口被刷，我们在 Nginx 层按 IP &#43; URI 做限流，用令牌桶算法控制速率为 10 req/s，多余的直接返回 429 Too Many Requests。”
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-10-22 17:18:39 +0800 CST'>October 22, 2025</span>&nbsp;·&nbsp;2 min</footer>
-  <a class="entry-link" aria-label="post link to 限流熔断降级" href="http://localhost:1313/posts/microservice/%E9%99%90%E6%B5%81%E7%86%94%E6%96%AD%E9%99%8D%E7%BA%A7/"></a>
-</article>
 <footer class="page-footer">
   <nav class="pagination">
     <a class="next" href="http://localhost:1313/posts/page/2/">Next&nbsp;&nbsp;»
@@ -294,7 +286,7 @@ package main import &#34;fmt&#34; func appendMaybe(s []int) []int { s = append(s
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">yangcp</a></span> · 
+        <span>&copy; 2026 <a href="http://localhost:1313/">yangcp</a></span> · 
 
     <span>
         Powered by

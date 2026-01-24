@@ -128,6 +128,21 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Go 场景题模版 — 答案版
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p> 🟢 初级场景题（语言特性与陷阱） 1. 切片在函数参数传递时，什么时候会影响外部数据？ 思路： 切片是三元组（指针、len、cap）。传参时会拷贝这三项，但底层数组仍然共享。只有当 append 导致扩容（新的底层数组分配）或修改通过索引直接写入时，外部可见。
+直接 s[i] = x 会影响外部； s = append(s, x) 当 cap 不足时会分配新数组，外部不会看到新元素。 示例代码：
+package main import &#34;fmt&#34; func appendMaybe(s []int) []int { s = append(s, 100) // 若 cap 不足，这里会分配新底层数组 return s } func modify(s []int) { if len(s) &gt; 0 { s[0] = 999 // 修改共享底层数组 } } func main() { a := make([]int, 1, 1) a[0] = 1 b := appendMaybe(a) fmt.Println(&#34;a:&#34;, a) // 如果扩容发生，a 不包含 100 fmt.Println(&#34;b:&#34;, b) c := make([]int, 1, 2) c[0] = 1 d := appendMaybe(c) fmt.Println(&#34;c:&#34;, c) // cap 足够，c 会看到 append 的结果 (如果 append reuses) fmt.Println(&#34;d:&#34;, d) modify(a) fmt.Println(&#34;a after modify:&#34;, a) // 被修改 } 2. for range vs for i := 0; i &lt; len(slice); i&#43;&#43; 思路： for range 会在每次迭代时把元素拷贝到新的变量（v），因此直接修改 v 不会影响切片。索引访问 slice[i] 直接访问底层数组可以修改原值。性能上两者差异很小，除非元素为大结构体，range 会拷贝整个结构体。
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-10-22 22:38:00 +0800 CST'>October 22, 2025</span>&nbsp;·&nbsp;15 min</footer>
+  <a class="entry-link" aria-label="post link to Go 场景题模版 — 答案版" href="http://localhost:1313/posts/scenario/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%A8%A1%E7%89%88-%E7%AD%94%E6%A1%88/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">限流熔断降级
     </h2>
   </header>
@@ -264,20 +279,6 @@ dept_id (INT, Primary Key) - 部门 ID dept_name (VARCHAR) - 部门名称 模块
   <footer class="entry-footer"><span title='2025-10-15 21:52:36 +0800 CST'>October 15, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to 打卡计划表" href="http://localhost:1313/posts/datastructalgorithm/%E6%89%93%E5%8D%A1%E8%AE%A1%E5%88%92%E8%A1%A8/"></a>
 </article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">刷题方法
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>个人感悟和前言 刷了很多题（其实也不是很多，但却是每天坚持半小时坚持了一年多了）， 但是老是面试的时候做不出来，或者要花很长时间才能做出来。我都产生自我怀疑了，我觉得是时候换个方式了。 我问了gpt,它给了我很多建议，接下来我会按照下面的方式重新规划我的学习方法
-以下大多数参考了gpt
-具体的做法 核心目标 一、核心目标 用最少的题，建立最大迁移力。 熟练识别模板，能举一反三。 面试时 3 分钟内能讲清思路。 重点在模式识别 &#43; 模板迁移，不追数量。 二、15 道最值得复盘的模板题 类别 LeetCode题目 核心模板 可迁移方向 双指针 15. 三数之和 排序 &#43; 去重 &#43; 左右夹逼 k数之和 / 差值最接近 / 删除一个字符变回文 双指针 11. 盛最多水的容器 左右夹逼取最大面积 股票买卖、最优区间类问题 滑动窗口 3. 无重复字符的最长子串 扩展窗口 &#43; 收缩窗口 最小覆盖子串、最长K个不同字符子串 哈希 1. 两数之和 哈希反查 三数之和、四数之和、路径求和 栈 20. 有效的括号 栈匹配 HTML标签验证、栈逆序 单调栈 739. 每日温度 单调递减栈 下一个更大元素、柱状图最大矩形 链表 206. 反转链表 指针前后反转 k组反转、回文链表检测 链表 141. 环形链表 快慢指针 相交链表检测、寻找环入口 动态规划 53. 最大子序和 dp[i] = max(nums[i], dp[i-1]&#43;nums[i]) 股票最大利润、子数组和问题 动态规划 198. 打家劫舍 dp[i] = max(dp[i-1], dp[i-2]&#43;nums[i]) 环形打家劫舍、爬楼梯变体 动态规划 139. 单词拆分 dp[i] = dp[j] &amp;&amp; wordDict[j:i] 句子拼接、分割字符串最少次数 二分查找 33. 搜索旋转排序数组 二分判定区间有序性 搜索峰值、最小差距值 DFS/BFS 200. 岛屿数量 遍历连通块 图遍历、封闭区域数量、朋友圈问题 树 104. 二叉树最大深度 递归 DFS 平衡二叉树、路径和 树 236. 最近公共祖先 后序递归 目录树路径、最小公共节点类问题 三、偏题迁移示例 原题模板 面试偏题举例 迁移思路 无重复字符的最长子串 最多允许一个重复字符的最长子串 滑动窗口 &#43; 计数增加一层判断 三数之和 找出所有和为目标值的三元组 排序 &#43; 去重 &#43; 双指针，只改目标值逻辑 有效括号 字符串里只有 &lt; &gt;，规则不同 替换匹配规则即可，核心仍是栈 每日温度 求每个元素右边第一个比它小的元素 单调递增栈，方向反转 打家劫舍 环形排列的房屋 拆成两种情况：不偷第一 vs 不偷最后 单词拆分 计算所有可行的拆分方式 dp[i] 的基础上计数或回溯 二叉树最大深度 判断是否平衡二叉树 在返回深度的同时判断差值 最近公共祖先 N 叉树版本 递归逻辑相同，遍历子节点代替左右子树 四、陌生题分析框架（面试必备） 求最值 → 贪心 / 动态规划 求存在 → 哈希 / 二分 求路径 / 连通 → DFS / BFS 求配对 / 区间 → 双指针 / 滑动窗口 暴力解 &amp; 复杂度 先写最直接暴力解，作为 fallback 考虑优化方向（排序 / 哈希 / 双指针） 是否有重复子问题 有 → 动态规划 没有 → 贪心或暴力优化 输入结构 数组 → 排序 / 双指针 矩阵 → DFS / BFS 树 / 图 → 递归 / 队列 写伪代码 先讲思路，代码只是形式 面试官更关注分析能力 五、复盘计划（3 周周期） 周数 目标 内容 第1周 模板巩固 前8题（数组、链表、哈希、栈）二刷，写模板笔记 第2周 动态规划 &amp; 树 后7题二刷，形成 dp / 树模板总结 第3周 偏题迁移训练 每天抽一道陌生题，用陌生题分析框架解题，重点练思路，不追完美 六、Go 开发者模板代码示例 // 双指针模板 func twoSum(nums []int, target int) []int { m := make(map[int]int) for i, v := range nums { if j, ok := m[target-v]; ok { return []int{j, i} } m[v] = i } return nil } // 滑动窗口模板 func lengthOfLongestSubstring(s string) int { window := make(map[byte]int) left, right, res := 0, 0, 0 for right &lt; len(s) { c := s[right] right&#43;&#43; window[c]&#43;&#43; for window[c] &gt; 1 { d := s[left] left&#43;&#43; window[d]-- } if res &lt; right-left { res = right - left } } return res } // map 初始化 m := make(map[int]int) // set 用法 set := map[int]bool{} set[x] = true if set[y] { ... } // priority queue 模板 type Item struct{ value, priority int } type PQ []Item func (pq PQ) Len() int { return len(pq) } func (pq PQ) Less(i, j int) bool { return pq[i].priority &lt; pq[j].priority } func (pq PQ) Swap(i, j int) { pq[i], pq[j] = pq[j], pq[i] } func (pq *PQ) Push(x any) { *pq = append(*pq, x.(Item)) } func (pq *PQ) Pop() any { old := *pq n := len(old) x := old[n-1] *pq = old[:n-1] return x } 七、最终目标 不靠“记题”，靠“识别结构 &#43; 套模板 &#43; 临场分析”。 偏题也能快速迁移思路，不慌张。 面试时有底气，3 分钟就能讲清解题思路。 </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-10-15 21:31:14 +0800 CST'>October 15, 2025</span>&nbsp;·&nbsp;3 min</footer>
-  <a class="entry-link" aria-label="post link to 刷题方法" href="http://localhost:1313/posts/datastructalgorithm/%E5%88%B7%E9%A2%98%E6%96%B9%E6%B3%95/"></a>
-</article>
 <footer class="page-footer">
   <nav class="pagination">
     <a class="prev" href="http://localhost:1313/">
@@ -290,7 +291,7 @@ dept_id (INT, Primary Key) - 部门 ID dept_name (VARCHAR) - 部门名称 模块
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">yangcp</a></span> · 
+        <span>&copy; 2026 <a href="http://localhost:1313/">yangcp</a></span> · 
 
     <span>
         Powered by

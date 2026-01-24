@@ -6,8 +6,20 @@
     <description>Recent content on yangcp</description>
     <generator>Hugo -- 0.147.4</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 27 Nov 2025 23:49:37 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 22 Jan 2026 20:05:32 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Dp</title>
+      <link>http://localhost:1313/posts/datastructalgorithm/dp/</link>
+      <pubDate>Thu, 22 Jan 2026 20:05:32 +0800</pubDate>
+      <guid>http://localhost:1313/posts/datastructalgorithm/dp/</guid>
+      <description>&lt;h3 id=&#34;dp-通用解题方法&#34;&gt;dp 通用解题方法&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;1. dp[?] 表示什么？
+2. dp[?] 从哪几个 dp[?] 来？
+3. dp 最小值怎么开始？
+4. dp 是正着算还是倒着算？
+&lt;/code&gt;&lt;/pre&gt;</description>
+    </item>
     <item>
       <title>算法模板思路总结</title>
       <link>http://localhost:1313/posts/go/%E7%AE%97%E6%B3%95%E6%A8%A1%E6%9D%BF%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93/</link>
@@ -2914,27 +2926,88 @@ c对b的引用。b本来应该被正确标记成黑色的，由于对象c为黑�
 &lt;p&gt;rpc是远程过程调用，是一种在不同进程或组件上让函数调用如同本地调用一样的技术。有多种实现，比如json-rpc,xrpc(基于xml),gprc
 google推出，基于protobuf,通过IDL(接口定义)定义同义的方法和参数，使用代码生成工具生成不同语言的代码。&lt;/p&gt;
 &lt;p&gt;grpc也是基于http2,所以他可以利用http2的各种特性，他有google推出，采用protobuf传输。&lt;/p&gt;
+&lt;p&gt;Protobuf 是一种跨语言的、结构化数据的二进制序列化协议&lt;/p&gt;
 &lt;p&gt;他有以下特点：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;基于IDL生成，接口及定义，可以生成多语言，被客户端和服务端共用。&lt;/li&gt;
 &lt;li&gt;数据传输效率高，基于http2,拥有双向传输、tcp多路复用、二进制数据帧传输、流量控制等特性&lt;/li&gt;
 &lt;li&gt;常见于微服务当中，可以方便的定义中间件，进行限流、降级等特性&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;浏览器一次完整的请求过程&#34;&gt;浏览器一次完整的请求过程&lt;/h3&gt;
+&lt;p&gt;完整 RPC 框架至少要干这些事：&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;服务器会启动进程监听某个端口，当端口监听到请求，进行处理&lt;/li&gt;
-&lt;li&gt;通过DNS解析域名拿到目标IP,依次通过浏览器、本地缓存查询，没有就往根dns服务器查询。&lt;/li&gt;
-&lt;li&gt;如果是http协议需要先通过ssl建立安全通道。&lt;/li&gt;
-&lt;li&gt;建立TCP连接，通过五元组：协议 ip 端口 目标IP 目标端口 进行三次握手，握手完成后开始发送数据&lt;/li&gt;
-&lt;li&gt;数据进行封装,数据从应用层（报文）-&amp;gt;传输层（报文+端口号）-&amp;gt;网络IP层（数据段+IP）-&amp;gt;数据链路层(数据包+mac主机物理地址-&amp;gt;数据帧)-&amp;gt;物理层(二进制流)这个层次依次进行传输&lt;/li&gt;
-&lt;li&gt;通过网络层找到目的主机，通过端口号找到主机监听目的端口的程序。应用程序处理请求。&lt;/li&gt;
-&lt;li&gt;服务器处理响应，完成后，返回给客户端&lt;/li&gt;
-&lt;li&gt;断开连接、4次挥手，最后一次等待服务器发送完毕数据&lt;/li&gt;
+&lt;li&gt;方法发现&lt;/li&gt;
+&lt;li&gt;我要调的是哪个服务？哪个方法？&lt;/li&gt;
+&lt;li&gt;参数序列化 / 反序列化&lt;/li&gt;
+&lt;li&gt;网络传输&lt;/li&gt;
+&lt;li&gt;错误模型&lt;/li&gt;
+&lt;li&gt;超时、重试、返回码&lt;/li&gt;
+&lt;li&gt;连接管理&lt;/li&gt;
+&lt;li&gt;长连接？池化？&lt;/li&gt;
+&lt;li&gt;并发模型&lt;/li&gt;
+&lt;li&gt;流式调用（可选）&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;参考资料&#34;&gt;参考资料&lt;/h3&gt;
+&lt;p&gt;HTTP和 gRPC 的区别在于：&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://blog.csdn.net/u012914309/article/details/127507726?spm=1001.2014.3001.5501&#34;&gt;https://blog.csdn.net/u012914309/article/details/127507726?spm=1001.2014.3001.5501&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description>
+&lt;li&gt;HTTP + JSON 的本质是：
+“约定好的接口 + 字符串传输”
+gRPC 的本质是：&lt;/li&gt;
+&lt;li&gt;“强约束的接口 + 代码级调用”&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;总结&#34;&gt;总结&lt;/h4&gt;
+&lt;p&gt;RPC是一种编程模型、抽象思想，RPC框架是这种编程模型、抽象思想的一种实现。grpc是rpc的一种go语言版本的实现。
+grpc框架提供了服务发现与注册、网络传输、编解码数据、错误机制（超时、重试、错误码定义等）、连接管理、并发模型等功能，让不同服务之间的调用就像调用
+一个包的函数里面调用一样。&lt;/p&gt;
+&lt;p&gt;protobuf负责数据的编码与解码。通过编写proto文件IDL强约束接口，定义方法和字段，并通过工具可以生成不同语言的代码，protobuf支持多种语言的生成。
+通过小数据用小字段，大数据用大字段，对数据进行编号，采用Varint对大部分字段进行编码，传输过程根据编号进行二进制传输，减少了数据传输的大小。传输格式为
+Key(field_number + wire_type) + Value， key的低3位表示 value的编码格式。 value 采用 0 + 7的格式，最高位表示后续是否还有数据。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>分布式锁</title>
+      <link>http://localhost:1313/posts/architecture/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/</link>
+      <pubDate>Fri, 18 Jul 2025 09:29:04 +0800</pubDate>
+      <guid>http://localhost:1313/posts/architecture/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/</guid>
+      <description>&lt;h3 id=&#34;分布式锁&#34;&gt;分布式锁&lt;/h3&gt;
+&lt;h3 id=&#34;定义&#34;&gt;定义&lt;/h3&gt;
+&lt;p&gt;分布式锁是用于并发控制的手段，他需要满足以下几点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;高性能、互斥。redis单线程，结合基于事件回调的IO模型，在处理并发时具有高性能。内置nx命令，只有当key不存在是才返回成功。满足互斥性。&lt;/li&gt;
+&lt;li&gt;避免死锁。如果持锁的线程挂掉，从而无法正常释放锁，就会造成死锁。可以给锁设置过期时间，比如nx命令传入ttl。&lt;/li&gt;
+&lt;li&gt;正确释放锁。因为设置了过期时间，所以会导致2个问题
+&lt;ul&gt;
+&lt;li&gt;如果a执行时间过长，ttl自动释放，这时b正常拿锁，之后a执行完成，如果直接释放锁，就把b的锁释放掉了。解决办法是在加锁的时候
+生成唯一ID,在解锁的时候进行判断，相同才删除。也就是说只有持锁的才能删除。&lt;/li&gt;
+&lt;li&gt;删除操作是2个命令，第一个是get,第二个是删除，注意需要保证原子性，因为get的时候并发，a get到锁之后ttl过期，b拿锁，a再释放，就出问题了。需要用lua脚本保证原子性。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;续期机制。如果持锁的线程执行时间过长超过了ttl设置的时间，就需要能够自动续期。我们可以采用看门狗机制，启动一个线程，轮训key的剩余过期时间， 比如到了3/2的过期时间，自动续期。&lt;/li&gt;
+&lt;li&gt;可重入，可重入是指同一个进程或者线程多次加锁要能获锁成功。这种可以为同一线程生成req_id，并且进行计数，当计算为0时对锁进行释放&lt;/li&gt;
+&lt;li&gt;分布式下部署下的分布式锁。上面五点基本可以保证单机状态下分布式锁的可靠性。但是单机系统的可用性比较低。如果采用分布式锁需要注意几个问题。
+&lt;ul&gt;
+&lt;li&gt;redis的哨兵Sentinel 和 cluster 模式下，不适合做分布式锁。
+&lt;ul&gt;
+&lt;li&gt;哨兵模式可能主从延迟、主备切换，比如主节点写入后还没来得及同步就挂掉，从节点成为主节点，锁丢失。&lt;/li&gt;
+&lt;li&gt;分布式下不允许多key操作，需要视同tag标签将锁落入同一个slot。其次也会发生哨兵模式的主从延迟、主备切换问题&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;高可以架构可以用redLock或者zookeeper、etcd实现
+&lt;ul&gt;
+&lt;li&gt;redLock就是采用多个独立的redis,采用多数派写入保证数据的一致性。&lt;/li&gt;
+&lt;li&gt;zookeeper可以在某个目录下建立节点，节点最新获取成功，并删除节点。否则循环或者守护进程监听最近的节点，当发生变化，在判断自己是不是最小的
+节点&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;使用&#34;&gt;使用&lt;/h3&gt;
+&lt;h4 id=&#34;使用场景&#34;&gt;使用场景&lt;/h4&gt;
+&lt;h4 id=&#34;使用方法&#34;&gt;使用方法&lt;/h4&gt;
+&lt;h3 id=&#34;注意事项&#34;&gt;注意事项&lt;/h3&gt;
+&lt;h3 id=&#34;参考资料&#34;&gt;参考资料&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;美团技术团队&lt;/strong&gt;. &lt;a href=&#34;https://tech.meituan.com/2016/09/29/distributed-system-mutually-exclusive-idempotence-cerberus-gtis.html&#34;&gt;分布式锁&lt;/a&gt;. &lt;em&gt;google&lt;/em&gt;. 最后修订于2016年09月29日. 访问于2025年7月20日.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;掘金&lt;/strong&gt;. &lt;a href=&#34;https://juejin.cn/post/6887740972168380429&#34;&gt;分布式锁&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
     </item>
     <item>
       <title>CAP</title>

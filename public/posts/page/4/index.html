@@ -131,6 +131,19 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">零拷贝
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>零拷贝技术 通过sendfile 等函数减少用户态和内核态的切换，减少拷贝次数，加快文件传输速度，但只适用于原样传输的场景，比如静态文件服务器，消息队列等，比如mysql 也是磁盘加载数据，但是需要对取出来的数据做各种处理就不适合这种场景。
+</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-09-10 20:40:50 +0800 CST'>September 10, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 零拷贝" href="http://localhost:1313/posts/cs/%E9%9B%B6%E6%8B%B7%E8%B4%9D/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Str_百度真题原地置换大小写
     </h2>
   </header>
@@ -257,19 +270,6 @@ go 的加载机制 go 会把go mod所在的目录当成工作目录，先加载�
   <footer class="entry-footer"><span title='2025-08-08 09:50:22 +0800 CST'>August 8, 2025</span>&nbsp;·&nbsp;2 min</footer>
   <a class="entry-link" aria-label="post link to ddd领域驱动设计" href="http://localhost:1313/posts/design_pattern/ddd/"></a>
 </article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">初始化方法比较
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>make和new的初始化比较 make new 返回值 返回实例化对象本身 返回类型并清空返回实例化对象的指针 作用类型、常见用法 slice、map、channel 所有类型 内部作用机制 初始化结构体，并初始化结构体内部的相关字段机构 初始化对象，清空内存，分配内存，置为零值 为什么new slice map 得到是nil 首先 new 严格遵守返回的是初始化对象指针的原则，而new slice、map的时候，返回的就是对象的引用，只是切片和哈希的 零值就是nil,所以如果new切片和map会出现无法使用的情况。
-</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-03 11:01:53 +0800 CST'>August 3, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to 初始化方法比较" href="http://localhost:1313/posts/go/%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95%E6%AF%94%E8%BE%83/"></a>
-</article>
 <footer class="page-footer">
   <nav class="pagination">
     <a class="prev" href="http://localhost:1313/posts/page/3/">
@@ -282,7 +282,7 @@ go 的加载机制 go 会把go mod所在的目录当成工作目录，先加载�
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">yangcp</a></span> · 
+        <span>&copy; 2026 <a href="http://localhost:1313/">yangcp</a></span> · 
 
     <span>
         Powered by

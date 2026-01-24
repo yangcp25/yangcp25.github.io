@@ -128,6 +128,21 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">分布式锁的实现
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>分布式锁的实现 分布式锁需要满足几个要点
+高性能、互斥，redis高性能，处理模型单线程天然支持互斥 原子性操作（主要是redis），高并发情况下，需要保证加锁、删除、自动续期的并发安全，所以需要原子性保证 安全释放锁、锁的删除，在并发情况下，可能出现A执行任务过长，锁已经自动过期了，B拿到锁在执行了，A执行完毕，释放锁，如果不进行锁的Val判断，会导致锁的异常释放。 自动过期/自动续期,使用set nx px 设置过期时间，使用看门狗机制实现自动续期，在释放锁的时候，使用context,cancel协程。 可重入 基于redis的实现 cache.go
+package cache import ( &#34;context&#34; &#34;github.com/redis/go-redis/v9&#34; &#34;time&#34; ) type Cache interface { // 通用封装 需要解决 //（1）缓存三大问题 a 穿透 b 击穿 c 缓存雪崩 //（2）缓存不一致的问题 //（3）分布式锁 // 设置通用前缀 app_name , 数据类型 data, 模块名字 ， SetPrefix(prefix ...string) Cache Set(ctx context.Context, key, value string, short bool) error Get(ctx context.Context, key string, handler func(context.Context) (string, error)) (string, error) // 增加 删除 修改的时候调用 Flush(ctx context.Context, handler func(context.Context) error) error FlushWithConsistency(ctx context.Context, handler func(context.Context) error) error // 以下是简单封装 SimpleSet(ctx context.Context, key string, data any, expiration time.Duration) (err error) SimpleGet(ctx context.Context, key string) (data string, err error) SimpleIncr(ctx context.Context, key string) (count int64, err error) SimpleDel(ctx context.Context, keys ...string) (deletedCount int64, err error) Pipelined(ctx context.Context, callback func(redis.Pipeliner) error) (cmder []redis.Cmder, err error) // 批量删除 key 比如 app_name:* DeleteKeysByPattern(ctx context.Context, pattern string) (err error) // 集合操作 SAdd(ctx context.Context, key string, members ...string) (err error) SMembers(ctx context.Context, key string) (members []string, err error) // 过期集合 设置获取 AddMemberWithTTL(ctx context.Context, setKey, member string, ttl time.Duration) error GetValidMembers(ctx context.Context, setKey string) ([]string, error) RemoveMember(ctx context.Context, setKey string, members ...string) (int64, error) // 分布式加解锁 DistributedLock(ctx context.Context, key string, ttl time.Duration) error DistributedUnlock(ctx context.Context, key string) error } redis.go
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-09-11 09:23:32 +0800 CST'>September 11, 2025</span>&nbsp;·&nbsp;7 min</footer>
+  <a class="entry-link" aria-label="post link to 分布式锁的实现" href="http://localhost:1313/posts/scenario/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E7%9A%84%E5%AE%9E%E7%8E%B0/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">零拷贝
     </h2>
   </header>
@@ -251,22 +266,6 @@ go 的加载机制 go 会把go mod所在的目录当成工作目录，先加载�
   <footer class="entry-footer"><span title='2025-08-16 09:49:21 +0800 CST'>August 16, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to Channel" href="http://localhost:1313/posts/go/channel/"></a>
 </article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">ddd领域驱动设计
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>什么是DDD? DDD是domain design driver 的简称，根本的目的是为了解决软件的复杂性的一种设计思想。传统的MVC等代码、软件架构是面向程序员工程师的，而 产品经理更多只是需求产品设计，这导致软件架构和实际的业务脱离，当业务变得复杂，软件复杂性提高之后，后续的维护升级重构会遭遇重重困难。
-关键概念 充血模型and贫血模型 贫血模型是为了引出充血模型这一概念。贫血模型是指我们通常的数据库映射只有属性，而没有表现出具体的业务属性，也就是没有 引起映射数据变化的方法，就看不出来这个映射具体的业务，DDD的建议是把能引发变化的方法都写到这个变化内，这样别人一看就知道这个 实体具体包含了哪些业务属性。
-聚合根 防腐层 我的理解 整个DDD架构里面遵循了设计原则的最佳实践，比如高内聚低耦合这个大的思想，以及一些设计原则
-单一职责,一个方法、类、模块只干一件事情 开放封闭，对扩展开放，对修改封闭 依赖倒置，依赖于接口而不是具体实现。 接口隔离，接口小而精，不是胖而杂 里氏替换，对继承的补充，一个子类要能够完全替换父类，也就是要遵循父类的约定，这样少破坏原有的约定。 迪米洛法则（最少知识原则），不要跨多个对象调用方法，不需要知道跨对象的内部细节，只调用最新的朋友节点 战术构件和战略构件 DDD是一套架构思想方法论，它为代码层面和架构层面都提供了对应的构件帮我我们设计构架。
-战术构件（代码层面） 实体 值对象 根/聚合根 repository domain 工厂 事件 战略构件（架构层面） 界限上下文（模块） 通用语言（业务和技术用同一种专业术语沟通，防止鸡同鸭讲） 上下文映射（模块之间如何关联） 实际架构示例 ┌──────────────────────────────────────────────┐ │ 战略构件 (Strategic) │ │----------------------------------------------│ │ 限界上下文 (Bounded Contexts) │ │ ├── 用户上下文 (User Context) │ │ ├── 订单上下文 (Order Context) │ │ ├── 商品上下文 (Product Context) │ │ └── 支付上下文 (Payment Context) │ │ │ │ 上下文映射 (Context Map) │ │ ├── 上下游 (Upstream/Downstream) │ │ ├── 防腐层 (ACL) │ │ ├── 合作伙伴 (Partnership) │ │ └── 开放主机服务 (OHS) │ │ │ │ 通用语言 (Ubiquitous Language) │ │ └── &#34;订单&#34;、&#34;支付单&#34;、&#34;退款单&#34; │ └──────────────────────────────────────────────┘ │ ▼ ┌──────────────────────────────────────────────┐ │ 战术构件 (Tactical) │ │----------------------------------------------│ │ 接口层 (Interface Layer) │ │ └── Kratos Handler (HTTP/gRPC 接口) │ │ │ │ 应用层 (Application Layer) │ │ └── 应用服务 (Application Service) │ │ → OrderUsecase │ │ │ │ 领域层 (Domain Layer) │ │ ├── 实体 (Entity) &amp; 聚合根 (AggregateRoot) │ │ │ → Order, OrderItem │ │ ├── 值对象 (Value Object) │ │ │ → Money, Address │ │ ├── 领域服务 (Domain Service) │ │ │ → PaymentService │ │ ├── 工厂 (Factory) │ │ │ → NewOrder │ │ ├── 领域事件 (Domain Event) │ │ │ → OrderPaidEvent │ │ └── 仓储接口 (Repository Interface) │ │ │ │ 基础设施层 (Infrastructure Layer) │ │ └── 仓储实现 (Repository Impl, GORM) │ │ → orderRepo (MySQL) │ └──────────────────────────────────────────────┘ kratos 和DDD 架构对照 Kratos 层级 DDD 层级 作用 service/ Interface / Adapter gRPC/HTTP Handler，参数验证/响应封装，调用 UseCase biz/ Domain &#43; Application 业务逻辑和领域规则处理，UseCase（业务服务），纯业务计算 data/ Infrastructure 数据库、缓存、第三方 SDK 封装，实现 Repository 接口，提供外部依赖能力 pkg/ Infrastructure（共享组件） 可复用 SDK 封装、工具函数、通用库，跨服务共享 参考资料 美团 领域驱动设计在互联网业务开发中的实践 </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-08 09:50:22 +0800 CST'>August 8, 2025</span>&nbsp;·&nbsp;2 min</footer>
-  <a class="entry-link" aria-label="post link to ddd领域驱动设计" href="http://localhost:1313/posts/design_pattern/ddd/"></a>
-</article>
 <footer class="page-footer">
   <nav class="pagination">
     <a class="prev" href="http://localhost:1313/page/3/">
@@ -279,7 +278,7 @@ go 的加载机制 go 会把go mod所在的目录当成工作目录，先加载�
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">yangcp</a></span> · 
+        <span>&copy; 2026 <a href="http://localhost:1313/">yangcp</a></span> · 
 
     <span>
         Powered by
