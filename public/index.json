@@ -1,4 +1,11 @@
 [{
+"title":"26年的重点与未来规划",
+"permalink": "http://localhost:1313/posts/ai/2026_plan/",
+"summary": "26年的重点与未来规划 算法与AI基础 leecode top100 背诵默写 top 100-200 全速刷两遍\nAI应用 工作当中会做一些AI相关的应用，在AI应用进行深耕\n未来的一些思考 gpt给出了一些建议：以下参考： 规划建议.pdf\n",
+"content": "26年的重点与未来规划 算法与AI基础 leecode top100 背诵默写 top 100-200 全速刷两遍\nAI应用 工作当中会做一些AI相关的应用，在AI应用进行深耕\n未来的一些思考 gpt给出了一些建议：以下参考： 规划建议.pdf\n",
+"tags":null,
+"categories":null
+},{
 "title":"Dp",
 "permalink": "http://localhost:1313/posts/datastructalgorithm/dp/",
 "summary": "dp 通用解题方法 1. dp[?] 表示什么？ 2. dp[?] 从哪几个 dp[?] 来？ 3. dp 最小值怎么开始？ 4. dp 是正着算还是倒着算？ ",

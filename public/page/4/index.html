@@ -128,6 +128,18 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">数组交集
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p> package main import &#34;fmt&#34; func main() { //4.1 实现一个函数，可以计算返回多个切片元素交集，如入参[1,2,3],[2,3,4] 返回 [2,3] arrays := make([][]int, 0) arrays = append(arrays, []int{1, 2, 3}) arrays = append(arrays, []int{2, 3, 4}) arrays = append(arrays, []int{3, 4}) res := calMerge(arrays...) fmt.Println(res) } func calMerge(arrays ...[]int) []int { // 数组先去重，就不实现了 check := make(map[int]int) for i := 0; i &lt; len(arrays); i&#43;&#43; { for j := 0; j &lt; len(arrays[i]); j&#43;&#43; { check[arrays[i][j]] &#43;= 1 } } newArray := make([]int, 0) for k, val := range check { if val &gt;= len(arrays) { newArray = append(newArray, k) } } return newArray } </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-09-12 09:41:25 +0800 CST'>September 12, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 数组交集" href="http://localhost:1313/posts/datastructalgorithm/slice_%E6%95%B0%E7%BB%84%E4%BA%A4%E9%9B%86/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">分布式锁的实现
     </h2>
   </header>
@@ -250,21 +262,6 @@ go 的加载机制 go 会把go mod所在的目录当成工作目录，先加载�
   </div>
   <footer class="entry-footer"><span title='2025-08-27 09:47:18 +0800 CST'>August 27, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to Mod" href="http://localhost:1313/posts/go/mod/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Channel
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>csp并发模型 go在协程见通信使用channel进行通信。go的协程间通信的哲学是使用消息（channel）通信，而不是共享内存。为什么呢？ 使用消息通信的好处是
-没有共享状态，避免锁和竞争问题。 通信即同步，即通信双方都必须要在通道上同步，才能完成信息交换 channel channel是一个并发安全的，FIFO的用于不同goroutine间传递数据的管道。
-底层原理 底层是一个chan结构体，里面有一个环形队列和首尾指针，以及待发送队列和待接受队列。
-使用方法和使用场景 使用场景 协程间的数据传递和交换 协程间的同步与协调 控制并发数/实现信号量 超时处理与非阻塞操作 协程的取消与退出通知 实现发布订阅的简单消息队列、简单协程池 实现限流算法（令牌桶） 需要注意的点</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-16 09:49:21 +0800 CST'>August 16, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Channel" href="http://localhost:1313/posts/go/channel/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">
