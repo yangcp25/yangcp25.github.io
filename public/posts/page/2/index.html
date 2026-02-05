@@ -131,6 +131,19 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Go 场景题模版
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Go 场景题训练手册 — 题目版 作者：cp yang 说明：分为 初级 / 中级 / 高级 / 实战 Debug 四个章节。每题为面试常见场景题（用于练习）
+🟢 初级场景题（语言特性与陷阱） 切片在函数参数传递时，什么时候会影响外部数据？请举例并解释。 for range vs for i := 0; i &lt; len(slice); i&#43;&#43;，在修改元素和效率上有什么区别？ map 初始化的正确写法有哪些？哪些写法会导致 panic？ defer 的执行顺序是什么？return 与 defer 的执行顺序如何？ append 扩容时如何影响底层数组？如何避免不必要的复制？ string 与 []byte 转换在高频场景下的性能问题如何优化？ 实现一个线程安全的简单 map（支持 Get/Set/Delete）。 🟡 中级场景题（并发与控制） 如何使用 sync.WaitGroup 控制并发任务？请给出示例，并说明常见错误。 设计一个固定大小的 goroutine 池（worker pool），能提交任务并等待完成。 设计一个生产者-消费者模型，支持多生产者、多消费者，并能优雅退出。 实现两个 goroutine 交替打印 1~100（A 打印 1，B 打印 2，依次交替）。 如何限制并发数量（例如同时最多 10 个任务）？给出实现。 使用 context 实现任务超时与取消，给出示例。 🔴 高级场景题（系统设计与性能） 设计一个本地缓存系统，支持 TTL、并发安全和定期清理。写出核心接口与实现要点。 设计并实现一个 LRU 缓存（map &#43; 双向链表），要求并发安全。 设计一个简易消息队列（支持发布/订阅、可持久化思路说明）。写出关键数据结构与伪码。 如何设计一个高并发的秒杀系统以防止超卖？给出架构思路与关键代码片段（Redis/本地预减库存等）。 设计一个限流组件（令牌桶），实现接口并说明在微服务网关如何使用。 ⚙️ 实战 Debug 场景题（排障与优化） 程序出现大量 goroutine 泄漏（数量不断增长），你如何排查？列出排查步骤与 pprof 使用方法。 出现死锁（程序卡住），如何定位和修复？给出示例代码及修改建议。 程序内存暴涨并触发 GC 压力，如何分析原因并给出优化方案？ 高并发下锁竞争严重（通过 Mutex 看到 QPS 降低），如何诊断并优化？ 使用 pprof 找到热点 CPU 占用点后，你会如何改进代码？给出一个简单示例。 </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-10-22 22:38:03 +0800 CST'>October 22, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Go 场景题模版" href="http://localhost:1313/posts/scenario/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%A8%A1%E7%89%88/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Go 场景题模版 — 答案版
     </h2>
   </header>
@@ -269,18 +282,6 @@ dept_id (INT, Primary Key) - 部门 ID dept_name (VARCHAR) - 部门名称 模块
   </div>
   <footer class="entry-footer"><span title='2025-10-15 21:52:36 +0800 CST'>October 15, 2025</span>&nbsp;·&nbsp;3 min</footer>
   <a class="entry-link" aria-label="post link to 常用数据结构" href="http://localhost:1313/posts/datastructalgorithm/%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">打卡计划表
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>开启打卡计划 日期 题目 模板 二刷结果 迁移练习 备注 10/16 15. 三数之和 双指针 ✅ 三数差值最接近 完整复盘，写模板笔记 10/17 11. 盛最多水的容器 双指针 ✅ 股票最大利润 计时 25 分钟 10/18 3. 无重复字符的最长子串 滑动窗口 ✅ 最长允许1重复字符 模拟面试说思路 10/19 1. 两数之和 哈希 ✅ 三数之和、路径求和 强化迁移能力 10/20 20. 有效括号 栈 ✅ HTML标签验证 二刷完成 10/21 739. 每日温度 单调栈 ✅ 下一个更小元素 二刷 &#43; 迁移 10/22 206. 反转链表 链表 ✅ k组反转、回文链表 模板笔记 10/23 141. 环形链表 链表 ✅ 相交链表检测 二刷完成 10/24 53. 最大子序和 动态规划 ✅ 股票最大利润 计时练习 10/25 198. 打家劫舍 动态规划 ✅ 环形打家劫舍 二刷完成 10/26 139. 单词拆分 动态规划 ✅ 所有拆分方式 写迁移笔记 10/27 33. 搜索旋转排序数组 二分 搜索峰值 计时练习 10/28 200. 岛屿数量 DFS/BFS 封闭区域计数 二刷 &#43; 迁移 10/29 104. 二叉树最大深度 树 判断平衡二叉树 模板笔记 10/30 236. 最近公共祖先 树 N叉树版本 二刷完成 </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-10-15 21:52:36 +0800 CST'>October 15, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to 打卡计划表" href="http://localhost:1313/posts/datastructalgorithm/%E6%89%93%E5%8D%A1%E8%AE%A1%E5%88%92%E8%A1%A8/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

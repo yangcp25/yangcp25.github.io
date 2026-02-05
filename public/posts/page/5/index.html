@@ -131,6 +131,21 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Channel
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>csp并发模型 go在协程见通信使用channel进行通信。go的协程间通信的哲学是使用消息（channel）通信，而不是共享内存。为什么呢？ 使用消息通信的好处是
+没有共享状态，避免锁和竞争问题。 通信即同步，即通信双方都必须要在通道上同步，才能完成信息交换 channel channel是一个并发安全的，FIFO的用于不同goroutine间传递数据的管道。
+底层原理 底层是一个chan结构体，里面有一个环形队列和首尾指针，以及待发送队列和待接受队列。
+使用方法和使用场景 使用场景 协程间的数据传递和交换 协程间的同步与协调 控制并发数/实现信号量 超时处理与非阻塞操作 协程的取消与退出通知 实现发布订阅的简单消息队列、简单协程池 实现限流算法（令牌桶） 需要注意的点</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-16 09:49:21 +0800 CST'>August 16, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Channel" href="http://localhost:1313/posts/go/channel/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">ddd领域驱动设计
     </h2>
   </header>
@@ -282,29 +297,6 @@ package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, }
   </div>
   <footer class="entry-footer"><span title='2025-07-09 09:20:50 +0800 CST'>July 9, 2025</span>&nbsp;·&nbsp;3 min</footer>
   <a class="entry-link" aria-label="post link to BFS&&DFS" href="http://localhost:1313/posts/datastructalgorithm/bfs_dfs/"></a>
-</article>
-
-<article class="post-entry"> 
-<figure class="entry-cover">
-        <img loading="lazy" src="http://localhost:1313/images/img.png" alt="">
-</figure>
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">golang的interface和reflect
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>interface 鸭子类型 如果一个东西，走起来像鸭子，叫起来像鸭子，那么我们认为他就是鸭子。也就是说我们关注对象的行为，而不是对象本身。
-go里面通过接口来达到鸭子类型的效果。
-多态 多态是指同一个操作（函数、方法），在不通的对象的作用下，会有不同的行为。 一般多态有两种实现方式：
-继承和组合，比如java、c&#43;&#43;。 接口的形式 在go里面它没有继承的概念，但是go里面有组合。组合式是一种更灵活的方式。 他可以通过组合和重写来实现继承。在调用结构体的方法的时候，会优先调用最近的结构体的方法。 我们推荐在go里通过接口来实现多态，会更加清晰明了。
-go的interface 定义 go里面的接口是一种复合数据类型。他的底层有2种实现，eface和iface。
-//eface 结构 type eface struct { tab *typtab data unsafe.Pointer } // iface结构 type iface struct { tab *itab data unsafe.Pointer } go里面的所有数据类型都实现了eface,也就是说可以借助interface来表示他的数据类型。 还可以通过interface来定义方法集合 。
-type A interface { method() } 可能你会有一个疑问，那go是怎么确定interface 到底应该是使用eface 还是 iface呢？ go是在编译阶段就会确定好interface 使用的eface 还是 iface。后面不会改变。
-如何使用 什么时候会使用interface 通过接口来实现解耦合，比如依赖注入、适配器模式。 不确定传入参数的类型，需要在运行时来确定。 使用方法 接口列表 type animal interface { move() } type dog struct {} func (d dog) move() { fmt.Println(&#34;dog moving&#34;) } type cat struct {} func (c cat) move() { fmt.Println(&#34;cat moving&#34;) } func main() { var a animal a = dog{} a.move() a = cat{} // a是结构可以同意调用 a.move() // 接口注入 call(a) // 不确定具体的参数 vat func1 = func(param any) {} func1 = func(param any) { fmt.Println(&#34;call any&#34;, param) } } func call(a animal) { fmt.Println(&#34;call animal \n&#34;) a.move() } 需要注意的点和坑 使用接口会让编译器无法确定数据类型，导致无法再编译阶段发现类型错误，引发运行时错误。 使用接口会让程序变得难以阅读和理解。 性能会损失大概一倍 reflect unsafe.pointer go语言unsafe包提供了一些函数，可以获取指针，修改指针，获取指针指向的数据，修改指针指向的数据。 简单来讲，go本身不能操作指针，但是提供了reflect包让我们可以操作指针来获得程序的 性能提升。
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-06 12:44:43 +0800 CST'>July 6, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to golang的interface和reflect" href="http://localhost:1313/posts/go/interfacereflect/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

@@ -131,6 +131,18 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">打卡计划表
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>开启打卡计划 日期 题目 模板 二刷结果 迁移练习 备注 10/16 15. 三数之和 双指针 ✅ 三数差值最接近 完整复盘，写模板笔记 10/17 11. 盛最多水的容器 双指针 ✅ 股票最大利润 计时 25 分钟 10/18 3. 无重复字符的最长子串 滑动窗口 ✅ 最长允许1重复字符 模拟面试说思路 10/19 1. 两数之和 哈希 ✅ 三数之和、路径求和 强化迁移能力 10/20 20. 有效括号 栈 ✅ HTML标签验证 二刷完成 10/21 739. 每日温度 单调栈 ✅ 下一个更小元素 二刷 &#43; 迁移 10/22 206. 反转链表 链表 ✅ k组反转、回文链表 模板笔记 10/23 141. 环形链表 链表 ✅ 相交链表检测 二刷完成 10/24 53. 最大子序和 动态规划 ✅ 股票最大利润 计时练习 10/25 198. 打家劫舍 动态规划 ✅ 环形打家劫舍 二刷完成 10/26 139. 单词拆分 动态规划 ✅ 所有拆分方式 写迁移笔记 10/27 33. 搜索旋转排序数组 二分 搜索峰值 计时练习 10/28 200. 岛屿数量 DFS/BFS 封闭区域计数 二刷 &#43; 迁移 10/29 104. 二叉树最大深度 树 判断平衡二叉树 模板笔记 10/30 236. 最近公共祖先 树 N叉树版本 二刷完成 </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-10-15 21:52:36 +0800 CST'>October 15, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 打卡计划表" href="http://localhost:1313/posts/datastructalgorithm/%E6%89%93%E5%8D%A1%E8%AE%A1%E5%88%92%E8%A1%A8/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">刷题方法
     </h2>
   </header>
@@ -248,18 +260,6 @@ CREATE TABLE students ( id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), age
   </div>
   <footer class="entry-footer"><span title='2025-09-12 09:41:41 +0800 CST'>September 12, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to Mysql_分组统计排序" href="http://localhost:1313/posts/interview_code/mysql_%E5%88%86%E7%BB%84%E7%BB%9F%E8%AE%A1%E6%8E%92%E5%BA%8F/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">数组交集
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p> package main import &#34;fmt&#34; func main() { //4.1 实现一个函数，可以计算返回多个切片元素交集，如入参[1,2,3],[2,3,4] 返回 [2,3] arrays := make([][]int, 0) arrays = append(arrays, []int{1, 2, 3}) arrays = append(arrays, []int{2, 3, 4}) arrays = append(arrays, []int{3, 4}) res := calMerge(arrays...) fmt.Println(res) } func calMerge(arrays ...[]int) []int { // 数组先去重，就不实现了 check := make(map[int]int) for i := 0; i &lt; len(arrays); i&#43;&#43; { for j := 0; j &lt; len(arrays[i]); j&#43;&#43; { check[arrays[i][j]] &#43;= 1 } } newArray := make([]int, 0) for k, val := range check { if val &gt;= len(arrays) { newArray = append(newArray, k) } } return newArray } </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-09-12 09:41:25 +0800 CST'>September 12, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to 数组交集" href="http://localhost:1313/posts/datastructalgorithm/slice_%E6%95%B0%E7%BB%84%E4%BA%A4%E9%9B%86/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

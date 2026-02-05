@@ -128,6 +128,27 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">使用场景和原则
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>一、Redis 常见 &amp; 真实可用的使用场景 1️⃣ 缓存（Cache）——最核心，但不是“随便加” 典型用途
+热点数据缓存（配置、用户信息、商品信息） 接口结果缓存（读多写少） 计算结果缓存（排行榜、聚合结果） 工程要点
+TTL 一定要有（防雪崩） 要有 cache miss 回源策略 不要缓存“强一致性要求”的数据 Go 示例
+user, ok := cache.Get(uid) if !ok { user = db.GetUser(uid) cache.Set(uid, user, time.Minute*5) } 2️⃣ 分布式锁（非常常用） 典型场景
+防止重复下单 防止任务并发执行 防止重复消费 推荐方式
+SET key value NX PX 不推荐简单 SETNX &#43; EXPIRE（非原子） 工程原则
+锁一定要有过期时间 value 用 UUID，防误删 解锁要校验 value 3️⃣ 计数器 / 限流器 典型场景
+接口 QPS 限流 短时间访问次数统计 点赞 / 浏览量 常用结构
+String（INCR） Hash（多维统计） Sorted Set（滑动窗口） 优点
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-05 14:09:54 +0800 CST'>February 5, 2026</span>&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to 使用场景和原则" href="http://localhost:1313/posts/redis/%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E5%8E%9F%E5%88%99/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">26年的重点与未来规划
     </h2>
   </header>
@@ -252,26 +273,6 @@ SELECT teacher_id, COUNT(*) AS student_count FROM student GROUP BY teacher_id HA
   </div>
   <footer class="entry-footer"><span title='2025-10-27 10:26:15 +0800 CST'>October 27, 2025</span>&nbsp;·&nbsp;3 min</footer>
   <a class="entry-link" aria-label="post link to sql高频题" href="http://localhost:1313/posts/sql/%E9%AB%98%E9%A2%91%E9%A2%98/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Liunx常用命令
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Linux 中非常常用和基础的命令，按照功能进行了分类：
-1. 文件和目录管理 ls (list)
-作用：列出目录中的文件和子目录。 常用选项： ls -l：显示详细信息（权限、所有者、大小、修改日期）。 ls -a：显示所有文件，包括隐藏文件（以 . 开头的）。 ls -h：与 -l 配合使用，以人类可读的格式显示文件大小（如 1K, 2M, 3G）。 示例：ls -lah /home/user cd (change directory)
-作用：切换当前工作目录。 常用用法： cd /var/log：切换到 /var/log 目录。 cd ..：切换到上一级目录。 cd ~ 或 cd：切换到当前用户的主目录。 cd -：切换到上一个工作目录。 pwd (print working directory)
-作用：显示当前所在的目录路径。 mkdir (make directory)
-作用：创建新目录。 常用选项： mkdir -p /path/to/new/dir：递归创建目录，如果父目录不存在也会一并创建。 示例：mkdir my_project rmdir (remove directory)
-作用：删除空目录。 rm (remove)
-作用：删除文件或目录。 常用选项： rm file.txt：删除一个文件。 rm -r directory_name：递归删除目录及其所有内容。 rm -f file.txt：强制删除，不进行提示。 rm -rf directory_name：（慎用！） 强制递归删除目录，不会有任何提示。 cp (copy)
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-10-26 19:15:43 +0800 CST'>October 26, 2025</span>&nbsp;·&nbsp;3 min</footer>
-  <a class="entry-link" aria-label="post link to Liunx常用命令" href="http://localhost:1313/posts/cs/liunx%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">
