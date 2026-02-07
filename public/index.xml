@@ -6,8 +6,59 @@
     <description>Recent content on yangcp</description>
     <generator>Hugo -- 0.147.4</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 05 Feb 2026 14:09:54 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 07 Feb 2026 09:23:43 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Python语法复习学习高级特性</title>
+      <link>http://localhost:1313/posts/python/start/</link>
+      <pubDate>Sat, 07 Feb 2026 09:23:43 +0800</pubDate>
+      <guid>http://localhost:1313/posts/python/start/</guid>
+      <description>&lt;h1 id=&#34;-学习路线总览&#34;&gt;🧭 学习路线总览&lt;/h1&gt;
+&lt;h3 id=&#34;第一阶段python-基础语法但以工程理解为主&#34;&gt;第一阶段：Python 基础语法（但以工程理解为主）&lt;/h3&gt;
+&lt;p&gt;目标：&lt;strong&gt;快速建立 Python 语言模型&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;变量 &amp;amp; 动态类型系统&lt;/li&gt;
+&lt;li&gt;控制流&lt;/li&gt;
+&lt;li&gt;容器类型（list / tuple / dict / set）&lt;/li&gt;
+&lt;li&gt;函数机制（参数、返回、多返回）&lt;/li&gt;
+&lt;li&gt;模块 &amp;amp; 包机制&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;第二阶段python-进阶特性核心能力区&#34;&gt;第二阶段：Python 进阶特性（核心能力区）&lt;/h3&gt;
+&lt;p&gt;目标：&lt;strong&gt;理解 Python 为什么这么写 &amp;amp; 怎么写高级代码&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;迭代器 / 生成器&lt;/li&gt;
+&lt;li&gt;装饰器&lt;/li&gt;
+&lt;li&gt;上下文管理器（with）&lt;/li&gt;
+&lt;li&gt;深浅拷贝&lt;/li&gt;
+&lt;li&gt;魔法方法（dunder）&lt;/li&gt;
+&lt;li&gt;dataclass&lt;/li&gt;
+&lt;li&gt;类型注解 &amp;amp; typing&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;第三阶段工程与底层机制&#34;&gt;第三阶段：工程与底层机制&lt;/h3&gt;
+&lt;p&gt;目标：&lt;strong&gt;Python 工程师的分水岭&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;内存模型 &amp;amp; GC&lt;/li&gt;
+&lt;li&gt;GIL 与并发模型&lt;/li&gt;
+&lt;li&gt;asyncio 协程&lt;/li&gt;
+&lt;li&gt;并发模型对比（thread / process / coroutine）&lt;/li&gt;
+&lt;li&gt;常见性能坑&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;第四阶段面试实战&#34;&gt;第四阶段：面试实战&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;高频面试题&lt;/li&gt;
+&lt;li&gt;原理追问&lt;/li&gt;
+&lt;li&gt;手撕代码&lt;/li&gt;
+&lt;li&gt;场景题&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h1 id=&#34;第-1-课python-基础语法核心工程师版&#34;&gt;第 1 课：Python 基础语法核心（工程师版）&lt;/h1&gt;
+&lt;p&gt;1️⃣ 变量与动态类型系统
+2️⃣ 基本数据类型
+3️⃣ None / True / False 的本质&lt;/p&gt;</description>
+    </item>
     <item>
       <title>使用场景和原则</title>
       <link>http://localhost:1313/posts/redis/%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E5%8E%9F%E5%88%99/</link>

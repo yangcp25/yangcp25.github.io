@@ -127,6 +127,19 @@
 <main class="main"> 
 
 <article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">分布式锁
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>分布式锁 定义 分布式锁是用于并发控制的手段，他需要满足以下几点：
+高性能、互斥。redis单线程，结合基于事件回调的IO模型，在处理并发时具有高性能。内置nx命令，只有当key不存在是才返回成功。满足互斥性。 避免死锁。如果持锁的线程挂掉，从而无法正常释放锁，就会造成死锁。可以给锁设置过期时间，比如nx命令传入ttl。 正确释放锁。因为设置了过期时间，所以会导致2个问题 如果a执行时间过长，ttl自动释放，这时b正常拿锁，之后a执行完成，如果直接释放锁，就把b的锁释放掉了。解决办法是在加锁的时候 生成唯一ID,在解锁的时候进行判断，相同才删除。也就是说只有持锁的才能删除。 删除操作是2个命令，第一个是get,第二个是删除，注意需要保证原子性，因为get的时候并发，a get到锁之后ttl过期，b拿锁，a再释放，就出问题了。需要用lua脚本保证原子性。 续期机制。如果持锁的线程执行时间过长超过了ttl设置的时间，就需要能够自动续期。我们可以采用看门狗机制，启动一个线程，轮训key的剩余过期时间， 比如到了3/2的过期时间，自动续期。 可重入，可重入是指同一个进程或者线程多次加锁要能获锁成功。这种可以为同一线程生成req_id，并且进行计数，当计算为0时对锁进行释放 分布式下部署下的分布式锁。上面五点基本可以保证单机状态下分布式锁的可靠性。但是单机系统的可用性比较低。如果采用分布式锁需要注意几个问题。 redis的哨兵Sentinel 和 cluster 模式下，不适合做分布式锁。 哨兵模式可能主从延迟、主备切换，比如主节点写入后还没来得及同步就挂掉，从节点成为主节点，锁丢失。 分布式下不允许多key操作，需要视同tag标签将锁落入同一个slot。其次也会发生哨兵模式的主从延迟、主备切换问题 高可以架构可以用redLock或者zookeeper、etcd实现 redLock就是采用多个独立的redis,采用多数派写入保证数据的一致性。 zookeeper可以在某个目录下建立节点，节点最新获取成功，并删除节点。否则循环或者守护进程监听最近的节点，当发生变化，在判断自己是不是最小的 节点 使用 使用场景 使用方法 注意事项 参考资料 美团技术团队. 分布式锁. google. 最后修订于2016年09月29日. 访问于2025年7月20日. 掘金. 分布式锁 </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-07-18 09:29:04 +0800 CST'>July 18, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to 分布式锁" href="http://localhost:1313/posts/architecture/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"></a>
+</article>
+
+<article class="post-entry"> 
 <figure class="entry-cover">
         <img loading="lazy" src="http://localhost:1313/images/cap.png" alt="">
 </figure>

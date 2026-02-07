@@ -131,6 +131,19 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Mysql_分组统计排序
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>记录一些面试遇到的题目
+CREATE TABLE students ( id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), age INT, sex CHAR(1), class VARCHAR(50) ); INSERT INTO students (name, age, sex, class) VALUES (&#39;沉默王二&#39;, 18, &#39;女&#39;, &#39;三年二班&#39;), (&#39;沉默王一&#39;, 20, &#39;男&#39;, &#39;三年二班&#39;), (&#39;沉默王三&#39;, 19, &#39;男&#39;, &#39;三年三班&#39;), (&#39;沉默王四&#39;, 17, &#39;男&#39;, &#39;三年三班&#39;), (&#39;沉默王五&#39;, 20, &#39;女&#39;, &#39;三年四班&#39;), (&#39;沉默王六&#39;, 21, &#39;男&#39;, &#39;三年四班&#39;), (&#39;沉默王七&#39;, 18, &#39;女&#39;, &#39;三年四班&#39;); select * from students s1 join ( select id, row_number() over (partition by class order by age) as rank_num from students ) s2 on s2.id = s1.id where s2.rank_num &lt;= 2 </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-09-12 09:41:41 +0800 CST'>September 12, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Mysql_分组统计排序" href="http://localhost:1313/posts/interview_code/mysql_%E5%88%86%E7%BB%84%E7%BB%9F%E8%AE%A1%E6%8E%92%E5%BA%8F/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">数组交集
     </h2>
   </header>
@@ -248,23 +261,6 @@ package main import ( &#34;fmt&#34; &#34;time&#34; ) type TokenBucket struct { t
   </div>
   <footer class="entry-footer"><span title='2025-08-29 09:43:09 +0800 CST'>August 29, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to Go实现限流器" href="http://localhost:1313/posts/datastructalgorithm/go%E5%AE%9E%E7%8E%B0%E9%99%90%E6%B5%81%E5%99%A8/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Mod
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>go mod 加载机制 go root go的安装目录
-go path go的源代码工作目录
-go mod go从1.11开始，加入了 go mod。开启 go mod 之后，不需要讲所有的源代码放到gopath。
-go 的加载机制 go 会把go mod所在的目录当成工作目录，先加载相对路径下的本地包，如果没有会去go mod文件查找，go mod 会尝试从go proxy 拉取代码，go proxy 是Google维护的go的包仓库，即使某些包的源码被删除，也还是可以从包仓库 下载，这保证了包引入的稳定性。如果go proxy没有，那么go会尝试从代码仓库拉取源码，比如github上的源码。go mod 当中 带有 // indirect的就是直接源码下载的。
-还可以使用 go mod edit -replace [old git package]@[version]=[new git package]@[version] 命令将远程代码仓库替换成本地的代码。 使用go private 设置私有化代码仓库的路径，然后配置认证就可以使用内部代码库。
-常用命令 go mod init 初始化模块，生成 go mod go mod tidy 拉取依赖，自动增删依赖，生成go.sum go mod download 将依赖预下载到本地缓存 go mod vendor 将下载的依赖缓存到 ./vendor,用于离线构建 go mod edit </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-27 09:47:18 +0800 CST'>August 27, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Mod" href="http://localhost:1313/posts/go/mod/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

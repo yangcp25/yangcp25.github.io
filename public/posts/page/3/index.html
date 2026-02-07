@@ -131,6 +131,19 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">常用数据结构
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>常用数据结构定义 1. 链表（Linked List） type ListNode struct { Val int Next *ListNode } 2. 双向链表（Doubly Linked List） type DListNode struct { Val int Prev *DListNode Next *DListNode } 3. 栈（Stack） type Stack struct { data []int } 4. 队列（Queue） type Queue struct { data []int } 5. 二叉树（Binary Tree） type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 6. N叉树（N-ary Tree） type NTreeNode struct { Val int Children []*NTreeNode } 7. 图（Graph） type GraphNode struct { Val int Neighbors []*GraphNode } 8. 哈希表（HashMap） m := make(map[string]int) 9. 堆（Heap / Priority Queue） type Item struct { Val int } type IntHeap []Item 10. 矩阵（Matrix） matrix := [][]int{ {1, 2, 3}, {4, 5, 6}, {7, 8, 9}, } 11. Trie（前缀树） type TrieNode struct { Children map[rune]*TrieNode IsEnd bool } type Trie struct { Root *TrieNode } 12. 并查集（Union-Find） type UnionFind struct { Parent []int Rank []int } 13. LRU 缓存（Least Recently Used Cache） type pair struct { key, value int } type LRUCache struct { capacity int cache map[int]*list.Element list *list.List } 进阶 图 🧠 一、图的基本概念 图由：
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-10-15 21:52:36 +0800 CST'>October 15, 2025</span>&nbsp;·&nbsp;3 min</footer>
+  <a class="entry-link" aria-label="post link to 常用数据结构" href="http://localhost:1313/posts/datastructalgorithm/%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">打卡计划表
     </h2>
   </header>
@@ -247,19 +260,6 @@ M:N 指的是它将 M 个 Goroutine（G）调度到 N 个操作系统线程（M�
   </div>
   <footer class="entry-footer"><span title='2025-09-12 09:47:57 +0800 CST'>September 12, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to 一次mysql的执行过程" href="http://localhost:1313/posts/database/%E4%B8%80%E6%AC%A1mysql%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Mysql_分组统计排序
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>记录一些面试遇到的题目
-CREATE TABLE students ( id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), age INT, sex CHAR(1), class VARCHAR(50) ); INSERT INTO students (name, age, sex, class) VALUES (&#39;沉默王二&#39;, 18, &#39;女&#39;, &#39;三年二班&#39;), (&#39;沉默王一&#39;, 20, &#39;男&#39;, &#39;三年二班&#39;), (&#39;沉默王三&#39;, 19, &#39;男&#39;, &#39;三年三班&#39;), (&#39;沉默王四&#39;, 17, &#39;男&#39;, &#39;三年三班&#39;), (&#39;沉默王五&#39;, 20, &#39;女&#39;, &#39;三年四班&#39;), (&#39;沉默王六&#39;, 21, &#39;男&#39;, &#39;三年四班&#39;), (&#39;沉默王七&#39;, 18, &#39;女&#39;, &#39;三年四班&#39;); select * from students s1 join ( select id, row_number() over (partition by class order by age) as rank_num from students ) s2 on s2.id = s1.id where s2.rank_num &lt;= 2 </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-09-12 09:41:41 +0800 CST'>September 12, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Mysql_分组统计排序" href="http://localhost:1313/posts/interview_code/mysql_%E5%88%86%E7%BB%84%E7%BB%9F%E8%AE%A1%E6%8E%92%E5%BA%8F/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

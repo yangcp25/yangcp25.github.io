@@ -128,6 +128,22 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Python语法复习学习高级特性
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>🧭 学习路线总览 第一阶段：Python 基础语法（但以工程理解为主） 目标：快速建立 Python 语言模型
+变量 &amp; 动态类型系统 控制流 容器类型（list / tuple / dict / set） 函数机制（参数、返回、多返回） 模块 &amp; 包机制 第二阶段：Python 进阶特性（核心能力区） 目标：理解 Python 为什么这么写 &amp; 怎么写高级代码
+迭代器 / 生成器 装饰器 上下文管理器（with） 深浅拷贝 魔法方法（dunder） dataclass 类型注解 &amp; typing 第三阶段：工程与底层机制 目标：Python 工程师的分水岭
+内存模型 &amp; GC GIL 与并发模型 asyncio 协程 并发模型对比（thread / process / coroutine） 常见性能坑 第四阶段：面试实战 高频面试题 原理追问 手撕代码 场景题 第 1 课：Python 基础语法核心（工程师版） 1️⃣ 变量与动态类型系统 2️⃣ 基本数据类型 3️⃣ None / True / False 的本质
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-07 09:23:43 +0800 CST'>February 7, 2026</span>&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to Python语法复习学习高级特性" href="http://localhost:1313/posts/python/start/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">使用场景和原则
     </h2>
   </header>
@@ -254,25 +270,6 @@ AI应用 工作当中会做一些AI相关的应用，在AI应用进行深耕
   </div>
   <footer class="entry-footer"><span title='2025-10-29 20:34:20 +0800 CST'>October 29, 2025</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to Tcp三次握手和四次挥手" href="http://localhost:1313/posts/network/tcp%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">sql高频题
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>分为六个维度：基础聚合 → 子查询 → TopN → 窗口函数 → 业务建模 → 性能优化。
-🎯 高频 SQL 题库（含答案与思路） 一、基础聚合与分组（GROUP BY / HAVING） 🧩 题 1：查询每个部门的平均工资 表结构：
-employee(emp_id, emp_name, dept_id, salary) SQL：
-SELECT dept_id, AVG(salary) AS avg_salary FROM employee GROUP BY dept_id; 📘 考点： 聚合函数 &#43; 分组
-🧩 题 2：查询带学生数超过 10 人的老师 teacher(teacher_id, name) student(student_id, teacher_id) SQL：
-SELECT teacher_id, COUNT(*) AS student_count FROM student GROUP BY teacher_id HAVING COUNT(*) &gt; 10; 📘 考点： HAVING 与 WHERE 的区别（HAVING 针对聚合后过滤）
-二、子查询（Subquery） 🧩 题 3：查询工资高于本部门平均工资的员工 SELECT e.emp_name, e.salary FROM employee e JOIN ( SELECT dept_id, AVG(salary) AS avg_salary FROM employee GROUP BY dept_id ) d ON e.dept_id = d.dept_id WHERE e.salary &gt; d.avg_salary; 📘 考点： 相关子查询 vs 非相关子查询
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-10-27 10:26:15 +0800 CST'>October 27, 2025</span>&nbsp;·&nbsp;3 min</footer>
-  <a class="entry-link" aria-label="post link to sql高频题" href="http://localhost:1313/posts/sql/%E9%AB%98%E9%A2%91%E9%A2%98/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

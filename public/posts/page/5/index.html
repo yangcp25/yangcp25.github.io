@@ -131,6 +131,23 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Mod
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>go mod 加载机制 go root go的安装目录
+go path go的源代码工作目录
+go mod go从1.11开始，加入了 go mod。开启 go mod 之后，不需要讲所有的源代码放到gopath。
+go 的加载机制 go 会把go mod所在的目录当成工作目录，先加载相对路径下的本地包，如果没有会去go mod文件查找，go mod 会尝试从go proxy 拉取代码，go proxy 是Google维护的go的包仓库，即使某些包的源码被删除，也还是可以从包仓库 下载，这保证了包引入的稳定性。如果go proxy没有，那么go会尝试从代码仓库拉取源码，比如github上的源码。go mod 当中 带有 // indirect的就是直接源码下载的。
+还可以使用 go mod edit -replace [old git package]@[version]=[new git package]@[version] 命令将远程代码仓库替换成本地的代码。 使用go private 设置私有化代码仓库的路径，然后配置认证就可以使用内部代码库。
+常用命令 go mod init 初始化模块，生成 go mod go mod tidy 拉取依赖，自动增删依赖，生成go.sum go mod download 将依赖预下载到本地缓存 go mod vendor 将下载的依赖缓存到 ./vendor,用于离线构建 go mod edit </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-27 09:47:18 +0800 CST'>August 27, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Mod" href="http://localhost:1313/posts/go/mod/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Channel
     </h2>
   </header>
@@ -281,22 +298,6 @@ go 简单的实践 package main import ( &#34;fmt&#34; &#34;io&#34; &#34;log&#34
   </div>
   <footer class="entry-footer"><span title='2025-07-16 09:21:40 +0800 CST'>July 16, 2025</span>&nbsp;·&nbsp;4 min</footer>
   <a class="entry-link" aria-label="post link to CAP" href="http://localhost:1313/posts/architecture/cap/"></a>
-</article>
-
-<article class="post-entry"> 
-<figure class="entry-cover">
-        <img loading="lazy" src="http://localhost:1313/images/img_2.png" alt="">
-</figure>
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">BFS&amp;&amp;DFS
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>树的遍历 深度优先遍历DFS package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, } root.Left = &amp;TreeNode{Val: 2} root.Right = &amp;TreeNode{Val: 3} root.Right.Left = &amp;TreeNode{Val: 4} root.Left.Left = &amp;TreeNode{Val: 5} list := make([]int, 0) var treeDFS = func(root *TreeNode) {} treeDFS = func(root *TreeNode) { if root == nil { return } list = append(list, root.Val) treeDFS(root.Left) treeDFS(root.Right) } treeDFS(root) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 函数版本
-package main import &#34;fmt&#34; func main() { root := &amp;TreeNode{ Val: 1, } root.Left = &amp;TreeNode{Val: 2} root.Right = &amp;TreeNode{Val: 3} root.Right.Left = &amp;TreeNode{Val: 4} root.Left.Left = &amp;TreeNode{Val: 5} list := make([]int, 0) TreeDFS(root, &amp;list) fmt.Println(list) //list2 := TreeBFS(root) //fmt.Println(list2) } func TreeDFS(root *TreeNode, list *[]int) { if root == nil { return } *list = append(*list, root.Val) TreeDFS(root.Left, list) TreeDFS(root.Right, list) } type TreeNode struct { Val int Left *TreeNode Right *TreeNode } 广度优先遍历BFS list2 := make([]int, 0) queue := make([]*TreeNode, 0) queue = append(queue, root) for len(queue) &gt; 0 { count := len(queue) for i := 0; i &lt; count; i&#43;&#43; { node := queue[0] queue = queue[1:] list2 = append(list2, node.Val) if node.Left != nil { queue = append(queue, node.Left) } if node.Right != nil { queue = append(queue, node.Right) } } } fmt.Println(list2) 根据先序遍历和中序遍历构造二叉树 package main import &#34;fmt&#34; func main() { // 1 // [1 2 5 3 4] 先序 // [2 5 1 3 4] 中序 // 1 [2 5] [2 5] i = 2 [3 4] // [2 5 3 4] [2 5] // [5 3 4] [5] copyTreeRoot := BuildTree([]int{1, 2, 5, 3, 4}, []int{2, 5, 1, 3, 4}) fmt.Println(copyTreeRoot) list3 := make([]int, 0) TreeDFS(copyTreeRoot, &amp;list3) fmt.Println(&#34;list3:&#34;, list3) //SliceTest() } func BuildTree(first []int, mid []int) *TreeNode { if len(first) == 0 { return nil } root := &amp;TreeNode{Val: first[0]} node := first[0] i := 0 for ; i &lt; len(mid); i&#43;&#43; { if mid[i] == node { break } } root.Left = BuildTree(first[1:i&#43;1], mid[:i]) root.Right = BuildTree(first[i&#43;1:], mid[i&#43;1:]) return root } 图的遍历 深度优先遍历DFS &amp;&amp; 广度优先遍历BFS package main import ( &#34;container/list&#34; &#34;fmt&#34; ) func main() { // 0 // 1 -&gt; 4 -&gt; 5 // 0 2 -&gt; 6 -&gt; 7 // 3 -&gt;^ g := make([][]int, 8) //g = append(g, []int{1, 2, 3} g[0] = []int{1, 2, 3} g[1] = []int{4} g[2] = []int{6} g[3] = []int{6} g[4] = []int{5} g[6] = []int{7} g2 := make(map[int][]int) g2[0] = []int{1, 2, 3} g2[1] = []int{4} g2[2] = []int{6} g2[3] = []int{6} g2[4] = []int{5} g2[6] = []int{7} graphDFS(0, g) //graphBFS(g) fmt.Println(&#34;-----&#34;) graphBFSWithQueue(g2) fmt.Println(&#34;-----&#34;) listC := graphBFSWithC(g2) fmt.Println(listC) } func graphDFS(root int, graph [][]int) { fmt.Println(root) if graph[root] == nil { return } //fmt.Println(root) for i := 0; i &lt; len(graph[root]); i&#43;&#43; { graphDFS(graph[root][i], graph) } return } func graphBFSWithQueue(graph map[int][]int) { queue := make([]int, 0) queue = append(queue, 0) fmt.Println(0) visited := make(map[int]bool) for len(queue) &gt; 0 { node := queue[0] queue = queue[1:] g := graph[node] size := len(g) for i := 0; i &lt; size; i&#43;&#43; { if visited[g[i]] { continue } else { fmt.Println(g[i]) queue = append(queue, g[i]) visited[g[i]] = true } } } } func graphBFSWithC(graph map[int][]int) []int { queue := list.New() order := make([]int, 0) visited := make(map[int]bool) queue.PushBack(0) for queue.Len() &gt; 0 { node := queue.Remove(queue.Front()).(int) order = append(order, node) neighbor := graph[node] size := len(neighbor) for i := 0; i &lt; size; i&#43;&#43; { if visited[neighbor[i]] { continue } else { queue.PushBack(neighbor[i]) visited[neighbor[i]] = true } } } return order } 带权图的最短路径算法 dijkstra 参考 可视化网站. 可视化网站. </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-09 09:20:50 +0800 CST'>July 9, 2025</span>&nbsp;·&nbsp;3 min</footer>
-  <a class="entry-link" aria-label="post link to BFS&&DFS" href="http://localhost:1313/posts/datastructalgorithm/bfs_dfs/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

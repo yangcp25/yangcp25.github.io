@@ -3,10 +3,13 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://localhost:1313/posts/</loc>
-    <lastmod>2026-02-05T14:09:54+08:00</lastmod>
+    <lastmod>2026-02-07T09:23:43+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/python/start/</loc>
+    <lastmod>2026-02-07T09:23:43+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/</loc>
-    <lastmod>2026-02-05T14:09:54+08:00</lastmod>
+    <lastmod>2026-02-07T09:23:43+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/redis/%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E5%8E%9F%E5%88%99/</loc>
     <lastmod>2026-02-05T14:09:54+08:00</lastmod>
