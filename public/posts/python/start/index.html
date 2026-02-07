@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Python语法复习学习高级特性 | yangcp</title>
+<meta name="keywords" content="">
+<meta name="description" content="🧭 学习路线总览
+第一阶段：Python 基础语法（但以工程理解为主）
+目标：快速建立 Python 语言模型
+
+变量 &amp; 动态类型系统
+控制流
+容器类型（list / tuple / dict / set）
+函数机制（参数、返回、多返回）
+模块 &amp; 包机制
+
+
+第二阶段：Python 进阶特性（核心能力区）
+目标：理解 Python 为什么这么写 &amp; 怎么写高级代码
+
+迭代器 / 生成器
+装饰器
+上下文管理器（with）
+深浅拷贝
+魔法方法（dunder）
+dataclass
+类型注解 &amp; typing
+
+
+第三阶段：工程与底层机制
+目标：Python 工程师的分水岭
+
+内存模型 &amp; GC
+GIL 与并发模型
+asyncio 协程
+并发模型对比（thread / process / coroutine）
+常见性能坑
+
+
+第四阶段：面试实战
+
+高频面试题
+原理追问
+手撕代码
+场景题
+
+
+第 1 课：Python 基础语法核心（工程师版）
+1️⃣ 变量与动态类型系统
+2️⃣ 基本数据类型
+3️⃣ None / True / False 的本质">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/python/start/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/python/start/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="yangcp (Alt + H)">yangcp</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tag">
+                    <span>Tag</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/me/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Python语法复习学习高级特性
+    </h1>
+    <div class="post-meta"><span title='2026-02-07 09:23:43 +0800 CST'>February 7, 2026</span>&nbsp;·&nbsp;4 min
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#-%e5%ad%a6%e4%b9%a0%e8%b7%af%e7%ba%bf%e6%80%bb%e8%a7%88" aria-label="🧭 学习路线总览">🧭 学习路线总览</a><ul>
+                        <ul>
+                        
+                <li>
+                    <a href="#%e7%ac%ac%e4%b8%80%e9%98%b6%e6%ae%b5python-%e5%9f%ba%e7%a1%80%e8%af%ad%e6%b3%95%e4%bd%86%e4%bb%a5%e5%b7%a5%e7%a8%8b%e7%90%86%e8%a7%a3%e4%b8%ba%e4%b8%bb" aria-label="第一阶段：Python 基础语法（但以工程理解为主）">第一阶段：Python 基础语法（但以工程理解为主）</a></li>
+                <li>
+                    <a href="#%e7%ac%ac%e4%ba%8c%e9%98%b6%e6%ae%b5python-%e8%bf%9b%e9%98%b6%e7%89%b9%e6%80%a7%e6%a0%b8%e5%bf%83%e8%83%bd%e5%8a%9b%e5%8c%ba" aria-label="第二阶段：Python 进阶特性（核心能力区）">第二阶段：Python 进阶特性（核心能力区）</a></li>
+                <li>
+                    <a href="#%e7%ac%ac%e4%b8%89%e9%98%b6%e6%ae%b5%e5%b7%a5%e7%a8%8b%e4%b8%8e%e5%ba%95%e5%b1%82%e6%9c%ba%e5%88%b6" aria-label="第三阶段：工程与底层机制">第三阶段：工程与底层机制</a></li>
+                <li>
+                    <a href="#%e7%ac%ac%e5%9b%9b%e9%98%b6%e6%ae%b5%e9%9d%a2%e8%af%95%e5%ae%9e%e6%88%98" aria-label="第四阶段：面试实战">第四阶段：面试实战</a></li></ul>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#%e7%ac%ac-1-%e8%af%bepython-%e5%9f%ba%e7%a1%80%e8%af%ad%e6%b3%95%e6%a0%b8%e5%bf%83%e5%b7%a5%e7%a8%8b%e5%b8%88%e7%89%88" aria-label="第 1 课：Python 基础语法核心（工程师版）">第 1 课：Python 基础语法核心（工程师版）</a><ul>
+                        
+                <li>
+                    <a href="#%e4%b8%80%e5%8f%98%e9%87%8f%e4%b8%8e%e5%8a%a8%e6%80%81%e7%b1%bb%e5%9e%8b%e7%b3%bb%e7%bb%9fpython-vs-go" aria-label="一、变量与动态类型系统（Python vs Go）">一、变量与动态类型系统（Python vs Go）</a><ul>
+                        
+                <li>
+                    <a href="#1-python-%e6%98%af%e5%bc%ba%e7%b1%bb%e5%9e%8b--%e5%8a%a8%e6%80%81%e7%b1%bb%e5%9e%8b" aria-label="1. Python 是强类型 &#43; 动态类型">1. Python 是强类型 + 动态类型</a></li>
+                <li>
+                    <a href="#2-python-%e5%8f%98%e9%87%8f%e6%9c%ac%e8%b4%a8%e6%98%af%e6%8c%87%e9%92%88--%e5%af%b9%e8%b1%a1" aria-label="2. Python 变量本质是：指针 &#43; 对象">2. Python 变量本质是：指针 + 对象</a></li>
+                <li>
+                    <a href="#3-%e8%b5%8b%e5%80%bc%e4%b8%8d%e6%98%af%e6%8b%b7%e8%b4%9d%e8%80%8c%e6%98%af%e5%bc%95%e7%94%a8%e7%bb%91%e5%ae%9a" aria-label="3. 赋值不是拷贝，而是引用绑定">3. 赋值不是拷贝，而是引用绑定</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%ba%8c%e5%9f%ba%e6%9c%ac%e6%95%b0%e6%8d%ae%e7%b1%bb%e5%9e%8b" aria-label="二、基本数据类型">二、基本数据类型</a><ul>
+                        
+                <li>
+                    <a href="#1-%e4%b8%8d%e5%8f%af%e5%8f%98%e7%b1%bb%e5%9e%8b-vs-%e5%8f%af%e5%8f%98%e7%b1%bb%e5%9e%8b%e6%9e%81%e9%87%8d%e8%a6%81" aria-label="1. 不可变类型 vs 可变类型（极重要）">1. 不可变类型 vs 可变类型（极重要）</a></li>
+                <li>
+                    <a href="#2-%e5%8f%af%e5%8f%98%e5%af%b9%e8%b1%a1%e7%9a%84%e5%8e%9f%e5%9c%b0%e4%bf%ae%e6%94%b9" aria-label="2. 可变对象的“原地修改”">2. 可变对象的“原地修改”</a></li>
+                <li>
+                    <a href="#3-python-%e5%8f%82%e6%95%b0%e4%bc%a0%e9%80%92%e6%9c%ac%e8%b4%a8" aria-label="3. Python 参数传递本质">3. Python 参数传递本质</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%b8%89none--true--false-%e7%9a%84%e6%9c%ac%e8%b4%a8" aria-label="三、None / True / False 的本质">三、None / True / False 的本质</a><ul>
+                        
+                <li>
+                    <a href="#1-none-%e6%98%af%e4%b8%80%e4%b8%aa%e7%9c%9f%e5%ae%9e%e5%af%b9%e8%b1%a1" aria-label="1. None 是一个真实对象">1. None 是一个真实对象</a></li>
+                <li>
+                    <a href="#2-true--false-%e4%b9%9f%e6%98%af%e5%af%b9%e8%b1%a1" aria-label="2. True / False 也是对象">2. True / False 也是对象</a></li>
+                <li>
+                    <a href="#3-python-%e7%9a%84%e7%9c%9f%e5%81%87%e5%88%a4%e6%96%ad%e8%a7%84%e5%88%99" aria-label="3. Python 的真假判断规则">3. Python 的真假判断规则</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#-%e7%bb%83%e4%b9%a0--%e6%80%9d%e8%80%83%e9%a2%98" aria-label="✍️ 练习 &amp; 思考题">✍️ 练习 &amp; 思考题</a><ul>
+                        <ul>
+                        
+                <li>
+                    <a href="#%e9%a2%98-1%e5%af%b9%e8%b1%a1%e5%bc%95%e7%94%a8" aria-label="题 1（对象引用）">题 1（对象引用）</a></li>
+                <li>
+                    <a href="#%e9%a2%98-2%e5%8f%af%e5%8f%98%e5%af%b9%e8%b1%a1%e4%bc%a0%e5%8f%82" aria-label="题 2（可变对象传参）">题 2（可变对象传参）</a></li>
+                <li>
+                    <a href="#%e9%a2%98-3%e4%b8%8d%e5%8f%af%e5%8f%98%e5%af%b9%e8%b1%a1%e4%bc%a0%e5%8f%82" aria-label="题 3（不可变对象传参）">题 3（不可变对象传参）</a></li>
+                <li>
+                    <a href="#%e9%a2%98-4%e7%9c%9f%e5%81%87%e5%88%a4%e6%96%ad" aria-label="题 4（真假判断）">题 4（真假判断）</a></li></ul>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#-%e7%ac%ac-2-%e8%af%bedict--set--python-%e7%9a%84%e7%81%b5%e9%ad%82" aria-label="🧠 第 2 课：dict &amp; set —— Python 的灵魂">🧠 第 2 课：dict &amp; set —— Python 的灵魂</a><ul>
+                        
+                <li>
+                    <a href="#%e5%87%bd%e6%95%b0%e4%bc%a0%e5%8f%82-tuple-list-set-dict" aria-label="函数传参 tuple list set dict">函数传参 tuple list set dict</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%b8%80dict-%e6%98%af-python-%e7%9a%84%e7%ac%ac%e4%b8%80%e5%85%ac%e6%b0%91" aria-label="一、dict 是 Python 的“第一公民”">一、dict 是 Python 的“第一公民”</a></li>
+                <li>
+                    <a href="#%e4%ba%8cdict-%e5%ba%95%e5%b1%82%e7%bb%93%e6%9e%84%e5%93%88%e5%b8%8c%e8%a1%a8" aria-label="二、dict 底层结构（哈希表）">二、dict 底层结构（哈希表）</a><ul>
+                        <ul>
+                        
+                <li>
+                    <a href="#%e6%a0%b8%e5%bf%83%e7%89%b9%e6%80%a7" aria-label="核心特性：">核心特性：</a></li></ul>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#%e4%b8%89hash--eqdict-%e7%9a%84%e5%8f%8c%e6%a0%b8%e5%bf%83%e6%9c%ba%e5%88%b6" aria-label="三、hash &amp; eq：dict 的双核心机制">三、hash &amp; eq：dict 的双核心机制</a><ul>
+                        
+                <li>
+                    <a href="#1-hash-%e5%86%b3%e5%ae%9a%e6%a1%b6%e4%bd%8d%e7%bd%ae" aria-label="1️⃣ hash 决定：桶位置">1️⃣ hash 决定：桶位置</a></li>
+                <li>
+                    <a href="#2-eq-%e5%86%b3%e5%ae%9a%e9%80%bb%e8%be%91%e7%9b%b8%e7%ad%89" aria-label="2️⃣ eq 决定：逻辑相等">2️⃣ eq 决定：逻辑相等</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%9b%9b%e7%bb%8f%e5%85%b8%e7%81%b5%e9%ad%82%e9%a2%98%e6%8b%86%e8%a7%a3" aria-label="四、经典灵魂题拆解">四、经典灵魂题拆解</a><ul>
+                        
+                <li>
+                    <a href="#step-1%e8%ae%a1%e7%ae%97-hash" aria-label="Step 1：计算 hash">Step 1：计算 hash</a></li>
+                <li>
+                    <a href="#step-2%e5%88%a4%e6%96%ad-eq" aria-label="Step 2：判断 eq">Step 2：判断 eq</a></li>
+                <li>
+                    <a href="#%e7%bb%93%e8%ae%ba" aria-label="结论：">结论：</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%ba%94%e8%bf%99%e9%81%93%e9%a2%98%e8%83%8c%e5%90%8e%e7%89%b5%e5%87%ba-python-%e4%b8%89%e5%a4%a7%e6%a0%b8%e5%bf%83%e8%ae%be%e8%ae%a1" aria-label="五、这道题背后牵出 Python 三大核心设计">五、这道题背后牵出 Python 三大核心设计</a></li>
+                <li>
+                    <a href="#%e5%85%ad%e4%bd%a0%e7%8e%b0%e5%9c%a8%e7%9a%84-go-%e5%af%b9%e7%85%a7%e6%a8%a1%e5%9e%8b" aria-label="六、你现在的 Go 对照模型">六、你现在的 Go 对照模型</a></li>
+                <li>
+                    <a href="#%e4%b8%83set-%e6%9c%ac%e8%b4%a8%e6%98%af%e4%bb%80%e4%b9%88" aria-label="七、set 本质是什么？">七、set 本质是什么？</a></li>
+                <li>
+                    <a href="#%e5%85%ab%e4%b8%ba%e4%bb%80%e4%b9%88-set-%e6%9f%a5%e6%89%be%e6%9e%81%e5%bf%ab" aria-label="八、为什么 set 查找极快？">八、为什么 set 查找极快？</a></li>
+                <li>
+                    <a href="#%e4%b9%9d%e4%b8%ba%e4%bb%80%e4%b9%88-list-%e4%b8%8d%e8%83%bd%e5%81%9a-dict-key" aria-label="九、为什么 list 不能做 dict key？">九、为什么 list 不能做 dict key？</a></li>
+                <li>
+                    <a href="#%e5%8d%81%e4%bd%a0%e7%8e%b0%e5%9c%a8%e7%9a%84%e7%90%86%e8%a7%a3%e5%b1%82%e7%ba%a7" aria-label="十、你现在的理解层级">十、你现在的理解层级</a></li>
+                <li>
+                    <a href="#-%e6%9c%ac%e8%8a%82%e7%bb%83%e4%b9%a0%e9%a2%98%e9%9d%a2%e8%af%95%e7%ba%a7" aria-label="✍️ 本节练习题（面试级）">✍️ 本节练习题（面试级）</a><ul>
+                        <ul>
+                        
+                <li>
+                    <a href="#%e9%a2%98-1%e5%bf%85%e8%80%83" aria-label="题 1（必考）">题 1（必考）</a></li>
+                <li>
+                    <a href="#%e9%a2%98-2%e9%ab%98%e7%ba%a7" aria-label="题 2（高级）">题 2（高级）</a></li>
+                <li>
+                    <a href="#%e9%a2%98-3%e9%99%b7%e9%98%b1%e9%a2%98" aria-label="题 3（陷阱题）">题 3（陷阱题）</a></li>
+                <li>
+                    <a href="#%e7%bb%8f%e5%85%b8%e9%a2%98%e5%9e%8b" aria-label="经典题型">经典题型</a>
+                </li>
+            </ul>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h1 id="-学习路线总览">🧭 学习路线总览<a hidden class="anchor" aria-hidden="true" href="#-学习路线总览">#</a></h1>
+<h3 id="第一阶段python-基础语法但以工程理解为主">第一阶段：Python 基础语法（但以工程理解为主）<a hidden class="anchor" aria-hidden="true" href="#第一阶段python-基础语法但以工程理解为主">#</a></h3>
+<p>目标：<strong>快速建立 Python 语言模型</strong></p>
+<ul>
+<li>变量 &amp; 动态类型系统</li>
+<li>控制流</li>
+<li>容器类型（list / tuple / dict / set）</li>
+<li>函数机制（参数、返回、多返回）</li>
+<li>模块 &amp; 包机制</li>
+</ul>
+<hr>
+<h3 id="第二阶段python-进阶特性核心能力区">第二阶段：Python 进阶特性（核心能力区）<a hidden class="anchor" aria-hidden="true" href="#第二阶段python-进阶特性核心能力区">#</a></h3>
+<p>目标：<strong>理解 Python 为什么这么写 &amp; 怎么写高级代码</strong></p>
+<ul>
+<li>迭代器 / 生成器</li>
+<li>装饰器</li>
+<li>上下文管理器（with）</li>
+<li>深浅拷贝</li>
+<li>魔法方法（dunder）</li>
+<li>dataclass</li>
+<li>类型注解 &amp; typing</li>
+</ul>
+<hr>
+<h3 id="第三阶段工程与底层机制">第三阶段：工程与底层机制<a hidden class="anchor" aria-hidden="true" href="#第三阶段工程与底层机制">#</a></h3>
+<p>目标：<strong>Python 工程师的分水岭</strong></p>
+<ul>
+<li>内存模型 &amp; GC</li>
+<li>GIL 与并发模型</li>
+<li>asyncio 协程</li>
+<li>并发模型对比（thread / process / coroutine）</li>
+<li>常见性能坑</li>
+</ul>
+<hr>
+<h3 id="第四阶段面试实战">第四阶段：面试实战<a hidden class="anchor" aria-hidden="true" href="#第四阶段面试实战">#</a></h3>
+<ul>
+<li>高频面试题</li>
+<li>原理追问</li>
+<li>手撕代码</li>
+<li>场景题</li>
+</ul>
+<hr>
+<h1 id="第-1-课python-基础语法核心工程师版">第 1 课：Python 基础语法核心（工程师版）<a hidden class="anchor" aria-hidden="true" href="#第-1-课python-基础语法核心工程师版">#</a></h1>
+<p>1️⃣ 变量与动态类型系统
+2️⃣ 基本数据类型
+3️⃣ None / True / False 的本质</p>
+<hr>
+<h2 id="一变量与动态类型系统python-vs-go">一、变量与动态类型系统（Python vs Go）<a hidden class="anchor" aria-hidden="true" href="#一变量与动态类型系统python-vs-go">#</a></h2>
+<h3 id="1-python-是强类型--动态类型">1. Python 是强类型 + 动态类型<a hidden class="anchor" aria-hidden="true" href="#1-python-是强类型--动态类型">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>a <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hello&#34;</span>
+</span></span><span style="display:flex;"><span>a <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>]
+</span></span></code></pre></div><p>变量 <strong>不是类型容器，而是引用</strong></p>
+<p>👉 类似 Go：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">a</span> <span style="color:#66d9ef">interface</span>{}
+</span></span></code></pre></div><h3 id="2-python-变量本质是指针--对象">2. Python 变量本质是：<strong>指针 + 对象</strong><a hidden class="anchor" aria-hidden="true" href="#2-python-变量本质是指针--对象">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> a
+</span></span></code></pre></div><p>内存模型：</p>
+<pre tabindex="0"><code>a ──▶ PyObject(10)
+b ──▶ PyObject(10)
+</code></pre><p>验证：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> a
+</span></span><span style="display:flex;"><span>print(id(a), id(b))   <span style="color:#75715e"># 一样</span>
+</span></span></code></pre></div><blockquote>
+<p><code>id()</code> = 对象的内存地址（CPython 中）</p></blockquote>
+<hr>
+<h3 id="3-赋值不是拷贝而是引用绑定">3. 赋值不是拷贝，而是引用绑定<a hidden class="anchor" aria-hidden="true" href="#3-赋值不是拷贝而是引用绑定">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>]
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> a
+</span></span><span style="display:flex;"><span>b<span style="color:#f92672">.</span>append(<span style="color:#ae81ff">4</span>)
+</span></span><span style="display:flex;"><span>print(a)
+</span></span></code></pre></div><p>输出：</p>
+<pre tabindex="0"><code>[1, 2, 3, 4]
+</code></pre><p>本质：</p>
+<pre tabindex="0"><code>a ──▶ list
+b ──▶ same list
+</code></pre><p>对比 Go：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">slice</span> <span style="color:#f92672">:=</span> []<span style="color:#66d9ef">int</span>{<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>}
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">s2</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">slice</span>
+</span></span></code></pre></div><p><strong>行为极其相似</strong></p>
+<hr>
+<h2 id="二基本数据类型">二、基本数据类型<a hidden class="anchor" aria-hidden="true" href="#二基本数据类型">#</a></h2>
+<p>Python 数据类型 = <strong>6 大类</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>分类</th>
+          <th>类型</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>数值</td>
+          <td>int, float, complex</td>
+      </tr>
+      <tr>
+          <td>布尔</td>
+          <td>bool</td>
+      </tr>
+      <tr>
+          <td>空值</td>
+          <td>None</td>
+      </tr>
+      <tr>
+          <td>字符串</td>
+          <td>str</td>
+      </tr>
+      <tr>
+          <td>容器</td>
+          <td>list, tuple, set, dict</td>
+      </tr>
+      <tr>
+          <td>进阶</td>
+          <td>bytes, bytearray</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h3 id="1-不可变类型-vs-可变类型极重要">1. 不可变类型 vs 可变类型（极重要）<a hidden class="anchor" aria-hidden="true" href="#1-不可变类型-vs-可变类型极重要">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>不可变</th>
+          <th>可变</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>int</td>
+          <td>list</td>
+      </tr>
+      <tr>
+          <td>float</td>
+          <td>dict</td>
+      </tr>
+      <tr>
+          <td>bool</td>
+          <td>set</td>
+      </tr>
+      <tr>
+          <td>str</td>
+          <td>bytearray</td>
+      </tr>
+      <tr>
+          <td>tuple</td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+<p>👉 不可变对象：<strong>内容不可修改，只能新建</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>a <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>   <span style="color:#75715e"># 不是原地修改，而是创建新对象</span>
+</span></span></code></pre></div><hr>
+<h3 id="2-可变对象的原地修改">2. 可变对象的“原地修改”<a hidden class="anchor" aria-hidden="true" href="#2-可变对象的原地修改">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>lst <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>]
+</span></span><span style="display:flex;"><span>lst<span style="color:#f92672">.</span>append(<span style="color:#ae81ff">4</span>)
+</span></span></code></pre></div><p><strong>不会创建新对象</strong></p>
+<p>这直接影响：</p>
+<ul>
+<li>并发安全</li>
+<li>参数传递</li>
+<li>函数副作用</li>
+<li>缓存设计</li>
+</ul>
+<hr>
+<h3 id="3-python-参数传递本质">3. Python 参数传递本质<a hidden class="anchor" aria-hidden="true" href="#3-python-参数传递本质">#</a></h3>
+<p><strong>永远是：对象引用传递（call by object reference）</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">foo</span>(x):
+</span></span><span style="display:flex;"><span>    x<span style="color:#f92672">.</span>append(<span style="color:#ae81ff">4</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>a <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>]
+</span></span><span style="display:flex;"><span>foo(a)
+</span></span><span style="display:flex;"><span>print(a)
+</span></span></code></pre></div><p>输出：</p>
+<pre tabindex="0"><code>[1,2,3,4]
+</code></pre><p><strong>你可以直接类比 Go 的 slice 传参</strong></p>
+<hr>
+<h2 id="三none--true--false-的本质">三、None / True / False 的本质<a hidden class="anchor" aria-hidden="true" href="#三none--true--false-的本质">#</a></h2>
+<h3 id="1-none-是一个真实对象">1. None 是一个真实对象<a hidden class="anchor" aria-hidden="true" href="#1-none-是一个真实对象">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">None</span> <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>   <span style="color:#75715e"># True</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>type(<span style="color:#66d9ef">None</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># &lt;class &#39;NoneType&#39;&gt;</span>
+</span></span></code></pre></div><p>只有一个实例：<strong>单例</strong></p>
+<hr>
+<h3 id="2-true--false-也是对象">2. True / False 也是对象<a hidden class="anchor" aria-hidden="true" href="#2-true--false-也是对象">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>type(<span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># &lt;class &#39;bool&#39;&gt;</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">True</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>   <span style="color:#75715e"># 2</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">False</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>  <span style="color:#75715e"># 1</span>
+</span></span></code></pre></div><p>因为：</p>
+<pre tabindex="0"><code>bool 是 int 的子类
+</code></pre><p>验证：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>isinstance(<span style="color:#66d9ef">True</span>, int)  <span style="color:#75715e"># True</span>
+</span></span></code></pre></div><hr>
+<h3 id="3-python-的真假判断规则">3. Python 的真假判断规则<a hidden class="anchor" aria-hidden="true" href="#3-python-的真假判断规则">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>bool(<span style="color:#ae81ff">0</span>)        <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>bool(<span style="color:#e6db74">&#34;&#34;</span>)       <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>bool([])       <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>bool(<span style="color:#66d9ef">None</span>)     <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">False</span>
+</span></span></code></pre></div><p><strong>空 = False</strong></p>
+<p>这决定了：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> data:
+</span></span></code></pre></div><p>等价于：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> data <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span> <span style="color:#f92672">and</span> len(data) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>
+</span></span></code></pre></div><hr>
+<blockquote>
+<p><strong>Python = 一切皆对象 + 引用传递 + 动态类型 + 强类型</strong></p></blockquote>
+<hr>
+<h1 id="-练习--思考题">✍️ 练习 &amp; 思考题<a hidden class="anchor" aria-hidden="true" href="#-练习--思考题">#</a></h1>
+<hr>
+<h3 id="题-1对象引用">题 1（对象引用）<a hidden class="anchor" aria-hidden="true" href="#题-1对象引用">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>]
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> a
+</span></span><span style="display:flex;"><span>a <span style="color:#f92672">=</span> [<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">6</span>]
+</span></span><span style="display:flex;"><span>print(b)
+</span></span></code></pre></div><p>👉 输出是什么？为什么？</p>
+<hr>
+<h3 id="题-2可变对象传参">题 2（可变对象传参）<a hidden class="anchor" aria-hidden="true" href="#题-2可变对象传参">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(x):
+</span></span><span style="display:flex;"><span>    x <span style="color:#f92672">=</span> [<span style="color:#ae81ff">100</span>,<span style="color:#ae81ff">200</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>a <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>]
+</span></span><span style="display:flex;"><span>f(a)
+</span></span><span style="display:flex;"><span>print(a)
+</span></span></code></pre></div><p>👉 输出是什么？为什么？</p>
+<hr>
+<h3 id="题-3不可变对象传参">题 3（不可变对象传参）<a hidden class="anchor" aria-hidden="true" href="#题-3不可变对象传参">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(x):
+</span></span><span style="display:flex;"><span>    x <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>a <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>f(a)
+</span></span><span style="display:flex;"><span>print(a)
+</span></span></code></pre></div><p>👉 输出是什么？为什么？</p>
+<hr>
+<h3 id="题-4真假判断">题 4（真假判断）<a hidden class="anchor" aria-hidden="true" href="#题-4真假判断">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> []:
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;yes&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;no&#34;</span>)
+</span></span></code></pre></div><h1 id="-第-2-课dict--set--python-的灵魂">🧠 第 2 课：dict &amp; set —— Python 的灵魂<a hidden class="anchor" aria-hidden="true" href="#-第-2-课dict--set--python-的灵魂">#</a></h1>
+<h2 id="函数传参-tuple-list-set-dict">函数传参 tuple list set dict<a hidden class="anchor" aria-hidden="true" href="#函数传参-tuple-list-set-dict">#</a></h2>
+<blockquote>
+<p><strong>如果你真正理解了 dict，你就真正理解了 Python。</strong></p></blockquote>
+<p>本节 3 个核心知识点：</p>
+<p>1️⃣ dict 底层结构 &amp; 哈希表原理
+2️⃣ Python 的 hash / eq 机制
+3️⃣ set 本质 &amp; 高性能根源</p>
+<hr>
+<h1 id="一dict-是-python-的第一公民">一、dict 是 Python 的“第一公民”<a hidden class="anchor" aria-hidden="true" href="#一dict-是-python-的第一公民">#</a></h1>
+<p>Python 里：</p>
+<ul>
+<li>变量</li>
+<li>对象</li>
+<li>模块</li>
+<li>类</li>
+<li>实例</li>
+<li>kwargs</li>
+<li>globals</li>
+<li>locals</li>
+</ul>
+<p>👉 <strong>本质全是 dict</strong></p>
+<p>例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>:
+</span></span><span style="display:flex;"><span>    x <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>
+</span></span></code></pre></div><p>底层等价：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>A<span style="color:#f92672">.</span>__dict__ <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;x&#34;</span>: <span style="color:#ae81ff">10</span>}
+</span></span></code></pre></div><hr>
+<h1 id="二dict-底层结构哈希表">二、dict 底层结构（哈希表）<a hidden class="anchor" aria-hidden="true" href="#二dict-底层结构哈希表">#</a></h1>
+<p>Python dict 是：</p>
+<blockquote>
+<p><strong>开放寻址哈希表（open addressing hash table）</strong></p></blockquote>
+<p>结构模型：</p>
+<pre tabindex="0"><code>hash(key) → index → table[index]
+</code></pre><h3 id="核心特性">核心特性：<a hidden class="anchor" aria-hidden="true" href="#核心特性">#</a></h3>
+<ul>
+<li>查找：O(1)</li>
+<li>插入：O(1)</li>
+<li>删除：O(1)</li>
+</ul>
+<hr>
+<h1 id="三hash--eqdict-的双核心机制">三、hash &amp; eq：dict 的双核心机制<a hidden class="anchor" aria-hidden="true" href="#三hash--eqdict-的双核心机制">#</a></h1>
+<p>dict 判断两个 key 是否相同，<strong>必须同时满足</strong>：</p>
+<pre tabindex="0"><code>hash(a) == hash(b)
+and
+a == b
+</code></pre><hr>
+<h2 id="1-hash-决定桶位置">1️⃣ hash 决定：桶位置<a hidden class="anchor" aria-hidden="true" href="#1-hash-决定桶位置">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>hash(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>hash(<span style="color:#e6db74">&#34;abc&#34;</span>)
+</span></span><span style="display:flex;"><span>hash((<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>))
+</span></span></code></pre></div><hr>
+<h2 id="2-eq-决定逻辑相等">2️⃣ eq 决定：逻辑相等<a hidden class="anchor" aria-hidden="true" href="#2-eq-决定逻辑相等">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ae81ff">1</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">True</span>   <span style="color:#75715e"># True</span>
+</span></span></code></pre></div><hr>
+<h1 id="四经典灵魂题拆解">四、经典灵魂题拆解<a hidden class="anchor" aria-hidden="true" href="#四经典灵魂题拆解">#</a></h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>d <span style="color:#f92672">=</span> {}
+</span></span><span style="display:flex;"><span>d[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;a&#34;</span>
+</span></span><span style="display:flex;"><span>d[<span style="color:#66d9ef">True</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;b&#34;</span>
+</span></span><span style="display:flex;"><span>print(d)
+</span></span></code></pre></div><p>你刚才已经推过类似的，我们现在<strong>完整拆解</strong></p>
+<hr>
+<h2 id="step-1计算-hash">Step 1：计算 hash<a hidden class="anchor" aria-hidden="true" href="#step-1计算-hash">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>hash(<span style="color:#ae81ff">1</span>) <span style="color:#f92672">==</span> hash(<span style="color:#66d9ef">True</span>)
+</span></span></code></pre></div><p>结果：</p>
+<pre tabindex="0"><code>True
+</code></pre><p>因为：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>bool 是 int 子类
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">True</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>
+</span></span></code></pre></div><hr>
+<h2 id="step-2判断-eq">Step 2：判断 eq<a hidden class="anchor" aria-hidden="true" href="#step-2判断-eq">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ae81ff">1</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">True</span>   <span style="color:#75715e"># True</span>
+</span></span></code></pre></div><hr>
+<h2 id="结论">结论：<a hidden class="anchor" aria-hidden="true" href="#结论">#</a></h2>
+<pre tabindex="0"><code>key 冲突 → 覆盖
+</code></pre><p>所以：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>{<span style="color:#ae81ff">1</span>: <span style="color:#e6db74">&#34;b&#34;</span>}
+</span></span></code></pre></div><hr>
+<h1 id="五这道题背后牵出-python-三大核心设计">五、这道题背后牵出 Python 三大核心设计<a hidden class="anchor" aria-hidden="true" href="#五这道题背后牵出-python-三大核心设计">#</a></h1>
+<p>1️⃣ bool 继承自 int
+2️⃣ hash &amp; eq 联合判断
+3️⃣ dict 冲突覆盖机制</p>
+<hr>
+<h1 id="六你现在的-go-对照模型">六、你现在的 Go 对照模型<a hidden class="anchor" aria-hidden="true" href="#六你现在的-go-对照模型">#</a></h1>
+<p>Go：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">int</span>]<span style="color:#66d9ef">string</span>
+</span></span></code></pre></div><p>Python：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>dict[int] <span style="color:#f92672">=</span> value
+</span></span></code></pre></div><p>区别：</p>
+<table>
+  <thead>
+      <tr>
+          <th>维度</th>
+          <th>Go</th>
+          <th>Python</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>key 可变</td>
+          <td>❌</td>
+          <td>❌</td>
+      </tr>
+      <tr>
+          <td>hash 可自定义</td>
+          <td>❌</td>
+          <td>✅</td>
+      </tr>
+      <tr>
+          <td>eq 可自定义</td>
+          <td>❌</td>
+          <td>✅</td>
+      </tr>
+      <tr>
+          <td>冲突策略</td>
+          <td>链表/红黑树</td>
+          <td>开放寻址</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h1 id="七set-本质是什么">七、set 本质是什么？<a hidden class="anchor" aria-hidden="true" href="#七set-本质是什么">#</a></h1>
+<p>一句话：</p>
+<blockquote>
+<p><strong>set = 只有 key，没有 value 的 dict</strong></p></blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>s <span style="color:#f92672">=</span> {<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>}
+</span></span></code></pre></div><p>底层本质：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>{<span style="color:#ae81ff">1</span>: <span style="color:#66d9ef">None</span>, <span style="color:#ae81ff">2</span>: <span style="color:#66d9ef">None</span>, <span style="color:#ae81ff">3</span>: <span style="color:#66d9ef">None</span>}
+</span></span></code></pre></div><hr>
+<h1 id="八为什么-set-查找极快">八、为什么 set 查找极快？<a hidden class="anchor" aria-hidden="true" href="#八为什么-set-查找极快">#</a></h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>x <span style="color:#f92672">in</span> set_obj
+</span></span></code></pre></div><p>→ hash 定位 → O(1)</p>
+<p>而：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>x <span style="color:#f92672">in</span> list_obj
+</span></span></code></pre></div><p>→ 线性扫描 → O(n)</p>
+<hr>
+<h1 id="九为什么-list-不能做-dict-key">九、为什么 list 不能做 dict key？<a hidden class="anchor" aria-hidden="true" href="#九为什么-list-不能做-dict-key">#</a></h1>
+<p>因为：</p>
+<blockquote>
+<p><strong>dict key 必须 hash 值稳定</strong></p></blockquote>
+<p>而：</p>
+<ul>
+<li>list → 可变 → hash 不稳定 ❌</li>
+<li>tuple → 不可变 → hash 稳定 ✅</li>
+</ul>
+<hr>
+<h1 id="十你现在的理解层级">十、你现在的理解层级<a hidden class="anchor" aria-hidden="true" href="#十你现在的理解层级">#</a></h1>
+<p>你已经具备：</p>
+<p>👉 dict + set + hash + eq + 引用模型 + 运算符模型</p>
+<p>这已经是 <strong>Python 工程核心区</strong></p>
+<hr>
+<h1 id="-本节练习题面试级">✍️ 本节练习题（面试级）<a hidden class="anchor" aria-hidden="true" href="#-本节练习题面试级">#</a></h1>
+<hr>
+<h3 id="题-1必考">题 1（必考）<a hidden class="anchor" aria-hidden="true" href="#题-1必考">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>d <span style="color:#f92672">=</span> {}
+</span></span><span style="display:flex;"><span>d[(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>)] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;a&#34;</span>
+</span></span><span style="display:flex;"><span>d[(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>)] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;b&#34;</span>
+</span></span><span style="display:flex;"><span>print(d)
+</span></span></code></pre></div><hr>
+<h3 id="题-2高级">题 2（高级）<a hidden class="anchor" aria-hidden="true" href="#题-2高级">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__hash__</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__eq__</span>(self, other):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>a <span style="color:#f92672">=</span> A()
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> A()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>d <span style="color:#f92672">=</span> {}
+</span></span><span style="display:flex;"><span>d[a] <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>d[b] <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>print(d)
+</span></span></code></pre></div><hr>
+<h3 id="题-3陷阱题">题 3（陷阱题）<a hidden class="anchor" aria-hidden="true" href="#题-3陷阱题">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>s <span style="color:#f92672">=</span> set()
+</span></span><span style="display:flex;"><span>s<span style="color:#f92672">.</span>add((<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,[<span style="color:#ae81ff">3</span>]))
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>tuple 不可变数组  初始化 <span style="color:#960050;background-color:#1e0010">（）</span>
+</span></span><span style="display:flex;"><span>list 切片 可变数组 初始化 []
+</span></span><span style="display:flex;"><span>set 集合 value为空的字段 初始化 set
+</span></span><span style="display:flex;"><span>dict 字典 初始化{} 
+</span></span></code></pre></div><h3 id="经典题型">经典题型<a hidden class="anchor" aria-hidden="true" href="#经典题型">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(x, arr<span style="color:#f92672">=</span>[]):
+</span></span><span style="display:flex;"><span>    arr <span style="color:#f92672">=</span> arr <span style="color:#f92672">+</span> [x]
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> arr
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(f(<span style="color:#ae81ff">1</span>))
+</span></span><span style="display:flex;"><span>print(f(<span style="color:#ae81ff">2</span>))
+</span></span><span style="display:flex;"><span>print(f(<span style="color:#ae81ff">3</span>))
+</span></span></code></pre></div>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="next" href="http://localhost:1313/posts/redis/%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E5%8E%9F%E5%88%99/">
+    <span class="title">Next »</span>
+    <br>
+    <span>使用场景和原则</span>
+  </a>
+</nav>
+
+  </footer><div id="utterances-comments"></div>
+<script src="https://utteranc.es/client.js"
+        repo="yangcp25/yangcp25.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">yangcp</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

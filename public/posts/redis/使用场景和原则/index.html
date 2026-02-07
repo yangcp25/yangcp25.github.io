@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>使用场景和原则 | yangcp</title>
+<meta name="keywords" content="">
+<meta name="description" content="一、Redis 常见 &amp; 真实可用的使用场景
+1️⃣ 缓存（Cache）——最核心，但不是“随便加”
+典型用途
+
+热点数据缓存（配置、用户信息、商品信息）
+接口结果缓存（读多写少）
+计算结果缓存（排行榜、聚合结果）
+
+工程要点
+
+TTL 一定要有（防雪崩）
+要有 cache miss 回源策略
+不要缓存“强一致性要求”的数据
+
+Go 示例
+user, ok := cache.Get(uid)
+if !ok {
+    user = db.GetUser(uid)
+    cache.Set(uid, user, time.Minute*5)
+}
+
+2️⃣ 分布式锁（非常常用）
+典型场景
+
+防止重复下单
+防止任务并发执行
+防止重复消费
+
+推荐方式
+
+SET key value NX PX
+不推荐简单 SETNX &#43; EXPIRE（非原子）
+
+工程原则
+
+锁一定要有过期时间
+value 用 UUID，防误删
+解锁要校验 value
+
+
+3️⃣ 计数器 / 限流器
+典型场景
+
+接口 QPS 限流
+短时间访问次数统计
+点赞 / 浏览量
+
+常用结构
+
+String（INCR）
+Hash（多维统计）
+Sorted Set（滑动窗口）
+
+优点">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/redis/%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E5%8E%9F%E5%88%99/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/redis/%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E5%8E%9F%E5%88%99/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="yangcp (Alt + H)">yangcp</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tag">
+                    <span>Tag</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/me/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      使用场景和原则
+    </h1>
+    <div class="post-meta"><span title='2026-02-05 14:09:54 +0800 CST'>February 5, 2026</span>&nbsp;·&nbsp;2 min
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e4%b8%80redis-%e5%b8%b8%e8%a7%81--%e7%9c%9f%e5%ae%9e%e5%8f%af%e7%94%a8%e7%9a%84%e4%bd%bf%e7%94%a8%e5%9c%ba%e6%99%af" aria-label="一、Redis 常见 &amp; 真实可用的使用场景">一、Redis 常见 &amp; 真实可用的使用场景</a><ul>
+                        
+                <li>
+                    <a href="#1-%e7%bc%93%e5%ad%98cache%e6%9c%80%e6%a0%b8%e5%bf%83%e4%bd%86%e4%b8%8d%e6%98%af%e9%9a%8f%e4%be%bf%e5%8a%a0" aria-label="1️⃣ 缓存（Cache）——最核心，但不是“随便加”">1️⃣ 缓存（Cache）——最核心，但不是“随便加”</a></li>
+                <li>
+                    <a href="#2-%e5%88%86%e5%b8%83%e5%bc%8f%e9%94%81%e9%9d%9e%e5%b8%b8%e5%b8%b8%e7%94%a8" aria-label="2️⃣ 分布式锁（非常常用）">2️⃣ 分布式锁（非常常用）</a></li>
+                <li>
+                    <a href="#3-%e8%ae%a1%e6%95%b0%e5%99%a8--%e9%99%90%e6%b5%81%e5%99%a8" aria-label="3️⃣ 计数器 / 限流器">3️⃣ 计数器 / 限流器</a></li>
+                <li>
+                    <a href="#4-session--%e7%99%bb%e5%bd%95%e6%80%81--token-%e5%ad%98%e5%82%a8" aria-label="4️⃣ Session / 登录态 / Token 存储">4️⃣ Session / 登录态 / Token 存储</a></li>
+                <li>
+                    <a href="#5-%e6%b6%88%e6%81%af%e9%98%9f%e5%88%97%e8%bd%bb%e9%87%8f%e7%ba%a7" aria-label="5️⃣ 消息队列（轻量级）">5️⃣ 消息队列（轻量级）</a></li>
+                <li>
+                    <a href="#6-%e6%8e%92%e8%a1%8c%e6%a6%9c--topn" aria-label="6️⃣ 排行榜 / TopN">6️⃣ 排行榜 / TopN</a></li>
+                <li>
+                    <a href="#7-%e7%8a%b6%e6%80%81%e6%9c%ba--%e4%b8%9a%e5%8a%a1%e4%b8%ad%e9%97%b4%e6%80%81" aria-label="7️⃣ 状态机 / 业务中间态">7️⃣ 状态机 / 业务中间态</a></li>
+                <li>
+                    <a href="#8-%e5%8e%bb%e9%87%8d--%e5%b9%82%e7%ad%89%e6%8e%a7%e5%88%b6" aria-label="8️⃣ 去重 / 幂等控制">8️⃣ 去重 / 幂等控制</a></li>
+                <li>
+                    <a href="#9-%e5%ae%9e%e6%97%b6%e6%95%b0%e6%8d%ae--%e4%b8%b4%e6%97%b6%e6%95%b0%e6%8d%ae" aria-label="9️⃣ 实时数据 &amp; 临时数据">9️⃣ 实时数据 &amp; 临时数据</a></li>
+                <li>
+                    <a href="#-ai-%e5%ba%94%e7%94%a8%e9%87%8c%e7%9a%84-redis-%e5%9c%ba%e6%99%af%e4%bd%a0%e7%8e%b0%e5%9c%a8%e9%9d%9e%e5%b8%b8-relevant" aria-label="🔟 AI 应用里的 Redis 场景（你现在非常 relevant）">🔟 AI 应用里的 Redis 场景（你现在非常 relevant）</a><ul>
+                        
+                <li>
+                    <a href="#-prompt--%e4%b8%8a%e4%b8%8b%e6%96%87%e7%bc%93%e5%ad%98" aria-label="✅ Prompt / 上下文缓存">✅ Prompt / 上下文缓存</a></li>
+                <li>
+                    <a href="#-embedding-%e7%bb%93%e6%9e%9c%e7%bc%93%e5%ad%98" aria-label="✅ Embedding 结果缓存">✅ Embedding 结果缓存</a></li>
+                <li>
+                    <a href="#-%e6%8e%a8%e7%90%86%e9%99%90%e6%b5%81--%e6%8e%92%e9%98%9f" aria-label="✅ 推理限流 &amp; 排队">✅ 推理限流 &amp; 排队</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%ba%8c%e5%93%aa%e4%ba%9b%e5%9c%ba%e6%99%af%e4%b8%8d%e9%80%82%e5%90%88-redis%e9%87%8d%e8%a6%81" aria-label="二、哪些场景不适合 Redis（重要）">二、哪些场景不适合 Redis（重要）</a></li>
+                <li>
+                    <a href="#%e4%b8%89redis-%e9%80%82%e7%94%a8%e5%9c%ba%e6%99%af%e7%9a%84%e5%88%a4%e6%96%ad%e5%8e%9f%e5%88%99%e9%87%8d%e7%82%b9" aria-label="三、Redis 适用场景的「判断原则」（重点）">三、Redis 适用场景的「判断原则」（重点）</a></li>
+                <li>
+                    <a href="#-%e5%8f%aa%e8%a6%81%e6%bb%a1%e8%b6%b3%e8%bf%99%e4%ba%9b%e5%8e%9f%e5%88%99%e5%b0%b1%e5%ba%94%e8%af%a5%e8%80%83%e8%99%91-redis" aria-label="✅ 只要满足这些原则，就应该考虑 Redis">✅ 只要满足这些原则，就应该考虑 Redis</a><ul>
+                        
+                <li>
+                    <a href="#%e5%8e%9f%e5%88%99-1%e6%95%b0%e6%8d%ae%e6%98%af%e4%b8%8d%e6%98%af-%e4%b8%b4%e6%97%b6%e7%9a%84--%e5%8f%af%e4%b8%a2%e7%9a%84" aria-label="原则 1️⃣：数据是不是 临时的 / 可丢的">原则 1️⃣：数据是不是 临时的 / 可丢的</a></li>
+                <li>
+                    <a href="#%e5%8e%9f%e5%88%99-2%e6%98%af%e4%b8%8d%e6%98%af-%e8%af%bb%e5%a4%9a%e5%86%99%e5%b0%91--%e9%ab%98%e9%a2%91%e8%ae%bf%e9%97%ae" aria-label="原则 2️⃣：是不是 读多写少 / 高频访问">原则 2️⃣：是不是 读多写少 / 高频访问</a></li>
+                <li>
+                    <a href="#%e5%8e%9f%e5%88%99-3%e6%98%af%e5%90%a6%e9%9c%80%e8%a6%81-ttl--%e8%87%aa%e5%8a%a8%e8%bf%87%e6%9c%9f" aria-label="原则 3️⃣：是否需要 TTL / 自动过期">原则 3️⃣：是否需要 TTL / 自动过期</a></li>
+                <li>
+                    <a href="#%e5%8e%9f%e5%88%99-4%e6%98%af%e5%90%a6%e9%9c%80%e8%a6%81-%e5%8e%9f%e5%ad%90%e6%93%8d%e4%bd%9c" aria-label="原则 4️⃣：是否需要 原子操作">原则 4️⃣：是否需要 原子操作</a></li>
+                <li>
+                    <a href="#%e5%8e%9f%e5%88%99-5%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84%e6%98%af%e5%90%a6-%e7%ae%80%e5%8d%95" aria-label="原则 5️⃣：数据结构是否 简单">原则 5️⃣：数据结构是否 简单</a></li>
+                <li>
+                    <a href="#%e5%8e%9f%e5%88%99-6%e6%98%af%e5%90%a6%e5%b1%9e%e4%ba%8e-%e7%b3%bb%e7%bb%9f%e5%8a%a0%e9%80%9f%e5%b1%82%e6%88%96%e5%8d%8f%e8%b0%83%e5%b1%82" aria-label="原则 6️⃣：是否属于 系统“加速层”或“协调层”">原则 6️⃣：是否属于 系统“加速层”或“协调层”</a></li>
+                <li>
+                    <a href="#%e5%8e%9f%e5%88%99-7%e6%98%af%e5%90%a6%e5%85%81%e8%ae%b8-%e6%9c%80%e7%bb%88%e4%b8%80%e8%87%b4%e6%80%a7" aria-label="原则 7️⃣：是否允许 最终一致性">原则 7️⃣：是否允许 最终一致性</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%9b%9b%e4%b8%80%e5%8f%a5%e6%80%bb%e7%bb%93" aria-label="四、一句总结">四、一句总结</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="一redis-常见--真实可用的使用场景">一、Redis 常见 &amp; 真实可用的使用场景<a hidden class="anchor" aria-hidden="true" href="#一redis-常见--真实可用的使用场景">#</a></h2>
+<h3 id="1-缓存cache最核心但不是随便加">1️⃣ 缓存（Cache）——最核心，但不是“随便加”<a hidden class="anchor" aria-hidden="true" href="#1-缓存cache最核心但不是随便加">#</a></h3>
+<p><strong>典型用途</strong></p>
+<ul>
+<li>热点数据缓存（配置、用户信息、商品信息）</li>
+<li>接口结果缓存（读多写少）</li>
+<li>计算结果缓存（排行榜、聚合结果）</li>
+</ul>
+<p><strong>工程要点</strong></p>
+<ul>
+<li>TTL 一定要有（防雪崩）</li>
+<li>要有 cache miss 回源策略</li>
+<li>不要缓存“强一致性要求”的数据</li>
+</ul>
+<p><strong>Go 示例</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">user</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">cache</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#a6e22e">uid</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">ok</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">user</span> = <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">GetUser</span>(<span style="color:#a6e22e">uid</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">cache</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#a6e22e">uid</span>, <span style="color:#a6e22e">user</span>, <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Minute</span><span style="color:#f92672">*</span><span style="color:#ae81ff">5</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><hr>
+<h3 id="2-分布式锁非常常用">2️⃣ 分布式锁（非常常用）<a hidden class="anchor" aria-hidden="true" href="#2-分布式锁非常常用">#</a></h3>
+<p><strong>典型场景</strong></p>
+<ul>
+<li>防止重复下单</li>
+<li>防止任务并发执行</li>
+<li>防止重复消费</li>
+</ul>
+<p><strong>推荐方式</strong></p>
+<ul>
+<li><code>SET key value NX PX</code></li>
+<li>不推荐简单 <code>SETNX + EXPIRE</code>（非原子）</li>
+</ul>
+<p><strong>工程原则</strong></p>
+<ul>
+<li>锁一定要有过期时间</li>
+<li>value 用 UUID，防误删</li>
+<li>解锁要校验 value</li>
+</ul>
+<hr>
+<h3 id="3-计数器--限流器">3️⃣ 计数器 / 限流器<a hidden class="anchor" aria-hidden="true" href="#3-计数器--限流器">#</a></h3>
+<p><strong>典型场景</strong></p>
+<ul>
+<li>接口 QPS 限流</li>
+<li>短时间访问次数统计</li>
+<li>点赞 / 浏览量</li>
+</ul>
+<p><strong>常用结构</strong></p>
+<ul>
+<li>String（INCR）</li>
+<li>Hash（多维统计）</li>
+<li>Sorted Set（滑动窗口）</li>
+</ul>
+<p><strong>优点</strong></p>
+<ul>
+<li>原子性</li>
+<li>性能极高</li>
+<li>延迟可控</li>
+</ul>
+<hr>
+<h3 id="4-session--登录态--token-存储">4️⃣ Session / 登录态 / Token 存储<a hidden class="anchor" aria-hidden="true" href="#4-session--登录态--token-存储">#</a></h3>
+<p><strong>典型场景</strong></p>
+<ul>
+<li>Web 登录态</li>
+<li>JWT 黑名单</li>
+<li>临时授权信息</li>
+</ul>
+<p><strong>为什么 Redis 合适</strong></p>
+<ul>
+<li>天然 TTL</li>
+<li>快速校验</li>
+<li>内存级性能</li>
+</ul>
+<p><strong>不适合</strong></p>
+<ul>
+<li>永久凭证</li>
+<li>强审计数据（要落 DB）</li>
+</ul>
+<hr>
+<h3 id="5-消息队列轻量级">5️⃣ 消息队列（轻量级）<a hidden class="anchor" aria-hidden="true" href="#5-消息队列轻量级">#</a></h3>
+<p><strong>方式</strong></p>
+<ul>
+<li>List（LPUSH + BRPOP）</li>
+<li>Stream（推荐）</li>
+<li>Pub/Sub（不可靠）</li>
+</ul>
+<p><strong>适合</strong></p>
+<ul>
+<li>简单异步任务</li>
+<li>允许丢数据</li>
+<li>非核心链路</li>
+</ul>
+<p><strong>不适合</strong></p>
+<ul>
+<li>强一致</li>
+<li>高可靠投递</li>
+<li>金融级场景（Kafka / RocketMQ）</li>
+</ul>
+<hr>
+<h3 id="6-排行榜--topn">6️⃣ 排行榜 / TopN<a hidden class="anchor" aria-hidden="true" href="#6-排行榜--topn">#</a></h3>
+<p><strong>典型场景</strong></p>
+<ul>
+<li>积分榜</li>
+<li>热度榜</li>
+<li>AI 推荐打分排序</li>
+</ul>
+<p><strong>使用结构</strong></p>
+<ul>
+<li>Sorted Set（ZSET）</li>
+</ul>
+<p><strong>为什么 Redis 无敌</strong></p>
+<ul>
+<li>排序天然支持</li>
+<li>更新 &amp; 查询都是 O(logN)</li>
+<li>DB 很难优雅实现</li>
+</ul>
+<hr>
+<h3 id="7-状态机--业务中间态">7️⃣ 状态机 / 业务中间态<a hidden class="anchor" aria-hidden="true" href="#7-状态机--业务中间态">#</a></h3>
+<p><strong>典型场景</strong></p>
+<ul>
+<li>订单流程状态</li>
+<li>AI 推理任务状态</li>
+<li>视频处理进度</li>
+</ul>
+<p><strong>特点</strong></p>
+<ul>
+<li>状态变化频繁</li>
+<li>生命周期短</li>
+<li>不需要永久保存</li>
+</ul>
+<hr>
+<h3 id="8-去重--幂等控制">8️⃣ 去重 / 幂等控制<a hidden class="anchor" aria-hidden="true" href="#8-去重--幂等控制">#</a></h3>
+<p><strong>典型场景</strong></p>
+<ul>
+<li>防止重复请求</li>
+<li>防止消息重复消费</li>
+<li>防止任务重复执行</li>
+</ul>
+<p><strong>方案</strong></p>
+<ul>
+<li>SET + TTL</li>
+<li>Bloom Filter（Redis Module）</li>
+</ul>
+<hr>
+<h3 id="9-实时数据--临时数据">9️⃣ 实时数据 &amp; 临时数据<a hidden class="anchor" aria-hidden="true" href="#9-实时数据--临时数据">#</a></h3>
+<p><strong>典型场景</strong></p>
+<ul>
+<li>在线用户列表</li>
+<li>房间成员</li>
+<li>实时协作状态</li>
+</ul>
+<p><strong>结构</strong></p>
+<ul>
+<li>Set / Hash / ZSet</li>
+</ul>
+<hr>
+<h3 id="-ai-应用里的-redis-场景你现在非常-relevant">🔟 AI 应用里的 Redis 场景（你现在非常 relevant）<a hidden class="anchor" aria-hidden="true" href="#-ai-应用里的-redis-场景你现在非常-relevant">#</a></h3>
+<h4 id="-prompt--上下文缓存">✅ Prompt / 上下文缓存<a hidden class="anchor" aria-hidden="true" href="#-prompt--上下文缓存">#</a></h4>
+<ul>
+<li>用户最近对话</li>
+<li>系统 prompt</li>
+<li>RAG 检索结果</li>
+</ul>
+<h4 id="-embedding-结果缓存">✅ Embedding 结果缓存<a hidden class="anchor" aria-hidden="true" href="#-embedding-结果缓存">#</a></h4>
+<ul>
+<li>避免重复 embedding</li>
+<li>Key = hash(text)</li>
+</ul>
+<h4 id="-推理限流--排队">✅ 推理限流 &amp; 排队<a hidden class="anchor" aria-hidden="true" href="#-推理限流--排队">#</a></h4>
+<ul>
+<li>控制模型并发</li>
+<li>防止打爆 GPU</li>
+</ul>
+<hr>
+<h2 id="二哪些场景不适合-redis重要">二、哪些场景<strong>不适合</strong> Redis（重要）<a hidden class="anchor" aria-hidden="true" href="#二哪些场景不适合-redis重要">#</a></h2>
+<p>很多项目 Redis 用烂了，是因为<strong>不该用的地方硬用</strong>。</p>
+<p>❌ 不适合：</p>
+<ul>
+<li>强一致金融数据</li>
+<li>永久数据存储</li>
+<li>大字段（几 MB 文本）</li>
+<li>复杂关联查询</li>
+<li>事务密集型系统</li>
+</ul>
+<p>一句话：</p>
+<blockquote>
+<p><strong>Redis 是“快 + 临时 + 简单结构”，不是数据库替代品</strong></p></blockquote>
+<hr>
+<h2 id="三redis-适用场景的判断原则重点">三、Redis 适用场景的「判断原则」（重点）<a hidden class="anchor" aria-hidden="true" href="#三redis-适用场景的判断原则重点">#</a></h2>
+<p>你问的这个问题，本质是<strong>架构判断能力</strong>，给你一套<strong>工程可复用的判断标准</strong>👇</p>
+<hr>
+<h2 id="-只要满足这些原则就应该考虑-redis">✅ 只要满足这些原则，就应该考虑 Redis<a hidden class="anchor" aria-hidden="true" href="#-只要满足这些原则就应该考虑-redis">#</a></h2>
+<h3 id="原则-1数据是不是-临时的--可丢的">原则 1️⃣：数据是不是 <strong>临时的 / 可丢的</strong><a hidden class="anchor" aria-hidden="true" href="#原则-1数据是不是-临时的--可丢的">#</a></h3>
+<ul>
+<li>能重建？</li>
+<li>能从 DB 回源？</li>
+<li>丢了不会“炸系统”？</li>
+</ul>
+<p>👉 是 → Redis 非常适合</p>
+<hr>
+<h3 id="原则-2是不是-读多写少--高频访问">原则 2️⃣：是不是 <strong>读多写少 / 高频访问</strong><a hidden class="anchor" aria-hidden="true" href="#原则-2是不是-读多写少--高频访问">#</a></h3>
+<ul>
+<li>QPS 高？</li>
+<li>延迟敏感？</li>
+</ul>
+<p>👉 是 → Redis</p>
+<hr>
+<h3 id="原则-3是否需要-ttl--自动过期">原则 3️⃣：是否需要 <strong>TTL / 自动过期</strong><a hidden class="anchor" aria-hidden="true" href="#原则-3是否需要-ttl--自动过期">#</a></h3>
+<ul>
+<li>登录态</li>
+<li>验证码</li>
+<li>限流窗口</li>
+</ul>
+<p>👉 是 → Redis 天然优势</p>
+<hr>
+<h3 id="原则-4是否需要-原子操作">原则 4️⃣：是否需要 <strong>原子操作</strong><a hidden class="anchor" aria-hidden="true" href="#原则-4是否需要-原子操作">#</a></h3>
+<ul>
+<li>计数</li>
+<li>限流</li>
+<li>排序</li>
+</ul>
+<p>👉 是 → Redis 比 DB 简单可靠</p>
+<hr>
+<h3 id="原则-5数据结构是否-简单">原则 5️⃣：数据结构是否 <strong>简单</strong><a hidden class="anchor" aria-hidden="true" href="#原则-5数据结构是否-简单">#</a></h3>
+<ul>
+<li>KV / List / Set / ZSet / Hash</li>
+<li>不需要 join</li>
+</ul>
+<p>👉 是 → Redis</p>
+<hr>
+<h3 id="原则-6是否属于-系统加速层或协调层">原则 6️⃣：是否属于 <strong>系统“加速层”或“协调层”</strong><a hidden class="anchor" aria-hidden="true" href="#原则-6是否属于-系统加速层或协调层">#</a></h3>
+<ul>
+<li>锁</li>
+<li>状态</li>
+<li>中间态</li>
+<li>控制并发</li>
+</ul>
+<p>👉 是 → Redis 非常合适</p>
+<hr>
+<h3 id="原则-7是否允许-最终一致性">原则 7️⃣：是否允许 <strong>最终一致性</strong><a hidden class="anchor" aria-hidden="true" href="#原则-7是否允许-最终一致性">#</a></h3>
+<ul>
+<li>短时间不一致 OK？</li>
+<li>异步修正 OK？</li>
+</ul>
+<p>👉 是 → Redis</p>
+<hr>
+<h2 id="四一句总结">四、一句总结<a hidden class="anchor" aria-hidden="true" href="#四一句总结">#</a></h2>
+<blockquote>
+<p><strong>凡是“高频访问 + 临时存在 + 结构简单 + 可丢失 + 对延迟敏感”的数据，都应该第一时间考虑 Redis。</strong></p></blockquote>
+<hr>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/python/start/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Python语法复习学习高级特性</span>
+  </a>
+  <a class="next" href="http://localhost:1313/posts/ai/2026_plan/">
+    <span class="title">Next »</span>
+    <br>
+    <span>26年的重点与未来规划</span>
+  </a>
+</nav>
+
+  </footer><div id="utterances-comments"></div>
+<script src="https://utteranc.es/client.js"
+        repo="yangcp25/yangcp25.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">yangcp</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
