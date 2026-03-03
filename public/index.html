@@ -128,6 +128,24 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">幂等性设计
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>生产级幂等性理论框架 幂等性的数学表达是 $f(f(x)) = f(x)$。在分布式系统中，它的本质是：如何识别重复请求并安全地返回相同结果。
+幂等请求的生命周期 我将解决方案分为三个等级，根据业务成本和重要性进行选择：
+第一级：天然幂等（架构设计优化） 查询（GET）与删除（DELETE）：通常天然幂等（注：删除需根据 ID 删除，而非 DELETE TOP 1）。 绝对赋值型更新：UPDATE score SET value = 100 是幂等的；UPDATE score SET value = value &#43; 10 则不是。 设计建议：尽可能将业务逻辑设计为“指向性”而非“增量性”。 第二级：业务状态机（最推荐，生产首选） 对于支付、订单等有明确流转状态的业务，利用数据库的原子性：
+SQL 技巧：使用条件更新。 UPDATE orders SET status = &#39;PAID&#39;, update_time = NOW() WHERE order_id = &#39;123&#39; AND status = &#39;UNPAID&#39;; 原理：利用数据库的行锁。如果状态已经变了，Affect Rows 为 0，程序直接返回成功。 第三级：通用幂等表/唯一 Key 机制 对于没有状态机的操作（如“发帖”、“新增用户”），需要引入 Idempotency Key（幂等键）。
+3. 高可用实践方案：通用幂等组件 这是一套成熟的后端通用方案，通常在 Golang 体系下通过中间件实现。
+核心步骤： 生成 Key：前端或调用方在请求头带上 X-Idempotency-Key（可以是 UUID 或业务唯一 ID）。 前置校验（Redis）： 使用 SET key value NX PX 86400000 (Atomic SET if Not Exists)。 如果设置失败，说明请求正在处理或已完成。 存储结果： 如果处理完成，将响应结果也缓存在 Redis 中。 下次相同 Key 进来，直接从缓存返回结果，不走业务逻辑。 Golang 伪代码实现： func IdempotencyMiddleware(next echo.HandlerFunc) echo.HandlerFunc { return func(c echo.Context) error { key := c.Request().Header.Get(&#34;X-Idempotency-Key&#34;) if key == &#34;&#34; { return next(c) // 或者强制要求传入 } // 1. 尝试锁定（原子操作） // Status: 0-处理中, 1-已完成 res, err := redis.Do(&#34;SET&#34;, key, &#34;processing&#34;, &#34;NX&#34;, &#34;EX&#34;, 3600) if err != nil { return c.JSON(http.StatusConflict, &#34;Request is being processed&#34;) } // 2. 执行业务逻辑 err = next(c) // 3. 处理完成后更新 Redis 中的状态及返回结果（可选） if err == nil { redis.Do(&#34;SET&#34;, key, &#34;completed&#34;, &#34;EX&#34;, 86400) } else { redis.Do(&#34;DEL&#34;, key) // 失败了允许重试 } return err } } 4. 极端场景下的三道防线 为了确保“高可用”和“绝对正确”，我会这样布防：
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-03-03 10:43:35 +0800 CST'>March 3, 2026</span>&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to 幂等性设计" href="http://localhost:1313/posts/architecture/%E5%B9%82%E7%AD%89%E6%80%A7%E8%AE%BE%E8%AE%A1/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Python语法复习学习高级特性
     </h2>
   </header>
@@ -258,18 +276,6 @@ AI应用 工作当中会做一些AI相关的应用，在AI应用进行深耕
   </div>
   <footer class="entry-footer"><span title='2025-10-31 18:10:00 +0800 CST'>October 31, 2025</span>&nbsp;·&nbsp;2 min</footer>
   <a class="entry-link" aria-label="post link to 内存分配" href="http://localhost:1313/posts/go/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Tcp三次握手和四次挥手
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>三次握手 客户端发送syn，客户端从close-&gt;syn-send syn服务端收到syn ,同时向客户端发送syn.ack ，自己从listen变成 syn-recd 客户端收到syn-ack会在发送一个ack,自己变成established,服务端收到这个ack，自己变成established。 </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-10-29 20:34:20 +0800 CST'>October 29, 2025</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to Tcp三次握手和四次挥手" href="http://localhost:1313/posts/network/tcp%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

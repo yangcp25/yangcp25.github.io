@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>幂等性设计 | yangcp</title>
+<meta name="keywords" content="">
+<meta name="description" content="生产级幂等性理论框架
+幂等性的数学表达是 $f(f(x)) = f(x)$。在分布式系统中，它的本质是：如何识别重复请求并安全地返回相同结果。
+幂等请求的生命周期
+我将解决方案分为三个等级，根据业务成本和重要性进行选择：
+第一级：天然幂等（架构设计优化）
+
+查询（GET）与删除（DELETE）：通常天然幂等（注：删除需根据 ID 删除，而非 DELETE TOP 1）。
+绝对赋值型更新：UPDATE score SET value = 100 是幂等的；UPDATE score SET value = value &#43; 10 则不是。
+设计建议：尽可能将业务逻辑设计为“指向性”而非“增量性”。
+
+第二级：业务状态机（最推荐，生产首选）
+对于支付、订单等有明确流转状态的业务，利用数据库的原子性：
+
+SQL 技巧：使用条件更新。
+
+UPDATE orders SET status = &#39;PAID&#39;, update_time = NOW() 
+WHERE order_id = &#39;123&#39; AND status = &#39;UNPAID&#39;;
+
+原理：利用数据库的行锁。如果状态已经变了，Affect Rows 为 0，程序直接返回成功。
+
+第三级：通用幂等表/唯一 Key 机制
+对于没有状态机的操作（如“发帖”、“新增用户”），需要引入 Idempotency Key（幂等键）。
+
+3. 高可用实践方案：通用幂等组件
+这是一套成熟的后端通用方案，通常在 Golang 体系下通过中间件实现。
+核心步骤：
+
+生成 Key：前端或调用方在请求头带上 X-Idempotency-Key（可以是 UUID 或业务唯一 ID）。
+前置校验（Redis）：
+
+
+使用 SET key value NX PX 86400000 (Atomic SET if Not Exists)。
+如果设置失败，说明请求正在处理或已完成。
+
+
+存储结果：
+
+
+如果处理完成，将响应结果也缓存在 Redis 中。
+下次相同 Key 进来，直接从缓存返回结果，不走业务逻辑。
+
+Golang 伪代码实现：
+func IdempotencyMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
+    return func(c echo.Context) error {
+        key := c.Request().Header.Get(&#34;X-Idempotency-Key&#34;)
+        if key == &#34;&#34; {
+            return next(c) // 或者强制要求传入
+        }
+
+        // 1. 尝试锁定（原子操作）
+        // Status: 0-处理中, 1-已完成
+        res, err := redis.Do(&#34;SET&#34;, key, &#34;processing&#34;, &#34;NX&#34;, &#34;EX&#34;, 3600)
+        if err != nil {
+            return c.JSON(http.StatusConflict, &#34;Request is being processed&#34;)
+        }
+
+        // 2. 执行业务逻辑
+        err = next(c)
+
+        // 3. 处理完成后更新 Redis 中的状态及返回结果（可选）
+        if err == nil {
+            redis.Do(&#34;SET&#34;, key, &#34;completed&#34;, &#34;EX&#34;, 86400) 
+        } else {
+            redis.Do(&#34;DEL&#34;, key) // 失败了允许重试
+        }
+        return err
+    }
+}
+
+4. 极端场景下的三道防线
+为了确保“高可用”和“绝对正确”，我会这样布防：">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/architecture/%E5%B9%82%E7%AD%89%E6%80%A7%E8%AE%BE%E8%AE%A1/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/architecture/%E5%B9%82%E7%AD%89%E6%80%A7%E8%AE%BE%E8%AE%A1/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="yangcp (Alt + H)">yangcp</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tag">
+                    <span>Tag</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/me/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      幂等性设计
+    </h1>
+    <div class="post-meta"><span title='2026-03-03 10:43:35 +0800 CST'>March 3, 2026</span>&nbsp;·&nbsp;2 min
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e7%94%9f%e4%ba%a7%e7%ba%a7%e5%b9%82%e7%ad%89%e6%80%a7%e7%90%86%e8%ae%ba%e6%a1%86%e6%9e%b6" aria-label="生产级幂等性理论框架">生产级幂等性理论框架</a><ul>
+                        
+                <li>
+                    <a href="#%e5%b9%82%e7%ad%89%e8%af%b7%e6%b1%82%e7%9a%84%e7%94%9f%e5%91%bd%e5%91%a8%e6%9c%9f" aria-label="幂等请求的生命周期">幂等请求的生命周期</a></li>
+                <li>
+                    <a href="#%e7%ac%ac%e4%b8%80%e7%ba%a7%e5%a4%a9%e7%84%b6%e5%b9%82%e7%ad%89%e6%9e%b6%e6%9e%84%e8%ae%be%e8%ae%a1%e4%bc%98%e5%8c%96" aria-label="第一级：天然幂等（架构设计优化）">第一级：天然幂等（架构设计优化）</a></li>
+                <li>
+                    <a href="#%e7%ac%ac%e4%ba%8c%e7%ba%a7%e4%b8%9a%e5%8a%a1%e7%8a%b6%e6%80%81%e6%9c%ba%e6%9c%80%e6%8e%a8%e8%8d%90%e7%94%9f%e4%ba%a7%e9%a6%96%e9%80%89" aria-label="第二级：业务状态机（最推荐，生产首选）">第二级：业务状态机（最推荐，生产首选）</a></li>
+                <li>
+                    <a href="#%e7%ac%ac%e4%b8%89%e7%ba%a7%e9%80%9a%e7%94%a8%e5%b9%82%e7%ad%89%e8%a1%a8%e5%94%af%e4%b8%80-key-%e6%9c%ba%e5%88%b6" aria-label="第三级：通用幂等表/唯一 Key 机制">第三级：通用幂等表/唯一 Key 机制</a></li></ul>
+                </li>
+                <li>
+                    <a href="#3-%e9%ab%98%e5%8f%af%e7%94%a8%e5%ae%9e%e8%b7%b5%e6%96%b9%e6%a1%88%e9%80%9a%e7%94%a8%e5%b9%82%e7%ad%89%e7%bb%84%e4%bb%b6" aria-label="3. 高可用实践方案：通用幂等组件">3. 高可用实践方案：通用幂等组件</a><ul>
+                        
+                <li>
+                    <a href="#%e6%a0%b8%e5%bf%83%e6%ad%a5%e9%aa%a4" aria-label="核心步骤：">核心步骤：</a></li>
+                <li>
+                    <a href="#golang-%e4%bc%aa%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0" aria-label="Golang 伪代码实现：">Golang 伪代码实现：</a></li></ul>
+                </li>
+                <li>
+                    <a href="#4-%e6%9e%81%e7%ab%af%e5%9c%ba%e6%99%af%e4%b8%8b%e7%9a%84%e4%b8%89%e9%81%93%e9%98%b2%e7%ba%bf" aria-label="4. 极端场景下的三道防线">4. 极端场景下的三道防线</a></li>
+                <li>
+                    <a href="#5-%e8%90%bd%e5%9c%b0%e5%bb%ba%e8%ae%ae%e4%b8%8e%e9%81%bf%e5%9d%91%e6%8c%87%e5%8d%97" aria-label="5. 落地建议与避坑指南">5. 落地建议与避坑指南</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="生产级幂等性理论框架">生产级幂等性理论框架<a hidden class="anchor" aria-hidden="true" href="#生产级幂等性理论框架">#</a></h2>
+<p>幂等性的数学表达是 $f(f(x)) = f(x)$。在分布式系统中，它的本质是：<strong>如何识别重复请求并安全地返回相同结果。</strong></p>
+<h3 id="幂等请求的生命周期">幂等请求的生命周期<a hidden class="anchor" aria-hidden="true" href="#幂等请求的生命周期">#</a></h3>
+<p>我将解决方案分为三个等级，根据业务成本和重要性进行选择：</p>
+<h3 id="第一级天然幂等架构设计优化">第一级：天然幂等（架构设计优化）<a hidden class="anchor" aria-hidden="true" href="#第一级天然幂等架构设计优化">#</a></h3>
+<ul>
+<li><strong>查询（GET）与删除（DELETE）</strong>：通常天然幂等（注：删除需根据 ID 删除，而非 <code>DELETE TOP 1</code>）。</li>
+<li><strong>绝对赋值型更新</strong>：<code>UPDATE score SET value = 100</code> 是幂等的；<code>UPDATE score SET value = value + 10</code> 则不是。</li>
+<li><strong>设计建议</strong>：尽可能将业务逻辑设计为“指向性”而非“增量性”。</li>
+</ul>
+<h3 id="第二级业务状态机最推荐生产首选">第二级：业务状态机（最推荐，生产首选）<a hidden class="anchor" aria-hidden="true" href="#第二级业务状态机最推荐生产首选">#</a></h3>
+<p>对于支付、订单等有明确流转状态的业务，利用数据库的原子性：</p>
+<ul>
+<li><strong>SQL 技巧</strong>：使用条件更新。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">UPDATE</span> orders <span style="color:#66d9ef">SET</span> status <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;PAID&#39;</span>, update_time <span style="color:#f92672">=</span> NOW() 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">WHERE</span> order_id <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;123&#39;</span> <span style="color:#66d9ef">AND</span> status <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;UNPAID&#39;</span>;
+</span></span></code></pre></div><ul>
+<li><strong>原理</strong>：利用数据库的行锁。如果状态已经变了，Affect Rows 为 0，程序直接返回成功。</li>
+</ul>
+<h3 id="第三级通用幂等表唯一-key-机制">第三级：通用幂等表/唯一 Key 机制<a hidden class="anchor" aria-hidden="true" href="#第三级通用幂等表唯一-key-机制">#</a></h3>
+<p>对于没有状态机的操作（如“发帖”、“新增用户”），需要引入 <strong>Idempotency Key（幂等键）</strong>。</p>
+<hr>
+<h2 id="3-高可用实践方案通用幂等组件">3. 高可用实践方案：通用幂等组件<a hidden class="anchor" aria-hidden="true" href="#3-高可用实践方案通用幂等组件">#</a></h2>
+<p>这是一套成熟的后端通用方案，通常在 Golang 体系下通过中间件实现。</p>
+<h3 id="核心步骤">核心步骤：<a hidden class="anchor" aria-hidden="true" href="#核心步骤">#</a></h3>
+<ol>
+<li><strong>生成 Key</strong>：前端或调用方在请求头带上 <code>X-Idempotency-Key</code>（可以是 UUID 或业务唯一 ID）。</li>
+<li><strong>前置校验（Redis）</strong>：</li>
+</ol>
+<ul>
+<li>使用 <code>SET key value NX PX 86400000</code> (Atomic SET if Not Exists)。</li>
+<li>如果设置失败，说明请求正在处理或已完成。</li>
+</ul>
+<ol start="3">
+<li><strong>存储结果</strong>：</li>
+</ol>
+<ul>
+<li>如果处理完成，将响应结果也缓存在 Redis 中。</li>
+<li>下次相同 Key 进来，直接从缓存返回结果，不走业务逻辑。</li>
+</ul>
+<h3 id="golang-伪代码实现">Golang 伪代码实现：<a hidden class="anchor" aria-hidden="true" href="#golang-伪代码实现">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">IdempotencyMiddleware</span>(<span style="color:#a6e22e">next</span> <span style="color:#a6e22e">echo</span>.<span style="color:#a6e22e">HandlerFunc</span>) <span style="color:#a6e22e">echo</span>.<span style="color:#a6e22e">HandlerFunc</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">c</span> <span style="color:#a6e22e">echo</span>.<span style="color:#a6e22e">Context</span>) <span style="color:#66d9ef">error</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">key</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Request</span>().<span style="color:#a6e22e">Header</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#e6db74">&#34;X-Idempotency-Key&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">key</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;&#34;</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">next</span>(<span style="color:#a6e22e">c</span>) <span style="color:#75715e">// 或者强制要求传入</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 1. 尝试锁定（原子操作）</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Status: 0-处理中, 1-已完成</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">res</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">redis</span>.<span style="color:#a6e22e">Do</span>(<span style="color:#e6db74">&#34;SET&#34;</span>, <span style="color:#a6e22e">key</span>, <span style="color:#e6db74">&#34;processing&#34;</span>, <span style="color:#e6db74">&#34;NX&#34;</span>, <span style="color:#e6db74">&#34;EX&#34;</span>, <span style="color:#ae81ff">3600</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">JSON</span>(<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">StatusConflict</span>, <span style="color:#e6db74">&#34;Request is being processed&#34;</span>)
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 2. 执行业务逻辑</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">next</span>(<span style="color:#a6e22e">c</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 3. 处理完成后更新 Redis 中的状态及返回结果（可选）</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">redis</span>.<span style="color:#a6e22e">Do</span>(<span style="color:#e6db74">&#34;SET&#34;</span>, <span style="color:#a6e22e">key</span>, <span style="color:#e6db74">&#34;completed&#34;</span>, <span style="color:#e6db74">&#34;EX&#34;</span>, <span style="color:#ae81ff">86400</span>) 
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">redis</span>.<span style="color:#a6e22e">Do</span>(<span style="color:#e6db74">&#34;DEL&#34;</span>, <span style="color:#a6e22e">key</span>) <span style="color:#75715e">// 失败了允许重试</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><hr>
+<h2 id="4-极端场景下的三道防线">4. 极端场景下的三道防线<a hidden class="anchor" aria-hidden="true" href="#4-极端场景下的三道防线">#</a></h2>
+<p>为了确保“高可用”和“绝对正确”，我会这样布防：</p>
+<table>
+  <thead>
+      <tr>
+          <th>防线</th>
+          <th>方案</th>
+          <th>解决的问题</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>第一道：分布式锁 (Redis/Etcd)</strong></td>
+          <td><code>SETNX</code> 锁定请求</td>
+          <td>解决秒级内的并发双击、高频重试。</td>
+      </tr>
+      <tr>
+          <td><strong>第二道：数据库唯一索引 (MySQL)</strong></td>
+          <td><code>UNIQUE KEY (order_sn, source)</code></td>
+          <td><strong>底线兜底</strong>。即便 Redis 宕机，数据库也会抛出异常，防止产生脏数据。</td>
+      </tr>
+      <tr>
+          <td><strong>第三道：乐观锁/版本号</strong></td>
+          <td><code>SET version = version + 1 WHERE id = x AND version = old_v</code></td>
+          <td>解决分布式环境下旧数据覆盖新数据的问题。</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="5-落地建议与避坑指南">5. 落地建议与避坑指南<a hidden class="anchor" aria-hidden="true" href="#5-落地建议与避坑指南">#</a></h2>
+<ol>
+<li><strong>重试机制的配合</strong>：幂等性是为了支持重试。如果后端实现了幂等，调用方（如 MQ）必须配置退避重试策略（Exponential Backoff）。</li>
+<li><strong>存储结果还是返回错误？</strong>：对于已处理过的请求，建议返回 <strong>上次成功的结果</strong>，而非报错。这样调用方会认为任务已完成，停止重试。</li>
+<li><strong>过期时间设置</strong>：幂等 Key 的有效期应大于业务处理可能的最大重试周期（通常 24-72 小时）。</li>
+<li><strong>注意原子性</strong>：在 Golang 中，如果业务逻辑包含多个 DB 操作，务必开启事务。</li>
+</ol>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="next" href="http://localhost:1313/posts/python/start/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Python语法复习学习高级特性</span>
+  </a>
+</nav>
+
+  </footer><div id="utterances-comments"></div>
+<script src="https://utteranc.es/client.js"
+        repo="yangcp25/yangcp25.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">yangcp</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

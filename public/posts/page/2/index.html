@@ -131,6 +131,25 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">sql高频题
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>分为六个维度：基础聚合 → 子查询 → TopN → 窗口函数 → 业务建模 → 性能优化。
+🎯 高频 SQL 题库（含答案与思路） 一、基础聚合与分组（GROUP BY / HAVING） 🧩 题 1：查询每个部门的平均工资 表结构：
+employee(emp_id, emp_name, dept_id, salary) SQL：
+SELECT dept_id, AVG(salary) AS avg_salary FROM employee GROUP BY dept_id; 📘 考点： 聚合函数 &#43; 分组
+🧩 题 2：查询带学生数超过 10 人的老师 teacher(teacher_id, name) student(student_id, teacher_id) SQL：
+SELECT teacher_id, COUNT(*) AS student_count FROM student GROUP BY teacher_id HAVING COUNT(*) &gt; 10; 📘 考点： HAVING 与 WHERE 的区别（HAVING 针对聚合后过滤）
+二、子查询（Subquery） 🧩 题 3：查询工资高于本部门平均工资的员工 SELECT e.emp_name, e.salary FROM employee e JOIN ( SELECT dept_id, AVG(salary) AS avg_salary FROM employee GROUP BY dept_id ) d ON e.dept_id = d.dept_id WHERE e.salary &gt; d.avg_salary; 📘 考点： 相关子查询 vs 非相关子查询
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-10-27 10:26:15 +0800 CST'>October 27, 2025</span>&nbsp;·&nbsp;3 min</footer>
+  <a class="entry-link" aria-label="post link to sql高频题" href="http://localhost:1313/posts/sql/%E9%AB%98%E9%A2%91%E9%A2%98/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Liunx常用命令
     </h2>
   </header>
@@ -277,18 +296,6 @@ dept_id (INT, Primary Key) - 部门 ID dept_name (VARCHAR) - 部门名称 模块
   </div>
   <footer class="entry-footer"><span title='2025-10-18 23:12:48 +0800 CST'>October 18, 2025</span>&nbsp;·&nbsp;9 min</footer>
   <a class="entry-link" aria-label="post link to 常见算法模板" href="http://localhost:1313/posts/datastructalgorithm/%E5%B8%B8%E8%A7%81%E7%AE%97%E6%B3%95%E6%A8%A1%E6%9D%BF/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">进程间通信
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p></p>
-  </div>
-  <footer class="entry-footer"><span title='2025-10-18 20:26:52 +0800 CST'>October 18, 2025</span>&nbsp;·&nbsp;0 min</footer>
-  <a class="entry-link" aria-label="post link to 进程间通信" href="http://localhost:1313/posts/cs/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

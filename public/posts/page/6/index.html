@@ -131,6 +131,31 @@
 
 <article class="post-entry"> 
 <figure class="entry-cover">
+        <img loading="lazy" src="http://localhost:1313/images/cap.png" alt="">
+</figure>
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CAP
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>定义 CAP理论是指分布式当中一致性、可用性以及分区容错性三者不可兼得。我们需要根据实际应用场景做出相应的取舍， 在现实中，一般来说分布式系统中的网络是不可能完全保证可用的，所以就需要在CA和CP中做出选择。
+c一致性(consistency) 同一份数据同一时间在不同的节点看到的结果应该是一致性的
+a可用性（availability） 当系统当中某些节点故障仍然可以在一定时间内响应用户请求，也就是说系统在任何时间对于非错请求都能在一定时间做出响应，且不返回错误。
+p分区容错性（partition tolerance） 当集群中发生网络分区，因为网络故障导致节点之间不能正常通信，系统仍然正常运行，能够对外提供服务。
+拜占庭将军问题 是指分布式系统中可能有恶意节点对数据一致性造成破坏。如果系统中的节点是f个，为了解决非拜占庭将军问题，至少需要3f&#43;1 个节点。能容忍拜占庭容错的系统一般是高安全性要求的系统，比如区跨链、金融、军事等。
+脑裂 脑裂是指分布式系统中由于网络波动或中断，导致系统被分成多个子系统，子系统在内部选举leader，对外提供服务。这会导致 严重的问题，比如
+数据不一致	两个分区同时写入同一数据（如账户余额），导致冲突且无法自动合并。 资源冲突	两个“领导者”同时操作共享资源（如分配同一IP地址、锁定同一文件）。 状态混乱	客户端可能被不同分区响应矛盾的结果（如A分区说“支付成功”，B分区说“未支付”）。 数据永久丢失	分区恢复后，冲突写入可能导致部分数据被覆盖或丢弃。 为了防止脑裂，一般分布式一致性协议都会采用多数派原则进行避免，比如五个节点的分布式系统中，需要3个节点的确认才能成为leader,否则会 因为无法选主而停止对外提供服务。
+raft协议 raft协议是分布式系统中多个节点对于某个资源的一致性的达成所采用的一种协议，主要有三个部分：
+主从选择 日志复制 安全性和一致性保证 raft协议是强一致的。还有一些其他的一致性组件比如zookeeper。raft协议提供了强一致性的方案。 zookeeper 实践 常见的使用场景 一些常见的开源软件的使用我们会经常遇到这个场景。拿最常见的redis为例，redis的分布式部署方案有三种，主从、哨兵、cluster。
+go 简单的实践 package main import ( &#34;fmt&#34; &#34;io&#34; &#34;log&#34; &#34;net&#34; &#34;os&#34; &#34;time&#34; &#34;github.com/hashicorp/raft&#34; bolt &#34;github.com/hashicorp/raft-boltdb&#34; ) // 简单的 FSM：提交即打印 type FSM struct{} func (f *FSM) Apply(l *raft.Log) interface{} { fmt.Printf(&#34;Apply: %s\n&#34;, string(l.Data)) return nil } func (f *FSM) Snapshot() (raft.FSMSnapshot, error) { return &amp;snapshot{}, nil } func (f *FSM) Restore(io.ReadCloser) error { return nil } type snapshot struct{} func (s *snapshot) Persist(sink raft.SnapshotSink) error { return sink.Close() } func (s *snapshot) Release() {} func main() { // 1) 配置 config := raft.DefaultConfig() config.LocalID = raft.ServerID(os.Args[1]) // 节点 ID 来自第一个参数 // 2) 网络传输：TCP addr, err := net.ResolveTCPAddr(&#34;tcp&#34;, os.Args[2]) if err != nil { log.Fatal(err) } transport, err := raft.NewTCPTransport(os.Args[2], addr, 3, 10*time.Second, os.Stdout) if err != nil { log.Fatal(err) } // 3) 日志与快照存储 store, err := bolt.NewBoltStore(fmt.Sprintf(&#34;raft-%s.db&#34;, os.Args[1])) if err != nil { log.Fatal(err) } snapshotStore := raft.NewInmemSnapshotStore() // 4) 创建 Raft 实例 r, err := raft.NewRaft(config, &amp;FSM{}, store, store, snapshotStore, transport) if err != nil { log.Fatal(err) } // 5) Bootstrap 第一个节点 if os.Args[1] == &#34;node1&#34; { cfg := raft.Configuration{ Servers: []raft.Server{ {ID: &#34;node1&#34;, Address: transport.LocalAddr()}, {ID: &#34;node2&#34;, Address: raft.ServerAddress(&#34;127.0.0.1:12002&#34;)}, {ID: &#34;node3&#34;, Address: raft.ServerAddress(&#34;127.0.0.1:12003&#34;)}, }, } r.BootstrapCluster(cfg) } // 6) 简单命令行提交 if config.LocalID == &#34;node1&#34; { go func() { for { time.Sleep(3 * time.Second) f := r.Apply([]byte(&#34;hello raft&#34;), 5*time.Second) if err := f.Error(); err != nil { log.Println(&#34;apply error:&#34;, err) } } }() } select {} // 阻塞 } `
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-07-16 09:21:40 +0800 CST'>July 16, 2025</span>&nbsp;·&nbsp;4 min</footer>
+  <a class="entry-link" aria-label="post link to CAP" href="http://localhost:1313/posts/architecture/cap/"></a>
+</article>
+
+<article class="post-entry"> 
+<figure class="entry-cover">
         <img loading="lazy" src="http://localhost:1313/images/img_2.png" alt="">
 </figure>
   <header class="entry-header">

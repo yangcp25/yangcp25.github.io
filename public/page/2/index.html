@@ -128,6 +128,18 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Tcp三次握手和四次挥手
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>三次握手 客户端发送syn，客户端从close-&gt;syn-send syn服务端收到syn ,同时向客户端发送syn.ack ，自己从listen变成 syn-recd 客户端收到syn-ack会在发送一个ack,自己变成established,服务端收到这个ack，自己变成established。 </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-10-29 20:34:20 +0800 CST'>October 29, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <a class="entry-link" aria-label="post link to Tcp三次握手和四次挥手" href="http://localhost:1313/posts/network/tcp%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">sql高频题
     </h2>
   </header>
@@ -279,20 +291,6 @@ dept_id (INT, Primary Key) - 部门 ID dept_name (VARCHAR) - 部门名称 模块
   </div>
   <footer class="entry-footer"><span title='2025-10-19 12:21:08 +0800 CST'>October 19, 2025</span>&nbsp;·&nbsp;3 min</footer>
   <a class="entry-link" aria-label="post link to 面试题模板" href="http://localhost:1313/posts/sql/%E9%9D%A2%E8%AF%95%E9%A2%98%E6%A8%A1%E6%9D%BF/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">常见算法模板
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p> 常见算法模板 第一部分：核心算法思想 1. 二分查找 (Binary Search) 适用于有序序列的查找。
-// 基础版本：查找特定值 func binarySearch(nums []int, target int) int { left, right := 0, len(nums)-1 for left &lt;= right { mid := left &#43; (right-left)/2 // 防溢出 if nums[mid] == target { return mid } else if nums[mid] &lt; target { left = mid &#43; 1 } else { right = mid - 1 } } return -1 // 未找到 } // 变体：查找左侧边界（第一个 &gt;= target 的位置） func lowerBound(nums []int, target int) int { left, right := 0, len(nums) // 注意 right 的取值 for left &lt; right { mid := left &#43; (right-left)/2 if nums[mid] &gt;= target { right = mid } else { left = mid &#43; 1 } } return left } 2. 双指针 (Two Pointers) 快慢指针 常用于链表（判断环、找中点）或数组（原地修改）。
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-10-18 23:12:48 +0800 CST'>October 18, 2025</span>&nbsp;·&nbsp;9 min</footer>
-  <a class="entry-link" aria-label="post link to 常见算法模板" href="http://localhost:1313/posts/datastructalgorithm/%E5%B8%B8%E8%A7%81%E7%AE%97%E6%B3%95%E6%A8%A1%E6%9D%BF/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">
