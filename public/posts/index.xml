@@ -6,8 +6,74 @@
     <description>Recent content in Posts on yangcp</description>
     <generator>Hugo -- 0.147.4</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 03 Mar 2026 10:43:35 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 04 Mar 2026 14:48:22 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>接口限流和限制并发</title>
+      <link>http://localhost:1313/posts/architecture/%E6%8E%A5%E5%8F%A3%E9%99%90%E6%B5%81%E5%92%8C%E9%99%90%E5%88%B6%E5%B9%B6%E5%8F%91/</link>
+      <pubDate>Wed, 04 Mar 2026 14:48:22 +0800</pubDate>
+      <guid>http://localhost:1313/posts/architecture/%E6%8E%A5%E5%8F%A3%E9%99%90%E6%B5%81%E5%92%8C%E9%99%90%E5%88%B6%E5%B9%B6%E5%8F%91/</guid>
+      <description>&lt;h2 id=&#34;接口频率限制-rate-limiting-总结&#34;&gt;接口频率限制 (Rate Limiting) 总结&lt;/h2&gt;
+&lt;p&gt;一套完整的限流方案，本质上是在解决三个问题：&lt;strong&gt;怎么算（算法与实现）&lt;/strong&gt;、&lt;strong&gt;卡多细（维度粒度）&lt;/strong&gt;、&lt;strong&gt;在哪挡（架构分层）&lt;/strong&gt;。&lt;/p&gt;
+&lt;h3 id=&#34;一-核心分类与算法选型&#34;&gt;一、 核心分类与算法选型&lt;/h3&gt;
+&lt;p&gt;限流从部署维度分为&lt;strong&gt;单机限流&lt;/strong&gt;和&lt;strong&gt;分布式限流&lt;/strong&gt;，其底层依赖四大基础算法与一种动态自适应机制。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;固定窗口 (Fixed Window)&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;特点&lt;/strong&gt;：按固定时间段（如1分钟）计数，实现极简，性能极高。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;缺点&lt;/strong&gt;：存在“临界突刺”问题（例如0:59和1:01分别打满，导致两秒内承受双倍流量）。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;场景&lt;/strong&gt;：对突发流量不敏感、只追求极致性能的粗粒度 RPM/RPH 控制。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;&lt;strong&gt;滑动窗口 (Sliding Window)&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;特点&lt;/strong&gt;：将固定窗口细分为多个小周期，平滑了临界问题。精度高。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;场景&lt;/strong&gt;：防刷、细粒度 QPS/RPM 控制。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;&lt;strong&gt;令牌桶 (Token Bucket)&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;特点&lt;/strong&gt;：以恒定速率生成令牌，请求消耗令牌。&lt;strong&gt;允许一定程度的突发流量&lt;/strong&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;场景&lt;/strong&gt;：应对常规互联网业务的峰谷波动，保障用户体验。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;&lt;strong&gt;漏桶 (Leaky Bucket)&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;特点&lt;/strong&gt;：不管流入多快，流出（处理）速率恒定。属于强力“整形”算法。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;场景&lt;/strong&gt;：保护极度脆弱的下游系统（如核心数据库慢查询、老旧第三方接口）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;5&#34;&gt;
+&lt;li&gt;&lt;strong&gt;自适应限流 (Adaptive Load Shedding)&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;特点&lt;/strong&gt;：抛弃静态死板的 QPS/并发数阈值，基于机器动态负载（CPU &amp;gt; 80%）、请求响应时间（RT）、并发数（Inflight）自动判断是否拒绝新请求。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;二-常见-golang-与-redis-落地手段&#34;&gt;二、 常见 Golang 与 Redis 落地手段&lt;/h3&gt;
+&lt;h4 id=&#34;1-单机并发控制-单体系统或保护节点自身&#34;&gt;1. 单机并发控制 (单体系统或保护节点自身)&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;基础版：协程信号量&lt;/strong&gt;
+利用 Go 非阻塞 channel：&lt;code&gt;make(chan struct{}, 10)&lt;/code&gt;。每进入一个执行函数写一条，&lt;code&gt;defer&lt;/code&gt; 消耗一条。极其轻量。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;进阶版：带权重的并发控制&lt;/strong&gt;
+使用官方库 &lt;code&gt;golang.org/x/sync/semaphore&lt;/code&gt;。支持超时控制和权重分配，避免死锁和携程泄露。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;频率限制&lt;/strong&gt;
+使用 &lt;code&gt;golang.org/x/time/rate&lt;/code&gt;，它基于令牌桶算法，是标准库生态下的限流利器。或者用 Uber 的 &lt;code&gt;go.uber.org/ratelimit&lt;/code&gt; 实现漏桶平滑限制。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;2-分布式限流核心-微服务或集群环境&#34;&gt;2. 分布式限流核心 (微服务或集群环境)&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;极简固定时间（排队）&lt;/strong&gt;
+利用 Redis 的 &lt;code&gt;SET EX&lt;/code&gt;。设置过期时间如 250ms，过期后才允许下一个操作。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;精确并发控制&lt;/strong&gt;
+Redis + Lua 脚本。利用原子 &lt;code&gt;INCR&lt;/code&gt; 增加并发数，操作完毕执行 &lt;code&gt;DECR&lt;/code&gt; 释放。&lt;strong&gt;Lua 的原子性是关键&lt;/strong&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;复杂窗口与令牌控制&lt;/strong&gt;
+同样依赖 Redis + Lua。滑动窗口通常借助 &lt;code&gt;ZSET&lt;/code&gt; 结构（用时间戳作为 score），令牌桶则用 Lua 脚本来原子计算时间差并补发令牌。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;三-维度的精细化拆分&#34;&gt;三、 维度的精细化拆分&lt;/h3&gt;
+&lt;p&gt;优秀的架构不应只卡“全局 QPS”，而是要能做到&lt;strong&gt;千人千面&lt;/strong&gt;的防控：&lt;/p&gt;</description>
+    </item>
     <item>
       <title>幂等性设计</title>
       <link>http://localhost:1313/posts/architecture/%E5%B9%82%E7%AD%89%E6%80%A7%E8%AE%BE%E8%AE%A1/</link>

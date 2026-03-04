@@ -128,6 +128,21 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">接口限流和限制并发
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>接口频率限制 (Rate Limiting) 总结 一套完整的限流方案，本质上是在解决三个问题：怎么算（算法与实现）、卡多细（维度粒度）、在哪挡（架构分层）。
+一、 核心分类与算法选型 限流从部署维度分为单机限流和分布式限流，其底层依赖四大基础算法与一种动态自适应机制。
+固定窗口 (Fixed Window) 特点：按固定时间段（如1分钟）计数，实现极简，性能极高。 缺点：存在“临界突刺”问题（例如0:59和1:01分别打满，导致两秒内承受双倍流量）。 场景：对突发流量不敏感、只追求极致性能的粗粒度 RPM/RPH 控制。 滑动窗口 (Sliding Window) 特点：将固定窗口细分为多个小周期，平滑了临界问题。精度高。 场景：防刷、细粒度 QPS/RPM 控制。 令牌桶 (Token Bucket) 特点：以恒定速率生成令牌，请求消耗令牌。允许一定程度的突发流量。 场景：应对常规互联网业务的峰谷波动，保障用户体验。 漏桶 (Leaky Bucket) 特点：不管流入多快，流出（处理）速率恒定。属于强力“整形”算法。 场景：保护极度脆弱的下游系统（如核心数据库慢查询、老旧第三方接口）。 自适应限流 (Adaptive Load Shedding) 特点：抛弃静态死板的 QPS/并发数阈值，基于机器动态负载（CPU &gt; 80%）、请求响应时间（RT）、并发数（Inflight）自动判断是否拒绝新请求。 二、 常见 Golang 与 Redis 落地手段 1. 单机并发控制 (单体系统或保护节点自身) 基础版：协程信号量 利用 Go 非阻塞 channel：make(chan struct{}, 10)。每进入一个执行函数写一条，defer 消耗一条。极其轻量。 进阶版：带权重的并发控制 使用官方库 golang.org/x/sync/semaphore。支持超时控制和权重分配，避免死锁和携程泄露。 频率限制 使用 golang.org/x/time/rate，它基于令牌桶算法，是标准库生态下的限流利器。或者用 Uber 的 go.uber.org/ratelimit 实现漏桶平滑限制。 2. 分布式限流核心 (微服务或集群环境) 极简固定时间（排队） 利用 Redis 的 SET EX。设置过期时间如 250ms，过期后才允许下一个操作。 精确并发控制 Redis &#43; Lua 脚本。利用原子 INCR 增加并发数，操作完毕执行 DECR 释放。Lua 的原子性是关键。 复杂窗口与令牌控制 同样依赖 Redis &#43; Lua。滑动窗口通常借助 ZSET 结构（用时间戳作为 score），令牌桶则用 Lua 脚本来原子计算时间差并补发令牌。 三、 维度的精细化拆分 优秀的架构不应只卡“全局 QPS”，而是要能做到千人千面的防控：
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-03-04 14:48:22 +0800 CST'>March 4, 2026</span>&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to 接口限流和限制并发" href="http://localhost:1313/posts/architecture/%E6%8E%A5%E5%8F%A3%E9%99%90%E6%B5%81%E5%92%8C%E9%99%90%E5%88%B6%E5%B9%B6%E5%8F%91/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">幂等性设计
     </h2>
   </header>
@@ -263,19 +278,6 @@ AI应用 工作当中会做一些AI相关的应用，在AI应用进行深耕
   </div>
   <footer class="entry-footer"><span title='2025-11-05 09:29:18 +0800 CST'>November 5, 2025</span>&nbsp;·&nbsp;5 min</footer>
   <a class="entry-link" aria-label="post link to 排序算法总结" href="http://localhost:1313/posts/datastructalgorithm/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">内存分配
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>go的内存分配 根据对象大小的不同，go的内存分配有3种类型： Tiny(size &lt; 16B): Objects of size less than 16 bytes are allocated using the mcache’s tiny allocator. This is efficient and multiple tiny allocations are done on a single 16-byte block. Small(size 16B ~ 32KB): Objects of size between 16 bytes and 32 Kilobytes are allocated on the corresponding size class(mspan) on mcache of the P where the G is running. In both tiny and small allocation if the mspan’s list is empty the allocator will obtain a run of pages from the mheap to use for the mspan. If the mheap is empty or has no page runs large enough then it allocates a new group of pages (at least 1MB) from the OS. Large(size &gt; 32KB): Objects of size greater than 32 kilobytes are allocated directly on the corresponding size class of mheap. If the mheap is empty or has no page runs large enough then it allocates a new group of pages (at least 1MB) from the OS. 总结一下Go是如何进行内存分配: mcache中如果有空闲的空间， 那么直接在mcache分配 mcache如果没有，那么尝试去mcentral中获取一个空闲的mspan mcentral中也咩有可用的mspan，那么直接去mheap向操作系统申请可用的mspan
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-10-31 18:10:00 +0800 CST'>October 31, 2025</span>&nbsp;·&nbsp;2 min</footer>
-  <a class="entry-link" aria-label="post link to 内存分配" href="http://localhost:1313/posts/go/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">
