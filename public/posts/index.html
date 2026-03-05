@@ -131,6 +131,35 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">接口重试解决方案
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>你的理解非常精准，已经覆盖了从业务代码层、RPC框架层到基础设施层（Service Mesh）的核心脉络。使用 go-resty 处理 HTTP、使用循环结合指数退避（Exponential Backoff），以及利用 gRPC 和 服务网格的内建机制，都是一线大厂非常主流的做法。
+作为架构师，在设计高并发、高可用的分布式系统时，仅仅有“重试动作”是不够的。我们需要补充几个关键的防御性维度：防雪崩机制（Jitter 抖动）、前提条件（接口幂等性）、防过度重试（熔断协同），以及异步补偿链路。
+下面为你梳理一套完整的、系统级的接口重试解决方案框架。
+完整的系统级重试解决方案 针对不同的场景和技术栈，我们应采用分层治理的架构策略：
+1. 业务代码层：轻量级同步调用 适用于内部简单的函数调用、第三方 HTTP API 对接。
+HTTP 请求：
+继续使用 go-resty/resty，它内置了非常完善的重试机制，支持设置条件重试（如只在 500, 502, 503, 504 状态码时重试）。
+替代方案：hashicorp/go-retryablehttp，也是大厂常用的标准库封装。
+通用泛型重试（函数级别）：
+不要手写 for 循环，推荐引入工业级组件：avast/retry-go 或 cenkalti/backoff（自带完美的带 Jitter 的指数退避算法）。
+架构规范：严格配置 MaxRetries（最大次数，一般不超过 3 次）和 MaxElapsedTime（最大总耗时）。
+2. RPC 框架层：微服务内部通信 适用于 Kubernetes 集群内 Pod 间的强同步通信（如 gRPC）。
+gRPC 内置重试：
+通过 gRPC 的 ServiceConfig 在客户端无侵入地配置重试策略（支持 maxAttempts、initialBackoff、maxBackoff、backoffMultiplier 和 retryableStatusCodes）。
+中间件拦截器（Interceptor）：
+在 gRPC 的 Client Interceptor 中统一定制重试与熔断逻辑，业务代码完全无感。
+3. 基础设施层：服务网格 (Service Mesh) 适用于异构系统或希望将流量治理完全与业务解耦的场景。
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-03-05 10:33:45 +0800 CST'>March 5, 2026</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;yangcp</footer>
+  <a class="entry-link" aria-label="post link to 接口重试解决方案" href="http://localhost:1313/posts/architecture/%E9%87%8D%E8%AF%95/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">接口限流和限制并发
     </h2>
   </header>
@@ -267,21 +296,6 @@ AI应用 工作当中会做一些AI相关的应用，在AI应用进行深耕
   </div>
   <footer class="entry-footer"><span title='2025-11-10 14:37:09 +0800 CST'>November 10, 2025</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;yangcp</footer>
   <a class="entry-link" aria-label="post link to 延时队列" href="http://localhost:1313/posts/scenario/%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">排序算法总结
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>总结——所有常见排序算法的核心思想、时间复杂度、空间复杂度、稳定性、是否原地排序、适用场景和简单例子。 下面是最全面且面试导向的总结版本👇
-🧠 排序算法总览表 算法 思想 时间复杂度 空间复杂度 稳定性 原地排序 适用场景 冒泡排序 (Bubble Sort) 相邻交换，最大（或最小）元素逐步“浮出” O(n²) O(1) ✅ 稳定 ✅ 数据量小、部分有序 选择排序 (Selection Sort) 每次选择最小元素放到前面 O(n²) O(1) ❌ 不稳定 ✅ 数据量小，对交换次数敏感 插入排序 (Insertion Sort) 将未排序元素插入到已排序序列中 O(n²) O(1) ✅ 稳定 ✅ 数据基本有序时高效 希尔排序 (Shell Sort) 插入排序的改进版，分组比较减少交换 O(n¹˙³~n²) O(1) ❌ 不稳定 ✅ 中等规模数据 归并排序 (Merge Sort) 分治 &#43; 合并有序子序列 O(n log n) O(n) ✅ 稳定 ❌ 大数据、外部排序 快速排序 (Quick Sort) 分治 &#43; 基准划分 平均 O(n log n)
-最坏 O(n²) O(log n) ❌ 不稳定 ✅ 通用最快的内部排序 堆排序 (Heap Sort) 利用堆结构维护最大/最小值 O(n log n) O(1) ❌ 不稳定 ✅ 需要快速找最大/最小的场景 计数排序 (Counting Sort) 统计每个元素出现次数 O(n &#43; k) O(n &#43; k) ✅ 稳定 ❌ 整数、范围较小的场景 桶排序 (Bucket Sort) 按区间划分多个桶再分别排序 O(n &#43; k) O(n &#43; k) ✅ 稳定（视子排序） ❌ 数据均匀分布的浮点数 基数排序 (Radix Sort) 按位（个位→高位）排序 O(d·(n&#43;k)) O(n &#43; k) ✅ 稳定 ❌ 整数、字符串排序 🔍 各算法核心思想讲解与代码示例 1️⃣ 冒泡排序 Bubble Sort 每一轮两两比较，把最大值“冒泡”到最后。
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-05 09:29:18 +0800 CST'>November 5, 2025</span>&nbsp;·&nbsp;5 min&nbsp;·&nbsp;yangcp</footer>
-  <a class="entry-link" aria-label="post link to 排序算法总结" href="http://localhost:1313/posts/datastructalgorithm/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

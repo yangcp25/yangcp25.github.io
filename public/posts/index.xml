@@ -6,8 +6,59 @@
     <description>Recent content in Posts on yangcp</description>
     <generator>Hugo -- 0.147.4</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 04 Mar 2026 14:48:22 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 05 Mar 2026 10:33:45 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>接口重试解决方案</title>
+      <link>http://localhost:1313/posts/architecture/%E9%87%8D%E8%AF%95/</link>
+      <pubDate>Thu, 05 Mar 2026 10:33:45 +0800</pubDate>
+      <guid>http://localhost:1313/posts/architecture/%E9%87%8D%E8%AF%95/</guid>
+      <description>&lt;p&gt;你的理解非常精准，已经覆盖了从业务代码层、RPC框架层到基础设施层（Service Mesh）的核心脉络。使用 &lt;code&gt;go-resty&lt;/code&gt; 处理 HTTP、使用循环结合指数退避（Exponential Backoff），以及利用 gRPC 和 服务网格的内建机制，都是一线大厂非常主流的做法。&lt;/p&gt;
+&lt;p&gt;作为架构师，在设计高并发、高可用的分布式系统时，仅仅有“重试动作”是不够的。我们需要补充几个关键的防御性维度：&lt;strong&gt;防雪崩机制（Jitter 抖动）&lt;/strong&gt;、&lt;strong&gt;前提条件（接口幂等性）&lt;/strong&gt;、&lt;strong&gt;防过度重试（熔断协同）&lt;/strong&gt;，以及&lt;strong&gt;异步补偿链路&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;下面为你梳理一套完整的、系统级的接口重试解决方案框架。&lt;/p&gt;
+&lt;h3 id=&#34;完整的系统级重试解决方案&#34;&gt;完整的系统级重试解决方案&lt;/h3&gt;
+&lt;p&gt;针对不同的场景和技术栈，我们应采用分层治理的架构策略：&lt;/p&gt;
+&lt;h4 id=&#34;1-业务代码层轻量级同步调用&#34;&gt;1. 业务代码层：轻量级同步调用&lt;/h4&gt;
+&lt;p&gt;适用于内部简单的函数调用、第三方 HTTP API 对接。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;HTTP 请求&lt;/strong&gt;：&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;继续使用 &lt;strong&gt;&lt;code&gt;go-resty/resty&lt;/code&gt;&lt;/strong&gt;，它内置了非常完善的重试机制，支持设置条件重试（如只在 500, 502, 503, 504 状态码时重试）。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;替代方案：&lt;strong&gt;&lt;code&gt;hashicorp/go-retryablehttp&lt;/code&gt;&lt;/strong&gt;，也是大厂常用的标准库封装。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;通用泛型重试（函数级别）&lt;/strong&gt;：&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;不要手写 &lt;code&gt;for&lt;/code&gt; 循环，推荐引入工业级组件：&lt;strong&gt;&lt;code&gt;avast/retry-go&lt;/code&gt;&lt;/strong&gt; 或 &lt;strong&gt;&lt;code&gt;cenkalti/backoff&lt;/code&gt;&lt;/strong&gt;（自带完美的带 Jitter 的指数退避算法）。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;架构规范&lt;/strong&gt;：严格配置 &lt;code&gt;MaxRetries&lt;/code&gt;（最大次数，一般不超过 3 次）和 &lt;code&gt;MaxElapsedTime&lt;/code&gt;（最大总耗时）。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;2-rpc-框架层微服务内部通信&#34;&gt;2. RPC 框架层：微服务内部通信&lt;/h4&gt;
+&lt;p&gt;适用于 Kubernetes 集群内 Pod 间的强同步通信（如 gRPC）。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;gRPC 内置重试&lt;/strong&gt;：&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;通过 gRPC 的 &lt;code&gt;ServiceConfig&lt;/code&gt; 在客户端无侵入地配置重试策略（支持 &lt;code&gt;maxAttempts&lt;/code&gt;、&lt;code&gt;initialBackoff&lt;/code&gt;、&lt;code&gt;maxBackoff&lt;/code&gt;、&lt;code&gt;backoffMultiplier&lt;/code&gt; 和 &lt;code&gt;retryableStatusCodes&lt;/code&gt;）。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;中间件拦截器（Interceptor）&lt;/strong&gt;：&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;在 gRPC 的 Client Interceptor 中统一定制重试与熔断逻辑，业务代码完全无感。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;3-基础设施层服务网格-service-mesh&#34;&gt;3. 基础设施层：服务网格 (Service Mesh)&lt;/h4&gt;
+&lt;p&gt;适用于异构系统或希望将流量治理完全与业务解耦的场景。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>接口限流和限制并发</title>
       <link>http://localhost:1313/posts/architecture/%E6%8E%A5%E5%8F%A3%E9%99%90%E6%B5%81%E5%92%8C%E9%99%90%E5%88%B6%E5%B9%B6%E5%8F%91/</link>
