@@ -8,7 +8,7 @@
 <title>Reflect | yangcp</title>
 <meta name="keywords" content="">
 <meta name="description" content="">
-<meta name="author" content="">
+<meta name="author" content="yangcp">
 <link rel="canonical" href="http://localhost:1313/tags/reflect/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
@@ -110,8 +110,8 @@
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/tags/" title="Tag">
-                    <span>Tag</span>
+                <a href="http://localhost:1313/tags/" title="Tags">
+                    <span>Tags</span>
                 </a>
             </li>
             <li>
@@ -148,7 +148,7 @@ type A interface { method() } 可能你会有一个疑问，那go是怎么确定
 如何使用 什么时候会使用interface 通过接口来实现解耦合，比如依赖注入、适配器模式。 不确定传入参数的类型，需要在运行时来确定。 使用方法 接口列表 type animal interface { move() } type dog struct {} func (d dog) move() { fmt.Println(&#34;dog moving&#34;) } type cat struct {} func (c cat) move() { fmt.Println(&#34;cat moving&#34;) } func main() { var a animal a = dog{} a.move() a = cat{} // a是结构可以同意调用 a.move() // 接口注入 call(a) // 不确定具体的参数 vat func1 = func(param any) {} func1 = func(param any) { fmt.Println(&#34;call any&#34;, param) } } func call(a animal) { fmt.Println(&#34;call animal \n&#34;) a.move() } 需要注意的点和坑 使用接口会让编译器无法确定数据类型，导致无法再编译阶段发现类型错误，引发运行时错误。 使用接口会让程序变得难以阅读和理解。 性能会损失大概一倍 reflect unsafe.pointer go语言unsafe包提供了一些函数，可以获取指针，修改指针，获取指针指向的数据，修改指针指向的数据。 简单来讲，go本身不能操作指针，但是提供了reflect包让我们可以操作指针来获得程序的 性能提升。
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-07-06 12:44:43 +0800 CST'>July 6, 2025</span>&nbsp;·&nbsp;1 min</footer>
+  <footer class="entry-footer"><span title='2025-07-06 12:44:43 +0800 CST'>July 6, 2025</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;yangcp</footer>
   <a class="entry-link" aria-label="post link to golang的interface和reflect" href="http://localhost:1313/posts/go/interfacereflect/"></a>
 </article>
     </main>

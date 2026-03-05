@@ -1,65 +1,82 @@
-theme = "PaperMod"
-[author]
-name = "yangcp"
 baseURL = "https://yangcp25.github.io/"
 languageCode = "zh-CN"
 title = "yangcp"
+theme = "PaperMod"
 
+# 1. 核心修复：定义作者对象（解决 RSS 和 JSON-LD 报错）
+[author]
+name = "yangcp"
+
+# 2. 渲染设置：解决 "Raw HTML omitted" 警告
+[markup]
+[markup.goldmark]
+[markup.goldmark.renderer]
+unsafe = true  # 允许在 Markdown 中使用原生 HTML
+
+# 3. 输出格式：搜索功能需要 JSON
 [outputs]
-home = ["HTML", "RSS", "JSON"]  # 搜索需要 index.json
+home = ["HTML", "RSS", "JSON"]
 
-[menu]
+# 4. 菜单配置
 [[menu.main]]
-name   = "Archives"
-url    = "/archives/"
+name = "Archives"
+url = "/archives/"
 weight = 10
 
 [[menu.main]]
 name = "Search"
 url = "/search/"
-weight = 10
+weight = 20
 
 [[menu.main]]
-name   = "Tag"
-url    = "/tags/"
+name = "Tags"
+url = "/tags/"
 weight = 30
 
 [[menu.main]]
-name       = "About"
-url        = "/about/me/"
-weight     = 40
+name = "About"
+url = "/about/me/"
+weight = 40
 
+# 5. 分页设置
 [pagination]
 pagerSize = 10
 
+# 6. PaperMod 主题参数
 [params]
-
+author = "yangcp" # 双重保险
 mainSections = ["posts"]
-showPostImage = true  # 关键参数：开启封面图
-ShowSearch = true                 # 启用搜索框
-showNewTab = true
 defaultTheme = "auto"
+showPostImage = true
+ShowSearch = true
+showNewTab = true
 showTaxonomies = ["tags", "categories"]
 
-comments = true                   # 启用评论
+# 阅读体验
+ShowReadingTime = true
+ShowToc = true
+TocOpen = false
+ShowBreadCrumbs = true
+ShowPostNavLinks = true
+ShowCodeCopyButtons = true
+
+# 评论系统 (Utterances)
+comments = true
 commentSystem = "utterances"
 utterancesRepo = "yangcp25/yangcp25.github.io"
 utterancesIssueTerm = "pathname"
 utterancesTheme = "github-light"
 
-ShowReadingTime = true           # 阅读时长
-ShowToc = true                   # 显示 TOC
-TocOpen = false                   # 默认展开 TOC
-ShowBreadCrumbs = true           # 面包屑导航
-ShowPostNavLinks = true          # 上一篇 / 下一篇
-ShowCodeCopyButtons = true       # 代码复制按钮
-
+# 社交图标
 [[params.socialIcons]]
 name = "github"
 url = "https://github.com/yangcp25"
 
+# 资源配置
+[params.assets]
+defaultPostImage = "/images/default-cover.png"
+
+# 7. 分类法
 [taxonomies]
 tag = "tags"
 category = "categories"
-[params.assets]
-defaultPostImage = "/images/default-cover.png"

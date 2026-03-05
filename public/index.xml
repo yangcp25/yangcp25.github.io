@@ -584,7 +584,7 @@ top 100-200 全速刷两遍&lt;/p&gt;
       &lt;tr&gt;
           &lt;td&gt;&lt;strong&gt;快速排序 (Quick Sort)&lt;/strong&gt;&lt;/td&gt;
           &lt;td&gt;分治 + 基准划分&lt;/td&gt;
-          &lt;td&gt;平均 O(n log n)&lt;!-- raw HTML omitted --&gt;最坏 O(n²)&lt;/td&gt;
+          &lt;td&gt;平均 O(n log n)&lt;br&gt;最坏 O(n²)&lt;/td&gt;
           &lt;td&gt;O(log n)&lt;/td&gt;
           &lt;td&gt;❌ 不稳定&lt;/td&gt;
           &lt;td&gt;✅&lt;/td&gt;
