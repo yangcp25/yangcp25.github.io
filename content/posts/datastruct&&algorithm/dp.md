@@ -1,7 +1,7 @@
 +++
 date = '2026-01-22T20:05:32+08:00'
 draft = false
-title = 'Dp'
+title = 'dp算法工作机'
 +++
 
 ### dp 通用解题方法

@@ -34,7 +34,7 @@
 "tags":null,
 "categories":null
 },{
-"title":"Dp",
+"title":"dp算法工作机",
 "permalink": "http://localhost:1313/posts/datastructalgorithm/dp/",
 "summary": "dp 通用解题方法 1. dp[?] 表示什么？ 2. dp[?] 从哪几个 dp[?] 来？ 3. dp 最小值怎么开始？ 4. dp 是正着算还是倒着算？ ",
 "content": "dp 通用解题方法 1. dp[?] 表示什么？ 2. dp[?] 从哪几个 dp[?] 来？ 3. dp 最小值怎么开始？ 4. dp 是正着算还是倒着算？ ",
