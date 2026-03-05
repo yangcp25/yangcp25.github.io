@@ -1,5 +1,6 @@
 theme = "PaperMod"
-
+[author]
+name = "yangcp"
 baseURL = "https://yangcp25.github.io/"
 languageCode = "zh-CN"
 title = "yangcp"
@@ -32,6 +33,7 @@ weight     = 40
 pagerSize = 10
 
 [params]
+
 mainSections = ["posts"]
 showPostImage = true  # 关键参数：开启封面图
 ShowSearch = true                 # 启用搜索框
