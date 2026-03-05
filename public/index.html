@@ -124,168 +124,38 @@
         </ul>
     </nav>
 </header>
-<main class="main"> 
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">接口限流和限制并发
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>接口频率限制 (Rate Limiting) 总结 一套完整的限流方案，本质上是在解决三个问题：怎么算（算法与实现）、卡多细（维度粒度）、在哪挡（架构分层）。
-一、 核心分类与算法选型 限流从部署维度分为单机限流和分布式限流，其底层依赖四大基础算法与一种动态自适应机制。
-固定窗口 (Fixed Window) 特点：按固定时间段（如1分钟）计数，实现极简，性能极高。 缺点：存在“临界突刺”问题（例如0:59和1:01分别打满，导致两秒内承受双倍流量）。 场景：对突发流量不敏感、只追求极致性能的粗粒度 RPM/RPH 控制。 滑动窗口 (Sliding Window) 特点：将固定窗口细分为多个小周期，平滑了临界问题。精度高。 场景：防刷、细粒度 QPS/RPM 控制。 令牌桶 (Token Bucket) 特点：以恒定速率生成令牌，请求消耗令牌。允许一定程度的突发流量。 场景：应对常规互联网业务的峰谷波动，保障用户体验。 漏桶 (Leaky Bucket) 特点：不管流入多快，流出（处理）速率恒定。属于强力“整形”算法。 场景：保护极度脆弱的下游系统（如核心数据库慢查询、老旧第三方接口）。 自适应限流 (Adaptive Load Shedding) 特点：抛弃静态死板的 QPS/并发数阈值，基于机器动态负载（CPU &gt; 80%）、请求响应时间（RT）、并发数（Inflight）自动判断是否拒绝新请求。 二、 常见 Golang 与 Redis 落地手段 1. 单机并发控制 (单体系统或保护节点自身) 基础版：协程信号量 利用 Go 非阻塞 channel：make(chan struct{}, 10)。每进入一个执行函数写一条，defer 消耗一条。极其轻量。 进阶版：带权重的并发控制 使用官方库 golang.org/x/sync/semaphore。支持超时控制和权重分配，避免死锁和携程泄露。 频率限制 使用 golang.org/x/time/rate，它基于令牌桶算法，是标准库生态下的限流利器。或者用 Uber 的 go.uber.org/ratelimit 实现漏桶平滑限制。 2. 分布式限流核心 (微服务或集群环境) 极简固定时间（排队） 利用 Redis 的 SET EX。设置过期时间如 250ms，过期后才允许下一个操作。 精确并发控制 Redis &#43; Lua 脚本。利用原子 INCR 增加并发数，操作完毕执行 DECR 释放。Lua 的原子性是关键。 复杂窗口与令牌控制 同样依赖 Redis &#43; Lua。滑动窗口通常借助 ZSET 结构（用时间戳作为 score），令牌桶则用 Lua 脚本来原子计算时间差并补发令牌。 三、 维度的精细化拆分 优秀的架构不应只卡“全局 QPS”，而是要能做到千人千面的防控：
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-03-04 14:48:22 +0800 CST'>March 4, 2026</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;yangcp</footer>
-  <a class="entry-link" aria-label="post link to 接口限流和限制并发" href="http://localhost:1313/posts/architecture/%E6%8E%A5%E5%8F%A3%E9%99%90%E6%B5%81%E5%92%8C%E9%99%90%E5%88%B6%E5%B9%B6%E5%8F%91/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">幂等性设计
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>生产级幂等性理论框架 幂等性的数学表达是 $f(f(x)) = f(x)$。在分布式系统中，它的本质是：如何识别重复请求并安全地返回相同结果。
-幂等请求的生命周期 我将解决方案分为三个等级，根据业务成本和重要性进行选择：
-第一级：天然幂等（架构设计优化） 查询（GET）与删除（DELETE）：通常天然幂等（注：删除需根据 ID 删除，而非 DELETE TOP 1）。 绝对赋值型更新：UPDATE score SET value = 100 是幂等的；UPDATE score SET value = value &#43; 10 则不是。 设计建议：尽可能将业务逻辑设计为“指向性”而非“增量性”。 第二级：业务状态机（最推荐，生产首选） 对于支付、订单等有明确流转状态的业务，利用数据库的原子性：
-SQL 技巧：使用条件更新。 UPDATE orders SET status = &#39;PAID&#39;, update_time = NOW() WHERE order_id = &#39;123&#39; AND status = &#39;UNPAID&#39;; 原理：利用数据库的行锁。如果状态已经变了，Affect Rows 为 0，程序直接返回成功。 第三级：通用幂等表/唯一 Key 机制 对于没有状态机的操作（如“发帖”、“新增用户”），需要引入 Idempotency Key（幂等键）。
-3. 高可用实践方案：通用幂等组件 这是一套成熟的后端通用方案，通常在 Golang 体系下通过中间件实现。
-核心步骤： 生成 Key：前端或调用方在请求头带上 X-Idempotency-Key（可以是 UUID 或业务唯一 ID）。 前置校验（Redis）： 使用 SET key value NX PX 86400000 (Atomic SET if Not Exists)。 如果设置失败，说明请求正在处理或已完成。 存储结果： 如果处理完成，将响应结果也缓存在 Redis 中。 下次相同 Key 进来，直接从缓存返回结果，不走业务逻辑。 Golang 伪代码实现： func IdempotencyMiddleware(next echo.HandlerFunc) echo.HandlerFunc { return func(c echo.Context) error { key := c.Request().Header.Get(&#34;X-Idempotency-Key&#34;) if key == &#34;&#34; { return next(c) // 或者强制要求传入 } // 1. 尝试锁定（原子操作） // Status: 0-处理中, 1-已完成 res, err := redis.Do(&#34;SET&#34;, key, &#34;processing&#34;, &#34;NX&#34;, &#34;EX&#34;, 3600) if err != nil { return c.JSON(http.StatusConflict, &#34;Request is being processed&#34;) } // 2. 执行业务逻辑 err = next(c) // 3. 处理完成后更新 Redis 中的状态及返回结果（可选） if err == nil { redis.Do(&#34;SET&#34;, key, &#34;completed&#34;, &#34;EX&#34;, 86400) } else { redis.Do(&#34;DEL&#34;, key) // 失败了允许重试 } return err } } 4. 极端场景下的三道防线 为了确保“高可用”和“绝对正确”，我会这样布防：
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-03-03 10:43:35 +0800 CST'>March 3, 2026</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;yangcp</footer>
-  <a class="entry-link" aria-label="post link to 幂等性设计" href="http://localhost:1313/posts/architecture/%E5%B9%82%E7%AD%89%E6%80%A7%E8%AE%BE%E8%AE%A1/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Python语法复习学习高级特性
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>🧭 学习路线总览 第一阶段：Python 基础语法（但以工程理解为主） 目标：快速建立 Python 语言模型
-变量 &amp; 动态类型系统 控制流 容器类型（list / tuple / dict / set） 函数机制（参数、返回、多返回） 模块 &amp; 包机制 第二阶段：Python 进阶特性（核心能力区） 目标：理解 Python 为什么这么写 &amp; 怎么写高级代码
-迭代器 / 生成器 装饰器 上下文管理器（with） 深浅拷贝 魔法方法（dunder） dataclass 类型注解 &amp; typing 第三阶段：工程与底层机制 目标：Python 工程师的分水岭
-内存模型 &amp; GC GIL 与并发模型 asyncio 协程 并发模型对比（thread / process / coroutine） 常见性能坑 第四阶段：面试实战 高频面试题 原理追问 手撕代码 场景题 第 1 课：Python 基础语法核心（工程师版） 1️⃣ 变量与动态类型系统 2️⃣ 基本数据类型 3️⃣ None / True / False 的本质
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-02-07 09:23:43 +0800 CST'>February 7, 2026</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;yangcp</footer>
-  <a class="entry-link" aria-label="post link to Python语法复习学习高级特性" href="http://localhost:1313/posts/python/start/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">使用场景和原则
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>一、Redis 常见 &amp; 真实可用的使用场景 1️⃣ 缓存（Cache）——最核心，但不是“随便加” 典型用途
-热点数据缓存（配置、用户信息、商品信息） 接口结果缓存（读多写少） 计算结果缓存（排行榜、聚合结果） 工程要点
-TTL 一定要有（防雪崩） 要有 cache miss 回源策略 不要缓存“强一致性要求”的数据 Go 示例
-user, ok := cache.Get(uid) if !ok { user = db.GetUser(uid) cache.Set(uid, user, time.Minute*5) } 2️⃣ 分布式锁（非常常用） 典型场景
-防止重复下单 防止任务并发执行 防止重复消费 推荐方式
-SET key value NX PX 不推荐简单 SETNX &#43; EXPIRE（非原子） 工程原则
-锁一定要有过期时间 value 用 UUID，防误删 解锁要校验 value 3️⃣ 计数器 / 限流器 典型场景
-接口 QPS 限流 短时间访问次数统计 点赞 / 浏览量 常用结构
-String（INCR） Hash（多维统计） Sorted Set（滑动窗口） 优点
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-02-05 14:09:54 +0800 CST'>February 5, 2026</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;yangcp</footer>
-  <a class="entry-link" aria-label="post link to 使用场景和原则" href="http://localhost:1313/posts/redis/%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E5%8E%9F%E5%88%99/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">26年的重点与未来规划
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>26年的重点与未来规划 算法与AI基础 leecode top100 背诵默写 top 100-200 全速刷两遍
-AI应用 工作当中会做一些AI相关的应用，在AI应用进行深耕
-未来的一些思考 gpt给出了一些建议：以下参考： 规划建议.pdf
-</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-01-31 09:45:39 +0800 CST'>January 31, 2026</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;yangcp</footer>
-  <a class="entry-link" aria-label="post link to 26年的重点与未来规划" href="http://localhost:1313/posts/ai/2026_plan/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Dp
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>dp 通用解题方法 1. dp[?] 表示什么？ 2. dp[?] 从哪几个 dp[?] 来？ 3. dp 最小值怎么开始？ 4. dp 是正着算还是倒着算？ </p>
-  </div>
-  <footer class="entry-footer"><span title='2026-01-22 20:05:32 +0800 CST'>January 22, 2026</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;yangcp</footer>
-  <a class="entry-link" aria-label="post link to Dp" href="http://localhost:1313/posts/datastructalgorithm/dp/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">算法模板思路总结
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p> 序号 问题 对应模板 关键字提示 ① 是否是“求区间”？ 前缀和 / 差分 区间和、子数组和、多次加法、update 区间 ② 是否在求最短步数？ BFS 最少多少步、最短时间、同时扩散、找最短路径（无权图） ③ 是否有权重？ Dijkstra 每条边有代价、最小代价、带权最短路径 ④ 是否要所有结果？ 回溯 所有排列、所有组合、所有子集、选择/不选择 ⑤ 是否判断能否满足条件？ 二分 &#43; check 最小值使条件成立、最大值使条件成立、单调性 ⑥ 图结构但不是最短路 DFS 岛屿数量、连通块、树路径和 ⑦ 是否是连通性判断？ 并查集 判断是否联通、合并集合、找代表元素 ⑧ 是否需要维护递增/递减？ 单调栈 下一个更大元素、每日温度、接雨水 ⑨ 是否是一维 DP？ DP 最大子序和、打家劫舍、背包 ⑩ 是否是字符串匹配？ KMP / Trie 多次查找字符串、大文本匹配模式串、多词查找 </p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-27 23:49:37 +0800 CST'>November 27, 2025</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;yangcp</footer>
-  <a class="entry-link" aria-label="post link to 算法模板思路总结" href="http://localhost:1313/posts/go/%E7%AE%97%E6%B3%95%E6%A8%A1%E6%9D%BF%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">高级算法模板
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p> ✅ 总目录（你只要按这个顺序掌握） 类别 内容 定位 一、前缀和 &amp; 差分 区间加减 → O(1) 求和 高频基础 二、字符串 KMP、Trie 面试常客 三、BFS / DFS 多源 BFS，分层 BFS 图模板 四、拓扑排序 DAG 处理 调度/依赖 五、树与图 树直径、并查集、Dijkstra 中高级 六、回溯 子集 / N 皇后 / 剪枝 模板化即可 七、状态压缩 DP 子集 DP / bitmask 稍难但高频 八、数学 快速幂 / gcd / 组合数 必备基础 一、前缀和 &amp; 差分 ✅ 前缀和（快速求区间和） sum[i] = nums[0] &#43; ... &#43; nums[i] 区间 [l, r] 的和 = sum[r] - sum[l-1] func prefixSum(nums []int) []int { n := len(nums) pre := make([]int, n&#43;1) for i := 1; i &lt;= n; i&#43;&#43; { pre[i] = pre[i-1] &#43; nums[i-1] } return pre } ✅ 差分（区间加值） diff[i] = nums[i] - nums[i-1] 区间加 k：diff[l] &#43;= k, diff[r&#43;1] -= k func diffBuild(nums []int) []int { n := len(nums) diff := make([]int, n) diff[0] = nums[0] for i := 1; i &lt; n; i&#43;&#43; { diff[i] = nums[i] - nums[i-1] } return diff } func diffApply(diff []int) []int { for i := 1; i &lt; len(diff); i&#43;&#43; { diff[i] &#43;= diff[i-1] } return diff } 二、字符串 ✅ KMP（快速匹配） 核心：求 next 数组（最长前后缀相等长度）
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-10 21:55:50 +0800 CST'>November 10, 2025</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;yangcp</footer>
-  <a class="entry-link" aria-label="post link to 高级算法模板" href="http://localhost:1313/posts/datastructalgorithm/%E9%AB%98%E7%BA%A7%E7%AE%97%E6%B3%95%E6%A8%A1%E6%9D%BF/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">延时队列
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>使用 Redis Sorted Set (ZSet) 实现延时队列（Delay Queue）是一种高效且常用的方法，因为它利用了 ZSet 的核心特性：元素有序。
-以下是基于 Redis ZSet 设计延时队列的详细步骤、关键操作和代码逻辑。
-基于 Redis ZSet 的延时队列设计 1. 核心数据结构 组件 Redis 数据结构 存储内容 ZSet Score (分数) ZSet Member (成员) 作用 延迟队列 Sorted Set (ZSet) 待执行任务 任务执行时间戳 (毫秒或秒) 任务的唯一 ID (例如：order:123, task:456) 核心结构，按执行时间排序 任务详情 Hash 或 String 任务的具体内容 N/A 任务 ID 存储任务执行所需的所有数据 2. 三个核心操作 一个完整的延时队列系统由三个主要角色构成：生产者（Producer）、消费者/扫描器（Consumer/Scanner） 和 任务处理器（Executor）。
-2.1 生产者：投递任务（将任务放入队列） 生产者负责将一个任务及其计划执行时间写入 Redis。
-操作步骤：
-确定执行时间： 计算任务应被执行的精确时间戳 T。 存储任务详情： 将任务的全部信息（如订单号、用户ID等）存储到 Redis 的 Hash 或 String 结构中，以任务 ID 为 Key。 加入 ZSet： 将任务的 ID 作为 Member，将时间戳 T 作为 Score，存入延迟队列 ZSet 中。 Redis 命令示例：
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-10 14:37:09 +0800 CST'>November 10, 2025</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;yangcp</footer>
-  <a class="entry-link" aria-label="post link to 延时队列" href="http://localhost:1313/posts/scenario/%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">排序算法总结
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>总结——所有常见排序算法的核心思想、时间复杂度、空间复杂度、稳定性、是否原地排序、适用场景和简单例子。 下面是最全面且面试导向的总结版本👇
-🧠 排序算法总览表 算法 思想 时间复杂度 空间复杂度 稳定性 原地排序 适用场景 冒泡排序 (Bubble Sort) 相邻交换，最大（或最小）元素逐步“浮出” O(n²) O(1) ✅ 稳定 ✅ 数据量小、部分有序 选择排序 (Selection Sort) 每次选择最小元素放到前面 O(n²) O(1) ❌ 不稳定 ✅ 数据量小，对交换次数敏感 插入排序 (Insertion Sort) 将未排序元素插入到已排序序列中 O(n²) O(1) ✅ 稳定 ✅ 数据基本有序时高效 希尔排序 (Shell Sort) 插入排序的改进版，分组比较减少交换 O(n¹˙³~n²) O(1) ❌ 不稳定 ✅ 中等规模数据 归并排序 (Merge Sort) 分治 &#43; 合并有序子序列 O(n log n) O(n) ✅ 稳定 ❌ 大数据、外部排序 快速排序 (Quick Sort) 分治 &#43; 基准划分 平均 O(n log n)
-最坏 O(n²) O(log n) ❌ 不稳定 ✅ 通用最快的内部排序 堆排序 (Heap Sort) 利用堆结构维护最大/最小值 O(n log n) O(1) ❌ 不稳定 ✅ 需要快速找最大/最小的场景 计数排序 (Counting Sort) 统计每个元素出现次数 O(n &#43; k) O(n &#43; k) ✅ 稳定 ❌ 整数、范围较小的场景 桶排序 (Bucket Sort) 按区间划分多个桶再分别排序 O(n &#43; k) O(n &#43; k) ✅ 稳定（视子排序） ❌ 数据均匀分布的浮点数 基数排序 (Radix Sort) 按位（个位→高位）排序 O(d·(n&#43;k)) O(n &#43; k) ✅ 稳定 ❌ 整数、字符串排序 🔍 各算法核心思想讲解与代码示例 1️⃣ 冒泡排序 Bubble Sort 每一轮两两比较，把最大值“冒泡”到最后。
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-05 09:29:18 +0800 CST'>November 5, 2025</span>&nbsp;·&nbsp;5 min&nbsp;·&nbsp;yangcp</footer>
-  <a class="entry-link" aria-label="post link to 排序算法总结" href="http://localhost:1313/posts/datastructalgorithm/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/"></a>
-</article>
-<footer class="page-footer">
-  <nav class="pagination">
-    <a class="next" href="http://localhost:1313/page/2/">Next&nbsp;&nbsp;»
+<main class="main"><div class="profile">
+    <div class="profile_inner">
+        <img draggable="false" src="https://github.com/yangcp25.png" alt="my avatar" title="my avatar"
+            height="150" width="150" />
+        <h1>yangcp | dev Log</h1>
+        <span>Hello World. I&rsquo;m yangcp.</span><div class="social-icons" >
+    <a href="https://github.com/yangcp25" target="_blank" rel="noopener noreferrer me"
+        title="Github">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
     </a>
-  </nav>
-</footer>
+</div>
+
+        <div class="buttons">
+            <a class="button" href="posts" rel="noopener" title="Posts">
+                <span class="button-inner">
+                    Posts
+                </span>
+            </a>
+            <a class="button" href="tags" rel="noopener" title="Tags">
+                <span class="button-inner">
+                    Tags
+                </span>
+            </a>
+        </div>
+    </div>
+</div>
+
     </main>
     
 <footer class="footer">

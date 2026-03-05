@@ -80,3 +80,18 @@ defaultPostImage = "/images/default-cover.png"
 [taxonomies]
 tag = "tags"
 category = "categories"
+
+
+[params.profileMode]
+enabled = true # 必须设为 true 才会显示简介和社交图标
+title = "yangcp | dev Log"
+subtitle = "Hello World. I'm yangcp."
+imageUrl = "https://github.com/yangcp25.png" # 自动抓取你的 GitHub 头像
+imageTitle = "my avatar"
+
+[[params.profileMode.buttons]]
+name = "Posts"
+url = "posts"
+[[params.profileMode.buttons]]
+name = "Tags"
+url = "tags"
